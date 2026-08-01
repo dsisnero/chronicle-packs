@@ -1,0 +1,3 @@
+[submodule "vendor/activegraph-packs"]
+	path = vendor/activegraph-packs
+	url = https://github.com/yoheinakajima/activegraph-packs.git

@@ -1,0 +1,20 @@
+# Dependencies
+/lib/
+/bin/
+/.shards/
+/shard.lock
+
+# Build artifacts
+*.dwarf
+
+# Apple Double / resource fork files (exFAT external drive)
+._*
+
+# Local agent/tool settings
+.claude/
+
+# Local Crystal cache
+.crystal-cache/
+
+# Temporary working artifacts
+temp/

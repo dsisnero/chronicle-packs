@@ -1,0 +1,21 @@
+name: chronicle-packs
+version: 0.1.0
+
+authors:
+  - Dominic Sisneros <dsisnero@gmail.com>
+
+crystal: '>= 1.21.0'
+
+license: MIT
+
+dependencies:
+  chronicle:
+    github: dsisnero/chronicle
+  toml:
+    github: crystal-community/toml.cr
+    version: ~> 0.8.1
+
+development_dependencies:
+  ameba:
+    github: crystal-ameba/ameba
+    version: ~> 1.6
