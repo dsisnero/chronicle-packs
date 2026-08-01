@@ -447,25 +447,25 @@ packs/connector_control/tools.py::function::record_connector_run_observation_fn	
 packs/connector_control/tools.py::function::request_connector_refresh	function	missing	-	auto-generated
 packs/connector_control/tools.py::function::stable_connector_id	function	missing	-	auto-generated
 packs/core/behaviors.py::const::BEHAVIORS	const	ported	src/chronicle_packs/core.cr	collected by DSL pack macro
-packs/core/behaviors.py::const::STOPWORDS	const	ported	src/chronicle_packs/core/behaviors.cr::Helpers::STOPWORDS	
-packs/core/behaviors.py::function::_infer_category	function	ported	src/chronicle_packs/core/behaviors.cr::_infer_category	
-packs/core/behaviors.py::function::_overlap_ratio	function	ported	src/chronicle_packs/core/behaviors.cr::_overlap_ratio	
-packs/core/behaviors.py::function::_sentences	function	ported	src/chronicle_packs/core/behaviors.cr::_sentences	
-packs/core/behaviors.py::function::_word_set	function	ported	src/chronicle_packs/core/behaviors.cr::_word_set	
-packs/core/behaviors.py::function::memory_candidate_proposer	function	ported	src/chronicle_packs/core/behaviors.cr::memory_candidate_proposer	
-packs/core/behaviors.py::function::observation_extractor	function	ported	src/chronicle_packs/core/behaviors.cr::observation_extractor	
-packs/core/behaviors.py::function::task_linker	function	ported	src/chronicle_packs/core/behaviors.cr::task_linker	
+packs/core/behaviors.py::const::STOPWORDS	const	ported	src/chronicle_packs/core/behaviors.cr::Helpers::STOPWORDS
+packs/core/behaviors.py::function::_infer_category	function	ported	src/chronicle_packs/core/behaviors.cr::_infer_category
+packs/core/behaviors.py::function::_overlap_ratio	function	ported	src/chronicle_packs/core/behaviors.cr::_overlap_ratio
+packs/core/behaviors.py::function::_sentences	function	ported	src/chronicle_packs/core/behaviors.cr::_sentences
+packs/core/behaviors.py::function::_word_set	function	ported	src/chronicle_packs/core/behaviors.cr::_word_set
+packs/core/behaviors.py::function::memory_candidate_proposer	function	ported	src/chronicle_packs/core/behaviors.cr::memory_candidate_proposer
+packs/core/behaviors.py::function::observation_extractor	function	ported	src/chronicle_packs/core/behaviors.cr::observation_extractor
+packs/core/behaviors.py::function::task_linker	function	ported	src/chronicle_packs/core/behaviors.cr::task_linker
 packs/core/fixtures/run_fixtures.py::function::_load_fixtures	function	ported	spec/chronicle_packs/core_fixtures_spec.cr	spec iterates fixture files
-packs/core/fixtures/run_fixtures.py::function::_resolve_ref	function	ported	src/chronicle_packs/fixture_runner.cr::resolve_ref	
+packs/core/fixtures/run_fixtures.py::function::_resolve_ref	function	ported	src/chronicle_packs/fixture_runner.cr::resolve_ref
 packs/core/fixtures/run_fixtures.py::function::_run_fixture	function	ported	src/chronicle_packs/fixture_runner.cr::run_scenario	renamed run_scenario
 packs/core/fixtures/run_fixtures.py::function::main	function	skipped	-	no standalone CLI; fixtures run via specs
-packs/core/object_types.py::class::Action	class	ported	src/chronicle_packs/core/object_types.cr::Action	
-packs/core/object_types.py::class::Artifact	class	ported	src/chronicle_packs/core/object_types.cr::Artifact	
-packs/core/object_types.py::class::Evaluation	class	ported	src/chronicle_packs/core/object_types.cr::Evaluation	
-packs/core/object_types.py::class::MemoryCandidate	class	ported	src/chronicle_packs/core/object_types.cr::MemoryCandidate	
-packs/core/object_types.py::class::Observation	class	ported	src/chronicle_packs/core/object_types.cr::Observation	
-packs/core/object_types.py::class::Source	class	ported	src/chronicle_packs/core/object_types.cr::Source	
-packs/core/object_types.py::class::Task	class	ported	src/chronicle_packs/core/object_types.cr::Task	
+packs/core/object_types.py::class::Action	class	ported	src/chronicle_packs/core/object_types.cr::Action
+packs/core/object_types.py::class::Artifact	class	ported	src/chronicle_packs/core/object_types.cr::Artifact
+packs/core/object_types.py::class::Evaluation	class	ported	src/chronicle_packs/core/object_types.cr::Evaluation
+packs/core/object_types.py::class::MemoryCandidate	class	ported	src/chronicle_packs/core/object_types.cr::MemoryCandidate
+packs/core/object_types.py::class::Observation	class	ported	src/chronicle_packs/core/object_types.cr::Observation
+packs/core/object_types.py::class::Source	class	ported	src/chronicle_packs/core/object_types.cr::Source
+packs/core/object_types.py::class::Task	class	ported	src/chronicle_packs/core/object_types.cr::Task
 packs/core/object_types.py::const::OBJECT_TYPES	const	ported	src/chronicle_packs/core.cr	collected by DSL pack macro from @[ObjectType] annotations
 packs/core/object_types.py::const::RELATION_TYPES	const	ported	src/chronicle_packs/core.cr	collected by DSL pack macro from @[RelationType] annotations
 packs/core/settings.py::class::CoreSettings	class	ported	src/chronicle_packs/core/settings.cr::CoreSettings	upstream pydantic bounds not runtime-enforced
@@ -1241,17 +1241,17 @@ packs/importers/public_presence/tools.py::function::_url_for	function	missing	-	
 packs/importers/public_presence/tools.py::function::bootstrap_public_presence	function	missing	-	auto-generated
 packs/importers/public_presence/tools.py::function::bootstrap_public_presence_fn	function	missing	-	auto-generated
 packs/importers/public_presence/tools.py::function::plan_presence_urls	function	missing	-	auto-generated
-packs/llm_provider.py::class::LLMProviderSettings	class	missing	-	auto-generated
-packs/llm_provider.py::class::ResolvedLLMProvider	class	missing	-	auto-generated
-packs/llm_provider.py::method::ResolvedLLMProvider.build_llm_provider	method	missing	-	auto-generated
-packs/llm_provider.py::method::ResolvedLLMProvider.clear_llm_provider	method	missing	-	auto-generated
-packs/llm_provider.py::method::ResolvedLLMProvider.configure_llm_provider	method	missing	-	auto-generated
-packs/llm_provider.py::method::ResolvedLLMProvider.configured	method	missing	-	auto-generated
-packs/llm_provider.py::method::ResolvedLLMProvider.configured_llm_provider	method	missing	-	auto-generated
-packs/llm_provider.py::method::ResolvedLLMProvider.default_model_for	method	missing	-	auto-generated
-packs/llm_provider.py::method::ResolvedLLMProvider.get_llm_provider	method	missing	-	auto-generated
-packs/llm_provider.py::method::ResolvedLLMProvider.resolve_llm_provider	method	missing	-	auto-generated
-packs/llm_provider.py::method::ResolvedLLMProvider.set_llm_provider	method	missing	-	auto-generated
+packs/llm_provider.py::class::LLMProviderSettings	class	ported	src/chronicle_packs/llm_provider.cr::LLMProviderSettings
+packs/llm_provider.py::class::ResolvedLLMProvider	class	ported	src/chronicle_packs/llm_provider.cr::ResolvedLLMProvider	configured? predicate
+packs/llm_provider.py::method::ResolvedLLMProvider.build_llm_provider	method	ported	src/chronicle_packs/llm_provider.cr::build_llm_provider	builds Chronicle::ProviderConfig seam
+packs/llm_provider.py::method::ResolvedLLMProvider.clear_llm_provider	method	ported	src/chronicle_packs/llm_provider.cr::clear_llm_provider
+packs/llm_provider.py::method::ResolvedLLMProvider.configure_llm_provider	method	ported	src/chronicle_packs/llm_provider.cr::configure_llm_provider
+packs/llm_provider.py::method::ResolvedLLMProvider.configured	method	ported	src/chronicle_packs/llm_provider.cr::ResolvedLLMProvider#configured?
+packs/llm_provider.py::method::ResolvedLLMProvider.configured_llm_provider	method	ported	src/chronicle_packs/llm_provider.cr::configured_llm_provider
+packs/llm_provider.py::method::ResolvedLLMProvider.default_model_for	method	ported	src/chronicle_packs/llm_provider.cr::default_model_for	returns override-or-nil; provider default_model is a chronicle route concern
+packs/llm_provider.py::method::ResolvedLLMProvider.get_llm_provider	method	ported	src/chronicle_packs/llm_provider.cr::llm_provider	renamed llm_provider (Crystal accessor form)
+packs/llm_provider.py::method::ResolvedLLMProvider.resolve_llm_provider	method	ported	src/chronicle_packs/llm_provider.cr::resolve_llm_provider
+packs/llm_provider.py::method::ResolvedLLMProvider.set_llm_provider	method	ported	src/chronicle_packs/llm_provider.cr::set_llm_provider
 packs/mcp/client.py::class::HttpTransport	class	missing	-	auto-generated
 packs/mcp/client.py::class::MCPClient	class	missing	-	auto-generated
 packs/mcp/client.py::class::MCPError	class	missing	-	auto-generated

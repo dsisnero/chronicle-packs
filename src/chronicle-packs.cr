@@ -1,6 +1,7 @@
 require "chronicle"
 
 require "./chronicle_packs/core"
+require "./chronicle_packs/llm_provider"
 require "./chronicle_packs/fixture_runner"
 
 # TODO: Write documentation for `Chronicle::Packs`

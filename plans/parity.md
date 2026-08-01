@@ -48,7 +48,7 @@ verticals, then transport adapters and the demo surface.
 - [ ] `attention` — engagement observations, bounded session batches
 - [ ] `skills` — skill lifecycle + verification/replay
 - [ ] `eval_outcome` — evaluation outcome tracking
-- [ ] `llm_provider` — provider resolution (explicit > env), deterministic floor, provider seam for LLM-backed extraction
+- [x] `llm_provider` — provider resolution (explicit > env), deterministic floor, provider seam for LLM-backed extraction — `src/chronicle_packs/llm_provider.cr`
 
 ### Tier 3 — Communication packs
 
@@ -113,6 +113,14 @@ verticals, then transport adapters and the demo surface.
 - `fixtures/run_fixtures.py`'s standalone `main` CLI is not ported; the
   deterministic runner is `Chronicle::Packs::FixtureRunner`, driven by
   specs.
+- `llm_provider` is a packs-level module, not a manifest pack. The
+  provider `get_llm_provider` accessor is renamed `llm_provider`
+  (Crystal accessor convention). `build_llm_provider` returns a
+  `Chronicle::ProviderConfig` (the seam chronicle's provider factories
+  consume) instead of a live client; `default_model_for` returns the
+  explicit override or nil (chronicle's default model is a route-target
+  concern). The doctor-side `check_llm_provider` checks ship with the
+  doctor feature (Tier 7).
 
 ## Inventory
 
