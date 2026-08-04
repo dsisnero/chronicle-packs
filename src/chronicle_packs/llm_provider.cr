@@ -146,6 +146,24 @@ module Chronicle::Packs::LLMProvider
     resolved.model || PROVIDER_DEFAULT_MODELS[provider]
   end
 
+  # Feed the deterministic router: map the resolved provider to a router
+  # target (provider + deterministic model). The router — not a channel
+  # client, not the model — owns provider/model selection with ordered
+  # fallback (chronicle AGENTS.md, "Combined Router and Log Principle");
+  # this module only supplies the target. Returns nil in zero-key mode,
+  # which is the supported deterministic floor, not an error.
+  def self.router_target(resolved : ResolvedLLMProvider) : Chronicle::Routing::Target?
+    provider = resolved.provider
+    return nil if provider.nil?
+
+    model = resolved.model || PROVIDER_DEFAULT_MODELS[provider]
+    Chronicle::Routing::Target.new(
+      provider: provider,
+      model: model,
+      remote: true,
+    )
+  end
+
   # ------------------------------------------------------- process registry
   #
   # The configured provider for this process (set once at startup, cleared

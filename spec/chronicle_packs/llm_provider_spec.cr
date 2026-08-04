@@ -45,6 +45,11 @@ private def with_env(vars : Hash(String, String), &)
   end
 end
 
+# A bare routing request with no explicit intent/target/context.
+private def routed_request : Chronicle::Routing::Request
+  Chronicle::Routing::Request.new("process", nil, nil, [] of String, [] of Chronicle::Routing::ContextCandidate, nil, 20)
+end
+
 describe Chronicle::Packs::LLMProvider do
   describe ".resolve_llm_provider" do
     it "resolves to none with no setting and no env" do
@@ -200,6 +205,69 @@ describe Chronicle::Packs::LLMProvider do
     surfaces = [resolved.provider.to_s, resolved.source, resolved.api_key_env.to_s, resolved.inspect]
     surfaces.each do |surface|
       surface.should_not contain(FAKE_ANTHROPIC_KEY)
+    end
+  end
+
+  describe "deterministic router integration" do
+    # The router — not the model or a channel — owns provider/model
+    # selection with ordered fallback (chronicle AGENTS.md, "Combined
+    # Router and Log Principle"). llm_provider feeds it a target; it
+    # never selects a provider itself.
+
+    it "maps a resolved provider to a router target with its deterministic model" do
+      target = Chronicle::Packs::LLMProvider.router_target(
+        Chronicle::Packs::LLMProvider.resolve_llm_provider(env: {"ANTHROPIC_API_KEY" => FAKE_ANTHROPIC_KEY})
+      )
+      target.should_not be_nil
+      target.not_nil!.provider.should eq("anthropic")
+      target.not_nil!.model.should eq("claude-sonnet-4-5")
+      target.not_nil!.remote?.should be_true
+    end
+
+    it "has no router target in zero-key mode (deterministic floor only)" do
+      Chronicle::Packs::LLMProvider.router_target(
+        Chronicle::Packs::LLMProvider.resolve_llm_provider(env: {} of String => String)
+      ).should be_nil
+    end
+
+    it "lets the deterministic router select the provider target" do
+      target = Chronicle::Packs::LLMProvider.router_target(
+        Chronicle::Packs::LLMProvider.resolve_llm_provider(env: {"ANTHROPIC_API_KEY" => FAKE_ANTHROPIC_KEY})
+      ).not_nil!
+      policy = Chronicle::Routing::Policy.new(default_target: target)
+
+      decision = Chronicle::Routing::Router.new.preview(routed_request, policy, [target])
+
+      decision.target.provider.should eq("anthropic")
+      decision.target.model.should eq("claude-sonnet-4-5")
+      decision.fallback_used?.should be_false
+      decision.override_used?.should be_false
+    end
+
+    it "applies ordered fallback when the provider target is unavailable" do
+      primary = Chronicle::Packs::LLMProvider.router_target(
+        Chronicle::Packs::LLMProvider.resolve_llm_provider(env: {"ANTHROPIC_API_KEY" => FAKE_ANTHROPIC_KEY})
+      ).not_nil!
+      fallback = Chronicle::Routing::Target.new(provider: "local", model: "fallback", remote: false)
+      policy = Chronicle::Routing::Policy.new(default_target: primary, default_fallbacks: [fallback])
+
+      decision = Chronicle::Routing::Router.new.preview(routed_request, policy, [fallback])
+
+      decision.target.should eq(fallback)
+      decision.fallback_used?.should be_true
+    end
+
+    it "never silently substitutes a model for the recorded provider" do
+      target = Chronicle::Packs::LLMProvider.router_target(
+        Chronicle::Packs::LLMProvider.resolve_llm_provider(env: {"OPENAI_API_KEY" => FAKE_OPENAI_KEY})
+      ).not_nil!
+      policy = Chronicle::Routing::Policy.new(default_target: target)
+
+      decision = Chronicle::Routing::Router.new.preview(routed_request, policy, [target])
+
+      decision.target.provider.should eq("openai")
+      decision.target.model.should eq("gpt-4o-mini")
+      decision.routing_reason.should eq("default route")
     end
   end
 end
