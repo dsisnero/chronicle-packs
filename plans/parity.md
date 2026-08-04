@@ -18,7 +18,7 @@ Core (the universal substrate) lands before the infrastructure it requires,
 then communication, domain verticals, transport adapters, and the demo
 surface.
 
-**Progress: 35 / 2080 source API items ported, 1 skipped.**
+**Progress: 70 / 2080 source API items ported, 2 skipped.**
 
 ## Features
 
@@ -59,8 +59,8 @@ surface.
       (0/42)
 - [ ] `memory_gateway` — candidate evaluation/promotion, SQLite backend,
       retrieval ranking, embedder seam (0/122)
-- [ ] `identity_auth` — principal resolution, role-based access, permission
-      checking (0/35)
+- [x] `identity_auth` — principal resolution, role-based access, permission
+      checking (35/35) — `src/chronicle_packs/identity_auth/`
 - [ ] `agent_profile` — goals, personality, standing instructions scoped by
       channel/audience (0/32)
 - [ ] `entity` — canonical extraction + dedup for people/orgs/projects/
@@ -182,6 +182,17 @@ surface.
   provider default models as upstream (`claude-sonnet-4-5` / `gpt-4o-mini`).
   The doctor-side `check_llm_provider` checks ship with the doctor
   feature (Phase 7).
+- `identity_auth` tool results are typed `JSON::Serializable` structs
+  (`PermissionCheck`, `PrincipalRegistration`). The declared tools are
+  `@[Tool]` wrappers over the `*_fn` functions and require a graph bound
+  by the host (`IdentityAuth.bound_graph`) because chronicle's Tool model
+  is args-only (no graph injection); the `*_fn` functions take the graph
+  explicitly and are fully testable. `Principal.is_owner`/`is_external`/
+  `can` are renamed to Crystal predicates `owner?`/`external?`/`can?`;
+  the tool wrapper methods use a `_tool` suffix. `principal_entity_linker`
+  is a no-op until the entity pack is ported (upstream also no-ops without
+  it). chronicle's `patch_object` replaces data, so the pack merges fields
+  manually (upstream merges).
 
 ## Inventory
 

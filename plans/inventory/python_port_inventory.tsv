@@ -996,41 +996,41 @@ packs/gmail/tools.py::function::request_gmail_exploration	function	missing	-	aut
 packs/gmail/tools.py::function::request_gmail_exploration_fn	function	missing	-	auto-generated
 packs/gmail/tools.py::function::request_gmail_poll	function	missing	-	auto-generated
 packs/gmail/tools.py::function::request_gmail_poll_fn	function	missing	-	auto-generated
-packs/identity_auth/behaviors.py::const::BEHAVIORS	const	missing	-	auto-generated
-packs/identity_auth/behaviors.py::function::_extract_display_name	function	missing	-	auto-generated
-packs/identity_auth/behaviors.py::function::_matches_owner_identifiers	function	missing	-	auto-generated
-packs/identity_auth/behaviors.py::function::_normalize_identifier	function	missing	-	auto-generated
-packs/identity_auth/behaviors.py::function::_resolve_principal	function	missing	-	auto-generated
-packs/identity_auth/behaviors.py::function::auth_context_builder	function	missing	-	auto-generated
-packs/identity_auth/behaviors.py::function::clear_principal_registry	function	missing	-	auto-generated
-packs/identity_auth/behaviors.py::function::comm_message_principal_resolver	function	missing	-	auto-generated
-packs/identity_auth/behaviors.py::function::permission_checker	function	missing	-	auto-generated
-packs/identity_auth/behaviors.py::function::principal_entity_linker	function	missing	-	auto-generated
-packs/identity_auth/behaviors.py::function::principal_resolver	function	missing	-	auto-generated
-packs/identity_auth/behaviors.py::function::principals_registered	function	missing	-	auto-generated
-packs/identity_auth/behaviors.py::function::rebuild_principal_registry	function	missing	-	auto-generated
-packs/identity_auth/behaviors.py::function::resolve_known_principal	function	missing	-	auto-generated
-packs/identity_auth/fixtures/run_fixtures.py::function::run_all	function	missing	-	auto-generated
-packs/identity_auth/fixtures/run_fixtures.py::function::run_principal_lifecycle	function	missing	-	auto-generated
-packs/identity_auth/object_types.py::class::AuthContext	class	missing	-	auto-generated
-packs/identity_auth/object_types.py::class::Delegation	class	missing	-	auto-generated
-packs/identity_auth/object_types.py::class::Permission	class	missing	-	auto-generated
-packs/identity_auth/object_types.py::class::Principal	class	missing	-	auto-generated
-packs/identity_auth/object_types.py::class::Role	class	missing	-	auto-generated
-packs/identity_auth/object_types.py::const::OBJECT_TYPES	const	missing	-	auto-generated
-packs/identity_auth/object_types.py::const::RELATION_TYPES	const	missing	-	auto-generated
-packs/identity_auth/object_types.py::const::ROLE_CAPABILITIES	const	missing	-	auto-generated
-packs/identity_auth/object_types.py::method::Principal.can	method	missing	-	auto-generated
-packs/identity_auth/object_types.py::method::Principal.is_external	method	missing	-	auto-generated
-packs/identity_auth/object_types.py::method::Principal.is_owner	method	missing	-	auto-generated
-packs/identity_auth/settings.py::class::IdentitySettings	class	missing	-	auto-generated
-packs/identity_auth/tools.py::const::TOOLS	const	missing	-	auto-generated
-packs/identity_auth/tools.py::function::check_principal_permission	function	missing	-	auto-generated
-packs/identity_auth/tools.py::function::check_principal_permission_fn	function	missing	-	auto-generated
-packs/identity_auth/tools.py::function::lookup_principal	function	missing	-	auto-generated
-packs/identity_auth/tools.py::function::lookup_principal_fn	function	missing	-	auto-generated
-packs/identity_auth/tools.py::function::register_principal	function	missing	-	auto-generated
-packs/identity_auth/tools.py::function::register_principal_fn	function	missing	-	auto-generated
+packs/identity_auth/behaviors.py::const::BEHAVIORS	const	ported	src/chronicle_packs/identity_auth/pack.cr	collected by DSL pack macro
+packs/identity_auth/behaviors.py::function::_extract_display_name	function	ported	src/chronicle_packs/identity_auth/behaviors.cr::_extract_display_name	-
+packs/identity_auth/behaviors.py::function::_matches_owner_identifiers	function	ported	src/chronicle_packs/identity_auth/behaviors.cr::_matches_owner_identifiers	-
+packs/identity_auth/behaviors.py::function::_normalize_identifier	function	ported	src/chronicle_packs/identity_auth/behaviors.cr::_normalize_identifier	-
+packs/identity_auth/behaviors.py::function::_resolve_principal	function	ported	src/chronicle_packs/identity_auth/behaviors.cr::_resolve_principal	-
+packs/identity_auth/behaviors.py::function::auth_context_builder	function	ported	src/chronicle_packs/identity_auth/behaviors.cr::auth_context_builder	-
+packs/identity_auth/behaviors.py::function::clear_principal_registry	function	ported	src/chronicle_packs/identity_auth/behaviors.cr::clear_principal_registry	-
+packs/identity_auth/behaviors.py::function::comm_message_principal_resolver	function	ported	src/chronicle_packs/identity_auth/behaviors.cr::comm_message_principal_resolver	-
+packs/identity_auth/behaviors.py::function::permission_checker	function	ported	src/chronicle_packs/identity_auth/behaviors.cr::permission_checker	decision extracted to _rejection_reason
+packs/identity_auth/behaviors.py::function::principal_entity_linker	function	ported	src/chronicle_packs/identity_auth/behaviors.cr::principal_entity_linker	no-op: entity pack not ported (upstream also no-ops without it)
+packs/identity_auth/behaviors.py::function::principal_resolver	function	ported	src/chronicle_packs/identity_auth/behaviors.cr::principal_resolver	-
+packs/identity_auth/behaviors.py::function::principals_registered	function	ported	src/chronicle_packs/identity_auth/behaviors.cr::principals_registered	-
+packs/identity_auth/behaviors.py::function::rebuild_principal_registry	function	ported	src/chronicle_packs/identity_auth/behaviors.cr::rebuild_principal_registry	-
+packs/identity_auth/behaviors.py::function::resolve_known_principal	function	ported	src/chronicle_packs/identity_auth/behaviors.cr::resolve_known_principal	-
+packs/identity_auth/fixtures/run_fixtures.py::function::run_all	function	skipped	-	no standalone CLI; lifecycle driven by specs
+packs/identity_auth/fixtures/run_fixtures.py::function::run_principal_lifecycle	function	ported	spec/chronicle_packs/identity_auth_spec.cr	fixture: principal_lifecycle
+packs/identity_auth/object_types.py::class::AuthContext	class	ported	src/chronicle_packs/identity_auth/object_types.cr::AuthContext	-
+packs/identity_auth/object_types.py::class::Delegation	class	ported	src/chronicle_packs/identity_auth/object_types.cr::Delegation	-
+packs/identity_auth/object_types.py::class::Permission	class	ported	src/chronicle_packs/identity_auth/object_types.cr::Permission	-
+packs/identity_auth/object_types.py::class::Principal	class	ported	src/chronicle_packs/identity_auth/object_types.cr::Principal	-
+packs/identity_auth/object_types.py::class::Role	class	ported	src/chronicle_packs/identity_auth/object_types.cr::Role	-
+packs/identity_auth/object_types.py::const::OBJECT_TYPES	const	ported	src/chronicle_packs/identity_auth/pack.cr	collected by DSL pack macro
+packs/identity_auth/object_types.py::const::RELATION_TYPES	const	ported	src/chronicle_packs/identity_auth/relation_types.cr	collected by DSL pack macro
+packs/identity_auth/object_types.py::const::ROLE_CAPABILITIES	const	ported	src/chronicle_packs/identity_auth/object_types.cr::RoleCapabilities::MAP	-
+packs/identity_auth/object_types.py::method::Principal.can	method	ported	src/chronicle_packs/identity_auth/object_types.cr::Principal#can?	renamed can? (Crystal predicate)
+packs/identity_auth/object_types.py::method::Principal.is_external	method	ported	src/chronicle_packs/identity_auth/object_types.cr::Principal#external?	renamed external? (Crystal predicate)
+packs/identity_auth/object_types.py::method::Principal.is_owner	method	ported	src/chronicle_packs/identity_auth/object_types.cr::Principal#owner?	renamed owner? (Crystal predicate)
+packs/identity_auth/settings.py::class::IdentitySettings	class	ported	src/chronicle_packs/identity_auth/settings.cr::IdentitySettings	-
+packs/identity_auth/tools.py::const::TOOLS	const	ported	src/chronicle_packs/identity_auth/pack.cr	collected by DSL @[Tool] annotations
+packs/identity_auth/tools.py::function::check_principal_permission	function	ported	src/chronicle_packs/identity_auth/tools.cr::check_principal_permission_tool	tool wrapper; renamed with _tool suffix
+packs/identity_auth/tools.py::function::check_principal_permission_fn	function	ported	src/chronicle_packs/identity_auth/tools.cr::check_principal_permission_fn	returns PermissionCheck struct
+packs/identity_auth/tools.py::function::lookup_principal	function	ported	src/chronicle_packs/identity_auth/tools.cr::lookup_principal_tool	tool wrapper; renamed with _tool suffix
+packs/identity_auth/tools.py::function::lookup_principal_fn	function	ported	src/chronicle_packs/identity_auth/tools.cr::lookup_principal_fn	-
+packs/identity_auth/tools.py::function::register_principal	function	ported	src/chronicle_packs/identity_auth/tools.cr::register_principal_tool	tool wrapper; renamed with _tool suffix
+packs/identity_auth/tools.py::function::register_principal_fn	function	ported	src/chronicle_packs/identity_auth/tools.cr::register_principal_fn	returns PrincipalRegistration struct
 packs/importers/assistant_local_sessions/behaviors.py::const::BEHAVIORS	const	missing	-	auto-generated
 packs/importers/assistant_local_sessions/fixtures/run_fixtures.py::function::_build_claude_tree	function	missing	-	auto-generated
 packs/importers/assistant_local_sessions/fixtures/run_fixtures.py::function::_build_codex_tree	function	missing	-	auto-generated
