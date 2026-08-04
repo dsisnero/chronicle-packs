@@ -11,7 +11,7 @@ module IdentityAuthSpecSupport
 
   REPO = Path[__DIR__].parent.parent
 
-  def manifest_path : Path
+  def identity_manifest_path : Path
     REPO / "vendor" / "activegraph-packs" / "packs" / "identity_auth" / "manifest.toml"
   end
 
@@ -57,7 +57,7 @@ describe Chronicle::Packs::IdentityAuth do
     end
 
     it "passes the runtime-side surface check against the real manifest" do
-      manifest = Chronicle::Packs.load_manifest(manifest_path.to_s)
+      manifest = Chronicle::Packs.load_manifest(identity_manifest_path.to_s)
       Chronicle::Packs.verify_surface(manifest, Chronicle::Packs::IdentityAuth.pack)
     end
   end

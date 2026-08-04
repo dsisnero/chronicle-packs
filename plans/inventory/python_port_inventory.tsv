@@ -120,38 +120,38 @@ packs/activity_normalizer/tools.py::function::disable_extractor_version	function
 packs/activity_normalizer/tools.py::function::disable_extractor_version_fn	function	missing	-	auto-generated
 packs/activity_normalizer/tools.py::function::reextract_evidence	function	missing	-	auto-generated
 packs/activity_normalizer/tools.py::function::reextract_evidence_fn	function	missing	-	auto-generated
-packs/agent_profile/behaviors.py::const::BEHAVIORS	const	missing	-	auto-generated
-packs/agent_profile/behaviors.py::function::_build_profile_context_view	function	missing	-	auto-generated
-packs/agent_profile/behaviors.py::function::_get_default_profile_id	function	missing	-	auto-generated
-packs/agent_profile/behaviors.py::function::_get_or_create_profile_entry	function	missing	-	auto-generated
-packs/agent_profile/behaviors.py::function::assemble_profile_view	function	missing	-	auto-generated
-packs/agent_profile/behaviors.py::function::clear_profile_registry	function	missing	-	auto-generated
-packs/agent_profile/behaviors.py::function::frame_context_trigger	function	missing	-	auto-generated
-packs/agent_profile/behaviors.py::function::goal_registry_recorder	function	missing	-	auto-generated
-packs/agent_profile/behaviors.py::function::instruction_registry_recorder	function	missing	-	auto-generated
-packs/agent_profile/behaviors.py::function::personality_registry_recorder	function	missing	-	auto-generated
-packs/agent_profile/behaviors.py::function::preference_registry_recorder	function	missing	-	auto-generated
-packs/agent_profile/behaviors.py::function::profile_context_provider	function	missing	-	auto-generated
-packs/agent_profile/behaviors.py::function::profile_context_trigger	function	missing	-	auto-generated
-packs/agent_profile/behaviors.py::function::profile_registry_recorder	function	missing	-	auto-generated
-packs/agent_profile/behaviors.py::function::rebuild_profile_registry	function	missing	-	auto-generated
-packs/agent_profile/fixtures/run_fixtures.py::function::run_all	function	missing	-	auto-generated
-packs/agent_profile/fixtures/run_fixtures.py::function::run_profile_context_assembly	function	missing	-	auto-generated
-packs/agent_profile/object_types.py::class::AgentProfile	class	missing	-	auto-generated
-packs/agent_profile/object_types.py::class::Goal	class	missing	-	auto-generated
-packs/agent_profile/object_types.py::class::OwnerPreference	class	missing	-	auto-generated
-packs/agent_profile/object_types.py::class::PersonalityProfile	class	missing	-	auto-generated
-packs/agent_profile/object_types.py::class::ProfileContextRequest	class	missing	-	auto-generated
-packs/agent_profile/object_types.py::class::ProfileContextView	class	missing	-	auto-generated
-packs/agent_profile/object_types.py::class::StandingInstruction	class	missing	-	auto-generated
-packs/agent_profile/object_types.py::const::OBJECT_TYPES	const	missing	-	auto-generated
-packs/agent_profile/object_types.py::const::RELATION_TYPES	const	missing	-	auto-generated
-packs/agent_profile/settings.py::class::AgentProfileSettings	class	missing	-	auto-generated
-packs/agent_profile/tools.py::const::TOOLS	const	missing	-	auto-generated
-packs/agent_profile/tools.py::function::register_profile	function	missing	-	auto-generated
-packs/agent_profile/tools.py::function::register_profile_fn	function	missing	-	auto-generated
-packs/agent_profile/tools.py::function::request_profile_context	function	missing	-	auto-generated
-packs/agent_profile/tools.py::function::request_profile_context_fn	function	missing	-	auto-generated
+packs/agent_profile/behaviors.py::const::BEHAVIORS	const	ported	src/chronicle_packs/agent_profile/pack.cr	collected by DSL pack macro
+packs/agent_profile/behaviors.py::function::_build_profile_context_view	function	ported	src/chronicle_packs/agent_profile/behaviors.cr::build_profile_context_view	renamed public; pure assembly function
+packs/agent_profile/behaviors.py::function::_get_default_profile_id	function	ported	src/chronicle_packs/agent_profile/behaviors.cr::_get_default_profile_id	-
+packs/agent_profile/behaviors.py::function::_get_or_create_profile_entry	function	ported	src/chronicle_packs/agent_profile/behaviors.cr::_get_or_create_profile_entry	-
+packs/agent_profile/behaviors.py::function::assemble_profile_view	function	ported	src/chronicle_packs/agent_profile/behaviors.cr::assemble_profile_view	-
+packs/agent_profile/behaviors.py::function::clear_profile_registry	function	ported	src/chronicle_packs/agent_profile/behaviors.cr::clear_profile_registry	-
+packs/agent_profile/behaviors.py::function::frame_context_trigger	function	ported	src/chronicle_packs/agent_profile/behaviors.cr::frame_context_trigger	-
+packs/agent_profile/behaviors.py::function::goal_registry_recorder	function	ported	src/chronicle_packs/agent_profile/behaviors.cr::goal_registry_recorder	-
+packs/agent_profile/behaviors.py::function::instruction_registry_recorder	function	ported	src/chronicle_packs/agent_profile/behaviors.cr::instruction_registry_recorder	-
+packs/agent_profile/behaviors.py::function::personality_registry_recorder	function	ported	src/chronicle_packs/agent_profile/behaviors.cr::personality_registry_recorder	-
+packs/agent_profile/behaviors.py::function::preference_registry_recorder	function	ported	src/chronicle_packs/agent_profile/behaviors.cr::preference_registry_recorder	-
+packs/agent_profile/behaviors.py::function::profile_context_provider	function	ported	src/chronicle_packs/agent_profile/behaviors.cr::profile_context_provider	-
+packs/agent_profile/behaviors.py::function::profile_context_trigger	function	ported	src/chronicle_packs/agent_profile/behaviors.cr::profile_context_trigger	-
+packs/agent_profile/behaviors.py::function::profile_registry_recorder	function	ported	src/chronicle_packs/agent_profile/behaviors.cr::profile_registry_recorder	-
+packs/agent_profile/behaviors.py::function::rebuild_profile_registry	function	ported	src/chronicle_packs/agent_profile/behaviors.cr::rebuild_profile_registry	-
+packs/agent_profile/fixtures/run_fixtures.py::function::run_all	function	skipped	-	no standalone CLI; assembly driven by specs
+packs/agent_profile/fixtures/run_fixtures.py::function::run_profile_context_assembly	function	ported	spec/chronicle_packs/agent_profile_spec.cr	covered by context assembly specs
+packs/agent_profile/object_types.py::class::AgentProfile	class	ported	src/chronicle_packs/agent_profile/object_types.cr::AgentProfile	-
+packs/agent_profile/object_types.py::class::Goal	class	ported	src/chronicle_packs/agent_profile/object_types.cr::Goal	-
+packs/agent_profile/object_types.py::class::OwnerPreference	class	ported	src/chronicle_packs/agent_profile/object_types.cr::OwnerPreference	-
+packs/agent_profile/object_types.py::class::PersonalityProfile	class	ported	src/chronicle_packs/agent_profile/object_types.cr::PersonalityProfile	-
+packs/agent_profile/object_types.py::class::ProfileContextRequest	class	ported	src/chronicle_packs/agent_profile/object_types.cr::ProfileContextRequest	-
+packs/agent_profile/object_types.py::class::ProfileContextView	class	ported	src/chronicle_packs/agent_profile/object_types.cr::ProfileContextView	typed JSON::Serializable view
+packs/agent_profile/object_types.py::class::StandingInstruction	class	ported	src/chronicle_packs/agent_profile/object_types.cr::StandingInstruction	-
+packs/agent_profile/object_types.py::const::OBJECT_TYPES	const	ported	src/chronicle_packs/agent_profile/pack.cr	collected by DSL pack macro
+packs/agent_profile/object_types.py::const::RELATION_TYPES	const	ported	src/chronicle_packs/agent_profile/relation_types.cr	collected by DSL pack macro
+packs/agent_profile/settings.py::class::AgentProfileSettings	class	ported	src/chronicle_packs/agent_profile/settings.cr::AgentProfileSettings	-
+packs/agent_profile/tools.py::const::TOOLS	const	ported	src/chronicle_packs/agent_profile/pack.cr	collected by DSL @[Tool] annotations
+packs/agent_profile/tools.py::function::register_profile	function	ported	src/chronicle_packs/agent_profile/tools.cr::register_profile_tool	tool wrapper; renamed with _tool suffix
+packs/agent_profile/tools.py::function::register_profile_fn	function	ported	src/chronicle_packs/agent_profile/tools.cr::register_profile_fn	-
+packs/agent_profile/tools.py::function::request_profile_context	function	ported	src/chronicle_packs/agent_profile/tools.cr::request_profile_context_tool	tool wrapper; renamed with _tool suffix
+packs/agent_profile/tools.py::function::request_profile_context_fn	function	ported	src/chronicle_packs/agent_profile/tools.cr::request_profile_context_fn	-
 packs/attention/behaviors.py::const::BEHAVIORS	const	missing	-	auto-generated
 packs/attention/behaviors.py::const::POLICY_ID	const	missing	-	auto-generated
 packs/attention/behaviors.py::const::POLICY_VERSION	const	missing	-	auto-generated

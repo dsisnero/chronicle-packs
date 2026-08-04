@@ -18,7 +18,7 @@ Core (the universal substrate) lands before the infrastructure it requires,
 then communication, domain verticals, transport adapters, and the demo
 surface.
 
-**Progress: 70 / 2080 source API items ported, 2 skipped.**
+**Progress: 102 / 2080 source API items ported, 3 skipped.**
 
 ## Features
 
@@ -61,8 +61,8 @@ surface.
       retrieval ranking, embedder seam (0/122)
 - [x] `identity_auth` — principal resolution, role-based access, permission
       checking (35/35) — `src/chronicle_packs/identity_auth/`
-- [ ] `agent_profile` — goals, personality, standing instructions scoped by
-      channel/audience (0/32)
+- [x] `agent_profile` — goals, personality, standing instructions scoped by
+      channel/audience (32/32) — `src/chronicle_packs/agent_profile/`
 - [ ] `entity` — canonical extraction + dedup for people/orgs/projects/
       products/repos (0/27)
 - [ ] `activity_normalizer` — provider-neutral evidence identity, replay
@@ -193,6 +193,13 @@ surface.
   is a no-op until the entity pack is ported (upstream also no-ops without
   it). chronicle's `patch_object` replaces data, so the pack merges fields
   manually (upstream merges).
+- `agent_profile` assembles context views as a typed `ProfileContextView`
+  struct; the pure assembly function is public `build_profile_context_view`
+  (upstream `_build_profile_context_view`) so both the provider behavior and
+  `assemble_profile_view` share one definition. Tools follow the same
+  host-bound-graph seam and `_tool` suffix as identity_auth. Goal priority
+  order lives in a nested `GoalPriorities::ORDER` constant (the DSL pack
+  macro assumes direct module constants are types).
 
 ## Inventory
 
