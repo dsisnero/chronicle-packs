@@ -18,7 +18,7 @@ Core (the universal substrate) lands before the infrastructure it requires,
 then communication, domain verticals, transport adapters, and the demo
 surface.
 
-**Progress: 102 / 2080 source API items ported, 3 skipped.**
+**Progress: 129 / 2080 source API items ported, 4 skipped.**
 
 ## Features
 
@@ -63,8 +63,8 @@ surface.
       checking (35/35) — `src/chronicle_packs/identity_auth/`
 - [x] `agent_profile` — goals, personality, standing instructions scoped by
       channel/audience (32/32) — `src/chronicle_packs/agent_profile/`
-- [ ] `entity` — canonical extraction + dedup for people/orgs/projects/
-      products/repos (0/27)
+- [x] `entity` — canonical extraction + dedup for people/orgs/projects/
+      products/repos (27/27) — `src/chronicle_packs/entity/`
 - [ ] `activity_normalizer` — provider-neutral evidence identity, replay
       modes/revisions, deterministic candidate extraction (0/87)
 - [ ] `semantic_extraction` — typed source-anchored annotations, deterministic
@@ -212,6 +212,16 @@ surface.
   host-bound-graph seam and `_tool` suffix as identity_auth. Goal priority
   order lives in a nested `GoalPriorities::ORDER` constant (the DSL pack
   macro assumes direct module constants are types).
+- `entity` uses typed value objects: `MentionCandidate` and
+  `EntityRegistryEntry` are `struct`s with `JSON::Serializable` (the
+  mention candidate serializes straight to the graph; the registry entry
+  mirrors entity data), and `SimilarityResult` is a struct. The shared
+  similarity helpers are public (`edit_distance_ratio`,
+  `identifier_overlap_score`, `compute_similarity`) —
+  `identifier_overlap_score` is the seam identity_auth's
+  `principal_entity_linker` will use once wired. The extraction regexes
+  live in a nested `Extraction` module (the DSL pack macro assumes direct
+  module constants are types).
 
 ## Inventory
 

@@ -609,33 +609,33 @@ packs/email/tools.py::function::create_email_response	function	missing	-	auto-ge
 packs/email/tools.py::function::create_email_response_fn	function	missing	-	auto-generated
 packs/email/tools.py::function::ingest_email	function	missing	-	auto-generated
 packs/email/tools.py::function::ingest_email_fn	function	missing	-	auto-generated
-packs/entity/behaviors.py::const::BEHAVIORS	const	missing	-	auto-generated
-packs/entity/behaviors.py::function::_add_to_alias_index	function	missing	-	auto-generated
-packs/entity/behaviors.py::function::_compute_similarity	function	missing	-	auto-generated
-packs/entity/behaviors.py::function::_edit_distance_ratio	function	missing	-	auto-generated
-packs/entity/behaviors.py::function::_extract_mentions_from_text	function	missing	-	auto-generated
-packs/entity/behaviors.py::function::_identifier_overlap_score	function	missing	-	auto-generated
-packs/entity/behaviors.py::function::_normalize	function	missing	-	auto-generated
-packs/entity/behaviors.py::function::clear_entity_registry	function	missing	-	auto-generated
-packs/entity/behaviors.py::function::entity_extractor	function	missing	-	auto-generated
-packs/entity/behaviors.py::function::entity_mention_from_annotation	function	missing	-	auto-generated
-packs/entity/behaviors.py::function::entity_registry_recorder	function	missing	-	auto-generated
-packs/entity/behaviors.py::function::entity_resolver	function	missing	-	auto-generated
-packs/entity/behaviors.py::function::merge_candidate_detector	function	missing	-	auto-generated
-packs/entity/fixtures/run_fixtures.py::function::run_all	function	missing	-	auto-generated
-packs/entity/fixtures/run_fixtures.py::function::run_entity_lifecycle	function	missing	-	auto-generated
-packs/entity/object_types.py::class::Entity	class	missing	-	auto-generated
-packs/entity/object_types.py::class::EntityMention	class	missing	-	auto-generated
-packs/entity/object_types.py::class::MergeCandidate	class	missing	-	auto-generated
-packs/entity/object_types.py::class::MergeDecision	class	missing	-	auto-generated
-packs/entity/object_types.py::const::OBJECT_TYPES	const	missing	-	auto-generated
-packs/entity/object_types.py::const::RELATION_TYPES	const	missing	-	auto-generated
-packs/entity/settings.py::class::EntitySettings	class	missing	-	auto-generated
-packs/entity/tools.py::const::TOOLS	const	missing	-	auto-generated
-packs/entity/tools.py::function::decide_merge	function	missing	-	auto-generated
-packs/entity/tools.py::function::decide_merge_fn	function	missing	-	auto-generated
-packs/entity/tools.py::function::register_entity	function	missing	-	auto-generated
-packs/entity/tools.py::function::register_entity_fn	function	missing	-	auto-generated
+packs/entity/behaviors.py::const::BEHAVIORS	const	ported	src/chronicle_packs/entity/pack.cr	collected by DSL pack macro
+packs/entity/behaviors.py::function::_add_to_alias_index	function	ported	src/chronicle_packs/entity/behaviors.cr::_add_to_alias_index	-
+packs/entity/behaviors.py::function::_compute_similarity	function	ported	src/chronicle_packs/entity/behaviors.cr::compute_similarity	renamed public; returns SimilarityResult
+packs/entity/behaviors.py::function::_edit_distance_ratio	function	ported	src/chronicle_packs/entity/behaviors.cr::edit_distance_ratio	renamed public
+packs/entity/behaviors.py::function::_extract_mentions_from_text	function	ported	src/chronicle_packs/entity/behaviors.cr::_extract_mentions_from_text	returns Array(MentionCandidate)
+packs/entity/behaviors.py::function::_identifier_overlap_score	function	ported	src/chronicle_packs/entity/behaviors.cr::identifier_overlap_score	renamed public
+packs/entity/behaviors.py::function::_normalize	function	ported	src/chronicle_packs/entity/behaviors.cr::_normalize	-
+packs/entity/behaviors.py::function::clear_entity_registry	function	ported	src/chronicle_packs/entity/behaviors.cr::clear_entity_registry	-
+packs/entity/behaviors.py::function::entity_extractor	function	ported	src/chronicle_packs/entity/behaviors.cr::entity_extractor	-
+packs/entity/behaviors.py::function::entity_mention_from_annotation	function	ported	src/chronicle_packs/entity/behaviors.cr::entity_mention_from_annotation	-
+packs/entity/behaviors.py::function::entity_registry_recorder	function	ported	src/chronicle_packs/entity/behaviors.cr::entity_registry_recorder	-
+packs/entity/behaviors.py::function::entity_resolver	function	ported	src/chronicle_packs/entity/behaviors.cr::entity_resolver	-
+packs/entity/behaviors.py::function::merge_candidate_detector	function	ported	src/chronicle_packs/entity/behaviors.cr::merge_candidate_detector	-
+packs/entity/fixtures/run_fixtures.py::function::run_all	function	skipped	-	no standalone CLI; lifecycle driven by specs
+packs/entity/fixtures/run_fixtures.py::function::run_entity_lifecycle	function	ported	spec/chronicle_packs/entity_spec.cr	covered by entity lifecycle specs
+packs/entity/object_types.py::class::Entity	class	ported	src/chronicle_packs/entity/object_types.cr::Entity	-
+packs/entity/object_types.py::class::EntityMention	class	ported	src/chronicle_packs/entity/object_types.cr::EntityMention	-
+packs/entity/object_types.py::class::MergeCandidate	class	ported	src/chronicle_packs/entity/object_types.cr::MergeCandidate	-
+packs/entity/object_types.py::class::MergeDecision	class	ported	src/chronicle_packs/entity/object_types.cr::MergeDecision	-
+packs/entity/object_types.py::const::OBJECT_TYPES	const	ported	src/chronicle_packs/entity/pack.cr	collected by DSL pack macro
+packs/entity/object_types.py::const::RELATION_TYPES	const	ported	src/chronicle_packs/entity/relation_types.cr	collected by DSL pack macro
+packs/entity/settings.py::class::EntitySettings	class	ported	src/chronicle_packs/entity/settings.cr::EntitySettings	-
+packs/entity/tools.py::const::TOOLS	const	ported	src/chronicle_packs/entity/pack.cr	collected by DSL @[Tool] annotations
+packs/entity/tools.py::function::decide_merge	function	ported	src/chronicle_packs/entity/tools.cr::decide_merge_tool	tool wrapper; renamed with _tool suffix
+packs/entity/tools.py::function::decide_merge_fn	function	ported	src/chronicle_packs/entity/tools.cr::decide_merge_fn	-
+packs/entity/tools.py::function::register_entity	function	ported	src/chronicle_packs/entity/tools.cr::register_entity_tool	tool wrapper; renamed with _tool suffix
+packs/entity/tools.py::function::register_entity_fn	function	ported	src/chronicle_packs/entity/tools.cr::register_entity_fn	-
 packs/eval_outcome/behaviors.py::const::BEHAVIORS	const	missing	-	auto-generated
 packs/eval_outcome/behaviors.py::function::_objects	function	missing	-	auto-generated
 packs/eval_outcome/behaviors.py::function::_verdict_and_multiplier	function	missing	-	auto-generated
