@@ -4,6 +4,7 @@ require "./chronicle_packs/core"
 require "./chronicle_packs/identity_auth/pack"
 require "./chronicle_packs/agent_profile/pack"
 require "./chronicle_packs/entity/pack"
+require "./chronicle_packs/secrets/pack"
 require "./chronicle_packs/llm_provider"
 require "./chronicle_packs/fixture_runner"
 

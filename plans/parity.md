@@ -18,7 +18,7 @@ Core (the universal substrate) lands before the infrastructure it requires,
 then communication, domain verticals, transport adapters, and the demo
 surface.
 
-**Progress: 129 / 2080 source API items ported, 4 skipped.**
+**Progress: 171 / 2080 source API items ported, 5 skipped.**
 
 ## Features
 
@@ -55,8 +55,8 @@ surface.
 - [ ] `tool_gateway` — capability registry, approval policy, execute/spec/
       pending-approvals tools, catalog, standing scopes, untrusted-content
       scan (0/98)
-- [ ] `secrets` — credential reference management, managed source registry
-      (0/42)
+- [x] `secrets` — credential reference management, managed source registry
+      (42/42) — `src/chronicle_packs/secrets/`
 - [ ] `memory_gateway` — candidate evaluation/promotion, SQLite backend,
       retrieval ranking, embedder seam (0/122)
 - [x] `identity_auth` — principal resolution, role-based access, permission
@@ -222,6 +222,14 @@ surface.
   `principal_entity_linker` will use once wired. The extraction regexes
   live in a nested `Extraction` module (the DSL pack macro assumes direct
   module constants are types).
+- `secrets` keeps the CRITICAL INVARIANT (names only, never values): the
+  resolved value is returned to the caller and never touches the graph,
+  events, or logs. The managed OAuth source (`OAuthTokenStore` is SQLite
+  via crystal-db, `OAuthDeviceFlow` takes an injectable `http_post` so the
+  flow runs offline) lives in `Chronicle::Packs::Secrets::Managed`.
+  `OAuthDeviceFlow` is a `struct`; `OAuthCredentialSource` is a class (its
+  `flows` map mutates via `add_flow`). The `resolve_credential` tool is
+  pure (no graph seam needed).
 
 ## Inventory
 

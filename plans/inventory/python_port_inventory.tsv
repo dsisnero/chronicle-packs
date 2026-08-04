@@ -1539,48 +1539,48 @@ packs/schedule/tools.py::function::list_due_fn	function	missing	-	auto-generated
 packs/schedule/tools.py::function::list_due_schedules	function	missing	-	auto-generated
 packs/schedule/tools.py::function::set_schedule_enabled	function	missing	-	auto-generated
 packs/schedule/tools.py::function::set_schedule_enabled_fn	function	missing	-	auto-generated
-packs/secrets/behaviors.py::const::BEHAVIORS	const	missing	-	auto-generated
-packs/secrets/behaviors.py::function::credential_resolution_recorder	function	missing	-	auto-generated
-packs/secrets/behaviors.py::function::secret_usage_recorder	function	missing	-	auto-generated
-packs/secrets/fixtures/run_fixtures.py::function::_run_fixture	function	missing	-	auto-generated
-packs/secrets/fixtures/run_fixtures.py::function::main	function	missing	-	auto-generated
-packs/secrets/managed.py::class::CredentialSource	class	missing	-	auto-generated
-packs/secrets/managed.py::class::OAuthCredentialSource	class	missing	-	auto-generated
-packs/secrets/managed.py::class::OAuthDeviceFlow	class	missing	-	auto-generated
-packs/secrets/managed.py::class::OAuthTokenStore	class	missing	-	auto-generated
-packs/secrets/managed.py::const::EXPIRY_MARGIN	const	missing	-	auto-generated
-packs/secrets/managed.py::function::_default_http_post	function	missing	-	auto-generated
-packs/secrets/managed.py::function::clear_credential_sources	function	missing	-	auto-generated
-packs/secrets/managed.py::function::register_credential_source	function	missing	-	auto-generated
-packs/secrets/managed.py::function::registered_credential_sources	function	missing	-	auto-generated
-packs/secrets/managed.py::method::CredentialSource.label	method	missing	-	auto-generated
-packs/secrets/managed.py::method::CredentialSource.resolve	method	missing	-	auto-generated
-packs/secrets/managed.py::method::OAuthCredentialSource.__init__	method	missing	-	auto-generated
-packs/secrets/managed.py::method::OAuthCredentialSource._refresh	method	missing	-	auto-generated
-packs/secrets/managed.py::method::OAuthCredentialSource.add_flow	method	missing	-	auto-generated
-packs/secrets/managed.py::method::OAuthCredentialSource.label	method	missing	-	auto-generated
-packs/secrets/managed.py::method::OAuthCredentialSource.resolve	method	missing	-	auto-generated
-packs/secrets/managed.py::method::OAuthDeviceFlow.poll	method	missing	-	auto-generated
-packs/secrets/managed.py::method::OAuthDeviceFlow.refresh	method	missing	-	auto-generated
-packs/secrets/managed.py::method::OAuthDeviceFlow.start	method	missing	-	auto-generated
-packs/secrets/managed.py::method::OAuthTokenStore.__init__	method	missing	-	auto-generated
-packs/secrets/managed.py::method::OAuthTokenStore.close	method	missing	-	auto-generated
-packs/secrets/managed.py::method::OAuthTokenStore.delete	method	missing	-	auto-generated
-packs/secrets/managed.py::method::OAuthTokenStore.get	method	missing	-	auto-generated
-packs/secrets/managed.py::method::OAuthTokenStore.names	method	missing	-	auto-generated
-packs/secrets/managed.py::method::OAuthTokenStore.put	method	missing	-	auto-generated
-packs/secrets/object_types.py::class::CredentialRef	class	missing	-	auto-generated
-packs/secrets/object_types.py::class::CredentialRotationEvent	class	missing	-	auto-generated
-packs/secrets/object_types.py::class::SecretScope	class	missing	-	auto-generated
-packs/secrets/object_types.py::class::SecretUsageEvent	class	missing	-	auto-generated
-packs/secrets/object_types.py::const::OBJECT_TYPES	const	missing	-	auto-generated
-packs/secrets/object_types.py::const::RELATION_TYPES	const	missing	-	auto-generated
-packs/secrets/settings.py::class::SecretsSettings	class	missing	-	auto-generated
-packs/secrets/tools.py::const::TOOLS	const	missing	-	auto-generated
-packs/secrets/tools.py::function::resolve_and_audit_fn	function	missing	-	auto-generated
-packs/secrets/tools.py::function::resolve_credential	function	missing	-	auto-generated
-packs/secrets/tools.py::function::resolve_credential_fn	function	missing	-	auto-generated
-packs/secrets/tools.py::function::resolve_credential_with_source_fn	function	missing	-	auto-generated
+packs/secrets/behaviors.py::const::BEHAVIORS	const	ported	src/chronicle_packs/secrets/pack.cr	collected by DSL pack macro
+packs/secrets/behaviors.py::function::credential_resolution_recorder	function	ported	src/chronicle_packs/secrets/behaviors.cr::credential_resolution_recorder	-
+packs/secrets/behaviors.py::function::secret_usage_recorder	function	ported	src/chronicle_packs/secrets/behaviors.cr::secret_usage_recorder	-
+packs/secrets/fixtures/run_fixtures.py::function::_run_fixture	function	ported	spec/chronicle_packs/secrets_spec.cr	covered by behavior/audit specs
+packs/secrets/fixtures/run_fixtures.py::function::main	function	skipped	-	no standalone CLI; fixtures driven by specs
+packs/secrets/managed.py::class::CredentialSource	class	ported	src/chronicle_packs/secrets/managed.cr::CredentialSource	abstract class (Crystal Protocol analogue)
+packs/secrets/managed.py::class::OAuthCredentialSource	class	ported	src/chronicle_packs/secrets/managed.cr::OAuthCredentialSource	-
+packs/secrets/managed.py::class::OAuthDeviceFlow	class	ported	src/chronicle_packs/secrets/managed.cr::OAuthDeviceFlow	struct
+packs/secrets/managed.py::class::OAuthTokenStore	class	ported	src/chronicle_packs/secrets/managed.cr::OAuthTokenStore	SQLite via crystal-db
+packs/secrets/managed.py::const::EXPIRY_MARGIN	const	ported	src/chronicle_packs/secrets/managed.cr::OAuthCredentialSource::EXPIRY_MARGIN	-
+packs/secrets/managed.py::function::_default_http_post	function	ported	src/chronicle_packs/secrets/managed.cr::_default_http_post	HTTP::Client form POST
+packs/secrets/managed.py::function::clear_credential_sources	function	ported	src/chronicle_packs/secrets/managed.cr::clear_credential_sources	-
+packs/secrets/managed.py::function::register_credential_source	function	ported	src/chronicle_packs/secrets/managed.cr::register_credential_source	-
+packs/secrets/managed.py::function::registered_credential_sources	function	ported	src/chronicle_packs/secrets/managed.cr::registered_credential_sources	-
+packs/secrets/managed.py::method::CredentialSource.label	method	ported	src/chronicle_packs/secrets/managed.cr::CredentialSource#label	-
+packs/secrets/managed.py::method::CredentialSource.resolve	method	ported	src/chronicle_packs/secrets/managed.cr::CredentialSource#resolve	-
+packs/secrets/managed.py::method::OAuthCredentialSource.__init__	method	ported	src/chronicle_packs/secrets/managed.cr::OAuthCredentialSource#initialize	-
+packs/secrets/managed.py::method::OAuthCredentialSource._refresh	method	ported	src/chronicle_packs/secrets/managed.cr::OAuthCredentialSource#_refresh	-
+packs/secrets/managed.py::method::OAuthCredentialSource.add_flow	method	ported	src/chronicle_packs/secrets/managed.cr::OAuthCredentialSource#add_flow	-
+packs/secrets/managed.py::method::OAuthCredentialSource.label	method	ported	src/chronicle_packs/secrets/managed.cr::OAuthCredentialSource#label	-
+packs/secrets/managed.py::method::OAuthCredentialSource.resolve	method	ported	src/chronicle_packs/secrets/managed.cr::OAuthCredentialSource#resolve	-
+packs/secrets/managed.py::method::OAuthDeviceFlow.poll	method	ported	src/chronicle_packs/secrets/managed.cr::OAuthDeviceFlow#poll	-
+packs/secrets/managed.py::method::OAuthDeviceFlow.refresh	method	ported	src/chronicle_packs/secrets/managed.cr::OAuthDeviceFlow#refresh	-
+packs/secrets/managed.py::method::OAuthDeviceFlow.start	method	ported	src/chronicle_packs/secrets/managed.cr::OAuthDeviceFlow#start	-
+packs/secrets/managed.py::method::OAuthTokenStore.__init__	method	ported	src/chronicle_packs/secrets/managed.cr::OAuthTokenStore#initialize	-
+packs/secrets/managed.py::method::OAuthTokenStore.close	method	ported	src/chronicle_packs/secrets/managed.cr::OAuthTokenStore#close	-
+packs/secrets/managed.py::method::OAuthTokenStore.delete	method	ported	src/chronicle_packs/secrets/managed.cr::OAuthTokenStore#delete	-
+packs/secrets/managed.py::method::OAuthTokenStore.get	method	ported	src/chronicle_packs/secrets/managed.cr::OAuthTokenStore#get	-
+packs/secrets/managed.py::method::OAuthTokenStore.names	method	ported	src/chronicle_packs/secrets/managed.cr::OAuthTokenStore#names	-
+packs/secrets/managed.py::method::OAuthTokenStore.put	method	ported	src/chronicle_packs/secrets/managed.cr::OAuthTokenStore#put	-
+packs/secrets/object_types.py::class::CredentialRef	class	ported	src/chronicle_packs/secrets/object_types.cr::CredentialRef	-
+packs/secrets/object_types.py::class::CredentialRotationEvent	class	ported	src/chronicle_packs/secrets/object_types.cr::CredentialRotationEvent	-
+packs/secrets/object_types.py::class::SecretScope	class	ported	src/chronicle_packs/secrets/object_types.cr::SecretScope	-
+packs/secrets/object_types.py::class::SecretUsageEvent	class	ported	src/chronicle_packs/secrets/object_types.cr::SecretUsageEvent	-
+packs/secrets/object_types.py::const::OBJECT_TYPES	const	ported	src/chronicle_packs/secrets/pack.cr	collected by DSL pack macro
+packs/secrets/object_types.py::const::RELATION_TYPES	const	ported	src/chronicle_packs/secrets/relation_types.cr	collected by DSL pack macro
+packs/secrets/settings.py::class::SecretsSettings	class	ported	src/chronicle_packs/secrets/settings.cr::SecretsSettings	-
+packs/secrets/tools.py::const::TOOLS	const	ported	src/chronicle_packs/secrets/pack.cr	collected by DSL @[Tool] annotations
+packs/secrets/tools.py::function::resolve_and_audit_fn	function	ported	src/chronicle_packs/secrets/tools.cr::resolve_and_audit_fn	-
+packs/secrets/tools.py::function::resolve_credential	function	ported	src/chronicle_packs/secrets/tools.cr::resolve_credential_tool	tool wrapper; renamed with _tool suffix (pure, no graph)
+packs/secrets/tools.py::function::resolve_credential_fn	function	ported	src/chronicle_packs/secrets/tools.cr::resolve_credential_fn	-
+packs/secrets/tools.py::function::resolve_credential_with_source_fn	function	ported	src/chronicle_packs/secrets/tools.cr::resolve_credential_with_source_fn	-
 packs/semantic_extraction/behaviors.py::const::BEHAVIORS	const	missing	-	auto-generated
 packs/semantic_extraction/behaviors.py::const::LLM_EXTRACTOR_REF	const	missing	-	auto-generated
 packs/semantic_extraction/behaviors.py::function::_existing_candidate_identities	function	missing	-	auto-generated
