@@ -18,7 +18,7 @@ Core (the universal substrate) lands before the infrastructure it requires,
 then communication, domain verticals, transport adapters, and the demo
 surface.
 
-**Progress: 250 / 2080 source API items ported, 7 skipped, 1 deferred.**
+**Progress: 283 / 2080 source API items ported, 8 skipped, 1 deferred.**
 
 ## Features
 
@@ -77,8 +77,8 @@ surface.
       — `src/chronicle_packs/attention/`
 - [x] `skills` — skill lifecycle + verification/replay (43/44, 1 deferred)
       — `src/chronicle_packs/skills/`
-- [ ] `eval_outcome` — evaluation outcome tracking, artifact reliability
-      (0/33)
+- [x] `eval_outcome` — evaluation outcome tracking, artifact reliability
+      (33/33) — `src/chronicle_packs/eval_outcome/`
 - [x] `llm_provider` — provider resolution (explicit > env), deterministic
       floor, provider seam feeding the deterministic router (12/12) —
       `src/chronicle_packs/llm_provider.cr`
@@ -248,8 +248,17 @@ surface.
   events; tools use the host-bound graph seam with `_tool`-suffixed
   wrappers. `verify_skill_replay_fn` is DEFERRED — chronicle lacks
   `Runtime#fork` (the fork-trial re-run); the portable replay pieces
-  (`SkillReplayIncompleteError`, `_recorded_usage`, `_lineage_gaps`) are
+  (  `SkillReplayIncompleteError`, `_recorded_usage`, `_lineage_gaps`) are
   ported, and the fork-based step lands with chronicle's fork support.
+- `eval_outcome` models its nodes as `JSON::Serializable` structs:
+  `OutcomeRecord`, `ArtifactReliability`, and the nested `ReliabilityTallies`.
+  Outcome capture emits canonical `outcome.*` events that the
+  `artifact_reliability_projector` folds into a typed, evidence-explainable
+  reliability projection (emitting `reliability.changed`, which the skills
+  pack's eligibility behavior consumes). Terminal outcomes are exclusive
+  (correction requires supersession); maintenance outcomes are idempotent
+  by contribution key. The upstream fixture also loads memory_gateway; the
+  behavior/tool specs run without it.
 
 ## Inventory
 

@@ -636,39 +636,39 @@ packs/entity/tools.py::function::decide_merge	function	ported	src/chronicle_pack
 packs/entity/tools.py::function::decide_merge_fn	function	ported	src/chronicle_packs/entity/tools.cr::decide_merge_fn	-
 packs/entity/tools.py::function::register_entity	function	ported	src/chronicle_packs/entity/tools.cr::register_entity_tool	tool wrapper; renamed with _tool suffix
 packs/entity/tools.py::function::register_entity_fn	function	ported	src/chronicle_packs/entity/tools.cr::register_entity_fn	-
-packs/eval_outcome/behaviors.py::const::BEHAVIORS	const	missing	-	auto-generated
-packs/eval_outcome/behaviors.py::function::_objects	function	missing	-	auto-generated
-packs/eval_outcome/behaviors.py::function::_verdict_and_multiplier	function	missing	-	auto-generated
-packs/eval_outcome/behaviors.py::function::artifact_reliability_projector	function	missing	-	auto-generated
-packs/eval_outcome/behaviors.py::function::evaluation_outcome_capture	function	missing	-	auto-generated
-packs/eval_outcome/fixtures/run_fixtures.py::function::run_all	function	missing	-	auto-generated
-packs/eval_outcome/fixtures/run_fixtures.py::function::run_reliability_fixture	function	missing	-	auto-generated
-packs/eval_outcome/object_types.py::class::ArtifactReliability	class	missing	-	auto-generated
-packs/eval_outcome/object_types.py::class::OutcomeRecord	class	missing	-	auto-generated
-packs/eval_outcome/object_types.py::class::ReliabilityTallies	class	missing	-	auto-generated
-packs/eval_outcome/object_types.py::const::OBJECT_TYPES	const	missing	-	auto-generated
-packs/eval_outcome/object_types.py::const::RELATION_TYPES	const	missing	-	auto-generated
-packs/eval_outcome/settings.py::class::EvalOutcomeSettings	class	missing	-	auto-generated
-packs/eval_outcome/tools.py::const::MAINTENANCE_EVENTS	const	missing	-	auto-generated
-packs/eval_outcome/tools.py::const::OUTCOME_EVENTS	const	missing	-	auto-generated
-packs/eval_outcome/tools.py::const::TERMINAL_EVENTS	const	missing	-	auto-generated
-packs/eval_outcome/tools.py::const::TOOLS	const	missing	-	auto-generated
-packs/eval_outcome/tools.py::function::_emit_event	function	missing	-	auto-generated
-packs/eval_outcome/tools.py::function::_find_usage	function	missing	-	auto-generated
-packs/eval_outcome/tools.py::function::_get_object	function	missing	-	auto-generated
-packs/eval_outcome/tools.py::function::_objects	function	missing	-	auto-generated
-packs/eval_outcome/tools.py::function::_stable_id	function	missing	-	auto-generated
-packs/eval_outcome/tools.py::function::_subject_trace	function	missing	-	auto-generated
-packs/eval_outcome/tools.py::function::_terminal_record	function	missing	-	auto-generated
-packs/eval_outcome/tools.py::function::get_artifact_reliability	function	missing	-	auto-generated
-packs/eval_outcome/tools.py::function::get_reliability_fn	function	missing	-	auto-generated
-packs/eval_outcome/tools.py::function::record_explicit_verdict	function	missing	-	auto-generated
-packs/eval_outcome/tools.py::function::record_explicit_verdict_fn	function	missing	-	auto-generated
-packs/eval_outcome/tools.py::function::record_maintenance_outcome	function	missing	-	auto-generated
-packs/eval_outcome/tools.py::function::record_maintenance_outcome_fn	function	missing	-	auto-generated
-packs/eval_outcome/tools.py::function::record_terminal_outcome_fn	function	missing	-	auto-generated
-packs/eval_outcome/tools.py::function::supersede_evaluation	function	missing	-	auto-generated
-packs/eval_outcome/tools.py::function::supersede_evaluation_fn	function	missing	-	auto-generated
+packs/eval_outcome/behaviors.py::const::BEHAVIORS	const	ported	src/chronicle_packs/eval_outcome/pack.cr	collected by DSL pack macro
+packs/eval_outcome/behaviors.py::function::_objects	function	ported	-	absorbed into graph.objects calls
+packs/eval_outcome/behaviors.py::function::_verdict_and_multiplier	function	ported	src/chronicle_packs/eval_outcome/behaviors.cr::_verdict_and_multiplier	-
+packs/eval_outcome/behaviors.py::function::artifact_reliability_projector	function	ported	src/chronicle_packs/eval_outcome/behaviors.cr::artifact_reliability_projector	-
+packs/eval_outcome/behaviors.py::function::evaluation_outcome_capture	function	ported	src/chronicle_packs/eval_outcome/behaviors.cr::evaluation_outcome_capture	-
+packs/eval_outcome/fixtures/run_fixtures.py::function::run_all	function	skipped	-	no standalone CLI; lifecycle driven by specs
+packs/eval_outcome/fixtures/run_fixtures.py::function::run_reliability_fixture	function	ported	spec/chronicle_packs/eval_outcome_spec.cr	reliability projection specs
+packs/eval_outcome/object_types.py::class::ArtifactReliability	class	ported	src/chronicle_packs/eval_outcome/object_types.cr::ArtifactReliability	-
+packs/eval_outcome/object_types.py::class::OutcomeRecord	class	ported	src/chronicle_packs/eval_outcome/object_types.cr::OutcomeRecord	-
+packs/eval_outcome/object_types.py::class::ReliabilityTallies	class	ported	src/chronicle_packs/eval_outcome/object_types.cr::ReliabilityTallies	-
+packs/eval_outcome/object_types.py::const::OBJECT_TYPES	const	ported	src/chronicle_packs/eval_outcome/pack.cr	collected by DSL pack macro
+packs/eval_outcome/object_types.py::const::RELATION_TYPES	const	ported	src/chronicle_packs/eval_outcome/relation_types.cr	collected by DSL pack macro
+packs/eval_outcome/settings.py::class::EvalOutcomeSettings	class	ported	src/chronicle_packs/eval_outcome/settings.cr::EvalOutcomeSettings	-
+packs/eval_outcome/tools.py::const::MAINTENANCE_EVENTS	const	ported	src/chronicle_packs/eval_outcome/tools.cr::Events::MAINTENANCE	-
+packs/eval_outcome/tools.py::const::OUTCOME_EVENTS	const	ported	src/chronicle_packs/eval_outcome/tools.cr::Events::OUTCOME	-
+packs/eval_outcome/tools.py::const::TERMINAL_EVENTS	const	ported	src/chronicle_packs/eval_outcome/tools.cr::Events::TERMINAL	-
+packs/eval_outcome/tools.py::const::TOOLS	const	ported	src/chronicle_packs/eval_outcome/pack.cr	collected by DSL @[Tool] annotations
+packs/eval_outcome/tools.py::function::_emit_event	function	ported	src/chronicle_packs/eval_outcome/tools.cr::_emit_event	-
+packs/eval_outcome/tools.py::function::_find_usage	function	ported	src/chronicle_packs/eval_outcome/tools.cr::_find_usage	-
+packs/eval_outcome/tools.py::function::_get_object	function	ported	src/chronicle_packs/eval_outcome/tools.cr::_get_object	-
+packs/eval_outcome/tools.py::function::_objects	function	ported	src/chronicle_packs/eval_outcome/tools.cr::_objects	-
+packs/eval_outcome/tools.py::function::_stable_id	function	ported	src/chronicle_packs/eval_outcome/tools.cr::_stable_id	-
+packs/eval_outcome/tools.py::function::_subject_trace	function	ported	src/chronicle_packs/eval_outcome/tools.cr::_subject_trace	-
+packs/eval_outcome/tools.py::function::_terminal_record	function	ported	src/chronicle_packs/eval_outcome/tools.cr::_terminal_record	-
+packs/eval_outcome/tools.py::function::get_artifact_reliability	function	ported	src/chronicle_packs/eval_outcome/tools.cr::get_artifact_reliability_tool	tool wrapper; renamed with _tool suffix
+packs/eval_outcome/tools.py::function::get_reliability_fn	function	ported	src/chronicle_packs/eval_outcome/tools.cr::get_reliability_fn	-
+packs/eval_outcome/tools.py::function::record_explicit_verdict	function	ported	src/chronicle_packs/eval_outcome/tools.cr::record_explicit_verdict_tool	tool wrapper; renamed with _tool suffix
+packs/eval_outcome/tools.py::function::record_explicit_verdict_fn	function	ported	src/chronicle_packs/eval_outcome/tools.cr::record_explicit_verdict_fn	-
+packs/eval_outcome/tools.py::function::record_maintenance_outcome	function	ported	src/chronicle_packs/eval_outcome/tools.cr::record_maintenance_outcome_tool	tool wrapper; renamed with _tool suffix
+packs/eval_outcome/tools.py::function::record_maintenance_outcome_fn	function	ported	src/chronicle_packs/eval_outcome/tools.cr::record_maintenance_outcome_fn	-
+packs/eval_outcome/tools.py::function::record_terminal_outcome_fn	function	ported	src/chronicle_packs/eval_outcome/tools.cr::record_terminal_outcome_fn	-
+packs/eval_outcome/tools.py::function::supersede_evaluation	function	ported	src/chronicle_packs/eval_outcome/tools.cr::supersede_evaluation_tool	tool wrapper; renamed with _tool suffix
+packs/eval_outcome/tools.py::function::supersede_evaluation_fn	function	ported	src/chronicle_packs/eval_outcome/tools.cr::supersede_evaluation_fn	-
 packs/evolution/adopt.py::class::AdoptProposalInput	class	missing	-	auto-generated
 packs/evolution/adopt.py::class::DisablePromotionInput	class	missing	-	auto-generated
 packs/evolution/adopt.py::const::ADOPT_ACTION_CLASS	const	missing	-	auto-generated
