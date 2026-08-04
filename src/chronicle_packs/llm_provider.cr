@@ -33,6 +33,15 @@ module Chronicle::Packs::LLMProvider
     "openai"    => "OPENAI_API_KEY",
   }
 
+  # Which model each provider uses when none is configured explicitly.
+  # Mirrors the runtime providers' `default_model`
+  # (activegraph.llm.AnthropicProvider / OpenAIProvider), so extraction
+  # has a deterministic model without per-behavior configuration.
+  PROVIDER_DEFAULT_MODELS = {
+    "anthropic" => "claude-sonnet-4-5",
+    "openai"    => "gpt-4o-mini",
+  }
+
   # Env-fallback probe order; also the tie-break when both keys exist.
   ENV_FALLBACK_ORDER = ["anthropic", "openai"]
 
@@ -127,14 +136,14 @@ module Chronicle::Packs::LLMProvider
     )
   end
 
-  # The model extraction should use: the explicit override, or nil in the
-  # zero-key mode. (Upstream also falls back to the provider's own
-  # default_model; in chronicle the default model is a route-target
-  # concern, so the override-or-nil result is the packs-side contract.)
+  # The model extraction should use: the explicit override, or the
+  # provider's deterministic default model, or nil in the zero-key mode
+  # (deterministic floor only).
   def self.default_model_for(resolved : ResolvedLLMProvider) : String?
-    return nil if resolved.provider.nil?
+    provider = resolved.provider
+    return nil if provider.nil?
 
-    resolved.model
+    resolved.model || PROVIDER_DEFAULT_MODELS[provider]
   end
 
   # ------------------------------------------------------- process registry

@@ -179,6 +179,18 @@ describe Chronicle::Packs::LLMProvider do
       )
       override.should eq("claude-haiku-4-5")
     end
+
+    it "falls back to the provider's deterministic default model" do
+      anthropic = Chronicle::Packs::LLMProvider.default_model_for(
+        Chronicle::Packs::LLMProvider.resolve_llm_provider(env: {"ANTHROPIC_API_KEY" => FAKE_ANTHROPIC_KEY})
+      )
+      anthropic.should eq("claude-sonnet-4-5")
+
+      openai = Chronicle::Packs::LLMProvider.default_model_for(
+        Chronicle::Packs::LLMProvider.resolve_llm_provider(env: {"OPENAI_API_KEY" => FAKE_OPENAI_KEY})
+      )
+      openai.should eq("gpt-4o-mini")
+    end
   end
 
   it "never surfaces key material in the resolution verdict" do

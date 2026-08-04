@@ -117,10 +117,10 @@ verticals, then transport adapters and the demo surface.
   provider `get_llm_provider` accessor is renamed `llm_provider`
   (Crystal accessor convention). `build_llm_provider` returns a
   `Chronicle::ProviderConfig` (the seam chronicle's provider factories
-  consume) instead of a live client; `default_model_for` returns the
-  explicit override or nil (chronicle's default model is a route-target
-  concern). The doctor-side `check_llm_provider` checks ship with the
-  doctor feature (Tier 7).
+  consume) instead of a live client; `default_model_for` uses the same
+  provider default models as upstream (`claude-sonnet-4-5` / `gpt-4o-mini`).
+  The doctor-side `check_llm_provider` checks ship with the doctor
+  feature (Tier 7).
 
 ## Inventory
 

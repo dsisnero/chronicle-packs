@@ -1248,7 +1248,7 @@ packs/llm_provider.py::method::ResolvedLLMProvider.clear_llm_provider	method	por
 packs/llm_provider.py::method::ResolvedLLMProvider.configure_llm_provider	method	ported	src/chronicle_packs/llm_provider.cr::configure_llm_provider
 packs/llm_provider.py::method::ResolvedLLMProvider.configured	method	ported	src/chronicle_packs/llm_provider.cr::ResolvedLLMProvider#configured?
 packs/llm_provider.py::method::ResolvedLLMProvider.configured_llm_provider	method	ported	src/chronicle_packs/llm_provider.cr::configured_llm_provider
-packs/llm_provider.py::method::ResolvedLLMProvider.default_model_for	method	ported	src/chronicle_packs/llm_provider.cr::default_model_for	returns override-or-nil; provider default_model is a chronicle route concern
+packs/llm_provider.py::method::ResolvedLLMProvider.default_model_for	method	ported	src/chronicle_packs/llm_provider.cr::default_model_for	uses upstream provider default models (claude-sonnet-4-5 / gpt-4o-mini)
 packs/llm_provider.py::method::ResolvedLLMProvider.get_llm_provider	method	ported	src/chronicle_packs/llm_provider.cr::llm_provider	renamed llm_provider (Crystal accessor form)
 packs/llm_provider.py::method::ResolvedLLMProvider.resolve_llm_provider	method	ported	src/chronicle_packs/llm_provider.cr::resolve_llm_provider
 packs/llm_provider.py::method::ResolvedLLMProvider.set_llm_provider	method	ported	src/chronicle_packs/llm_provider.cr::set_llm_provider
