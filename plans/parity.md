@@ -160,6 +160,18 @@ surface.
   shard (`Chronicle::Packs`), not in this repo — upstream owns it in
   `activegraph.packs.manifest`; chronicle ports it. This repo verifies it
   against the real upstream manifests.
+- Manifest spec conformance: `vendor/activegraph-packs/docs/manifest-spec.md`
+  (FROZEN) is language-agnostic (TOML schema, two-way surface contract,
+  byte hash) and is unchanged by the port. `Chronicle::Packs` is the
+  Crystal reference implementation of its §9 runtime half
+  (`load_manifest` / `verify_surface` / `compute_content_hash` /
+  `compute_bundle_hash`), with the Crystal-side mappings the spec's
+  identity table implies (e.g. `settings_schema` is the settings class
+  name string, `Pack.capabilities` is `Array(CapabilityDecl)`). Byte-exact
+  §4 hash parity is proven by every upstream pack's pinned `content_hash`
+  recomputing identically (`spec/chronicle_packs/vendor_manifests_spec.cr`).
+  The port never regenerates upstream manifests, so the Python-specific
+  `[dependencies]`/`fixtures` fields stay as-is.
 - Core object type schemas are Crystal `struct` + `JSON::Serializable`
   records (matching chronicle's `@[ObjectType]` DSL contract) instead of
   Pydantic models. Pydantic field bounds (0.0–1.0 confidence, 1–100 max
