@@ -152,42 +152,42 @@ packs/agent_profile/tools.py::function::register_profile	function	ported	src/chr
 packs/agent_profile/tools.py::function::register_profile_fn	function	ported	src/chronicle_packs/agent_profile/tools.cr::register_profile_fn	-
 packs/agent_profile/tools.py::function::request_profile_context	function	ported	src/chronicle_packs/agent_profile/tools.cr::request_profile_context_tool	tool wrapper; renamed with _tool suffix
 packs/agent_profile/tools.py::function::request_profile_context_fn	function	ported	src/chronicle_packs/agent_profile/tools.cr::request_profile_context_fn	-
-packs/attention/behaviors.py::const::BEHAVIORS	const	missing	-	auto-generated
-packs/attention/behaviors.py::const::POLICY_ID	const	missing	-	auto-generated
-packs/attention/behaviors.py::const::POLICY_VERSION	const	missing	-	auto-generated
-packs/attention/behaviors.py::function::_importance_score	function	missing	-	auto-generated
-packs/attention/behaviors.py::function::_objects	function	missing	-	auto-generated
-packs/attention/behaviors.py::function::_stable_key	function	missing	-	auto-generated
-packs/attention/behaviors.py::function::_trust_score	function	missing	-	auto-generated
-packs/attention/behaviors.py::function::_trust_sources	function	missing	-	auto-generated
-packs/attention/behaviors.py::function::importance_vector_projector	function	missing	-	auto-generated
-packs/attention/behaviors.py::function::semantic_attention_signal_capture	function	missing	-	auto-generated
-packs/attention/behaviors.py::function::source_trust_vector_projector	function	missing	-	auto-generated
-packs/attention/fixtures/run_fixtures.py::function::_build	function	missing	-	auto-generated
-packs/attention/fixtures/run_fixtures.py::function::run_all	function	missing	-	auto-generated
-packs/attention/fixtures/run_fixtures.py::function::run_censored_absence_fixture	function	missing	-	auto-generated
-packs/attention/fixtures/run_fixtures.py::function::run_semantic_batch_fixture	function	missing	-	auto-generated
-packs/attention/object_types.py::class::AttentionObservation	class	missing	-	auto-generated
-packs/attention/object_types.py::class::ImportanceVector	class	missing	-	auto-generated
-packs/attention/object_types.py::class::InteractionBatch	class	missing	-	auto-generated
-packs/attention/object_types.py::class::SourceTrustVector	class	missing	-	auto-generated
-packs/attention/object_types.py::class::_StrictModel	class	missing	-	auto-generated
-packs/attention/object_types.py::const::OBJECT_TYPES	const	missing	-	auto-generated
-packs/attention/object_types.py::const::RELATION_TYPES	const	missing	-	auto-generated
-packs/attention/settings.py::class::AttentionSettings	class	missing	-	auto-generated
-packs/attention/tools.py::const::TOOLS	const	missing	-	auto-generated
-packs/attention/tools.py::function::_object_by_field	function	missing	-	auto-generated
-packs/attention/tools.py::function::_stable_id	function	missing	-	auto-generated
-packs/attention/tools.py::function::get_importance	function	missing	-	auto-generated
-packs/attention/tools.py::function::get_importance_fn	function	missing	-	auto-generated
-packs/attention/tools.py::function::get_source_trust	function	missing	-	auto-generated
-packs/attention/tools.py::function::get_source_trust_fn	function	missing	-	auto-generated
-packs/attention/tools.py::function::rank_importance	function	missing	-	auto-generated
-packs/attention/tools.py::function::rank_importance_fn	function	missing	-	auto-generated
-packs/attention/tools.py::function::record_attention_observation	function	missing	-	auto-generated
-packs/attention/tools.py::function::record_attention_observation_fn	function	missing	-	auto-generated
-packs/attention/tools.py::function::record_interaction_batch	function	missing	-	auto-generated
-packs/attention/tools.py::function::record_interaction_batch_fn	function	missing	-	auto-generated
+packs/attention/behaviors.py::const::BEHAVIORS	const	ported	src/chronicle_packs/attention/pack.cr	collected by DSL pack macro
+packs/attention/behaviors.py::const::POLICY_ID	const	ported	src/chronicle_packs/attention/behaviors.cr::Policy::POLICY_ID	-
+packs/attention/behaviors.py::const::POLICY_VERSION	const	ported	src/chronicle_packs/attention/behaviors.cr::Policy::POLICY_VERSION	-
+packs/attention/behaviors.py::function::_importance_score	function	ported	src/chronicle_packs/attention/behaviors.cr::importance_score	renamed public; returns {score, confidence, band}
+packs/attention/behaviors.py::function::_objects	function	ported	-	absorbed into graph.objects calls
+packs/attention/behaviors.py::function::_stable_key	function	ported	src/chronicle_packs/attention/behaviors.cr::_stable_key	-
+packs/attention/behaviors.py::function::_trust_score	function	ported	src/chronicle_packs/attention/behaviors.cr::trust_score	renamed public; returns {score, confidence, verdict}
+packs/attention/behaviors.py::function::_trust_sources	function	ported	src/chronicle_packs/attention/behaviors.cr::_trust_sources	-
+packs/attention/behaviors.py::function::importance_vector_projector	function	ported	src/chronicle_packs/attention/behaviors.cr::importance_vector_projector	-
+packs/attention/behaviors.py::function::semantic_attention_signal_capture	function	ported	src/chronicle_packs/attention/behaviors.cr::semantic_attention_signal_capture	-
+packs/attention/behaviors.py::function::source_trust_vector_projector	function	ported	src/chronicle_packs/attention/behaviors.cr::source_trust_vector_projector	-
+packs/attention/fixtures/run_fixtures.py::function::_build	function	ported	spec/chronicle_packs/attention_spec.cr	covered by signal/vector specs
+packs/attention/fixtures/run_fixtures.py::function::run_all	function	skipped	-	no standalone CLI; fixtures driven by specs
+packs/attention/fixtures/run_fixtures.py::function::run_censored_absence_fixture	function	ported	spec/chronicle_packs/attention_spec.cr	nonresponse_window fails closed
+packs/attention/fixtures/run_fixtures.py::function::run_semantic_batch_fixture	function	ported	spec/chronicle_packs/attention_spec.cr	covered by batch tool specs
+packs/attention/object_types.py::class::AttentionObservation	class	ported	src/chronicle_packs/attention/object_types.cr::AttentionObservation	-
+packs/attention/object_types.py::class::ImportanceVector	class	ported	src/chronicle_packs/attention/object_types.cr::ImportanceVector	-
+packs/attention/object_types.py::class::InteractionBatch	class	ported	src/chronicle_packs/attention/object_types.cr::InteractionBatch	-
+packs/attention/object_types.py::class::SourceTrustVector	class	ported	src/chronicle_packs/attention/object_types.cr::SourceTrustVector	-
+packs/attention/object_types.py::class::_StrictModel	class	ported	-	extra=forbid not enforced by JSON::Serializable
+packs/attention/object_types.py::const::OBJECT_TYPES	const	ported	src/chronicle_packs/attention/pack.cr	collected by DSL pack macro
+packs/attention/object_types.py::const::RELATION_TYPES	const	ported	src/chronicle_packs/attention/pack.cr	empty; no relation types
+packs/attention/settings.py::class::AttentionSettings	class	ported	src/chronicle_packs/attention/settings.cr::AttentionSettings	-
+packs/attention/tools.py::const::TOOLS	const	ported	src/chronicle_packs/attention/pack.cr	collected by DSL @[Tool] annotations
+packs/attention/tools.py::function::_object_by_field	function	ported	src/chronicle_packs/attention/tools.cr::_object_by_field	-
+packs/attention/tools.py::function::_stable_id	function	ported	src/chronicle_packs/attention/tools.cr::_stable_key	shared _stable_key helper
+packs/attention/tools.py::function::get_importance	function	ported	src/chronicle_packs/attention/tools.cr::get_importance_tool	tool wrapper; renamed with _tool suffix
+packs/attention/tools.py::function::get_importance_fn	function	ported	src/chronicle_packs/attention/tools.cr::get_importance_fn	-
+packs/attention/tools.py::function::get_source_trust	function	ported	src/chronicle_packs/attention/tools.cr::get_source_trust_tool	tool wrapper; renamed with _tool suffix
+packs/attention/tools.py::function::get_source_trust_fn	function	ported	src/chronicle_packs/attention/tools.cr::get_source_trust_fn	-
+packs/attention/tools.py::function::rank_importance	function	ported	src/chronicle_packs/attention/tools.cr::rank_importance_tool	tool wrapper; renamed with _tool suffix
+packs/attention/tools.py::function::rank_importance_fn	function	ported	src/chronicle_packs/attention/tools.cr::rank_importance_fn	-
+packs/attention/tools.py::function::record_attention_observation	function	ported	src/chronicle_packs/attention/tools.cr::record_attention_observation_tool	tool wrapper; renamed with _tool suffix
+packs/attention/tools.py::function::record_attention_observation_fn	function	ported	src/chronicle_packs/attention/tools.cr::record_attention_observation_fn	-
+packs/attention/tools.py::function::record_interaction_batch	function	ported	src/chronicle_packs/attention/tools.cr::record_interaction_batch_tool	tool wrapper; renamed with _tool suffix
+packs/attention/tools.py::function::record_interaction_batch_fn	function	ported	src/chronicle_packs/attention/tools.cr::record_interaction_batch_fn	-
 packs/bridges/__init__.py::class::DiligenceCoreBridgeSettings	class	missing	-	auto-generated
 packs/bridges/diligence_core.py::const::BEHAVIORS	const	missing	-	auto-generated
 packs/bridges/diligence_core.py::function::claim_to_observation	function	missing	-	auto-generated

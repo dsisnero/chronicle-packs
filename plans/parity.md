@@ -18,7 +18,7 @@ Core (the universal substrate) lands before the infrastructure it requires,
 then communication, domain verticals, transport adapters, and the demo
 surface.
 
-**Progress: 171 / 2080 source API items ported, 5 skipped.**
+**Progress: 207 / 2080 source API items ported, 6 skipped.**
 
 ## Features
 
@@ -73,7 +73,8 @@ surface.
       settlement, interaction facts (0/77)
 - [ ] `connector_control` — service/account/surface status, run adapters,
       learning deltas (0/62)
-- [ ] `attention` — engagement observations, bounded session batches (0/36)
+- [x] `attention` — engagement observations, bounded session batches (36/36)
+      — `src/chronicle_packs/attention/`
 - [ ] `skills` — skill lifecycle + verification/replay (0/44)
 - [ ] `eval_outcome` — evaluation outcome tracking, artifact reliability
       (0/33)
@@ -230,6 +231,14 @@ surface.
   `OAuthDeviceFlow` is a `struct`; `OAuthCredentialSource` is a class (its
   `flows` map mutates via `add_flow`). The `resolve_credential` tool is
   pure (no graph seam needed).
+- `attention` projects explainable importance/source-trust vectors from
+  signals and canonical outcome events, with all four object types as
+  `JSON::Serializable` structs (explicit `initialize`; getter defaults
+  keep partial JSON valid). The signal-capture and trust behaviors fire on
+  custom event types (`attention.signal_observed`, `outcome.*`) driven via
+  `graph.emit`. The Pydantic `_StrictModel` `extra="forbid"` is not
+  enforced (JSON::Serializable ignores unknown fields). `_objects` is
+  absorbed into `graph.objects` calls; `_stable_id` shares `_stable_key`.
 
 ## Inventory
 
