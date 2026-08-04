@@ -1737,50 +1737,50 @@ packs/semantic_extraction/tools.py::function::run_extractor_trial_fn	function	mi
 packs/semantic_extraction/tools.py::function::synthesize_request_procedure	function	missing	-	auto-generated
 packs/semantic_extraction/tools.py::function::update_extraction_profile	function	missing	-	auto-generated
 packs/semantic_extraction/tools.py::function::update_extraction_profile_fn	function	missing	-	auto-generated
-packs/skills/behaviors.py::const::BEHAVIORS	const	missing	-	auto-generated
-packs/skills/behaviors.py::function::skill_candidate_author	function	missing	-	auto-generated
-packs/skills/behaviors.py::function::skill_evaluation_linker	function	missing	-	auto-generated
-packs/skills/behaviors.py::function::skill_outcome_summary	function	missing	-	auto-generated
-packs/skills/behaviors.py::function::skill_reliability_eligibility	function	missing	-	auto-generated
-packs/skills/fixtures/run_fixtures.py::function::_runtime	function	missing	-	auto-generated
-packs/skills/fixtures/run_fixtures.py::function::run_all	function	missing	-	auto-generated
-packs/skills/fixtures/run_fixtures.py::function::run_lifecycle_fixture	function	missing	-	auto-generated
-packs/skills/object_types.py::class::OutcomeSummary	class	missing	-	auto-generated
-packs/skills/object_types.py::class::SkillArtifact	class	missing	-	auto-generated
-packs/skills/object_types.py::class::SkillEvaluationLink	class	missing	-	auto-generated
-packs/skills/object_types.py::class::SkillPromotionEvidence	class	missing	-	auto-generated
-packs/skills/object_types.py::class::SkillUsage	class	missing	-	auto-generated
-packs/skills/object_types.py::const::OBJECT_TYPES	const	missing	-	auto-generated
-packs/skills/object_types.py::const::RELATION_TYPES	const	missing	-	auto-generated
-packs/skills/settings.py::class::SkillsSettings	class	missing	-	auto-generated
-packs/skills/tools.py::const::TOOLS	const	missing	-	auto-generated
-packs/skills/tools.py::function::_canonical_json	function	missing	-	auto-generated
-packs/skills/tools.py::function::_definition	function	missing	-	auto-generated
-packs/skills/tools.py::function::_emit_event	function	missing	-	auto-generated
-packs/skills/tools.py::function::_find_skill	function	missing	-	auto-generated
-packs/skills/tools.py::function::_find_skill_by_object_or_identity	function	missing	-	auto-generated
-packs/skills/tools.py::function::_objects	function	missing	-	auto-generated
-packs/skills/tools.py::function::_promotion_support	function	missing	-	auto-generated
-packs/skills/tools.py::function::_set_ineligible	function	missing	-	auto-generated
-packs/skills/tools.py::function::_stable_id	function	missing	-	auto-generated
-packs/skills/tools.py::function::author_skill	function	missing	-	auto-generated
-packs/skills/tools.py::function::author_skill_fn	function	missing	-	auto-generated
-packs/skills/tools.py::function::demote_skill	function	missing	-	auto-generated
-packs/skills/tools.py::function::demote_skill_fn	function	missing	-	auto-generated
-packs/skills/tools.py::function::disable_skill	function	missing	-	auto-generated
-packs/skills/tools.py::function::disable_skill_fn	function	missing	-	auto-generated
-packs/skills/tools.py::function::invoke_skill	function	missing	-	auto-generated
-packs/skills/tools.py::function::invoke_skill_fn	function	missing	-	auto-generated
-packs/skills/tools.py::function::link_skill_evaluation_fn	function	missing	-	auto-generated
-packs/skills/tools.py::function::list_eligible_skills_fn	function	missing	-	auto-generated
-packs/skills/tools.py::function::promote_skill	function	missing	-	auto-generated
-packs/skills/tools.py::function::promote_skill_fn	function	missing	-	auto-generated
-packs/skills/tools.py::function::record_promotion_evidence_fn	function	missing	-	auto-generated
-packs/skills/tools.py::function::record_skill_promotion_evidence	function	missing	-	auto-generated
-packs/skills/verification.py::class::SkillReplayIncompleteError	class	missing	-	auto-generated
-packs/skills/verification.py::function::_lineage_gaps	function	missing	-	auto-generated
-packs/skills/verification.py::function::_recorded_usage	function	missing	-	auto-generated
-packs/skills/verification.py::function::verify_skill_replay_fn	function	missing	-	auto-generated
+packs/skills/behaviors.py::const::BEHAVIORS	const	ported	src/chronicle_packs/skills/pack.cr	collected by DSL pack macro
+packs/skills/behaviors.py::function::skill_candidate_author	function	ported	src/chronicle_packs/skills/behaviors.cr::skill_candidate_author	-
+packs/skills/behaviors.py::function::skill_evaluation_linker	function	ported	src/chronicle_packs/skills/behaviors.cr::skill_evaluation_linker	-
+packs/skills/behaviors.py::function::skill_outcome_summary	function	ported	src/chronicle_packs/skills/behaviors.cr::skill_outcome_summary	-
+packs/skills/behaviors.py::function::skill_reliability_eligibility	function	ported	src/chronicle_packs/skills/behaviors.cr::skill_reliability_eligibility	-
+packs/skills/fixtures/run_fixtures.py::function::_runtime	function	ported	spec/chronicle_packs/skills_spec.cr	covered by lifecycle specs
+packs/skills/fixtures/run_fixtures.py::function::run_all	function	skipped	-	no standalone CLI; fixtures driven by specs
+packs/skills/fixtures/run_fixtures.py::function::run_lifecycle_fixture	function	ported	spec/chronicle_packs/skills_spec.cr	covered by lifecycle specs
+packs/skills/object_types.py::class::OutcomeSummary	class	ported	src/chronicle_packs/skills/object_types.cr::OutcomeSummary	-
+packs/skills/object_types.py::class::SkillArtifact	class	ported	src/chronicle_packs/skills/object_types.cr::SkillArtifact	promotion_history as Array(PromotionHistoryEntry)
+packs/skills/object_types.py::class::SkillEvaluationLink	class	ported	src/chronicle_packs/skills/object_types.cr::SkillEvaluationLink	-
+packs/skills/object_types.py::class::SkillPromotionEvidence	class	ported	src/chronicle_packs/skills/object_types.cr::SkillPromotionEvidence	-
+packs/skills/object_types.py::class::SkillUsage	class	ported	src/chronicle_packs/skills/object_types.cr::SkillUsage	-
+packs/skills/object_types.py::const::OBJECT_TYPES	const	ported	src/chronicle_packs/skills/pack.cr	collected by DSL pack macro
+packs/skills/object_types.py::const::RELATION_TYPES	const	ported	src/chronicle_packs/skills/relation_types.cr	collected by DSL pack macro
+packs/skills/settings.py::class::SkillsSettings	class	ported	src/chronicle_packs/skills/settings.cr::SkillsSettings	-
+packs/skills/tools.py::const::TOOLS	const	ported	src/chronicle_packs/skills/pack.cr	collected by DSL @[Tool] annotations
+packs/skills/tools.py::function::_canonical_json	function	ported	src/chronicle_packs/skills/tools.cr::_canonical_json	-
+packs/skills/tools.py::function::_definition	function	ported	src/chronicle_packs/skills/tools.cr::_definition	-
+packs/skills/tools.py::function::_emit_event	function	ported	src/chronicle_packs/skills/tools.cr::_emit_event	-
+packs/skills/tools.py::function::_find_skill	function	ported	src/chronicle_packs/skills/tools.cr::_find_skill	-
+packs/skills/tools.py::function::_find_skill_by_object_or_identity	function	ported	src/chronicle_packs/skills/tools.cr::_find_skill_by_object_or_identity	-
+packs/skills/tools.py::function::_objects	function	ported	src/chronicle_packs/skills/tools.cr::_objects	-
+packs/skills/tools.py::function::_promotion_support	function	ported	src/chronicle_packs/skills/tools.cr::_promotion_support	-
+packs/skills/tools.py::function::_set_ineligible	function	ported	src/chronicle_packs/skills/tools.cr::_set_ineligible	-
+packs/skills/tools.py::function::_stable_id	function	ported	src/chronicle_packs/skills/tools.cr::_stable_id	-
+packs/skills/tools.py::function::author_skill	function	ported	src/chronicle_packs/skills/tools.cr::author_skill_tool	tool wrapper; renamed with _tool suffix
+packs/skills/tools.py::function::author_skill_fn	function	ported	src/chronicle_packs/skills/tools.cr::author_skill_fn	-
+packs/skills/tools.py::function::demote_skill	function	ported	src/chronicle_packs/skills/tools.cr::demote_skill_tool	tool wrapper; renamed with _tool suffix
+packs/skills/tools.py::function::demote_skill_fn	function	ported	src/chronicle_packs/skills/tools.cr::demote_skill_fn	-
+packs/skills/tools.py::function::disable_skill	function	ported	src/chronicle_packs/skills/tools.cr::disable_skill_tool	tool wrapper; renamed with _tool suffix
+packs/skills/tools.py::function::disable_skill_fn	function	ported	src/chronicle_packs/skills/tools.cr::disable_skill_fn	-
+packs/skills/tools.py::function::invoke_skill	function	ported	src/chronicle_packs/skills/tools.cr::invoke_skill_tool	tool wrapper; renamed with _tool suffix
+packs/skills/tools.py::function::invoke_skill_fn	function	ported	src/chronicle_packs/skills/tools.cr::invoke_skill_fn	-
+packs/skills/tools.py::function::link_skill_evaluation_fn	function	ported	src/chronicle_packs/skills/tools.cr::link_skill_evaluation_fn	-
+packs/skills/tools.py::function::list_eligible_skills_fn	function	ported	src/chronicle_packs/skills/tools.cr::list_eligible_skills_fn	-
+packs/skills/tools.py::function::promote_skill	function	ported	src/chronicle_packs/skills/tools.cr::promote_skill_tool	tool wrapper; renamed with _tool suffix
+packs/skills/tools.py::function::promote_skill_fn	function	ported	src/chronicle_packs/skills/tools.cr::promote_skill_fn	-
+packs/skills/tools.py::function::record_promotion_evidence_fn	function	ported	src/chronicle_packs/skills/tools.cr::record_promotion_evidence_fn	-
+packs/skills/tools.py::function::record_skill_promotion_evidence	function	ported	src/chronicle_packs/skills/tools.cr::record_skill_promotion_evidence_tool	tool wrapper; renamed with _tool suffix
+packs/skills/verification.py::class::SkillReplayIncompleteError	class	ported	src/chronicle_packs/skills/verification.cr::SkillReplayIncompleteError	-
+packs/skills/verification.py::function::_lineage_gaps	function	ported	src/chronicle_packs/skills/verification.cr::_lineage_gaps	-
+packs/skills/verification.py::function::_recorded_usage	function	ported	src/chronicle_packs/skills/verification.cr::_recorded_usage	-
+packs/skills/verification.py::function::verify_skill_replay_fn	function	intentional_divergence	-	deferred: needs chronicle Runtime#fork (ReplayEngine#replay exists instead)
 packs/subject_profile/behaviors.py::const::BEHAVIORS	const	missing	-	auto-generated
 packs/subject_profile/behaviors.py::function::_stable_id	function	missing	-	auto-generated
 packs/subject_profile/behaviors.py::function::apply_subject_fact_verdict	function	missing	-	auto-generated

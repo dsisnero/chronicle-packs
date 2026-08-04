@@ -18,7 +18,7 @@ Core (the universal substrate) lands before the infrastructure it requires,
 then communication, domain verticals, transport adapters, and the demo
 surface.
 
-**Progress: 207 / 2080 source API items ported, 6 skipped.**
+**Progress: 250 / 2080 source API items ported, 7 skipped, 1 deferred.**
 
 ## Features
 
@@ -75,7 +75,8 @@ surface.
       learning deltas (0/62)
 - [x] `attention` — engagement observations, bounded session batches (36/36)
       — `src/chronicle_packs/attention/`
-- [ ] `skills` — skill lifecycle + verification/replay (0/44)
+- [x] `skills` — skill lifecycle + verification/replay (43/44, 1 deferred)
+      — `src/chronicle_packs/skills/`
 - [ ] `eval_outcome` — evaluation outcome tracking, artifact reliability
       (0/33)
 - [x] `llm_provider` — provider resolution (explicit > env), deterministic
@@ -239,6 +240,16 @@ surface.
   `graph.emit`. The Pydantic `_StrictModel` `extra="forbid"` is not
   enforced (JSON::Serializable ignores unknown fields). `_objects` is
   absorbed into `graph.objects` calls; `_stable_id` shares `_stable_key`.
+- `skills` models every typed node as a `JSON::Serializable` struct:
+  `OutcomeSummary`, `PromotionHistoryEntry` (for `skill.promotion_history`,
+  replacing loose hashes), and the four object types. The lifecycle
+  (author/invoke/evidence/promote/demote/disable) is deterministic and
+  emits `skill.proposed`/`skill.used`/`skill.promoted`/`skill.demoted`
+  events; tools use the host-bound graph seam with `_tool`-suffixed
+  wrappers. `verify_skill_replay_fn` is DEFERRED — chronicle lacks
+  `Runtime#fork` (the fork-trial re-run); the portable replay pieces
+  (`SkillReplayIncompleteError`, `_recorded_usage`, `_lineage_gaps`) are
+  ported, and the fork-based step lands with chronicle's fork support.
 
 ## Inventory
 
