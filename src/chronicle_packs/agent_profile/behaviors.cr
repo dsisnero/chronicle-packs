@@ -12,13 +12,19 @@ module Chronicle::Packs::AgentProfile
 
   # ------------------------------------------------------------------ registry
 
-  # One profile's indexed objects, keyed by profile_id.
+  # One profile's indexed objects, keyed by profile_id. A mutable bucket
+  # (recorders append to the collections), so a class; still JSON-serializable.
   class ProfileRegistryEntry
+    include JSON::Serializable
+
     property profile : Hash(String, JSON::Any) = {} of String => JSON::Any
     property goals : Array(Hash(String, JSON::Any)) = [] of Hash(String, JSON::Any)
     property instructions : Array(Hash(String, JSON::Any)) = [] of Hash(String, JSON::Any)
     property personality : Array(Hash(String, JSON::Any)) = [] of Hash(String, JSON::Any)
     property preferences : Array(Hash(String, JSON::Any)) = [] of Hash(String, JSON::Any)
+
+    def initialize
+    end
 
     def empty? : Bool
       profile.empty? && goals.empty? && instructions.empty? && personality.empty? && preferences.empty?
