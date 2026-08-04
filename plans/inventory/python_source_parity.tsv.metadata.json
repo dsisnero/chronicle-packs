@@ -1,8 +1,8 @@
 {
   "base": "/Volumes/extreme_ssd/repos/github.com/dsisnero/clarity-packs/vendor/activegraph-packs",
-  "parser_requested": "regex",
-  "backend": "regex",
-  "binary": null,
+  "parser_requested": "tree-sitter",
+  "backend": "chiasmus-tree-sitter",
+  "binary": "/Users/dominic/.agents/skills/crystal_forge/skills/cross-language-crystal-parity/bin/darwin-aarch64/chiasmus-discover --language python --dir /Volumes/extreme_ssd/repos/github.com/dsisnero/clarity-packs/vendor/activegraph-packs --parser tree-sitter",
   "include_paths": [
     "."
   ],
