@@ -19,7 +19,8 @@ module Chronicle::Packs::ToolGateway
     risk_class : String = "low",
     credential_ref_name : String? = nil,
     origin : String = "native",
-    action_class : String = "" do
+    action_class : String = "",
+    input_schema_available : Bool = true do
     def key : String
       "#{provider_name}.#{capability_name}"
     end
@@ -31,11 +32,12 @@ module Chronicle::Packs::ToolGateway
     REGISTRY = {} of String => CapabilitySpec
   end
 
-  def self.register_local_capability(provider_name : String, capability_name : String, fn : Proc(Hash(String, JSON::Any), Hash(String, JSON::Any)), description : String = "", risk_class : String = "low", credential_ref_name : String? = nil, origin : String = "native", action_class : String = "") : CapabilitySpec
+  def self.register_local_capability(provider_name : String, capability_name : String, fn : Proc(Hash(String, JSON::Any), Hash(String, JSON::Any)), description : String = "", risk_class : String = "low", credential_ref_name : String? = nil, origin : String = "native", action_class : String = "", input_schema_available : Bool = true) : CapabilitySpec
     unless action_class.in?({"", "R0", "R1", "R2", "R3", "R4"})
       raise ArgumentError.new("capability #{provider_name}.#{capability_name}: action_class #{action_class.inspect} must be one of R0|R1|R2|R3|R4 (or omitted). Legacy risk labels are a different dimension and never map.")
     end
-    spec = CapabilitySpec.new(provider_name, capability_name, fn, description, risk_class, credential_ref_name, origin, action_class)
+    check_registration(provider_name, capability_name, risk_class, origin: origin, action_class: action_class)
+    spec = CapabilitySpec.new(provider_name, capability_name, fn, description, risk_class, credential_ref_name, origin, action_class, input_schema_available)
     LocalRegistry::REGISTRY[spec.key] = spec
     spec
   end

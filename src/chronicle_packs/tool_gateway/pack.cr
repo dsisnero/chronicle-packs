@@ -6,6 +6,8 @@ require "./relation_types"
 require "./sanitizer"
 require "./untrusted"
 require "./gateway"
+require "./catalog"
+require "./registration_check"
 require "./tools"
 require "./behaviors"
 

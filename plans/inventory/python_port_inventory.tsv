@@ -1865,11 +1865,11 @@ packs/tool_gateway/behaviors.py::function::result_sourcer	function	ported	src/ch
 packs/tool_gateway/behaviors.py::function::tool_policy_reliability_guard	function	deferred	-	depends on standing_scopes (demote_tool_policy_fn)
 packs/tool_gateway/capabilities.py::function::_fetch	function	deferred	-	host runtime web_fetch/ToolContext seam
 packs/tool_gateway/capabilities.py::function::register_web_fetch_capability	function	deferred	-	host runtime web_fetch/ToolContext seam
-packs/tool_gateway/catalog.py::class::CatalogSearchInput	class	deferred	-	slice 2: catalog
-packs/tool_gateway/catalog.py::function::_entry	function	deferred	-	slice 2: catalog
-packs/tool_gateway/catalog.py::function::_search	function	deferred	-	slice 2: catalog
-packs/tool_gateway/catalog.py::function::catalog_entries	function	deferred	-	slice 2: catalog
-packs/tool_gateway/catalog.py::function::register_catalog_capability	function	deferred	-	slice 2: catalog
+packs/tool_gateway/catalog.py::class::CatalogSearchInput	class	ported	src/chronicle_packs/tool_gateway/catalog.cr::CatalogSearchInput	record
+packs/tool_gateway/catalog.py::function::_entry	function	ported	src/chronicle_packs/tool_gateway/catalog.cr::_catalog_entry	-
+packs/tool_gateway/catalog.py::function::_search	function	ported	src/chronicle_packs/tool_gateway/catalog.cr::register_catalog_capability	folded into the catalog.search handler
+packs/tool_gateway/catalog.py::function::catalog_entries	function	ported	src/chronicle_packs/tool_gateway/catalog.cr::catalog_entries	-
+packs/tool_gateway/catalog.py::function::register_catalog_capability	function	ported	src/chronicle_packs/tool_gateway/catalog.cr::register_catalog_capability	-
 packs/tool_gateway/fixtures/run_fixtures.py::function::_run_action_class_fixture	function	skipped	-	fixture scripts; lifecycle driven by specs
 packs/tool_gateway/fixtures/run_fixtures.py::function::_run_fixture	function	skipped	-	fixture scripts; lifecycle driven by specs
 packs/tool_gateway/fixtures/run_fixtures.py::function::_run_standing_scope_fixture	function	skipped	-	fixture scripts; lifecycle driven by specs
@@ -1912,10 +1912,10 @@ packs/tool_gateway/object_types.py::class::ToolPolicy	class	ported	src/chronicle
 packs/tool_gateway/object_types.py::class::_StrictModel	class	skipped	-	pydantic extra=forbid not enforced
 packs/tool_gateway/object_types.py::const::OBJECT_TYPES	const	ported	src/chronicle_packs/tool_gateway/pack.cr	collected by DSL pack macro
 packs/tool_gateway/object_types.py::const::RELATION_TYPES	const	ported	src/chronicle_packs/tool_gateway/pack.cr	collected by DSL pack macro
-packs/tool_gateway/registration_check.py::function::_pack_states	function	deferred	-	slice 2: registration enforcement
-packs/tool_gateway/registration_check.py::function::arm_registration_enforcement	function	deferred	-	slice 2: registration enforcement
-packs/tool_gateway/registration_check.py::function::check_registration	function	deferred	-	slice 2: registration enforcement
-packs/tool_gateway/registration_check.py::function::disarm_registration_enforcement	function	deferred	-	slice 2: registration enforcement
+packs/tool_gateway/registration_check.py::function::_pack_states	function	ported	src/chronicle_packs/tool_gateway/registration_check.cr::_pack_states	-
+packs/tool_gateway/registration_check.py::function::arm_registration_enforcement	function	ported	src/chronicle_packs/tool_gateway/registration_check.cr::arm_registration_enforcement	-
+packs/tool_gateway/registration_check.py::function::check_registration	function	ported	src/chronicle_packs/tool_gateway/registration_check.cr::check_registration	hooked into register_local_capability
+packs/tool_gateway/registration_check.py::function::disarm_registration_enforcement	function	ported	src/chronicle_packs/tool_gateway/registration_check.cr::disarm_registration_enforcement	-
 packs/tool_gateway/sanitizer.py::function::sanitize_output	function	ported	src/chronicle_packs/tool_gateway/sanitizer.cr::Sanitizer.sanitize_output	-
 packs/tool_gateway/settings.py::class::ToolGatewaySettings	class	ported	src/chronicle_packs/tool_gateway/settings.cr::ToolGatewaySettings	-
 packs/tool_gateway/standing_scopes.py::const::STANDING_SCOPE_RULES	const	deferred	-	slice 2: standing scopes (ADR 0018)
