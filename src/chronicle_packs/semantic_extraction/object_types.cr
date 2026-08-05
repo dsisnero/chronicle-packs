@@ -66,7 +66,7 @@ module Chronicle::Packs::SemanticExtraction
       @metadata = metadata
     end
 
-    define_copy_with(annotation_identity, facet, body, evidence_id, evidence_identity, revision_id, selector, extractor_id, extractor_version, config_hash, confidence, attribution, author_role, event_time, observation_time, modality, polarity, status, invalidation_reason, run_id, metadata)
+    define_copy_with
   end
 
   # One cache-identified extractor pass over one evidence revision.
@@ -117,7 +117,7 @@ module Chronicle::Packs::SemanticExtraction
       @metadata = metadata
     end
 
-    define_copy_with(run_identity, evidence_id, evidence_identity, revision_id, selection_id, extractor_id, extractor_version, config_hash, requested_facets, executed_facets, cached_facets, annotation_ids, status, error, metadata)
+    define_copy_with
   end
 
   # What one run did and did not process — a first-class output.
@@ -215,7 +215,7 @@ module Chronicle::Packs::SemanticExtraction
       @supersedes_profile_id = supersedes_profile_id
     end
 
-    define_copy_with(profile_identity, version, status, default_facets, facets_by_source_category, extractor_by_facet, created_by, rationale, supersedes_profile_id)
+    define_copy_with
   end
 
   # Eligibility of one annotation-extractor version.

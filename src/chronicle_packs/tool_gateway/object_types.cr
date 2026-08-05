@@ -131,7 +131,7 @@ module Chronicle::Packs::ToolGateway
       @metadata = metadata
     end
 
-    define_copy_with(profile_identity, profile_version, service, account_ref, account_display, status, routes, scopes_granted, scopes_available, facets, capability_inventory, data_topology, signal_map, claims, health, exploration_receipts, supersedes_id, metadata)
+    define_copy_with
   end
 
   # Budgeted R0 probe receipt used to build or refresh a profile.
@@ -277,7 +277,7 @@ module Chronicle::Packs::ToolGateway
       @metadata = metadata
     end
 
-    define_copy_with(provider_id, capability_name, provider_name, input_data, credential_ref_name, credential_ref_id, risk_class, action_class, status, proposed_by, frame_id, proposed_at, metadata)
+    define_copy_with
   end
 
   # Records that a capability call was approved for execution.
@@ -324,7 +324,7 @@ module Chronicle::Packs::ToolGateway
       @metadata = metadata
     end
 
-    define_copy_with(call_id, provider_id, provider_name, capability_name, action_class, input_data, credential_ref_name, credential_ref_id, frame_id, policy_decision, approver, approved_at, metadata)
+    define_copy_with
   end
 
   # Records that a held capability call was explicitly denied.
@@ -402,7 +402,7 @@ module Chronicle::Packs::ToolGateway
       @metadata = metadata
     end
 
-    define_copy_with(call_id, provider_name, capability_name, output_data, error, success, executed_at, sanitized, untrusted, injection_flags, source_id, frame_id, metadata)
+    define_copy_with
   end
 
   # A capability result matched known prompt-injection patterns.

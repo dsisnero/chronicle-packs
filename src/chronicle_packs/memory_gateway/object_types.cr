@@ -94,7 +94,7 @@ module Chronicle::Packs::MemoryGateway
       @promotion_history = promotion_history
     end
 
-    define_copy_with(text, category, confidence, source_ids, candidate_id, created_at, last_retrieved_at, retrieval_count, subject_ref, metadata, reliability_verdict, reliability_multiplier, reliability_event_id, promotion_status, artifact_version, promotion_history)
+    define_copy_with
   end
 
   # A reliability-generated promote/demote proposal for one memory item.
@@ -193,7 +193,7 @@ module Chronicle::Packs::MemoryGateway
       @metadata = metadata
     end
 
-    define_copy_with(query, request_id, behavior_name, frame_id, results_count, item_ids, retrieved_at, metadata)
+    define_copy_with
   end
 
   # Scores a MemoryItem's relevance for a specific retrieval.
