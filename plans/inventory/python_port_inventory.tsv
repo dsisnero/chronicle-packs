@@ -33,20 +33,20 @@ packs/_template/object_types.py::const::OBJECT_TYPES	const	missing	-	auto-genera
 packs/_template/object_types.py::const::RELATION_TYPES	const	missing	-	auto-generated
 packs/_template/settings.py::class::TemplateSettings	class	missing	-	auto-generated
 packs/_template/tools.py::const::TOOLS	const	missing	-	auto-generated
-packs/activity_normalizer/annotation_extractor.py::class::StructureAnnotationExtractor	class	deferred	-	depends on semantic_extraction extractor seam (AnnotationDraft/register_annotation_extractor)
-packs/activity_normalizer/annotation_extractor.py::const::FACET_BY_KIND	const	deferred	-	depends on semantic_extraction extractor seam (AnnotationDraft/register_annotation_extractor)
-packs/activity_normalizer/annotation_extractor.py::const::KIND_BY_FACET	const	deferred	-	depends on semantic_extraction extractor seam (AnnotationDraft/register_annotation_extractor)
-packs/activity_normalizer/annotation_extractor.py::const::STRUCTURE_FACETS	const	deferred	-	depends on semantic_extraction extractor seam (AnnotationDraft/register_annotation_extractor)
-packs/activity_normalizer/annotation_extractor.py::function::_anchor	function	deferred	-	depends on semantic_extraction extractor seam (AnnotationDraft/register_annotation_extractor)
-packs/activity_normalizer/annotation_extractor.py::function::_clean	function	deferred	-	depends on semantic_extraction extractor seam (AnnotationDraft/register_annotation_extractor)
-packs/activity_normalizer/annotation_extractor.py::function::_line_spans	function	deferred	-	depends on semantic_extraction extractor seam (AnnotationDraft/register_annotation_extractor)
-packs/activity_normalizer/annotation_extractor.py::method::StructureAnnotationExtractor.__init__	method	deferred	-	depends on semantic_extraction extractor seam (AnnotationDraft/register_annotation_extractor)
-packs/activity_normalizer/annotation_extractor.py::method::StructureAnnotationExtractor.config	method	deferred	-	depends on semantic_extraction extractor seam (AnnotationDraft/register_annotation_extractor)
-packs/activity_normalizer/annotation_extractor.py::method::StructureAnnotationExtractor.extract	method	deferred	-	depends on semantic_extraction extractor seam (AnnotationDraft/register_annotation_extractor)
-packs/activity_normalizer/annotation_extractor.py::method::StructureAnnotationExtractor.implemented_facets	method	deferred	-	depends on semantic_extraction extractor seam (AnnotationDraft/register_annotation_extractor)
+packs/activity_normalizer/annotation_extractor.py::class::StructureAnnotationExtractor	class	ported	src/chronicle_packs/activity_normalizer/annotation_extractor.cr::AnnotationExtractor::StructureAnnotationExtractor	registers at the shared extraction seam (activity.structure@0.2.0)
+packs/activity_normalizer/annotation_extractor.py::const::FACET_BY_KIND	const	ported	src/chronicle_packs/activity_normalizer/annotation_extractor.cr::AnnotationExtractor::FACET_BY_KIND	-
+packs/activity_normalizer/annotation_extractor.py::const::KIND_BY_FACET	const	ported	src/chronicle_packs/activity_normalizer/annotation_extractor.cr::AnnotationExtractor::KIND_BY_FACET	-
+packs/activity_normalizer/annotation_extractor.py::const::STRUCTURE_FACETS	const	ported	src/chronicle_packs/activity_normalizer/annotation_extractor.cr::AnnotationExtractor::STRUCTURE_FACETS	-
+packs/activity_normalizer/annotation_extractor.py::function::_anchor	function	ported	src/chronicle_packs/activity_normalizer/annotation_extractor.cr::AnnotationExtractor::StructureAnnotationExtractor#_anchor	private
+packs/activity_normalizer/annotation_extractor.py::function::_clean	function	ported	src/chronicle_packs/activity_normalizer/annotation_extractor.cr::AnnotationExtractor._clean	-
+packs/activity_normalizer/annotation_extractor.py::function::_line_spans	function	ported	src/chronicle_packs/activity_normalizer/annotation_extractor.cr::AnnotationExtractor::StructureAnnotationExtractor#_line_spans	private
+packs/activity_normalizer/annotation_extractor.py::method::StructureAnnotationExtractor.__init__	method	ported	src/chronicle_packs/activity_normalizer/annotation_extractor.cr::AnnotationExtractor::StructureAnnotationExtractor#initialize	-
+packs/activity_normalizer/annotation_extractor.py::method::StructureAnnotationExtractor.config	method	ported	src/chronicle_packs/activity_normalizer/annotation_extractor.cr::AnnotationExtractor::StructureAnnotationExtractor#config	-
+packs/activity_normalizer/annotation_extractor.py::method::StructureAnnotationExtractor.extract	method	ported	src/chronicle_packs/activity_normalizer/annotation_extractor.cr::AnnotationExtractor::StructureAnnotationExtractor#extract	-
+packs/activity_normalizer/annotation_extractor.py::method::StructureAnnotationExtractor.implemented_facets	method	ported	src/chronicle_packs/activity_normalizer/annotation_extractor.cr::AnnotationExtractor::StructureAnnotationExtractor#implemented_facets	-
 packs/activity_normalizer/behaviors.py::const::BEHAVIORS	const	ported	-	collected by DSL pack macro
-packs/activity_normalizer/behaviors.py::const::COMMUNICATION_FACET_FLOOR	const	deferred	-	used by deferred shared-extraction behaviors
-packs/activity_normalizer/behaviors.py::const::STRUCTURE_EXTRACTOR_REF	const	deferred	-	used by deferred shared-extraction behaviors
+packs/activity_normalizer/behaviors.py::const::COMMUNICATION_FACET_FLOOR	const	ported	src/chronicle_packs/activity_normalizer/shared_extraction_behaviors.cr::SharedExtraction::COMMUNICATION_FACET_FLOOR	-
+packs/activity_normalizer/behaviors.py::const::STRUCTURE_EXTRACTOR_REF	const	ported	src/chronicle_packs/activity_normalizer/shared_extraction_behaviors.cr::SharedExtraction::STRUCTURE_EXTRACTOR_REF	-
 packs/activity_normalizer/behaviors.py::function::_candidate_identity	function	ported	src/chronicle_packs/activity_normalizer/behaviors.cr::_candidate_identity	-
 packs/activity_normalizer/behaviors.py::function::_content_for	function	ported	src/chronicle_packs/activity_normalizer/behaviors.cr::_content_for	-
 packs/activity_normalizer/behaviors.py::function::_create_candidate	function	ported	src/chronicle_packs/activity_normalizer/behaviors.cr::_create_candidate	-
@@ -56,15 +56,15 @@ packs/activity_normalizer/behaviors.py::function::_patch	function	ported	src/chr
 packs/activity_normalizer/behaviors.py::function::_stable_id	function	ported	src/chronicle_packs/activity_normalizer/behaviors.cr::_stable_id	-
 packs/activity_normalizer/behaviors.py::function::emit_domain_event	function	ported	src/chronicle_packs/activity_normalizer/behaviors.cr::_emit_event	-
 packs/activity_normalizer/behaviors.py::function::fulfill_evidence_invalidation_request	function	ported	src/chronicle_packs/activity_normalizer/behaviors.cr::fulfill_evidence_invalidation_request	-
-packs/activity_normalizer/behaviors.py::function::migrate_communication_extraction_floor	function	deferred	-	depends on semantic_extraction types (extraction_profile, semantic_annotation)
+packs/activity_normalizer/behaviors.py::function::migrate_communication_extraction_floor	function	ported	src/chronicle_packs/activity_normalizer/shared_extraction_behaviors.cr::migrate_communication_extraction_floor	-
 packs/activity_normalizer/behaviors.py::function::normalize_acquired_item	function	ported	src/chronicle_packs/activity_normalizer/behaviors.cr::normalize_acquired_item	-
 packs/activity_normalizer/behaviors.py::function::normalize_replay_payload	function	ported	src/chronicle_packs/activity_normalizer/behaviors.cr::normalize_replay_payload	-
-packs/activity_normalizer/behaviors.py::function::project_structure_candidates	function	deferred	-	depends on semantic_extraction types (extraction_profile, semantic_annotation)
+packs/activity_normalizer/behaviors.py::function::project_structure_candidates	function	ported	src/chronicle_packs/activity_normalizer/shared_extraction_behaviors.cr::project_structure_candidates	-
 packs/activity_normalizer/behaviors.py::function::publish_cursor_created	function	ported	src/chronicle_packs/activity_normalizer/behaviors.cr::publish_cursor_created	-
 packs/activity_normalizer/behaviors.py::function::publish_cursor_patch	function	ported	src/chronicle_packs/activity_normalizer/behaviors.cr::publish_cursor_patch	-
 packs/activity_normalizer/behaviors.py::function::record_failure	function	ported	src/chronicle_packs/activity_normalizer/behaviors.cr::record_failure	-
 packs/activity_normalizer/behaviors.py::function::run_extraction	function	ported	src/chronicle_packs/activity_normalizer/behaviors.cr::run_extraction	-
-packs/activity_normalizer/behaviors.py::function::select_shared_extraction	function	deferred	-	depends on semantic_extraction types (extraction_profile, semantic_annotation)
+packs/activity_normalizer/behaviors.py::function::select_shared_extraction	function	ported	src/chronicle_packs/activity_normalizer/shared_extraction_behaviors.cr::select_shared_extraction	-
 packs/activity_normalizer/extractors.py::class::CandidateDraft	class	ported	src/chronicle_packs/activity_normalizer/object_types.cr::CandidateDraft	-
 packs/activity_normalizer/extractors.py::class::Extractor	class	skipped	-	protocol; registry typed to StructureExtractor
 packs/activity_normalizer/extractors.py::class::StructureExtractor	class	ported	src/chronicle_packs/activity_normalizer/extractors.cr::Extractors::StructureExtractor	-

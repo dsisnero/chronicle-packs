@@ -256,7 +256,7 @@ module Chronicle::Packs::ActivityNormalizer
     getter evidence_id : String
     getter evidence_identity : String
     getter revision_id : String
-    getter extraction_record_id : String
+    getter extraction_record_id : String?
     getter extractor_id : String
     getter extractor_version : String
     getter extraction_config_id : String
@@ -267,7 +267,7 @@ module Chronicle::Packs::ActivityNormalizer
 
     def initialize(
       candidate_identity : String, text : String, evidence_id : String,
-      evidence_identity : String, revision_id : String, extraction_record_id : String,
+      evidence_identity : String, revision_id : String, extraction_record_id : String?,
       extractor_id : String, extractor_version : String, extraction_config_id : String,
       confidence : Float64 = 0.7, status : String = "candidate",
       invalidation_reason : String? = nil,
@@ -301,7 +301,7 @@ module Chronicle::Packs::ActivityNormalizer
     getter evidence_id : String
     getter evidence_identity : String
     getter revision_id : String
-    getter extraction_record_id : String
+    getter extraction_record_id : String?
     getter extractor_id : String
     getter extractor_version : String
     getter extraction_config_id : String
@@ -313,7 +313,7 @@ module Chronicle::Packs::ActivityNormalizer
 
     def initialize(
       candidate_identity : String, text : String, evidence_id : String,
-      evidence_identity : String, revision_id : String, extraction_record_id : String,
+      evidence_identity : String, revision_id : String, extraction_record_id : String?,
       extractor_id : String, extractor_version : String, extraction_config_id : String,
       confidence : Float64 = 0.7, status : String = "candidate",
       invalidation_reason : String? = nil,
@@ -348,7 +348,7 @@ module Chronicle::Packs::ActivityNormalizer
     getter evidence_id : String
     getter evidence_identity : String
     getter revision_id : String
-    getter extraction_record_id : String
+    getter extraction_record_id : String?
     getter extractor_id : String
     getter extractor_version : String
     getter extraction_config_id : String
@@ -360,7 +360,7 @@ module Chronicle::Packs::ActivityNormalizer
 
     def initialize(
       candidate_identity : String, text : String, evidence_id : String,
-      evidence_identity : String, revision_id : String, extraction_record_id : String,
+      evidence_identity : String, revision_id : String, extraction_record_id : String?,
       extractor_id : String, extractor_version : String, extraction_config_id : String,
       confidence : Float64 = 0.7, status : String = "candidate",
       invalidation_reason : String? = nil,
@@ -395,7 +395,7 @@ module Chronicle::Packs::ActivityNormalizer
     getter evidence_id : String
     getter evidence_identity : String
     getter revision_id : String
-    getter extraction_record_id : String
+    getter extraction_record_id : String?
     getter extractor_id : String
     getter extractor_version : String
     getter extraction_config_id : String
@@ -407,7 +407,7 @@ module Chronicle::Packs::ActivityNormalizer
 
     def initialize(
       candidate_identity : String, text : String, evidence_id : String,
-      evidence_identity : String, revision_id : String, extraction_record_id : String,
+      evidence_identity : String, revision_id : String, extraction_record_id : String?,
       extractor_id : String, extractor_version : String, extraction_config_id : String,
       confidence : Float64 = 0.7, status : String = "candidate",
       invalidation_reason : String? = nil,
@@ -442,7 +442,7 @@ module Chronicle::Packs::ActivityNormalizer
     getter evidence_id : String
     getter evidence_identity : String
     getter revision_id : String
-    getter extraction_record_id : String
+    getter extraction_record_id : String?
     getter extractor_id : String
     getter extractor_version : String
     getter extraction_config_id : String
@@ -454,7 +454,7 @@ module Chronicle::Packs::ActivityNormalizer
 
     def initialize(
       candidate_identity : String, text : String, evidence_id : String,
-      evidence_identity : String, revision_id : String, extraction_record_id : String,
+      evidence_identity : String, revision_id : String, extraction_record_id : String?,
       extractor_id : String, extractor_version : String, extraction_config_id : String,
       confidence : Float64 = 0.7, status : String = "candidate",
       invalidation_reason : String? = nil,

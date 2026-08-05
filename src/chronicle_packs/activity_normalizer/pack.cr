@@ -5,7 +5,9 @@ require "./object_types"
 require "./relation_types"
 require "./extractors"
 require "./replay"
+require "./annotation_extractor"
 require "./behaviors"
+require "./shared_extraction_behaviors"
 require "./tools"
 
 # Activity Normalizer Pack — provider-neutral evidence identity and

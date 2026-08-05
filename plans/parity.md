@@ -18,7 +18,7 @@ Core (the universal substrate) lands before the infrastructure it requires,
 then communication, domain verticals, transport adapters, and the demo
 surface.
 
-**Progress: 593 / 2080 source API items ported, 51 skipped, 242 deferred.**
+**Progress: 609 / 2080 source API items ported, 51 skipped, 226 deferred.**
 
 ## Features
 
@@ -73,10 +73,10 @@ surface.
 - [x] `entity` — canonical extraction + dedup for people/orgs/projects/
       products/repos (27/27) — `src/chronicle_packs/entity/`
 - [x] `activity_normalizer` — provider-neutral evidence identity, replay
-      modes/revisions, deterministic candidate extraction (55/87; remaining
-      16 depend on the semantic_extraction pack: the annotation layer,
-      the ADR 0026 shared-extraction selection/migration behaviors, and the
-      structure-candidate projector)
+      modes/revisions, deterministic candidate extraction (71/87) —
+      `src/chronicle_packs/activity_normalizer/` (ADR 0026 annotation layer,
+      shared-extraction selection/migration, and the structure-candidate
+      projector now complete)
 - [~] `semantic_extraction` — typed source-anchored annotations, deterministic
       floor + LLM upgrade seam, coverage tracking (50/156, slice 1: the
       deterministic zero-key floor (DeterministicExtractorV1) + facets +
@@ -296,8 +296,14 @@ surface.
   the retained payload, emitting `replay.verified`) and
   `disable_extractor_version` (invalidates records + candidate provenance,
   preserving evidence) are `@[Tool]` wrappers over the host-bound seam.
-  Deferred until semantic_extraction lands: the annotation layer and the
-  ADR 0026 shared-extraction behaviors (migration/selection/projector).
+  The ADR 0026 shared-extraction tail is now complete: the structure
+  annotation extractor (`activity.structure@0.2.0`) registers at the shared
+  semantic_extraction seam and emits the legacy drafts as namespaced
+  `activity.*` facets; `project_structure_candidates` mints the same legacy
+  candidates (deduped by the legacy identity); `select_shared_extraction`
+  routes the `activity.*` facets onto the shared layer the moment the
+  seeded profile appears; and `migrate_communication_extraction_floor`
+  upgrades stack-owned profiles with the bounded communication floor.
 - `semantic_extraction` (slice 1 of 2, in progress): 11 typed object types +
   8 relation types; the `semantic_annotation` envelope carries
   annotation_identity/facet/body/selector/extractor identity/config hash/

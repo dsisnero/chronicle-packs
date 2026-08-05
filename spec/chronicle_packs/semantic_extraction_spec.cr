@@ -102,9 +102,8 @@ describe Chronicle::Packs::SemanticExtraction do
       with_semantic_runtime do |_store, graph, rt|
         rt.run_until_idle
         profiles = graph.objects(type: "extraction_profile")
-        profiles.size.should eq(1)
-        JSON.parse(profiles.first.data)["version"].as_i.should eq(1)
-        JSON.parse(profiles.first.data)["status"].as_s.should eq("active")
+        active = profiles.find { |obj| JSON.parse(obj.data)["status"].as_s == "active" }
+        active.should_not be_nil
       end
     end
   end

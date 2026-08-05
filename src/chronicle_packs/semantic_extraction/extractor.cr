@@ -80,8 +80,18 @@ module Chronicle::Packs::SemanticExtraction
       text.gsub(BULLET_RE, "")
     end
 
+    # The annotation-extractor contract shared by the deterministic floor and
+    # any LLM-backed upgrade (same registry seam, different extractor_id).
+    abstract class AnnotationExtractor
+      abstract def extractor_id : String
+      abstract def extractor_version : String
+      abstract def implemented_facets : Array(String)
+      abstract def config : Hash(String, JSON::Any)
+      abstract def extract(content : String, metadata : Hash(String, JSON::Any), facets : Array(String)) : Array(AnnotationDraft)
+    end
+
     # The deterministic v1 extractor implementing the zero-key floor.
-    class DeterministicExtractorV1
+    class DeterministicExtractorV1 < AnnotationExtractor
       property extractor_id : String = "semantic.deterministic"
       property extractor_version : String = "0.1.0"
 
@@ -283,10 +293,10 @@ module Chronicle::Packs::SemanticExtraction
 
     # Registry keyed by immutable (extractor_id, extractor_version).
     module ExtractorRegistry
-      REGISTRY = {} of {String, String} => DeterministicExtractorV1
+      REGISTRY = {} of {String, String} => AnnotationExtractor
     end
 
-    def self.register_annotation_extractor(extractor : DeterministicExtractorV1, replace : Bool = false) : Nil
+    def self.register_annotation_extractor(extractor : AnnotationExtractor, replace : Bool = false) : Nil
       key = {extractor.extractor_id, extractor.extractor_version}
       existing = ExtractorRegistry::REGISTRY[key]?
       raise "extractor already registered: #{key}" if existing && existing != extractor && !replace
@@ -294,7 +304,7 @@ module Chronicle::Packs::SemanticExtraction
       ExtractorRegistry::REGISTRY[key] = extractor
     end
 
-    def self.get_annotation_extractor(extractor_id : String, extractor_version : String) : DeterministicExtractorV1
+    def self.get_annotation_extractor(extractor_id : String, extractor_version : String) : AnnotationExtractor
       ExtractorRegistry::REGISTRY[{extractor_id, extractor_version}]? || raise KeyError.new("unknown annotation extractor: {#{extractor_id}, #{extractor_version}}")
     end
   end
