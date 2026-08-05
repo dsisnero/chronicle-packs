@@ -1880,17 +1880,17 @@ packs/tool_gateway/fixtures/run_fixtures.py::function::status	function	skipped	-
 packs/tool_gateway/gateway.py::function::decide_policy	function	ported	src/chronicle_packs/tool_gateway/gateway.cr::decide_policy	-
 packs/tool_gateway/gateway.py::function::decide_policy_detail	function	ported	src/chronicle_packs/tool_gateway/gateway.cr::decide_policy_detail	-
 packs/tool_gateway/gateway.py::function::execute_approved_call	function	ported	src/chronicle_packs/tool_gateway/gateway.cr::execute_approved_call	credential injection via host seam; no sanitizer/injection stubs — ported
-packs/tool_gateway/integrations.py::function::_canonical	function	deferred	-	slice 2: integration profiles
-packs/tool_gateway/integrations.py::function::_shape	function	deferred	-	slice 2: integration profiles
-packs/tool_gateway/integrations.py::function::active_integration_profile	function	deferred	-	slice 2: integration profiles
-packs/tool_gateway/integrations.py::function::correct_integration_claim_fn	function	deferred	-	slice 2: integration profiles
-packs/tool_gateway/integrations.py::function::ensure_aggregator_profile_fn	function	deferred	-	slice 2: integration profiles
-packs/tool_gateway/integrations.py::function::latest_integration_profile	function	deferred	-	slice 2: integration profiles
-packs/tool_gateway/integrations.py::function::record_exploration_fn	function	deferred	-	slice 2: integration profiles
-packs/tool_gateway/integrations.py::function::record_integration_profile_fn	function	deferred	-	slice 2: integration profiles
-packs/tool_gateway/integrations.py::function::safe_sha256_fingerprint	function	deferred	-	slice 2: integration profiles
-packs/tool_gateway/integrations.py::function::shape_fingerprint	function	deferred	-	slice 2: integration profiles
-packs/tool_gateway/integrations.py::function::stable_integration_id	function	deferred	-	slice 2: integration profiles
+packs/tool_gateway/integrations.py::function::_canonical	function	ported	src/chronicle_packs/tool_gateway/integrations.cr::_canonical	compact key-sorted JSON
+packs/tool_gateway/integrations.py::function::_shape	function	ported	src/chronicle_packs/tool_gateway/integrations.cr::_shape	-
+packs/tool_gateway/integrations.py::function::active_integration_profile	function	ported	src/chronicle_packs/tool_gateway/integrations.cr::active_integration_profile	-
+packs/tool_gateway/integrations.py::function::correct_integration_claim_fn	function	ported	src/chronicle_packs/tool_gateway/integrations.cr::correct_integration_claim_fn	-
+packs/tool_gateway/integrations.py::function::ensure_aggregator_profile_fn	function	ported	src/chronicle_packs/tool_gateway/integrations.cr::ensure_aggregator_profile_fn	-
+packs/tool_gateway/integrations.py::function::latest_integration_profile	function	ported	src/chronicle_packs/tool_gateway/integrations.cr::latest_integration_profile	-
+packs/tool_gateway/integrations.py::function::record_exploration_fn	function	ported	src/chronicle_packs/tool_gateway/integrations.cr::record_exploration_fn	-
+packs/tool_gateway/integrations.py::function::record_integration_profile_fn	function	ported	src/chronicle_packs/tool_gateway/integrations.cr::record_integration_profile_fn	typed struct compare via copy_with
+packs/tool_gateway/integrations.py::function::safe_sha256_fingerprint	function	ported	src/chronicle_packs/tool_gateway/integrations.cr::safe_sha256_fingerprint	-
+packs/tool_gateway/integrations.py::function::shape_fingerprint	function	ported	src/chronicle_packs/tool_gateway/integrations.cr::shape_fingerprint	-
+packs/tool_gateway/integrations.py::function::stable_integration_id	function	ported	src/chronicle_packs/tool_gateway/integrations.cr::stable_integration_id	-
 packs/tool_gateway/llm_tools.py::function::_now_iso	function	deferred	-	slice 2: LLM proxies
 packs/tool_gateway/llm_tools.py::function::_proxy	function	deferred	-	slice 2: LLM proxies
 packs/tool_gateway/llm_tools.py::function::as_llm_tool	function	deferred	-	slice 2: LLM proxies

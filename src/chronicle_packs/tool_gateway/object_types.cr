@@ -76,6 +76,7 @@ module Chronicle::Packs::ToolGateway
   @[Chronicle::Packs::Annotations::ObjectType(name: "integration_profile", description: "Versioned, evidence-backed understanding of one canonical service/account.")]
   struct IntegrationProfile
     include JSON::Serializable
+    include Chronicle::Packs::CopyWith
 
     getter profile_identity : String
     getter profile_version : Int32 = 1
@@ -95,6 +96,42 @@ module Chronicle::Packs::ToolGateway
     getter exploration_receipts : Array(String) = [] of String
     getter supersedes_id : String?
     getter metadata : Hash(String, JSON::Any) = {} of String => JSON::Any
+
+    def initialize(
+      profile_identity : String, service : String, account_ref : String,
+      profile_version : Int32 = 1, account_display : String? = nil, status : String = "active",
+      routes : Array(IntegrationRoute) = [] of IntegrationRoute,
+      scopes_granted : Array(String) = [] of String, scopes_available : Array(String) = [] of String,
+      facets : Array(String) = [] of String,
+      capability_inventory : Array(IntegrationCapability) = [] of IntegrationCapability,
+      data_topology : Hash(String, JSON::Any) = {} of String => JSON::Any,
+      signal_map : Array(IntegrationSignal) = [] of IntegrationSignal,
+      claims : Array(IntegrationClaim) = [] of IntegrationClaim,
+      health : Hash(String, JSON::Any) = {} of String => JSON::Any,
+      exploration_receipts : Array(String) = [] of String, supersedes_id : String? = nil,
+      metadata : Hash(String, JSON::Any) = {} of String => JSON::Any,
+    )
+      @profile_identity = profile_identity
+      @profile_version = profile_version
+      @service = service
+      @account_ref = account_ref
+      @account_display = account_display
+      @status = status
+      @routes = routes
+      @scopes_granted = scopes_granted
+      @scopes_available = scopes_available
+      @facets = facets
+      @capability_inventory = capability_inventory
+      @data_topology = data_topology
+      @signal_map = signal_map
+      @claims = claims
+      @health = health
+      @exploration_receipts = exploration_receipts
+      @supersedes_id = supersedes_id
+      @metadata = metadata
+    end
+
+    define_copy_with(profile_identity, profile_version, service, account_ref, account_display, status, routes, scopes_granted, scopes_available, facets, capability_inventory, data_topology, signal_map, claims, health, exploration_receipts, supersedes_id, metadata)
   end
 
   # Budgeted R0 probe receipt used to build or refresh a profile.
@@ -111,7 +148,7 @@ module Chronicle::Packs::ToolGateway
     getter budget : Int32
     getter? structural_only : Bool = true
     getter shape_fingerprint : String?
-    getter status : CallStatus = CallStatus::Proposed
+    getter status : ExplorationStatus = ExplorationStatus::Proposed
     getter injection_flags : Array(String) = [] of String
     getter metadata : Hash(String, JSON::Any) = {} of String => JSON::Any
   end
@@ -132,6 +169,15 @@ module Chronicle::Packs::ToolGateway
     Rejected
     Executing
     Done
+    Failed
+  end
+
+  # Closed lifecycle for a budgeted exploration receipt (upstream Literal
+  # proposed/completed/partial/failed).
+  enum ExplorationStatus
+    Proposed
+    Completed
+    Partial
     Failed
   end
 

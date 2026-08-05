@@ -10,6 +10,7 @@ require "./catalog"
 require "./registration_check"
 require "./standing_scopes"
 require "./tools"
+require "./integrations"
 require "./behaviors"
 
 # Tool Gateway Pack — the host tool dispatch surface. Ported from upstream

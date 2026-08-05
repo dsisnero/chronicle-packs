@@ -18,7 +18,7 @@ Core (the universal substrate) lands before the infrastructure it requires,
 then communication, domain verticals, transport adapters, and the demo
 surface.
 
-**Progress: 642 / 2080 source API items ported, 51 skipped, 193 deferred.**
+**Progress: 653 / 2080 source API items ported, 51 skipped, 182 deferred.**
 
 ## Features
 
@@ -54,13 +54,14 @@ surface.
 
 - [~] `tool_gateway` — capability registry, approval policy, execute/spec/
       pending-approvals tools, catalog, standing scopes, untrusted-content
-      scan (74/98, slice 1: object surface + registry + sanitizer + injection
+      scan (85/98, slice 1: object surface + registry + sanitizer + injection
       scan + policy decision + approval resolution + 4 core behaviors + the
       capability catalog + registration enforcement + ADR 0018 standing
       scopes (propose/promote/demote/disable + the R2 auto-approval read
-      path) + the tool_policy_reliability_guard behavior closing the
-      automate-demote loop; integrations, LLM proxies, and the reference
-      web_fetch capability are deferred)
+      path) + the tool_policy_reliability_guard behavior + the integration
+      profile chassis (aggregator/profile/exploration receipts, stable ids
+      and shape fingerprints); LLM proxies and the reference web_fetch
+      capability are deferred)
 - [x] `secrets` — credential reference management, managed source registry
       (42/42) — `src/chronicle_packs/secrets/`
 - [~] `memory_gateway` — candidate evaluation/promotion, SQLite backend,
