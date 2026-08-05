@@ -18,7 +18,7 @@ Core (the universal substrate) lands before the infrastructure it requires,
 then communication, domain verticals, transport adapters, and the demo
 surface.
 
-**Progress: 461 / 2080 source API items ported, 33 skipped, 16 deferred.**
+**Progress: 511 / 2080 source API items ported, 41 skipped, 56 deferred.**
 
 ## Features
 
@@ -52,9 +52,12 @@ surface.
 
 ### Phase 2 — Infrastructure packs
 
-- [ ] `tool_gateway` — capability registry, approval policy, execute/spec/
+- [~] `tool_gateway` — capability registry, approval policy, execute/spec/
       pending-approvals tools, catalog, standing scopes, untrusted-content
-      scan (0/98)
+      scan (50/98, slice 1: object surface + registry + sanitizer + injection
+      scan + policy decision + approval resolution + 4 core behaviors; the
+      catalog, standing scopes, integrations, LLM proxies, registration
+      enforcement, and the reference web_fetch capability are deferred)
 - [x] `secrets` — credential reference management, managed source registry
       (42/42) — `src/chronicle_packs/secrets/`
 - [ ] `memory_gateway` — candidate evaluation/promotion, SQLite backend,
@@ -324,6 +327,29 @@ surface.
   `CoverageStats`). Tool parameters are typed `record` structs with an
   ISO-8601 `Time` converter; bools avoid `is_` prefixes (JSON key preserved
   via `@[JSON::Field(key: ...)]`).
+- `tool_gateway` (slice 1 of 2, in progress): 10 typed object types + 8
+  relation types. The capability registry (`CapabilitySpec` as a `record`,
+  `register_local_capability`) dispatches registered handlers or a mock.
+  `decide_policy_detail` evaluates the legacy risk dimension and the
+  action-class dimension independently (never cross-inferred); the pure
+  `evaluate_action_authority` fails closed on missing classes, gates R3/R4,
+  and R2 auto-approval additionally requires a promoted standing scope
+  (none ported yet, so R2 holds — the upstream fail-safe). The
+  `sanitize_output` redactor and the deterministic injection scan
+  (`scan_for_injection`/`wrap_untrusted` envelope) are ported; a host
+  `credential_resolver` seam covers Secrets injection. The four core
+  behaviors complete the lifecycle: `call_recorder` (calls relation),
+  `policy_enforcer` (auto-approve → `capability_approval`, else hold at
+  `policy_checking` carrying the per-dimension reasons),
+  `call_executor` (fires only on approval, idempotent on the `approved`
+  status), and `result_sourcer` (maps to a Core `source`). Approvals are
+  resolved through `approve_capability_fn`/`deny_capability_fn` (approver
+  verification against Identity/Auth when principals are registered;
+  `identity_unverified` otherwise). Status transitions use the shared
+  `Chronicle::Packs::CopyWith#define_copy_with` instead of hash merges.
+  Deferred to slice 2: the catalog, standing scopes (ADR 0018), integration
+  profiles, LLM proxies, registration enforcement, and the reference
+  web_fetch capability (host runtime seam).
 
 ## Inventory
 

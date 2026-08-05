@@ -1855,104 +1855,104 @@ packs/telegram/tools.py::const::TOOLS	const	missing	-	auto-generated
 packs/telegram/tools.py::function::_now_iso	function	missing	-	auto-generated
 packs/telegram/tools.py::function::submit_telegram_update	function	missing	-	auto-generated
 packs/telegram/tools.py::function::submit_telegram_update_fn	function	missing	-	auto-generated
-packs/tool_gateway/behaviors.py::const::BEHAVIORS	const	missing	-	auto-generated
-packs/tool_gateway/behaviors.py::function::_stricter_ceiling	function	missing	-	auto-generated
-packs/tool_gateway/behaviors.py::function::call_executor	function	missing	-	auto-generated
-packs/tool_gateway/behaviors.py::function::call_recorder	function	missing	-	auto-generated
-packs/tool_gateway/behaviors.py::function::evaluate_call_policy	function	missing	-	auto-generated
-packs/tool_gateway/behaviors.py::function::policy_enforcer	function	missing	-	auto-generated
-packs/tool_gateway/behaviors.py::function::result_sourcer	function	missing	-	auto-generated
-packs/tool_gateway/behaviors.py::function::tool_policy_reliability_guard	function	missing	-	auto-generated
-packs/tool_gateway/capabilities.py::function::_fetch	function	missing	-	auto-generated
-packs/tool_gateway/capabilities.py::function::register_web_fetch_capability	function	missing	-	auto-generated
-packs/tool_gateway/catalog.py::class::CatalogSearchInput	class	missing	-	auto-generated
-packs/tool_gateway/catalog.py::function::_entry	function	missing	-	auto-generated
-packs/tool_gateway/catalog.py::function::_search	function	missing	-	auto-generated
-packs/tool_gateway/catalog.py::function::catalog_entries	function	missing	-	auto-generated
-packs/tool_gateway/catalog.py::function::register_catalog_capability	function	missing	-	auto-generated
-packs/tool_gateway/fixtures/run_fixtures.py::function::_run_action_class_fixture	function	missing	-	auto-generated
-packs/tool_gateway/fixtures/run_fixtures.py::function::_run_fixture	function	missing	-	auto-generated
-packs/tool_gateway/fixtures/run_fixtures.py::function::_run_standing_scope_fixture	function	missing	-	auto-generated
-packs/tool_gateway/fixtures/run_fixtures.py::function::add_call	function	missing	-	auto-generated
-packs/tool_gateway/fixtures/run_fixtures.py::function::add_r2_call	function	missing	-	auto-generated
-packs/tool_gateway/fixtures/run_fixtures.py::function::main	function	missing	-	auto-generated
-packs/tool_gateway/fixtures/run_fixtures.py::function::status	function	missing	-	auto-generated
-packs/tool_gateway/gateway.py::function::decide_policy	function	missing	-	auto-generated
-packs/tool_gateway/gateway.py::function::decide_policy_detail	function	missing	-	auto-generated
-packs/tool_gateway/gateway.py::function::execute_approved_call	function	missing	-	auto-generated
-packs/tool_gateway/integrations.py::function::_canonical	function	missing	-	auto-generated
-packs/tool_gateway/integrations.py::function::_shape	function	missing	-	auto-generated
-packs/tool_gateway/integrations.py::function::active_integration_profile	function	missing	-	auto-generated
-packs/tool_gateway/integrations.py::function::correct_integration_claim_fn	function	missing	-	auto-generated
-packs/tool_gateway/integrations.py::function::ensure_aggregator_profile_fn	function	missing	-	auto-generated
-packs/tool_gateway/integrations.py::function::latest_integration_profile	function	missing	-	auto-generated
-packs/tool_gateway/integrations.py::function::record_exploration_fn	function	missing	-	auto-generated
-packs/tool_gateway/integrations.py::function::record_integration_profile_fn	function	missing	-	auto-generated
-packs/tool_gateway/integrations.py::function::safe_sha256_fingerprint	function	missing	-	auto-generated
-packs/tool_gateway/integrations.py::function::shape_fingerprint	function	missing	-	auto-generated
-packs/tool_gateway/integrations.py::function::stable_integration_id	function	missing	-	auto-generated
-packs/tool_gateway/llm_tools.py::function::_now_iso	function	missing	-	auto-generated
-packs/tool_gateway/llm_tools.py::function::_proxy	function	missing	-	auto-generated
-packs/tool_gateway/llm_tools.py::function::as_llm_tool	function	missing	-	auto-generated
-packs/tool_gateway/llm_tools.py::function::llm_tools_for	function	missing	-	auto-generated
-packs/tool_gateway/object_types.py::class::AggregatorProfile	class	missing	-	auto-generated
-packs/tool_gateway/object_types.py::class::CapabilityApproval	class	missing	-	auto-generated
-packs/tool_gateway/object_types.py::class::CapabilityCall	class	missing	-	auto-generated
-packs/tool_gateway/object_types.py::class::CapabilityDenial	class	missing	-	auto-generated
-packs/tool_gateway/object_types.py::class::CapabilityProvider	class	missing	-	auto-generated
-packs/tool_gateway/object_types.py::class::CapabilityResult	class	missing	-	auto-generated
-packs/tool_gateway/object_types.py::class::InjectionFlag	class	missing	-	auto-generated
-packs/tool_gateway/object_types.py::class::IntegrationCapability	class	missing	-	auto-generated
-packs/tool_gateway/object_types.py::class::IntegrationClaim	class	missing	-	auto-generated
-packs/tool_gateway/object_types.py::class::IntegrationExploration	class	missing	-	auto-generated
-packs/tool_gateway/object_types.py::class::IntegrationProfile	class	missing	-	auto-generated
-packs/tool_gateway/object_types.py::class::IntegrationRoute	class	missing	-	auto-generated
-packs/tool_gateway/object_types.py::class::IntegrationSignal	class	missing	-	auto-generated
-packs/tool_gateway/object_types.py::class::ToolPolicy	class	missing	-	auto-generated
-packs/tool_gateway/object_types.py::class::_StrictModel	class	missing	-	auto-generated
-packs/tool_gateway/object_types.py::const::OBJECT_TYPES	const	missing	-	auto-generated
-packs/tool_gateway/object_types.py::const::RELATION_TYPES	const	missing	-	auto-generated
-packs/tool_gateway/registration_check.py::function::_pack_states	function	missing	-	auto-generated
-packs/tool_gateway/registration_check.py::function::arm_registration_enforcement	function	missing	-	auto-generated
-packs/tool_gateway/registration_check.py::function::check_registration	function	missing	-	auto-generated
-packs/tool_gateway/registration_check.py::function::disarm_registration_enforcement	function	missing	-	auto-generated
-packs/tool_gateway/sanitizer.py::function::sanitize_output	function	missing	-	auto-generated
-packs/tool_gateway/settings.py::class::ToolGatewaySettings	class	missing	-	auto-generated
-packs/tool_gateway/standing_scopes.py::const::STANDING_SCOPE_RULES	const	missing	-	auto-generated
-packs/tool_gateway/standing_scopes.py::function::_emit_event	function	missing	-	auto-generated
-packs/tool_gateway/standing_scopes.py::function::_event_index_of_ref	function	missing	-	auto-generated
-packs/tool_gateway/standing_scopes.py::function::_objects	function	missing	-	auto-generated
-packs/tool_gateway/standing_scopes.py::function::_validate_pairs	function	missing	-	auto-generated
-packs/tool_gateway/standing_scopes.py::function::accuracy_percent	function	missing	-	auto-generated
-packs/tool_gateway/standing_scopes.py::function::demote_tool_policy_fn	function	missing	-	auto-generated
-packs/tool_gateway/standing_scopes.py::function::disable_tool_policy_fn	function	missing	-	auto-generated
-packs/tool_gateway/standing_scopes.py::function::find_tool_policy	function	missing	-	auto-generated
-packs/tool_gateway/standing_scopes.py::function::pair_matched	function	missing	-	auto-generated
-packs/tool_gateway/standing_scopes.py::function::promote_tool_policy_fn	function	missing	-	auto-generated
-packs/tool_gateway/standing_scopes.py::function::promoted_standing_scope_for	function	missing	-	auto-generated
-packs/tool_gateway/standing_scopes.py::function::propose_standing_scope_fn	function	missing	-	auto-generated
-packs/tool_gateway/tools.py::class::CapabilitySpec	class	missing	-	auto-generated
-packs/tool_gateway/tools.py::const::TOOLS	const	missing	-	auto-generated
-packs/tool_gateway/tools.py::function::_verify_approver	function	missing	-	auto-generated
-packs/tool_gateway/tools.py::function::approve_capability	function	missing	-	auto-generated
-packs/tool_gateway/tools.py::function::approve_capability_fn	function	missing	-	auto-generated
-packs/tool_gateway/tools.py::function::clear_local_registry	function	missing	-	auto-generated
-packs/tool_gateway/tools.py::function::deny_capability	function	missing	-	auto-generated
-packs/tool_gateway/tools.py::function::deny_capability_fn	function	missing	-	auto-generated
-packs/tool_gateway/tools.py::function::execute_capability	function	missing	-	auto-generated
-packs/tool_gateway/tools.py::function::execute_capability_fn	function	missing	-	auto-generated
-packs/tool_gateway/tools.py::function::get_capability_spec	function	missing	-	auto-generated
-packs/tool_gateway/tools.py::function::pending_approvals	function	missing	-	auto-generated
-packs/tool_gateway/tools.py::function::pending_approvals_fn	function	missing	-	auto-generated
-packs/tool_gateway/tools.py::function::register_local_capability	function	missing	-	auto-generated
-packs/tool_gateway/tools.py::function::registered_capability_keys	function	missing	-	auto-generated
-packs/tool_gateway/tools.py::method::CapabilitySpec.key	method	missing	-	auto-generated
-packs/tool_gateway/untrusted.py::const::INJECTION_PATTERNS	const	missing	-	auto-generated
-packs/tool_gateway/untrusted.py::const::NEVER_LLM_CALLABLE	const	missing	-	auto-generated
-packs/tool_gateway/untrusted.py::const::UNTRUSTED_CLOSE	const	missing	-	auto-generated
-packs/tool_gateway/untrusted.py::const::UNTRUSTED_OPEN	const	missing	-	auto-generated
-packs/tool_gateway/untrusted.py::function::scan_for_injection	function	missing	-	auto-generated
-packs/tool_gateway/untrusted.py::function::wrap_untrusted	function	missing	-	auto-generated
+packs/tool_gateway/behaviors.py::const::BEHAVIORS	const	ported	-	collected by DSL pack macro
+packs/tool_gateway/behaviors.py::function::_stricter_ceiling	function	ported	src/chronicle_packs/tool_gateway/gateway.cr::_stricter_ceiling	-
+packs/tool_gateway/behaviors.py::function::call_executor	function	ported	src/chronicle_packs/tool_gateway/behaviors.cr::call_executor	-
+packs/tool_gateway/behaviors.py::function::call_recorder	function	ported	src/chronicle_packs/tool_gateway/behaviors.cr::call_recorder	-
+packs/tool_gateway/behaviors.py::function::evaluate_call_policy	function	ported	src/chronicle_packs/tool_gateway/behaviors.cr::evaluate_call_policy	standing-scope lookup stubbed to nil
+packs/tool_gateway/behaviors.py::function::policy_enforcer	function	ported	src/chronicle_packs/tool_gateway/behaviors.cr::policy_enforcer	-
+packs/tool_gateway/behaviors.py::function::result_sourcer	function	ported	src/chronicle_packs/tool_gateway/behaviors.cr::result_sourcer	-
+packs/tool_gateway/behaviors.py::function::tool_policy_reliability_guard	function	deferred	-	depends on standing_scopes (demote_tool_policy_fn)
+packs/tool_gateway/capabilities.py::function::_fetch	function	deferred	-	host runtime web_fetch/ToolContext seam
+packs/tool_gateway/capabilities.py::function::register_web_fetch_capability	function	deferred	-	host runtime web_fetch/ToolContext seam
+packs/tool_gateway/catalog.py::class::CatalogSearchInput	class	deferred	-	slice 2: catalog
+packs/tool_gateway/catalog.py::function::_entry	function	deferred	-	slice 2: catalog
+packs/tool_gateway/catalog.py::function::_search	function	deferred	-	slice 2: catalog
+packs/tool_gateway/catalog.py::function::catalog_entries	function	deferred	-	slice 2: catalog
+packs/tool_gateway/catalog.py::function::register_catalog_capability	function	deferred	-	slice 2: catalog
+packs/tool_gateway/fixtures/run_fixtures.py::function::_run_action_class_fixture	function	skipped	-	fixture scripts; lifecycle driven by specs
+packs/tool_gateway/fixtures/run_fixtures.py::function::_run_fixture	function	skipped	-	fixture scripts; lifecycle driven by specs
+packs/tool_gateway/fixtures/run_fixtures.py::function::_run_standing_scope_fixture	function	skipped	-	fixture scripts; lifecycle driven by specs
+packs/tool_gateway/fixtures/run_fixtures.py::function::add_call	function	skipped	-	fixture scripts; lifecycle driven by specs
+packs/tool_gateway/fixtures/run_fixtures.py::function::add_r2_call	function	skipped	-	fixture scripts; lifecycle driven by specs
+packs/tool_gateway/fixtures/run_fixtures.py::function::main	function	skipped	-	fixture scripts; lifecycle driven by specs
+packs/tool_gateway/fixtures/run_fixtures.py::function::status	function	skipped	-	fixture scripts; lifecycle driven by specs
+packs/tool_gateway/gateway.py::function::decide_policy	function	ported	src/chronicle_packs/tool_gateway/gateway.cr::decide_policy	-
+packs/tool_gateway/gateway.py::function::decide_policy_detail	function	ported	src/chronicle_packs/tool_gateway/gateway.cr::decide_policy_detail	-
+packs/tool_gateway/gateway.py::function::execute_approved_call	function	ported	src/chronicle_packs/tool_gateway/gateway.cr::execute_approved_call	credential injection via host seam; no sanitizer/injection stubs — ported
+packs/tool_gateway/integrations.py::function::_canonical	function	deferred	-	slice 2: integration profiles
+packs/tool_gateway/integrations.py::function::_shape	function	deferred	-	slice 2: integration profiles
+packs/tool_gateway/integrations.py::function::active_integration_profile	function	deferred	-	slice 2: integration profiles
+packs/tool_gateway/integrations.py::function::correct_integration_claim_fn	function	deferred	-	slice 2: integration profiles
+packs/tool_gateway/integrations.py::function::ensure_aggregator_profile_fn	function	deferred	-	slice 2: integration profiles
+packs/tool_gateway/integrations.py::function::latest_integration_profile	function	deferred	-	slice 2: integration profiles
+packs/tool_gateway/integrations.py::function::record_exploration_fn	function	deferred	-	slice 2: integration profiles
+packs/tool_gateway/integrations.py::function::record_integration_profile_fn	function	deferred	-	slice 2: integration profiles
+packs/tool_gateway/integrations.py::function::safe_sha256_fingerprint	function	deferred	-	slice 2: integration profiles
+packs/tool_gateway/integrations.py::function::shape_fingerprint	function	deferred	-	slice 2: integration profiles
+packs/tool_gateway/integrations.py::function::stable_integration_id	function	deferred	-	slice 2: integration profiles
+packs/tool_gateway/llm_tools.py::function::_now_iso	function	deferred	-	slice 2: LLM proxies
+packs/tool_gateway/llm_tools.py::function::_proxy	function	deferred	-	slice 2: LLM proxies
+packs/tool_gateway/llm_tools.py::function::as_llm_tool	function	deferred	-	slice 2: LLM proxies
+packs/tool_gateway/llm_tools.py::function::llm_tools_for	function	deferred	-	slice 2: LLM proxies
+packs/tool_gateway/object_types.py::class::AggregatorProfile	class	ported	src/chronicle_packs/tool_gateway/object_types.cr::AggregatorProfile	-
+packs/tool_gateway/object_types.py::class::CapabilityApproval	class	ported	src/chronicle_packs/tool_gateway/object_types.cr::CapabilityApproval	-
+packs/tool_gateway/object_types.py::class::CapabilityCall	class	ported	src/chronicle_packs/tool_gateway/object_types.cr::CapabilityCall	-
+packs/tool_gateway/object_types.py::class::CapabilityDenial	class	ported	src/chronicle_packs/tool_gateway/object_types.cr::CapabilityDenial	-
+packs/tool_gateway/object_types.py::class::CapabilityProvider	class	ported	src/chronicle_packs/tool_gateway/object_types.cr::CapabilityProvider	-
+packs/tool_gateway/object_types.py::class::CapabilityResult	class	ported	src/chronicle_packs/tool_gateway/object_types.cr::CapabilityResult	-
+packs/tool_gateway/object_types.py::class::InjectionFlag	class	ported	src/chronicle_packs/tool_gateway/object_types.cr::InjectionFlag	-
+packs/tool_gateway/object_types.py::class::IntegrationCapability	class	ported	src/chronicle_packs/tool_gateway/object_types.cr::IntegrationCapability	-
+packs/tool_gateway/object_types.py::class::IntegrationClaim	class	ported	src/chronicle_packs/tool_gateway/object_types.cr::IntegrationClaim	-
+packs/tool_gateway/object_types.py::class::IntegrationExploration	class	ported	src/chronicle_packs/tool_gateway/object_types.cr::IntegrationExploration	-
+packs/tool_gateway/object_types.py::class::IntegrationProfile	class	ported	src/chronicle_packs/tool_gateway/object_types.cr::IntegrationProfile	-
+packs/tool_gateway/object_types.py::class::IntegrationRoute	class	ported	src/chronicle_packs/tool_gateway/object_types.cr::IntegrationRoute	-
+packs/tool_gateway/object_types.py::class::IntegrationSignal	class	ported	src/chronicle_packs/tool_gateway/object_types.cr::IntegrationSignal	-
+packs/tool_gateway/object_types.py::class::ToolPolicy	class	ported	src/chronicle_packs/tool_gateway/object_types.cr::ToolPolicy	-
+packs/tool_gateway/object_types.py::class::_StrictModel	class	skipped	-	pydantic extra=forbid not enforced
+packs/tool_gateway/object_types.py::const::OBJECT_TYPES	const	ported	src/chronicle_packs/tool_gateway/pack.cr	collected by DSL pack macro
+packs/tool_gateway/object_types.py::const::RELATION_TYPES	const	ported	src/chronicle_packs/tool_gateway/pack.cr	collected by DSL pack macro
+packs/tool_gateway/registration_check.py::function::_pack_states	function	deferred	-	slice 2: registration enforcement
+packs/tool_gateway/registration_check.py::function::arm_registration_enforcement	function	deferred	-	slice 2: registration enforcement
+packs/tool_gateway/registration_check.py::function::check_registration	function	deferred	-	slice 2: registration enforcement
+packs/tool_gateway/registration_check.py::function::disarm_registration_enforcement	function	deferred	-	slice 2: registration enforcement
+packs/tool_gateway/sanitizer.py::function::sanitize_output	function	ported	src/chronicle_packs/tool_gateway/sanitizer.cr::Sanitizer.sanitize_output	-
+packs/tool_gateway/settings.py::class::ToolGatewaySettings	class	ported	src/chronicle_packs/tool_gateway/settings.cr::ToolGatewaySettings	-
+packs/tool_gateway/standing_scopes.py::const::STANDING_SCOPE_RULES	const	deferred	-	slice 2: standing scopes (ADR 0018)
+packs/tool_gateway/standing_scopes.py::function::_emit_event	function	deferred	-	slice 2: standing scopes
+packs/tool_gateway/standing_scopes.py::function::_event_index_of_ref	function	deferred	-	slice 2: standing scopes
+packs/tool_gateway/standing_scopes.py::function::_objects	function	deferred	-	slice 2: standing scopes
+packs/tool_gateway/standing_scopes.py::function::_validate_pairs	function	deferred	-	slice 2: standing scopes
+packs/tool_gateway/standing_scopes.py::function::accuracy_percent	function	deferred	-	slice 2: standing scopes
+packs/tool_gateway/standing_scopes.py::function::demote_tool_policy_fn	function	deferred	-	slice 2: standing scopes
+packs/tool_gateway/standing_scopes.py::function::disable_tool_policy_fn	function	deferred	-	slice 2: standing scopes
+packs/tool_gateway/standing_scopes.py::function::find_tool_policy	function	deferred	-	slice 2: standing scopes
+packs/tool_gateway/standing_scopes.py::function::pair_matched	function	deferred	-	slice 2: standing scopes
+packs/tool_gateway/standing_scopes.py::function::promote_tool_policy_fn	function	deferred	-	slice 2: standing scopes
+packs/tool_gateway/standing_scopes.py::function::promoted_standing_scope_for	function	deferred	-	slice 2: standing scopes
+packs/tool_gateway/standing_scopes.py::function::propose_standing_scope_fn	function	deferred	-	slice 2: standing scopes
+packs/tool_gateway/tools.py::class::CapabilitySpec	class	ported	src/chronicle_packs/tool_gateway/tools.cr::CapabilitySpec	record
+packs/tool_gateway/tools.py::const::TOOLS	const	ported	-	collected by DSL @[Tool] annotations
+packs/tool_gateway/tools.py::function::_verify_approver	function	ported	src/chronicle_packs/tool_gateway/tools.cr::_verify_approver	identity_auth optional partner
+packs/tool_gateway/tools.py::function::approve_capability	function	ported	src/chronicle_packs/tool_gateway/tools.cr::approve_capability_tool	tool wrapper; renamed with _tool suffix
+packs/tool_gateway/tools.py::function::approve_capability_fn	function	ported	src/chronicle_packs/tool_gateway/tools.cr::approve_capability_fn	-
+packs/tool_gateway/tools.py::function::clear_local_registry	function	ported	src/chronicle_packs/tool_gateway/tools.cr::clear_local_registry	-
+packs/tool_gateway/tools.py::function::deny_capability	function	ported	src/chronicle_packs/tool_gateway/tools.cr::deny_capability_tool	tool wrapper; renamed with _tool suffix
+packs/tool_gateway/tools.py::function::deny_capability_fn	function	ported	src/chronicle_packs/tool_gateway/tools.cr::deny_capability_fn	-
+packs/tool_gateway/tools.py::function::execute_capability	function	ported	src/chronicle_packs/tool_gateway/tools.cr::execute_capability_tool	tool wrapper; renamed with _tool suffix
+packs/tool_gateway/tools.py::function::execute_capability_fn	function	ported	src/chronicle_packs/tool_gateway/tools.cr::execute_capability_fn	-
+packs/tool_gateway/tools.py::function::get_capability_spec	function	ported	src/chronicle_packs/tool_gateway/tools.cr::get_capability_spec	-
+packs/tool_gateway/tools.py::function::pending_approvals	function	ported	src/chronicle_packs/tool_gateway/tools.cr::pending_approvals_tool	tool wrapper; renamed with _tool suffix
+packs/tool_gateway/tools.py::function::pending_approvals_fn	function	ported	src/chronicle_packs/tool_gateway/tools.cr::pending_approvals_fn	-
+packs/tool_gateway/tools.py::function::register_local_capability	function	ported	src/chronicle_packs/tool_gateway/tools.cr::register_local_capability	-
+packs/tool_gateway/tools.py::function::registered_capability_keys	function	ported	src/chronicle_packs/tool_gateway/tools.cr::registered_capability_keys	-
+packs/tool_gateway/tools.py::method::CapabilitySpec.key	method	ported	src/chronicle_packs/tool_gateway/tools.cr::CapabilitySpec#key	-
+packs/tool_gateway/untrusted.py::const::INJECTION_PATTERNS	const	ported	src/chronicle_packs/tool_gateway/untrusted.cr::Untrusted	compiled into module regexes
+packs/tool_gateway/untrusted.py::const::NEVER_LLM_CALLABLE	const	ported	src/chronicle_packs/tool_gateway/untrusted.cr::Untrusted::NEVER_LLM_CALLABLE	-
+packs/tool_gateway/untrusted.py::const::UNTRUSTED_CLOSE	const	ported	src/chronicle_packs/tool_gateway/untrusted.cr::Untrusted::UNTRUSTED_CLOSE	-
+packs/tool_gateway/untrusted.py::const::UNTRUSTED_OPEN	const	ported	src/chronicle_packs/tool_gateway/untrusted.cr::Untrusted::UNTRUSTED_OPEN	-
+packs/tool_gateway/untrusted.py::function::scan_for_injection	function	ported	src/chronicle_packs/tool_gateway/untrusted.cr::Untrusted.scan_for_injection	-
+packs/tool_gateway/untrusted.py::function::wrap_untrusted	function	ported	src/chronicle_packs/tool_gateway/untrusted.cr::Untrusted.wrap_untrusted	-
 packs/usage/behaviors.py::const::BEHAVIORS	const	ported	-	collected by DSL pack macro
 packs/usage/behaviors.py::function::_clock_times	function	ported	src/chronicle_packs/usage/behaviors.cr::_clock_times	-
 packs/usage/behaviors.py::function::_current_evidence	function	ported	src/chronicle_packs/usage/behaviors.cr::_current_evidence	returns typed UsageEvidence

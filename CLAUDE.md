@@ -33,10 +33,17 @@ crystal spec                            # run tests
 - **Immutable structs use `record`:** declare simple immutable structs with
   the `record Name, field : Type = default, ... do include JSON::Serializable
   end` form — it generates getters, defaults, the initializer, and
-  `copy_with`. For bool fields, avoid `is_`/`has_` prefixes (they trip ameba
-  `Naming/QueryBoolMethods` under `record`'s plain getters); name them
-  `fixture`, `passed`, etc. and keep the upstream JSON key via
-  `@[JSON::Field(key: "is_fixture")]` when it differs.
+  `copy_with`. For bool fields, `record`'s plain getters trip ameba
+  `Naming/QueryBoolMethods` for `is_`/`has_` prefixes AND bare bool-noun
+  names (`passed`, `fixture`, `enabled`, ...) — so in `record` structs name
+  bools with compound/descriptive words (`volume_passed`, `allow_either`)
+  and keep the upstream JSON key via `@[JSON::Field(key: "is_fixture")]`.
+  In plain structs (custom initializer or parse-only), use `getter? field`
+  which is ameba-clean and needs no key annotation. When a plain struct
+  needs `copy_with`, include `Chronicle::Packs::CopyWith` and declare
+  `define_copy_with(field1, field2, ...)` (all fields as named params
+  defaulting to the current ivar values) — no `JSON.parse(...).as_h` merge
+  patches.
 
 ## Relevant docs
 
