@@ -8,6 +8,7 @@ require "./chronicle_packs/secrets/pack"
 require "./chronicle_packs/attention/pack"
 require "./chronicle_packs/skills/pack"
 require "./chronicle_packs/eval_outcome/pack"
+require "./chronicle_packs/activity_normalizer/pack"
 require "./chronicle_packs/llm_provider"
 require "./chronicle_packs/fixture_runner"
 

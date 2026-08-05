@@ -18,7 +18,7 @@ Core (the universal substrate) lands before the infrastructure it requires,
 then communication, domain verticals, transport adapters, and the demo
 surface.
 
-**Progress: 283 / 2080 source API items ported, 8 skipped, 1 deferred.**
+**Progress: 317 / 2080 source API items ported, 24 skipped, 38 deferred.**
 
 ## Features
 
@@ -65,8 +65,11 @@ surface.
       channel/audience (32/32) — `src/chronicle_packs/agent_profile/`
 - [x] `entity` — canonical extraction + dedup for people/orgs/projects/
       products/repos (27/27) — `src/chronicle_packs/entity/`
-- [ ] `activity_normalizer` — provider-neutral evidence identity, replay
-      modes/revisions, deterministic candidate extraction (0/87)
+- [~] `activity_normalizer` — provider-neutral evidence identity, replay
+      modes/revisions, deterministic candidate extraction (34/87, slice 1:
+      evidence identity/revision ownership + StructureExtractor; replay
+      store, annotation layer, cursor/tombstone/migration behaviors, and
+      the two graph tools deferred to slice 2)
 - [ ] `semantic_extraction` — typed source-anchored annotations, deterministic
       floor + LLM upgrade seam, coverage tracking (0/156)
 - [ ] `usage` — source surfaces, connector handoffs, stable cursors,
@@ -259,6 +262,21 @@ surface.
   (correction requires supersession); maintenance outcomes are idempotent
   by contribution key. The upstream fixture also loads memory_gateway; the
   behavior/tool specs run without it.
+- `activity_normalizer` (slice 1 of 2, in progress): all 13 object types and
+  8 relation types are `JSON::Serializable` structs. The
+  `normalize_acquired_item` behavior owns provider-neutral evidence identity
+  (`evidence_{sha256(source_surface_id, dedup_key)}`), bumps `revision_number`
+  per distinct `content_hash` (idempotent on hash match), supersedes the
+  prior revision by patching only its `status` (chronicle's patch replaces,
+  so the merge is explicit), and wires `content_for`/`normalizes_to`/
+  `acquired_from`/`supersedes`. The legacy evidence→candidate path
+  (`run_extraction`, default off per ADR 0026) runs the zero-key
+  `StructureExtractor` idempotently by `extraction_identity` and records
+  typed candidates + `produced_candidate`/`extracted_from`. Deferred to
+  slice 2: the content-addressed replay artifact store (`replay.py`), the
+  shared annotation layer (`annotation_extractor.py`), the cursor/tombstone/
+  migration/projector behaviors, and the two graph tools. Until the replay
+  store lands, non-`reference_only` acquisition payloads are not dereferenced.
 
 ## Inventory
 

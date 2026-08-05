@@ -33,93 +33,93 @@ packs/_template/object_types.py::const::OBJECT_TYPES	const	missing	-	auto-genera
 packs/_template/object_types.py::const::RELATION_TYPES	const	missing	-	auto-generated
 packs/_template/settings.py::class::TemplateSettings	class	missing	-	auto-generated
 packs/_template/tools.py::const::TOOLS	const	missing	-	auto-generated
-packs/activity_normalizer/annotation_extractor.py::class::StructureAnnotationExtractor	class	missing	-	auto-generated
-packs/activity_normalizer/annotation_extractor.py::const::FACET_BY_KIND	const	missing	-	auto-generated
-packs/activity_normalizer/annotation_extractor.py::const::KIND_BY_FACET	const	missing	-	auto-generated
-packs/activity_normalizer/annotation_extractor.py::const::STRUCTURE_FACETS	const	missing	-	auto-generated
-packs/activity_normalizer/annotation_extractor.py::function::_anchor	function	missing	-	auto-generated
-packs/activity_normalizer/annotation_extractor.py::function::_clean	function	missing	-	auto-generated
-packs/activity_normalizer/annotation_extractor.py::function::_line_spans	function	missing	-	auto-generated
-packs/activity_normalizer/annotation_extractor.py::method::StructureAnnotationExtractor.__init__	method	missing	-	auto-generated
-packs/activity_normalizer/annotation_extractor.py::method::StructureAnnotationExtractor.config	method	missing	-	auto-generated
-packs/activity_normalizer/annotation_extractor.py::method::StructureAnnotationExtractor.extract	method	missing	-	auto-generated
-packs/activity_normalizer/annotation_extractor.py::method::StructureAnnotationExtractor.implemented_facets	method	missing	-	auto-generated
-packs/activity_normalizer/behaviors.py::const::BEHAVIORS	const	missing	-	auto-generated
-packs/activity_normalizer/behaviors.py::const::COMMUNICATION_FACET_FLOOR	const	missing	-	auto-generated
-packs/activity_normalizer/behaviors.py::const::STRUCTURE_EXTRACTOR_REF	const	missing	-	auto-generated
-packs/activity_normalizer/behaviors.py::function::_candidate_identity	function	missing	-	auto-generated
-packs/activity_normalizer/behaviors.py::function::_content_for	function	missing	-	auto-generated
-packs/activity_normalizer/behaviors.py::function::_create_candidate	function	missing	-	auto-generated
-packs/activity_normalizer/behaviors.py::function::_emit_cursor_event	function	missing	-	auto-generated
-packs/activity_normalizer/behaviors.py::function::_extractor_disabled	function	missing	-	auto-generated
-packs/activity_normalizer/behaviors.py::function::_patch	function	missing	-	auto-generated
-packs/activity_normalizer/behaviors.py::function::_stable_id	function	missing	-	auto-generated
-packs/activity_normalizer/behaviors.py::function::emit_domain_event	function	missing	-	auto-generated
-packs/activity_normalizer/behaviors.py::function::fulfill_evidence_invalidation_request	function	missing	-	auto-generated
-packs/activity_normalizer/behaviors.py::function::migrate_communication_extraction_floor	function	missing	-	auto-generated
-packs/activity_normalizer/behaviors.py::function::normalize_acquired_item	function	missing	-	auto-generated
-packs/activity_normalizer/behaviors.py::function::normalize_replay_payload	function	missing	-	auto-generated
-packs/activity_normalizer/behaviors.py::function::project_structure_candidates	function	missing	-	auto-generated
-packs/activity_normalizer/behaviors.py::function::publish_cursor_created	function	missing	-	auto-generated
-packs/activity_normalizer/behaviors.py::function::publish_cursor_patch	function	missing	-	auto-generated
-packs/activity_normalizer/behaviors.py::function::record_failure	function	missing	-	auto-generated
-packs/activity_normalizer/behaviors.py::function::run_extraction	function	missing	-	auto-generated
-packs/activity_normalizer/behaviors.py::function::select_shared_extraction	function	missing	-	auto-generated
-packs/activity_normalizer/extractors.py::class::CandidateDraft	class	missing	-	auto-generated
-packs/activity_normalizer/extractors.py::class::Extractor	class	missing	-	auto-generated
-packs/activity_normalizer/extractors.py::class::StructureExtractor	class	missing	-	auto-generated
-packs/activity_normalizer/extractors.py::function::_clean	function	missing	-	auto-generated
-packs/activity_normalizer/extractors.py::function::get_extractor	function	missing	-	auto-generated
-packs/activity_normalizer/extractors.py::function::register_extractor	function	missing	-	auto-generated
-packs/activity_normalizer/extractors.py::method::Extractor.extract	method	missing	-	auto-generated
-packs/activity_normalizer/extractors.py::method::StructureExtractor.extract	method	missing	-	auto-generated
-packs/activity_normalizer/fixtures/run_fixtures.py::const::DIGEST	const	missing	-	auto-generated
-packs/activity_normalizer/fixtures/run_fixtures.py::const::PAYLOAD	const	missing	-	auto-generated
-packs/activity_normalizer/fixtures/run_fixtures.py::function::_acquire	function	missing	-	auto-generated
-packs/activity_normalizer/fixtures/run_fixtures.py::function::run_all	function	missing	-	auto-generated
-packs/activity_normalizer/fixtures/run_fixtures.py::function::run_legacy_optin_fixture	function	missing	-	auto-generated
-packs/activity_normalizer/fixtures/run_fixtures.py::function::run_migrated_default_fixture	function	missing	-	auto-generated
-packs/activity_normalizer/fixtures/run_fixtures.py::function::run_shared_path_fixture	function	missing	-	auto-generated
-packs/activity_normalizer/object_types.py::class::AcquiredContent	class	missing	-	auto-generated
-packs/activity_normalizer/object_types.py::class::AcquiredItem	class	missing	-	auto-generated
-packs/activity_normalizer/object_types.py::class::ActivityEvidence	class	missing	-	auto-generated
-packs/activity_normalizer/object_types.py::class::BackfillCursor	class	missing	-	auto-generated
-packs/activity_normalizer/object_types.py::class::EvalCandidate	class	missing	-	auto-generated
-packs/activity_normalizer/object_types.py::class::EvidenceInvalidationRequest	class	missing	-	auto-generated
-packs/activity_normalizer/object_types.py::class::ExtractionRecord	class	missing	-	auto-generated
-packs/activity_normalizer/object_types.py::class::ExtractorVersionState	class	missing	-	auto-generated
-packs/activity_normalizer/object_types.py::class::IngestionFailure	class	missing	-	auto-generated
-packs/activity_normalizer/object_types.py::class::PreferenceCandidate	class	missing	-	auto-generated
-packs/activity_normalizer/object_types.py::class::ProfileCandidate	class	missing	-	auto-generated
-packs/activity_normalizer/object_types.py::class::SkillCandidate	class	missing	-	auto-generated
-packs/activity_normalizer/object_types.py::class::TaskCandidate	class	missing	-	auto-generated
-packs/activity_normalizer/object_types.py::class::_CandidateBase	class	missing	-	auto-generated
-packs/activity_normalizer/object_types.py::class::_StrictModel	class	missing	-	auto-generated
-packs/activity_normalizer/object_types.py::const::OBJECT_TYPES	const	missing	-	auto-generated
-packs/activity_normalizer/object_types.py::const::RELATION_TYPES	const	missing	-	auto-generated
-packs/activity_normalizer/object_types.py::method::AcquiredItem._payload_reference_matches_mode	method	missing	-	auto-generated
-packs/activity_normalizer/object_types.py::method::AcquiredItem._valid_sha256	method	missing	-	auto-generated
-packs/activity_normalizer/object_types.py::method::ActivityEvidence._valid_evidence_hash	method	missing	-	auto-generated
-packs/activity_normalizer/object_types.py::method::EvidenceInvalidationRequest._has_identity	method	missing	-	auto-generated
-packs/activity_normalizer/object_types.py::method::ExtractionRecord._valid_input_hash	method	missing	-	auto-generated
-packs/activity_normalizer/replay.py::class::ReplayError	class	missing	-	auto-generated
-packs/activity_normalizer/replay.py::class::ReplayIntegrityError	class	missing	-	auto-generated
-packs/activity_normalizer/replay.py::class::ReplayUnavailableError	class	missing	-	auto-generated
-packs/activity_normalizer/replay.py::function::_digest_from_ref	function	missing	-	auto-generated
-packs/activity_normalizer/replay.py::function::artifact_identity_from_locator	function	missing	-	auto-generated
-packs/activity_normalizer/replay.py::function::artifact_path	function	missing	-	auto-generated
-packs/activity_normalizer/replay.py::function::artifact_ref_for_hash	function	missing	-	auto-generated
-packs/activity_normalizer/replay.py::function::portable_artifact_locator	function	missing	-	auto-generated
-packs/activity_normalizer/replay.py::function::read_artifact	function	missing	-	auto-generated
-packs/activity_normalizer/replay.py::function::read_replay_payload	function	missing	-	auto-generated
-packs/activity_normalizer/replay.py::function::sha256_hex	function	missing	-	auto-generated
-packs/activity_normalizer/replay.py::function::store_replay_artifact	function	missing	-	auto-generated
-packs/activity_normalizer/settings.py::class::ActivityNormalizerSettings	class	missing	-	auto-generated
-packs/activity_normalizer/tools.py::const::TOOLS	const	missing	-	auto-generated
-packs/activity_normalizer/tools.py::function::disable_extractor_version	function	missing	-	auto-generated
-packs/activity_normalizer/tools.py::function::disable_extractor_version_fn	function	missing	-	auto-generated
-packs/activity_normalizer/tools.py::function::reextract_evidence	function	missing	-	auto-generated
-packs/activity_normalizer/tools.py::function::reextract_evidence_fn	function	missing	-	auto-generated
+packs/activity_normalizer/annotation_extractor.py::class::StructureAnnotationExtractor	class	deferred	-	slice 2: shared annotation extraction layer
+packs/activity_normalizer/annotation_extractor.py::const::FACET_BY_KIND	const	deferred	-	slice 2: shared annotation extraction layer
+packs/activity_normalizer/annotation_extractor.py::const::KIND_BY_FACET	const	deferred	-	slice 2: shared annotation extraction layer
+packs/activity_normalizer/annotation_extractor.py::const::STRUCTURE_FACETS	const	deferred	-	slice 2: shared annotation extraction layer
+packs/activity_normalizer/annotation_extractor.py::function::_anchor	function	deferred	-	slice 2: shared annotation extraction layer
+packs/activity_normalizer/annotation_extractor.py::function::_clean	function	deferred	-	slice 2: shared annotation extraction layer
+packs/activity_normalizer/annotation_extractor.py::function::_line_spans	function	deferred	-	slice 2: shared annotation extraction layer
+packs/activity_normalizer/annotation_extractor.py::method::StructureAnnotationExtractor.__init__	method	deferred	-	slice 2: shared annotation extraction layer
+packs/activity_normalizer/annotation_extractor.py::method::StructureAnnotationExtractor.config	method	deferred	-	slice 2: shared annotation extraction layer
+packs/activity_normalizer/annotation_extractor.py::method::StructureAnnotationExtractor.extract	method	deferred	-	slice 2: shared annotation extraction layer
+packs/activity_normalizer/annotation_extractor.py::method::StructureAnnotationExtractor.implemented_facets	method	deferred	-	slice 2: shared annotation extraction layer
+packs/activity_normalizer/behaviors.py::const::BEHAVIORS	const	ported	-	collected by DSL pack macro
+packs/activity_normalizer/behaviors.py::const::COMMUNICATION_FACET_FLOOR	const	deferred	-	used by deferred behaviors
+packs/activity_normalizer/behaviors.py::const::STRUCTURE_EXTRACTOR_REF	const	deferred	-	used by deferred behaviors
+packs/activity_normalizer/behaviors.py::function::_candidate_identity	function	ported	src/chronicle_packs/activity_normalizer/behaviors.cr::_candidate_identity
+packs/activity_normalizer/behaviors.py::function::_content_for	function	ported	src/chronicle_packs/activity_normalizer/behaviors.cr::_content_for
+packs/activity_normalizer/behaviors.py::function::_create_candidate	function	ported	src/chronicle_packs/activity_normalizer/behaviors.cr::_create_candidate
+packs/activity_normalizer/behaviors.py::function::_emit_cursor_event	function	deferred	-	slice 2: cursor/tombstone/migration/annotation projectors
+packs/activity_normalizer/behaviors.py::function::_extractor_disabled	function	ported	src/chronicle_packs/activity_normalizer/behaviors.cr::_extractor_disabled
+packs/activity_normalizer/behaviors.py::function::_patch	function	ported	src/chronicle_packs/activity_normalizer/behaviors.cr::_patch
+packs/activity_normalizer/behaviors.py::function::_stable_id	function	ported	src/chronicle_packs/activity_normalizer/behaviors.cr::_stable_id
+packs/activity_normalizer/behaviors.py::function::emit_domain_event	function	ported	src/chronicle_packs/activity_normalizer/behaviors.cr::_emit_event
+packs/activity_normalizer/behaviors.py::function::fulfill_evidence_invalidation_request	function	deferred	-	slice 2: cursor/tombstone/migration/annotation projectors
+packs/activity_normalizer/behaviors.py::function::migrate_communication_extraction_floor	function	deferred	-	slice 2: cursor/tombstone/migration/annotation projectors
+packs/activity_normalizer/behaviors.py::function::normalize_acquired_item	function	ported	src/chronicle_packs/activity_normalizer/behaviors.cr::normalize_acquired_item
+packs/activity_normalizer/behaviors.py::function::normalize_replay_payload	function	ported	src/chronicle_packs/activity_normalizer/behaviors.cr::normalize_replay_payload
+packs/activity_normalizer/behaviors.py::function::project_structure_candidates	function	deferred	-	slice 2: cursor/tombstone/migration/annotation projectors
+packs/activity_normalizer/behaviors.py::function::publish_cursor_created	function	deferred	-	slice 2: cursor/tombstone/migration/annotation projectors
+packs/activity_normalizer/behaviors.py::function::publish_cursor_patch	function	deferred	-	slice 2: cursor/tombstone/migration/annotation projectors
+packs/activity_normalizer/behaviors.py::function::record_failure	function	ported	src/chronicle_packs/activity_normalizer/behaviors.cr::record_failure
+packs/activity_normalizer/behaviors.py::function::run_extraction	function	ported	src/chronicle_packs/activity_normalizer/behaviors.cr::run_extraction
+packs/activity_normalizer/behaviors.py::function::select_shared_extraction	function	deferred	-	slice 2: cursor/tombstone/migration/annotation projectors
+packs/activity_normalizer/extractors.py::class::CandidateDraft	class	ported	src/chronicle_packs/activity_normalizer/object_types.cr::CandidateDraft
+packs/activity_normalizer/extractors.py::class::Extractor	class	skipped	-	protocol; registry typed to StructureExtractor
+packs/activity_normalizer/extractors.py::class::StructureExtractor	class	ported	src/chronicle_packs/activity_normalizer/extractors.cr::Extractors::StructureExtractor
+packs/activity_normalizer/extractors.py::function::_clean	function	ported	src/chronicle_packs/activity_normalizer/extractors.cr::Extractors::StructureExtractor#_clean	private
+packs/activity_normalizer/extractors.py::function::get_extractor	function	ported	src/chronicle_packs/activity_normalizer/extractors.cr::Extractors.get_extractor
+packs/activity_normalizer/extractors.py::function::register_extractor	function	ported	src/chronicle_packs/activity_normalizer/extractors.cr::Extractors.register_extractor
+packs/activity_normalizer/extractors.py::method::Extractor.extract	method	skipped	-	protocol method; not implemented
+packs/activity_normalizer/extractors.py::method::StructureExtractor.extract	method	ported	src/chronicle_packs/activity_normalizer/extractors.cr::Extractors::StructureExtractor#extract
+packs/activity_normalizer/fixtures/run_fixtures.py::const::DIGEST	const	skipped	-	fixture scripts; lifecycle driven by specs
+packs/activity_normalizer/fixtures/run_fixtures.py::const::PAYLOAD	const	skipped	-	fixture scripts; lifecycle driven by specs
+packs/activity_normalizer/fixtures/run_fixtures.py::function::_acquire	function	skipped	-	fixture scripts; lifecycle driven by specs
+packs/activity_normalizer/fixtures/run_fixtures.py::function::run_all	function	skipped	-	fixture scripts; lifecycle driven by specs
+packs/activity_normalizer/fixtures/run_fixtures.py::function::run_legacy_optin_fixture	function	skipped	-	fixture scripts; lifecycle driven by specs
+packs/activity_normalizer/fixtures/run_fixtures.py::function::run_migrated_default_fixture	function	skipped	-	fixture scripts; lifecycle driven by specs
+packs/activity_normalizer/fixtures/run_fixtures.py::function::run_shared_path_fixture	function	skipped	-	fixture scripts; lifecycle driven by specs
+packs/activity_normalizer/object_types.py::class::AcquiredContent	class	ported	src/chronicle_packs/activity_normalizer/object_types.cr::AcquiredContent
+packs/activity_normalizer/object_types.py::class::AcquiredItem	class	ported	src/chronicle_packs/activity_normalizer/object_types.cr::AcquiredItem
+packs/activity_normalizer/object_types.py::class::ActivityEvidence	class	ported	src/chronicle_packs/activity_normalizer/object_types.cr::ActivityEvidence
+packs/activity_normalizer/object_types.py::class::BackfillCursor	class	ported	src/chronicle_packs/activity_normalizer/object_types.cr::BackfillCursor
+packs/activity_normalizer/object_types.py::class::EvalCandidate	class	ported	src/chronicle_packs/activity_normalizer/object_types.cr::EvalCandidate
+packs/activity_normalizer/object_types.py::class::EvidenceInvalidationRequest	class	ported	src/chronicle_packs/activity_normalizer/object_types.cr::EvidenceInvalidationRequest
+packs/activity_normalizer/object_types.py::class::ExtractionRecord	class	ported	src/chronicle_packs/activity_normalizer/object_types.cr::ExtractionRecord
+packs/activity_normalizer/object_types.py::class::ExtractorVersionState	class	ported	src/chronicle_packs/activity_normalizer/object_types.cr::ExtractorVersionState
+packs/activity_normalizer/object_types.py::class::IngestionFailure	class	ported	src/chronicle_packs/activity_normalizer/object_types.cr::IngestionFailure
+packs/activity_normalizer/object_types.py::class::PreferenceCandidate	class	ported	src/chronicle_packs/activity_normalizer/object_types.cr::PreferenceCandidate
+packs/activity_normalizer/object_types.py::class::ProfileCandidate	class	ported	src/chronicle_packs/activity_normalizer/object_types.cr::ProfileCandidate
+packs/activity_normalizer/object_types.py::class::SkillCandidate	class	ported	src/chronicle_packs/activity_normalizer/object_types.cr::SkillCandidate
+packs/activity_normalizer/object_types.py::class::TaskCandidate	class	ported	src/chronicle_packs/activity_normalizer/object_types.cr::TaskCandidate
+packs/activity_normalizer/object_types.py::class::_CandidateBase	class	skipped	-	abstract base folded into the 5 candidate structs
+packs/activity_normalizer/object_types.py::class::_StrictModel	class	skipped	-	pydantic extra=forbid not enforced; unknown keys tolerated
+packs/activity_normalizer/object_types.py::const::OBJECT_TYPES	const	ported	-	collected by DSL pack macro
+packs/activity_normalizer/object_types.py::const::RELATION_TYPES	const	ported	-	collected by DSL pack macro
+packs/activity_normalizer/object_types.py::method::AcquiredItem._payload_reference_matches_mode	method	skipped	-	pydantic validator not enforced; schema folded into struct getters
+packs/activity_normalizer/object_types.py::method::AcquiredItem._valid_sha256	method	skipped	-	pydantic validator not enforced; schema folded into struct getters
+packs/activity_normalizer/object_types.py::method::ActivityEvidence._valid_evidence_hash	method	skipped	-	pydantic validator not enforced; schema folded into struct getters
+packs/activity_normalizer/object_types.py::method::EvidenceInvalidationRequest._has_identity	method	skipped	-	pydantic validator not enforced; schema folded into struct getters
+packs/activity_normalizer/object_types.py::method::ExtractionRecord._valid_input_hash	method	skipped	-	pydantic validator not enforced; schema folded into struct getters
+packs/activity_normalizer/replay.py::class::ReplayError	class	deferred	-	slice 2: content-addressed replay artifact store
+packs/activity_normalizer/replay.py::class::ReplayIntegrityError	class	deferred	-	slice 2: content-addressed replay artifact store
+packs/activity_normalizer/replay.py::class::ReplayUnavailableError	class	deferred	-	slice 2: content-addressed replay artifact store
+packs/activity_normalizer/replay.py::function::_digest_from_ref	function	deferred	-	slice 2: content-addressed replay artifact store
+packs/activity_normalizer/replay.py::function::artifact_identity_from_locator	function	deferred	-	slice 2: content-addressed replay artifact store
+packs/activity_normalizer/replay.py::function::artifact_path	function	deferred	-	slice 2: content-addressed replay artifact store
+packs/activity_normalizer/replay.py::function::artifact_ref_for_hash	function	deferred	-	slice 2: content-addressed replay artifact store
+packs/activity_normalizer/replay.py::function::portable_artifact_locator	function	deferred	-	slice 2: content-addressed replay artifact store
+packs/activity_normalizer/replay.py::function::read_artifact	function	deferred	-	slice 2: content-addressed replay artifact store
+packs/activity_normalizer/replay.py::function::read_replay_payload	function	deferred	-	slice 2: content-addressed replay artifact store
+packs/activity_normalizer/replay.py::function::sha256_hex	function	deferred	-	slice 2: content-addressed replay artifact store
+packs/activity_normalizer/replay.py::function::store_replay_artifact	function	deferred	-	slice 2: content-addressed replay artifact store
+packs/activity_normalizer/settings.py::class::ActivityNormalizerSettings	class	ported	src/chronicle_packs/activity_normalizer/settings.cr::ActivityNormalizerSettings
+packs/activity_normalizer/tools.py::const::TOOLS	const	deferred	-	slice 2: graph tools (reextract/disable)
+packs/activity_normalizer/tools.py::function::disable_extractor_version	function	deferred	-	slice 2: graph tools (reextract/disable)
+packs/activity_normalizer/tools.py::function::disable_extractor_version_fn	function	deferred	-	slice 2: graph tools (reextract/disable)
+packs/activity_normalizer/tools.py::function::reextract_evidence	function	deferred	-	slice 2: graph tools (reextract/disable)
+packs/activity_normalizer/tools.py::function::reextract_evidence_fn	function	deferred	-	slice 2: graph tools (reextract/disable)
 packs/agent_profile/behaviors.py::const::BEHAVIORS	const	ported	src/chronicle_packs/agent_profile/pack.cr	collected by DSL pack macro
 packs/agent_profile/behaviors.py::function::_build_profile_context_view	function	ported	src/chronicle_packs/agent_profile/behaviors.cr::build_profile_context_view	renamed public; pure assembly function
 packs/agent_profile/behaviors.py::function::_get_default_profile_id	function	ported	src/chronicle_packs/agent_profile/behaviors.cr::_get_default_profile_id	-
