@@ -1859,10 +1859,10 @@ packs/tool_gateway/behaviors.py::const::BEHAVIORS	const	ported	-	collected by DS
 packs/tool_gateway/behaviors.py::function::_stricter_ceiling	function	ported	src/chronicle_packs/tool_gateway/gateway.cr::_stricter_ceiling	-
 packs/tool_gateway/behaviors.py::function::call_executor	function	ported	src/chronicle_packs/tool_gateway/behaviors.cr::call_executor	-
 packs/tool_gateway/behaviors.py::function::call_recorder	function	ported	src/chronicle_packs/tool_gateway/behaviors.cr::call_recorder	-
-packs/tool_gateway/behaviors.py::function::evaluate_call_policy	function	ported	src/chronicle_packs/tool_gateway/behaviors.cr::evaluate_call_policy	standing-scope lookup stubbed to nil
+packs/tool_gateway/behaviors.py::function::evaluate_call_policy	function	ported	src/chronicle_packs/tool_gateway/behaviors.cr::evaluate_call_policy	standing-scope lookup live via graph; instance ceiling explicit param (chronicle Runtime rank vocab is read/write/admin, not R0-R4)
 packs/tool_gateway/behaviors.py::function::policy_enforcer	function	ported	src/chronicle_packs/tool_gateway/behaviors.cr::policy_enforcer	-
 packs/tool_gateway/behaviors.py::function::result_sourcer	function	ported	src/chronicle_packs/tool_gateway/behaviors.cr::result_sourcer	-
-packs/tool_gateway/behaviors.py::function::tool_policy_reliability_guard	function	deferred	-	depends on standing_scopes (demote_tool_policy_fn)
+packs/tool_gateway/behaviors.py::function::tool_policy_reliability_guard	function	ported	src/chronicle_packs/tool_gateway/behaviors.cr::tool_policy_reliability_guard	demotes on harmful/stale; no auto-re-promotion
 packs/tool_gateway/capabilities.py::function::_fetch	function	deferred	-	host runtime web_fetch/ToolContext seam
 packs/tool_gateway/capabilities.py::function::register_web_fetch_capability	function	deferred	-	host runtime web_fetch/ToolContext seam
 packs/tool_gateway/catalog.py::class::CatalogSearchInput	class	ported	src/chronicle_packs/tool_gateway/catalog.cr::CatalogSearchInput	record

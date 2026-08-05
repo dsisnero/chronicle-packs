@@ -5,17 +5,20 @@ module Chronicle::Packs::ToolGateway
   # (slice 1: call_recorder, policy_enforcer, call_executor, result_sourcer).
   # tool_policy_reliability_guard depends on standing_scopes (deferred).
 
-  # Both policy dimensions for one call. Standing-scope lookup is deferred
-  # (no promoted tool_policy), so R2 calls fail closed to hold — the same
-  # fail-safe as upstream with no scope.
-  def self.evaluate_call_policy(capability_key : String, risk_class : String, action_class : String, settings : ToolGatewaySettings, requires_explicit_approval : Bool = false) : Hash(String, JSON::Any)
+  # Both policy dimensions for one call. P6 (ADR 0018): an R2 call is
+  # auto-eligible only when a PROMOTED standing scope (tool_policy) covers
+  # this capability AND the instance authority ceiling is at least R2 —
+  # looked up live from *graph*, so a demotion takes effect on the very
+  # next call.
+  def self.evaluate_call_policy(capability_key : String, risk_class : String, action_class : String, settings : ToolGatewaySettings, requires_explicit_approval : Bool = false, graph : Chronicle::GraphProjection? = nil, authority_ceiling : String = "none") : Hash(String, JSON::Any)
     capability_ceiling = settings.capability_action_ceilings[capability_key]?
+    standing_scope = (graph && action_class == "R2") ? promoted_standing_scope_for(graph, capability_key, "R2") : nil
     detail = decide_policy_detail(
       risk_class, settings,
       action_class: action_class,
-      authority_ceiling: "none",
+      authority_ceiling: authority_ceiling,
       capability_ceiling: capability_ceiling,
-      standing_scope: nil,
+      standing_scope: standing_scope,
     )
     if authority = detail["action_authority"]?.try(&.as_h)
       authority["capability"] = JSON::Any.new(capability_key)
@@ -153,5 +156,39 @@ module Chronicle::Packs::ToolGateway
       graph.patch_object(result_id, result.copy_with(source_id: source.id).to_json)
     end
     graph.add_relation(result_id, source.id, "sourced_as")
+  end
+
+  # Demote a promoted standing scope whose reliability turns bad.
+  # Unlike skills, recovery NEVER auto-re-promotes an automation grant:
+  # re-promotion always takes a fresh proposal plus explicit owner approval
+  # (ADR 0018: promotion is never silent).
+  @[Chronicle::Packs::Annotations::Behavior(name: "tool_policy_reliability_guard", on: ["reliability.changed"])]
+  # ameba:disable Metrics/CyclomaticComplexity -- faithful port of the upstream guard's verdict gating
+  def tool_policy_reliability_guard(event : Chronicle::Event, graph : Chronicle::GraphProjection, _ctx : Chronicle::Packs::BehaviorContext, settings : ToolGatewaySettings) : Nil
+    payload = JSON.parse(event.payload).as_h
+    return unless payload["artifact_type"]?.try(&.as_s?) == "tool_policy"
+    verdict = payload["verdict"]?.try(&.as_s?) || "weak"
+    return unless verdict.in?({"harmful", "stale"})
+
+    artifact_id = payload["artifact_id"]?.try(&.as_s?) || ""
+    policy = graph.get_object(artifact_id)
+    if policy.nil? || policy.type != "tool_policy"
+      policy = graph.objects(type: "tool_policy").find { |obj| JSON.parse(obj.data)["policy_id"]?.try(&.as_s?) == artifact_id }
+    end
+    return if policy.nil?
+
+    policy_data = JSON.parse(policy.data).as_h
+    return unless policy_data["status"]?.try(&.as_s?) == "promoted"
+
+    outcome_event_id = payload["outcome_event_id"]?.try(&.as_s?) || ""
+    evidence = policy_data["evidence"]?.try(&.as_h) || {} of String => JSON::Any
+    demote_tool_policy_fn(
+      graph,
+      policy_data["policy_id"]?.try(&.as_s?) || "",
+      missed_prediction_refs: [event.id],
+      observed_accuracy_percent: evidence["accuracy_percent"]?.try(&.as_i?) || 0,
+      actor: "tool_policy_reliability_guard",
+      reason: "reliability verdict fell to #{verdict.inspect} (outcome evidence #{outcome_event_id})",
+    )
   end
 end
