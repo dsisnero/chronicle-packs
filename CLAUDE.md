@@ -41,9 +41,16 @@ crystal spec                            # run tests
   In plain structs (custom initializer or parse-only), use `getter? field`
   which is ameba-clean and needs no key annotation. When a plain struct
   needs `copy_with`, include `Chronicle::Packs::CopyWith` and declare
-  `define_copy_with(field1, field2, ...)` (all fields as named params
-  defaulting to the current ivar values) — no `JSON.parse(...).as_h` merge
-  patches.
+  `define_copy_with` — with **no arguments** it auto-derives the field list
+  from `@type.instance_vars` (legal only inside a `def`, so the macro emits
+  `def copy_with(**opts : **T) forall T` with a `{% verbatim do %}{% begin
+  %}` block deferring expansion until the type is finalized). The explicit
+  initializer must accept **every** ivar as a named arg; partial overrides
+  keep the other ivars' current values, and falsy overrides (`false`, `0`,
+  `""`) apply, but an explicitly-passed `nil` is treated as "not provided"
+  (keep the current value). The explicit form `define_copy_with(x, visible)`
+  still works for structs whose initializer takes a subset. Never reach for
+  `JSON.parse(...).as_h` merge patches.
 - **Closed string sets are enums:** for validated, closed `Literal` sets
   (source_category, connection_path, surface_status, replay_mode, risk
   class, maintenance mode, ...) use a Crystal `enum`. Non-flags enums
