@@ -1464,9 +1464,9 @@ packs/memory_gateway/promotion.py::function::resolve_memory_promotion_fn	functio
 packs/memory_gateway/promotion.py::function::verify_memory_replay_fn	function	deferred	-	slice 2: promotion module
 packs/memory_gateway/settings.py::class::MemoryGatewaySettings	class	ported	src/chronicle_packs/memory_gateway/settings.cr::MemoryGatewaySettings	-
 packs/memory_gateway/tools.py::const::TOOLS	const	ported	-	collected by DSL @[Tool] annotations
-packs/memory_gateway/tools.py::function::_subject_allows_evidence	function	deferred	-	slice 2: resolve_memory_query
-packs/memory_gateway/tools.py::function::resolve_memory_query	function	deferred	-	slice 2: procedure resolver
-packs/memory_gateway/tools.py::function::resolve_memory_query_fn	function	deferred	-	slice 2: procedure resolver
+packs/memory_gateway/tools.py::function::_subject_allows_evidence	function	ported	src/chronicle_packs/memory_gateway/tools.cr::_subject_allows_evidence	-
+packs/memory_gateway/tools.py::function::resolve_memory_query	function	ported	src/chronicle_packs/memory_gateway/tools.cr::resolve_memory_query_tool	tool wrapper; renamed with _tool suffix
+packs/memory_gateway/tools.py::function::resolve_memory_query_fn	function	ported	src/chronicle_packs/memory_gateway/tools.cr::resolve_memory_query_fn	-
 packs/memory_gateway/tools.py::function::retrieve_memories	function	ported	src/chronicle_packs/memory_gateway/tools.cr::retrieve_memories_tool	tool wrapper; renamed with _tool suffix
 packs/memory_gateway/tools.py::function::retrieve_memories_fn	function	ported	src/chronicle_packs/memory_gateway/tools.cr::retrieve_memories_fn	graph-backed
 packs/research/behaviors.py::const::BEHAVIORS	const	missing	-	auto-generated

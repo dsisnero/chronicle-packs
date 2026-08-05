@@ -238,5 +238,27 @@ module Chronicle::Packs::MemoryGateway
     getter? authoritative_evidence : Bool = true
     getter coverage : Hash(String, JSON::Any) = {} of String => JSON::Any
     getter metadata : Hash(String, JSON::Any) = {} of String => JSON::Any
+
+    def initialize(
+      query : String, subject_ref : String? = nil, selected_tier : ResolutionTier = ResolutionTier::None,
+      procedure_id : String = "", evidence_ids : Array(String) = [] of String,
+      annotation_ids : Array(String) = [] of String, memory_item_ids : Array(String) = [] of String,
+      context_text : String = "", confidence : Float64 = 0.0, authoritative_evidence : Bool = true,
+      coverage : Hash(String, JSON::Any) = {} of String => JSON::Any,
+      metadata : Hash(String, JSON::Any) = {} of String => JSON::Any,
+    )
+      @query = query
+      @subject_ref = subject_ref
+      @selected_tier = selected_tier
+      @procedure_id = procedure_id
+      @evidence_ids = evidence_ids
+      @annotation_ids = annotation_ids
+      @memory_item_ids = memory_item_ids
+      @context_text = context_text
+      @confidence = confidence
+      @authoritative_evidence = authoritative_evidence
+      @coverage = coverage
+      @metadata = metadata
+    end
   end
 end

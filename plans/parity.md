@@ -18,7 +18,7 @@ Core (the universal substrate) lands before the infrastructure it requires,
 then communication, domain verticals, transport adapters, and the demo
 surface.
 
-**Progress: 616 / 2080 source API items ported, 51 skipped, 219 deferred.**
+**Progress: 619 / 2080 source API items ported, 51 skipped, 216 deferred.**
 
 ## Features
 
@@ -61,11 +61,11 @@ surface.
 - [x] `secrets` — credential reference management, managed source registry
       (42/42) — `src/chronicle_packs/secrets/`
 - [~] `memory_gateway` — candidate evaluation/promotion, SQLite backend,
-      retrieval ranking, embedder seam (32/122, slice 1: graph-backed
+      retrieval ranking, embedder seam (35/122, slice 1: graph-backed
       lifecycle — candidate_evaluator/memory_writer/memory_retriever/
       memory_ranker/memory_reliability_applier, lexical_score, retrieve_
-      memories; SQLite/embedder/adapters/promotion/resolve_memory_query
-      deferred)
+      memories, resolve_memory_query (evidence-authoritative);
+      SQLite/embedder/adapters/promotion deferred)
 - [x] `identity_auth` — principal resolution, role-based access, permission
       checking (35/35) — `src/chronicle_packs/identity_auth/`
 - [x] `agent_profile` — goals, personality, standing instructions scoped by
@@ -396,10 +396,12 @@ surface.
   candidates with subject-scoped dedup and LRU eviction; `memory_retriever`
   fulfills graph-visible retrieval requests; `memory_ranker` scores each
   result; `memory_reliability_applier` applies `reliability.changed` to an
-  item. `retrieve_memories_fn` returns outcome-adjusted ranked results.
-  Deferred to slice 2: the SQLite/embedding backends, adapters,
-  `memory_promotion_proposer` + the promotion module, and
-  `resolve_memory_query` (the procedure resolver).
+  item. `retrieve_memories_fn` returns outcome-adjusted ranked results, and
+  `resolve_memory_query_fn` resolves over the evidence-authoritative tiers
+  (raw evidence floor, annotations, admitted items) with source-trust
+  arbitration from the attention pack, writing a `memory_query_resolution`.
+  Deferred to slice 2: the SQLite/embedding backends, adapters, and
+  `memory_promotion_proposer` + the promotion module.
 
 ## Inventory
 
