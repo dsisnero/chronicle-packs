@@ -4,7 +4,9 @@ require "./settings"
 require "./object_types"
 require "./relation_types"
 require "./extractors"
+require "./replay"
 require "./behaviors"
+require "./tools"
 
 # Activity Normalizer Pack — provider-neutral evidence identity and
 # deterministic candidate extraction. Ported from upstream

@@ -24,5 +24,24 @@ module Chronicle::Packs::ActivityNormalizer
     getter? legacy_extraction_enabled : Bool = false
     getter? select_shared_extraction : Bool = true
     getter? compat_candidate_projectors : Bool = true
+
+    def initialize(
+      @enabled : Bool = true,
+      @artifact_store_dir : String = ".activegraph/replay-artifacts",
+      @max_replay_payload_bytes : Int32 = 8 * 1024 * 1024,
+      @default_extractor_id : String = "activity.structure",
+      @default_extractor_version : String = "0.1.0",
+      @default_extraction_config_id : String = "default",
+      @max_normalized_content_chars : Int32 = 16_000,
+      @max_candidates_per_evidence : Int32 = 32,
+      @max_candidate_chars : Int32 = 2000,
+      @retention_policy : String = "source_default",
+      @encoding : String = "utf-8",
+      @emit_custom_events : Bool = true,
+      @legacy_extraction_enabled : Bool = false,
+      @select_shared_extraction : Bool = true,
+      @compat_candidate_projectors : Bool = true,
+    )
+    end
   end
 end

@@ -18,7 +18,7 @@ Core (the universal substrate) lands before the infrastructure it requires,
 then communication, domain verticals, transport adapters, and the demo
 surface.
 
-**Progress: 317 / 2080 source API items ported, 24 skipped, 38 deferred.**
+**Progress: 331 / 2080 source API items ported, 24 skipped, 16 deferred.**
 
 ## Features
 
@@ -65,11 +65,11 @@ surface.
       channel/audience (32/32) — `src/chronicle_packs/agent_profile/`
 - [x] `entity` — canonical extraction + dedup for people/orgs/projects/
       products/repos (27/27) — `src/chronicle_packs/entity/`
-- [~] `activity_normalizer` — provider-neutral evidence identity, replay
-      modes/revisions, deterministic candidate extraction (34/87, slice 1:
-      evidence identity/revision ownership + StructureExtractor; replay
-      store, annotation layer, cursor/tombstone/migration behaviors, and
-      the two graph tools deferred to slice 2)
+- [x] `activity_normalizer` — provider-neutral evidence identity, replay
+      modes/revisions, deterministic candidate extraction (55/87; remaining
+      16 depend on the semantic_extraction pack: the annotation layer,
+      the ADR 0026 shared-extraction selection/migration behaviors, and the
+      structure-candidate projector)
 - [ ] `semantic_extraction` — typed source-anchored annotations, deterministic
       floor + LLM upgrade seam, coverage tracking (0/156)
 - [ ] `usage` — source surfaces, connector handoffs, stable cursors,
@@ -262,7 +262,7 @@ surface.
   (correction requires supersession); maintenance outcomes are idempotent
   by contribution key. The upstream fixture also loads memory_gateway; the
   behavior/tool specs run without it.
-- `activity_normalizer` (slice 1 of 2, in progress): all 13 object types and
+- `activity_normalizer`: all 13 object types and
   8 relation types are `JSON::Serializable` structs. The
   `normalize_acquired_item` behavior owns provider-neutral evidence identity
   (`evidence_{sha256(source_surface_id, dedup_key)}`), bumps `revision_number`
@@ -272,11 +272,21 @@ surface.
   `acquired_from`/`supersedes`. The legacy evidence→candidate path
   (`run_extraction`, default off per ADR 0026) runs the zero-key
   `StructureExtractor` idempotently by `extraction_identity` and records
-  typed candidates + `produced_candidate`/`extracted_from`. Deferred to
-  slice 2: the content-addressed replay artifact store (`replay.py`), the
-  shared annotation layer (`annotation_extractor.py`), the cursor/tombstone/
-  migration/projector behaviors, and the two graph tools. Until the replay
-  store lands, non-`reference_only` acquisition payloads are not dereferenced.
+  typed candidates + `produced_candidate`/`extracted_from`. The replay
+  store (`replay.py`) is ported: content-addressed SHA-256 artifacts, portable
+  chunked locators for passage through secret sanitizers, and
+  `read_replay_payload` (inline verification / artifact-store reads /
+  reference_only rejection), which `normalize_acquired_item` calls for
+  non-`reference_only` acquisitions. Cursor behaviors publish
+  `source.cursor_advanced` on `backfill_cursor` creation and `patch.applied`;
+  `fulfill_evidence_invalidation_request` revokes matching current evidence
+  (idempotent fulfilled no-op outside the retained window) and emits
+  `source.evidence_invalidated`. The graph tools `reextract_evidence` (from
+  the retained payload, emitting `replay.verified`) and
+  `disable_extractor_version` (invalidates records + candidate provenance,
+  preserving evidence) are `@[Tool]` wrappers over the host-bound seam.
+  Deferred until semantic_extraction lands: the annotation layer and the
+  ADR 0026 shared-extraction behaviors (migration/selection/projector).
 
 ## Inventory
 

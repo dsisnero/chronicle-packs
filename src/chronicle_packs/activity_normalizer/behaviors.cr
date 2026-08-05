@@ -2,13 +2,16 @@ require "json"
 require "digest"
 
 module Chronicle::Packs::ActivityNormalizer
-  # Identity-owning normalization and deterministic extraction behaviors.
-  # Ported from upstream packs/activity_normalizer/behaviors.py (slice 1:
-  # normalize_acquired_item + run_extraction + helpers).
+  # Identity-owning normalization, deterministic extraction, and
+  # cursor/tombstone behaviors. Ported from upstream
+  # packs/activity_normalizer/behaviors.py.
   #
   # Chronicle differences: object.created payload is flat ({id, type, data}),
   # ctx has no read view (graph serves reads), and patch_object replaces the
-  # full object — so supersede merges explicitly.
+  # full object — so supersede/invalidation merges are explicit. The ADR 0026
+  # shared-extraction behaviors (migrate_communication_extraction_floor,
+  # select_shared_extraction, project_structure_candidates) depend on the
+  # semantic_extraction pack's types and are deferred until it lands.
 
   class_property event_seq = 0_u64
 
@@ -45,7 +48,9 @@ module Chronicle::Packs::ActivityNormalizer
     failure = IngestionFailure.new(stage, error_code, message[0, 2000] || error_code, source_surface_id, acquired_item_id, source_ref, importer_id, importer_version, extractor_id, extractor_version, recoverable, metadata)
     obj = graph.add_object("ingestion_failure", failure.to_json)
     target = acquired_item_id.try { |id| graph.get_object(id) }
-    graph.add_relation(obj.id, acquired_item_id, "failure_for") if target
+    if target && (item_id = acquired_item_id)
+      graph.add_relation(obj.id, item_id, "failure_for")
+    end
     obj
   end
 
@@ -274,6 +279,11 @@ module Chronicle::Packs::ActivityNormalizer
 
     handoff = AcquiredContent.from_json(content_obj.data)
     begin
+      # Validate the retained replay payload is available and verifiable for
+      # non-reference_only modes (upstream: read_replay_payload at ingestion).
+      if item.replay_mode != "reference_only"
+        Replay.read_replay_payload(JSON.parse(item.to_json).as_h, settings)
+      end
       content_hash = item.source_hash || item.replay_payload_hash
       identity = _stable_id("evidence", item.source_surface_id, item.dedup_key)
       current, idempotent = _current_revision(graph, identity, content_hash)
@@ -297,5 +307,89 @@ module Chronicle::Packs::ActivityNormalizer
     rescue ex
       record_failure(graph, stage: "normalization", error_code: "normalization_failed", message: "#{ex.class}: #{ex}", source_surface_id: item.source_surface_id, acquired_item_id: acquired_item_id, source_ref: item.source_ref, importer_id: item.importer_id, importer_version: item.importer_version)
     end
+  end
+
+  # Emit the provider-stable cursor state for observational consumers.
+  def self._emit_cursor_event(graph : Chronicle::GraphProjection, cursor : Chronicle::GraphObject, caused_by : String?) : Nil
+    cursor_data = JSON.parse(cursor.data).as_h
+    _emit_event(graph, "source.cursor_advanced", {
+      "cursor_id"           => JSON::Any.new(cursor.id),
+      "source_surface_id"   => cursor_data["source_surface_id"]? || JSON::Any.new(nil),
+      "oldest_ingested_ref" => cursor_data["oldest_ingested_ref"]? || JSON::Any.new(nil),
+      "newest_ingested_ref" => cursor_data["newest_ingested_ref"]? || JSON::Any.new(nil),
+      "watermark_ref"       => cursor_data["watermark_ref"]? || JSON::Any.new(nil),
+      "cursor_version"      => cursor_data["cursor_version"]? || JSON::Any.new(1),
+    }, caused_by: caused_by)
+  end
+
+  # Publish provider-stable cursor state on cursor creation.
+  @[Chronicle::Packs::Annotations::Behavior(name: "publish_cursor_created", on: ["object.created"], where: {"type" => "backfill_cursor"})]
+  def publish_cursor_created(event : Chronicle::Event, graph : Chronicle::GraphProjection, _ctx : Chronicle::Packs::BehaviorContext, settings : ActivityNormalizerSettings) : Nil
+    return if !settings.emit_custom_events?
+
+    payload = JSON.parse(event.payload)
+    cursor_id = payload["id"]?.try(&.as_s?)
+    return if cursor_id.nil?
+
+    cursor = graph.get_object(cursor_id)
+    _emit_cursor_event(graph, cursor, event.id) if cursor
+  end
+
+  # Publish each committed cursor advance without interpreting pagination.
+  @[Chronicle::Packs::Annotations::Behavior(name: "publish_cursor_patch", on: ["patch.applied"])]
+  def publish_cursor_patch(event : Chronicle::Event, graph : Chronicle::GraphProjection, _ctx : Chronicle::Packs::BehaviorContext, settings : ActivityNormalizerSettings) : Nil
+    return if !settings.emit_custom_events?
+
+    payload = JSON.parse(event.payload)
+    target = payload["target"]?.try(&.as_s?)
+    return if target.nil?
+
+    cursor = graph.get_object(target)
+    if cursor && cursor.type == "backfill_cursor"
+      _emit_cursor_event(graph, cursor, event.id)
+    end
+  end
+
+  # Turn one provider tombstone into explicit, reversible invalidation.
+  @[Chronicle::Packs::Annotations::Behavior(name: "fulfill_evidence_invalidation_request", on: ["object.created"], where: {"type" => "evidence_invalidation_request"})]
+  def fulfill_evidence_invalidation_request(event : Chronicle::Event, graph : Chronicle::GraphProjection, _ctx : Chronicle::Packs::BehaviorContext, settings : ActivityNormalizerSettings) : Nil
+    payload = JSON.parse(event.payload)
+    request_id = payload["id"]?.try(&.as_s?)
+    return if request_id.nil?
+
+    data = payload["data"]?.try(&.as_h) || {} of String => JSON::Any
+    return unless data["status"]?.try(&.as_s?) == "proposed"
+
+    source_surface_id = data["source_surface_id"]?.try(&.as_s?)
+    return if source_surface_id.nil?
+
+    evidence_identity = data["evidence_identity"]?.try(&.as_s?)
+    provider_item_id = data["provider_item_id"]?.try(&.as_s?)
+    matches = graph.objects(type: "activity_evidence").select do |obj|
+      evidence = ActivityEvidence.from_json(obj.data)
+      evidence.source_surface_id == source_surface_id &&
+        evidence.status == "current" &&
+        ((evidence_identity && evidence.evidence_identity == evidence_identity) ||
+          (provider_item_id && evidence.provider_item_id == provider_item_id))
+    end
+    invalidated = [] of String
+    matches.each do |evidence_obj|
+      evidence = ActivityEvidence.from_json(evidence_obj.data)
+      current_data = JSON.parse(evidence_obj.data).as_h
+      current_data["status"] = JSON::Any.new("revoked")
+      _patch(graph, evidence_obj.id, current_data)
+      _emit_event(graph, "source.evidence_invalidated", {
+        "request_id"        => JSON::Any.new(request_id),
+        "evidence_id"       => JSON::Any.new(evidence_obj.id),
+        "evidence_identity" => JSON::Any.new(evidence.evidence_identity),
+        "source_surface_id" => JSON::Any.new(evidence.source_surface_id),
+        "provider_item_id"  => evidence.provider_item_id.try { |v| JSON::Any.new(v) } || JSON::Any.new(nil),
+        "reason"            => data["reason"]? || JSON::Any.new(nil),
+      }, caused_by: event.id)
+      invalidated << evidence_obj.id
+    end
+    # A tombstone for an item outside the retained window is an inspectable
+    # successful no-op, not an error and not a fabricated evidence object.
+    _patch(graph, request_id, {"status" => JSON::Any.new("fulfilled"), "invalidated_evidence_ids" => JSON::Any.new(invalidated.map { |id| JSON::Any.new(id) })})
   end
 end
