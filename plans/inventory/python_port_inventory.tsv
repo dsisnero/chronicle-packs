@@ -1918,19 +1918,19 @@ packs/tool_gateway/registration_check.py::function::check_registration	function	
 packs/tool_gateway/registration_check.py::function::disarm_registration_enforcement	function	ported	src/chronicle_packs/tool_gateway/registration_check.cr::disarm_registration_enforcement	-
 packs/tool_gateway/sanitizer.py::function::sanitize_output	function	ported	src/chronicle_packs/tool_gateway/sanitizer.cr::Sanitizer.sanitize_output	-
 packs/tool_gateway/settings.py::class::ToolGatewaySettings	class	ported	src/chronicle_packs/tool_gateway/settings.cr::ToolGatewaySettings	-
-packs/tool_gateway/standing_scopes.py::const::STANDING_SCOPE_RULES	const	deferred	-	slice 2: standing scopes (ADR 0018)
-packs/tool_gateway/standing_scopes.py::function::_emit_event	function	deferred	-	slice 2: standing scopes
-packs/tool_gateway/standing_scopes.py::function::_event_index_of_ref	function	deferred	-	slice 2: standing scopes
-packs/tool_gateway/standing_scopes.py::function::_objects	function	deferred	-	slice 2: standing scopes
-packs/tool_gateway/standing_scopes.py::function::_validate_pairs	function	deferred	-	slice 2: standing scopes
-packs/tool_gateway/standing_scopes.py::function::accuracy_percent	function	deferred	-	slice 2: standing scopes
-packs/tool_gateway/standing_scopes.py::function::demote_tool_policy_fn	function	deferred	-	slice 2: standing scopes
-packs/tool_gateway/standing_scopes.py::function::disable_tool_policy_fn	function	deferred	-	slice 2: standing scopes
-packs/tool_gateway/standing_scopes.py::function::find_tool_policy	function	deferred	-	slice 2: standing scopes
-packs/tool_gateway/standing_scopes.py::function::pair_matched	function	deferred	-	slice 2: standing scopes
-packs/tool_gateway/standing_scopes.py::function::promote_tool_policy_fn	function	deferred	-	slice 2: standing scopes
-packs/tool_gateway/standing_scopes.py::function::promoted_standing_scope_for	function	deferred	-	slice 2: standing scopes
-packs/tool_gateway/standing_scopes.py::function::propose_standing_scope_fn	function	deferred	-	slice 2: standing scopes
+packs/tool_gateway/standing_scopes.py::const::STANDING_SCOPE_RULES	const	ported	src/chronicle_packs/tool_gateway/standing_scopes.cr::StandingScopeRules::RULES	versioned rules
+packs/tool_gateway/standing_scopes.py::function::_emit_event	function	ported	src/chronicle_packs/tool_gateway/standing_scopes.cr::_emit_event	-
+packs/tool_gateway/standing_scopes.py::function::_event_index_of_ref	function	ported	src/chronicle_packs/tool_gateway/standing_scopes.cr::_event_index_of_ref	-
+packs/tool_gateway/standing_scopes.py::function::_objects	function	ported	src/chronicle_packs/tool_gateway/standing_scopes.cr objects()	inlined as graph.objects
+packs/tool_gateway/standing_scopes.py::function::_validate_pairs	function	ported	src/chronicle_packs/tool_gateway/standing_scopes.cr::_validate_pairs	-
+packs/tool_gateway/standing_scopes.py::function::accuracy_percent	function	ported	src/chronicle_packs/tool_gateway/standing_scopes.cr::accuracy_percent	-
+packs/tool_gateway/standing_scopes.py::function::demote_tool_policy_fn	function	ported	src/chronicle_packs/tool_gateway/standing_scopes.cr::demote_tool_policy_fn	-
+packs/tool_gateway/standing_scopes.py::function::disable_tool_policy_fn	function	ported	src/chronicle_packs/tool_gateway/standing_scopes.cr::disable_tool_policy_fn	-
+packs/tool_gateway/standing_scopes.py::function::find_tool_policy	function	ported	src/chronicle_packs/tool_gateway/standing_scopes.cr::find_tool_policy	-
+packs/tool_gateway/standing_scopes.py::function::pair_matched	function	ported	src/chronicle_packs/tool_gateway/standing_scopes.cr::pair_matched	-
+packs/tool_gateway/standing_scopes.py::function::promote_tool_policy_fn	function	ported	src/chronicle_packs/tool_gateway/standing_scopes.cr::promote_tool_policy_fn	-
+packs/tool_gateway/standing_scopes.py::function::promoted_standing_scope_for	function	ported	src/chronicle_packs/tool_gateway/standing_scopes.cr::promoted_standing_scope_for	the gateway's R2 auto-approval read path
+packs/tool_gateway/standing_scopes.py::function::propose_standing_scope_fn	function	ported	src/chronicle_packs/tool_gateway/standing_scopes.cr::propose_standing_scope_fn	-
 packs/tool_gateway/tools.py::class::CapabilitySpec	class	ported	src/chronicle_packs/tool_gateway/tools.cr::CapabilitySpec	record
 packs/tool_gateway/tools.py::const::TOOLS	const	ported	-	collected by DSL @[Tool] annotations
 packs/tool_gateway/tools.py::function::_verify_approver	function	ported	src/chronicle_packs/tool_gateway/tools.cr::_verify_approver	identity_auth optional partner

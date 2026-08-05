@@ -8,6 +8,7 @@ require "./untrusted"
 require "./gateway"
 require "./catalog"
 require "./registration_check"
+require "./standing_scopes"
 require "./tools"
 require "./behaviors"
 
