@@ -18,7 +18,7 @@ Core (the universal substrate) lands before the infrastructure it requires,
 then communication, domain verticals, transport adapters, and the demo
 surface.
 
-**Progress: 609 / 2080 source API items ported, 51 skipped, 226 deferred.**
+**Progress: 616 / 2080 source API items ported, 51 skipped, 219 deferred.**
 
 ## Features
 
@@ -78,11 +78,12 @@ surface.
       shared-extraction selection/migration, and the structure-candidate
       projector now complete)
 - [~] `semantic_extraction` — typed source-anchored annotations, deterministic
-      floor + LLM upgrade seam, coverage tracking (50/156, slice 1: the
+      floor + LLM upgrade seam, coverage tracking (56/156, slices 1-2a: the
       deterministic zero-key floor (DeterministicExtractorV1) + facets +
       seeded extraction_profile + the eager annotate pipeline with cache
-      idempotency; procedures, the LLM seam, selection extraction, and the
-      candidate projectors are deferred)
+      idempotency; the profile/memory candidate projectors and the profile-update/
+      extractor-invalidation tools are in; procedures, the LLM seam, and
+      selection extraction remain deferred)
 - [x] `usage` — source surfaces, connector handoffs, stable cursors,
       settlement, interaction facts (71/77) — `src/chronicle_packs/usage/`
 - [x] `connector_control` — service/account/surface status, run adapters,

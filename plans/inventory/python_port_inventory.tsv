@@ -1583,12 +1583,12 @@ packs/secrets/tools.py::function::resolve_credential_fn	function	ported	src/chro
 packs/secrets/tools.py::function::resolve_credential_with_source_fn	function	ported	src/chronicle_packs/secrets/tools.cr::resolve_credential_with_source_fn	-
 packs/semantic_extraction/behaviors.py::const::BEHAVIORS	const	ported	-	collected by DSL pack macro
 packs/semantic_extraction/behaviors.py::const::LLM_EXTRACTOR_REF	const	deferred	-	slice 2: LLM seam
-packs/semantic_extraction/behaviors.py::function::_existing_candidate_identities	function	deferred	-	slice 2: projectors
+packs/semantic_extraction/behaviors.py::function::_existing_candidate_identities	function	ported	src/chronicle_packs/semantic_extraction/behaviors.cr::project_profile_candidates	folded into the projector
 packs/semantic_extraction/behaviors.py::function::_llm_upgrade_active	function	deferred	-	slice 2: LLM seam
 packs/semantic_extraction/behaviors.py::function::annotate_evidence	function	ported	src/chronicle_packs/semantic_extraction/behaviors.cr::annotate_evidence	-
 packs/semantic_extraction/behaviors.py::function::extract_selected_evidence	function	deferred	-	slice 2: selection extraction
-packs/semantic_extraction/behaviors.py::function::project_memory_candidates	function	deferred	-	slice 2: projectors
-packs/semantic_extraction/behaviors.py::function::project_profile_candidates	function	deferred	-	slice 2: projectors
+packs/semantic_extraction/behaviors.py::function::project_memory_candidates	function	ported	src/chronicle_packs/semantic_extraction/behaviors.cr::project_memory_candidates	-
+packs/semantic_extraction/behaviors.py::function::project_profile_candidates	function	ported	src/chronicle_packs/semantic_extraction/behaviors.cr::project_profile_candidates	-
 packs/semantic_extraction/behaviors.py::function::seed_extraction_profile	function	ported	src/chronicle_packs/semantic_extraction/behaviors.cr::seed_extraction_profile	-
 packs/semantic_extraction/engine.py::function::_active_profile	function	ported	src/chronicle_packs/semantic_extraction/engine.cr::_active_profile	-
 packs/semantic_extraction/engine.py::function::_attribution	function	ported	src/chronicle_packs/semantic_extraction/engine.cr::_attribution	-
@@ -1727,16 +1727,16 @@ packs/semantic_extraction/tools.py::function::annotation_coverage_fn	function	de
 packs/semantic_extraction/tools.py::function::ensure_llm_extraction_profile_fn	function	deferred	-	slice 2
 packs/semantic_extraction/tools.py::function::extract_annotations	function	ported	src/chronicle_packs/semantic_extraction/tools.cr::extract_annotations_tool	tool wrapper; renamed with _tool suffix
 packs/semantic_extraction/tools.py::function::extract_annotations_fn	function	deferred	-	slice 2
-packs/semantic_extraction/tools.py::function::invalidate_annotation_extractor	function	deferred	-	slice 2
-packs/semantic_extraction/tools.py::function::invalidate_annotation_extractor_fn	function	deferred	-	slice 2
+packs/semantic_extraction/tools.py::function::invalidate_annotation_extractor	function	ported	src/chronicle_packs/semantic_extraction/tools.cr::invalidate_annotation_extractor_tool	tool wrapper; renamed with _tool suffix
+packs/semantic_extraction/tools.py::function::invalidate_annotation_extractor_fn	function	ported	src/chronicle_packs/semantic_extraction/tools.cr::invalidate_annotation_extractor_fn	-
 packs/semantic_extraction/tools.py::function::promote_llm_extractor	function	deferred	-	slice 2
 packs/semantic_extraction/tools.py::function::promote_llm_extractor_fn	function	deferred	-	slice 2
 packs/semantic_extraction/tools.py::function::promote_request_procedure	function	deferred	-	slice 2
 packs/semantic_extraction/tools.py::function::run_extractor_trial	function	deferred	-	slice 2
 packs/semantic_extraction/tools.py::function::run_extractor_trial_fn	function	deferred	-	slice 2
 packs/semantic_extraction/tools.py::function::synthesize_request_procedure	function	deferred	-	slice 2
-packs/semantic_extraction/tools.py::function::update_extraction_profile	function	deferred	-	slice 2
-packs/semantic_extraction/tools.py::function::update_extraction_profile_fn	function	deferred	-	slice 2
+packs/semantic_extraction/tools.py::function::update_extraction_profile	function	ported	src/chronicle_packs/semantic_extraction/tools.cr::update_extraction_profile_tool	tool wrapper; renamed with _tool suffix
+packs/semantic_extraction/tools.py::function::update_extraction_profile_fn	function	ported	src/chronicle_packs/semantic_extraction/tools.cr::update_extraction_profile_fn	-
 packs/skills/behaviors.py::const::BEHAVIORS	const	ported	src/chronicle_packs/skills/pack.cr	collected by DSL pack macro
 packs/skills/behaviors.py::function::skill_candidate_author	function	ported	src/chronicle_packs/skills/behaviors.cr::skill_candidate_author	-
 packs/skills/behaviors.py::function::skill_evaluation_linker	function	ported	src/chronicle_packs/skills/behaviors.cr::skill_evaluation_linker	-
