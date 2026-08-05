@@ -1863,8 +1863,8 @@ packs/tool_gateway/behaviors.py::function::evaluate_call_policy	function	ported	
 packs/tool_gateway/behaviors.py::function::policy_enforcer	function	ported	src/chronicle_packs/tool_gateway/behaviors.cr::policy_enforcer	-
 packs/tool_gateway/behaviors.py::function::result_sourcer	function	ported	src/chronicle_packs/tool_gateway/behaviors.cr::result_sourcer	-
 packs/tool_gateway/behaviors.py::function::tool_policy_reliability_guard	function	ported	src/chronicle_packs/tool_gateway/behaviors.cr::tool_policy_reliability_guard	demotes on harmful/stale; no auto-re-promotion
-packs/tool_gateway/capabilities.py::function::_fetch	function	deferred	-	host runtime web_fetch/ToolContext seam
-packs/tool_gateway/capabilities.py::function::register_web_fetch_capability	function	deferred	-	host runtime web_fetch/ToolContext seam
+packs/tool_gateway/capabilities.py::function::_fetch	function	ported	src/chronicle_packs/tool_gateway/capabilities.cr _fetch closure	inlined as the registered fn; live I/O via web_fetch_fetcher host seam, fails closed when unset
+packs/tool_gateway/capabilities.py::function::register_web_fetch_capability	function	ported	src/chronicle_packs/tool_gateway/capabilities.cr::register_web_fetch_capability	risk low, R0, default auto-approvable
 packs/tool_gateway/catalog.py::class::CatalogSearchInput	class	ported	src/chronicle_packs/tool_gateway/catalog.cr::CatalogSearchInput	record
 packs/tool_gateway/catalog.py::function::_entry	function	ported	src/chronicle_packs/tool_gateway/catalog.cr::_catalog_entry	-
 packs/tool_gateway/catalog.py::function::_search	function	ported	src/chronicle_packs/tool_gateway/catalog.cr::register_catalog_capability	folded into the catalog.search handler
