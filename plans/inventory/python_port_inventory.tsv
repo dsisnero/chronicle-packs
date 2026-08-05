@@ -1347,128 +1347,128 @@ packs/meeting/tools.py::function::create_meeting	function	missing	-	auto-generat
 packs/meeting/tools.py::function::create_meeting_fn	function	missing	-	auto-generated
 packs/meeting/tools.py::function::ingest_transcript	function	missing	-	auto-generated
 packs/meeting/tools.py::function::ingest_transcript_fn	function	missing	-	auto-generated
-packs/memory_gateway/adapters.py::class::Mem0Backend	class	missing	-	auto-generated
-packs/memory_gateway/adapters.py::function::register_mem0_backend	function	missing	-	auto-generated
-packs/memory_gateway/adapters.py::method::Mem0Backend.__init__	method	missing	-	auto-generated
-packs/memory_gateway/adapters.py::method::Mem0Backend._normalize	method	missing	-	auto-generated
-packs/memory_gateway/adapters.py::method::Mem0Backend._search	method	missing	-	auto-generated
-packs/memory_gateway/adapters.py::method::Mem0Backend.retrieve_by_query	method	missing	-	auto-generated
-packs/memory_gateway/adapters.py::method::Mem0Backend.store_item	method	missing	-	auto-generated
-packs/memory_gateway/backend.py::class::Embedder	class	missing	-	auto-generated
-packs/memory_gateway/backend.py::class::ExternalMemoryBackend	class	missing	-	auto-generated
-packs/memory_gateway/backend.py::class::MemoryBackend	class	missing	-	auto-generated
-packs/memory_gateway/backend.py::class::SqliteMemoryBackend	class	missing	-	auto-generated
-packs/memory_gateway/backend.py::const::STOPWORDS	const	missing	-	auto-generated
-packs/memory_gateway/backend.py::function::_cosine	function	missing	-	auto-generated
-packs/memory_gateway/backend.py::function::_embed	function	missing	-	auto-generated
-packs/memory_gateway/backend.py::function::_invoke_embedder	function	missing	-	auto-generated
-packs/memory_gateway/backend.py::function::_jaccard	function	missing	-	auto-generated
-packs/memory_gateway/backend.py::function::_normalize_text	function	missing	-	auto-generated
-packs/memory_gateway/backend.py::function::_recorded_embed_fn	function	missing	-	auto-generated
-packs/memory_gateway/backend.py::function::_safe_embed	function	missing	-	auto-generated
-packs/memory_gateway/backend.py::function::_word_set	function	missing	-	auto-generated
-packs/memory_gateway/backend.py::function::auto_configure_embedder	function	missing	-	auto-generated
-packs/memory_gateway/backend.py::function::clear_all_backends	function	missing	-	auto-generated
-packs/memory_gateway/backend.py::function::clear_embedder	function	missing	-	auto-generated
-packs/memory_gateway/backend.py::function::close_all_backends	function	missing	-	auto-generated
-packs/memory_gateway/backend.py::function::get_backend	function	missing	-	auto-generated
-packs/memory_gateway/backend.py::function::get_embedder	function	missing	-	auto-generated
-packs/memory_gateway/backend.py::function::lexical_score	function	missing	-	auto-generated
-packs/memory_gateway/backend.py::function::register_backend	function	missing	-	auto-generated
-packs/memory_gateway/backend.py::function::runtime_recorded_embedding	function	missing	-	auto-generated
-packs/memory_gateway/backend.py::function::set_embedder	function	missing	-	auto-generated
-packs/memory_gateway/backend.py::function::set_embedder_factory	function	missing	-	auto-generated
-packs/memory_gateway/backend.py::function::unregister_backend	function	missing	-	auto-generated
-packs/memory_gateway/backend.py::method::Embedder.embed	method	missing	-	auto-generated
-packs/memory_gateway/backend.py::method::ExternalMemoryBackend.__init__	method	missing	-	auto-generated
-packs/memory_gateway/backend.py::method::ExternalMemoryBackend.apply_reliability	method	missing	-	auto-generated
-packs/memory_gateway/backend.py::method::ExternalMemoryBackend.clear	method	missing	-	auto-generated
-packs/memory_gateway/backend.py::method::ExternalMemoryBackend.close	method	missing	-	auto-generated
-packs/memory_gateway/backend.py::method::ExternalMemoryBackend.count	method	missing	-	auto-generated
-packs/memory_gateway/backend.py::method::ExternalMemoryBackend.enforce_limit	method	missing	-	auto-generated
-packs/memory_gateway/backend.py::method::ExternalMemoryBackend.find_by_text	method	missing	-	auto-generated
-packs/memory_gateway/backend.py::method::ExternalMemoryBackend.get_subject	method	missing	-	auto-generated
-packs/memory_gateway/backend.py::method::ExternalMemoryBackend.retrieve_by_query	method	missing	-	auto-generated
-packs/memory_gateway/backend.py::method::ExternalMemoryBackend.set_reliability	method	missing	-	auto-generated
-packs/memory_gateway/backend.py::method::ExternalMemoryBackend.set_subject	method	missing	-	auto-generated
-packs/memory_gateway/backend.py::method::ExternalMemoryBackend.store_item	method	missing	-	auto-generated
-packs/memory_gateway/backend.py::method::ExternalMemoryBackend.update_retrieval	method	missing	-	auto-generated
-packs/memory_gateway/backend.py::method::MemoryBackend.clear	method	missing	-	auto-generated
-packs/memory_gateway/backend.py::method::MemoryBackend.close	method	missing	-	auto-generated
-packs/memory_gateway/backend.py::method::MemoryBackend.count	method	missing	-	auto-generated
-packs/memory_gateway/backend.py::method::MemoryBackend.enforce_limit	method	missing	-	auto-generated
-packs/memory_gateway/backend.py::method::MemoryBackend.find_by_text	method	missing	-	auto-generated
-packs/memory_gateway/backend.py::method::MemoryBackend.get_subject	method	missing	-	auto-generated
-packs/memory_gateway/backend.py::method::MemoryBackend.retrieve_by_query	method	missing	-	auto-generated
-packs/memory_gateway/backend.py::method::MemoryBackend.set_reliability	method	missing	-	auto-generated
-packs/memory_gateway/backend.py::method::MemoryBackend.set_subject	method	missing	-	auto-generated
-packs/memory_gateway/backend.py::method::MemoryBackend.store_item	method	missing	-	auto-generated
-packs/memory_gateway/backend.py::method::MemoryBackend.update_retrieval	method	missing	-	auto-generated
-packs/memory_gateway/backend.py::method::SqliteMemoryBackend.__init__	method	missing	-	auto-generated
-packs/memory_gateway/backend.py::method::SqliteMemoryBackend._setup	method	missing	-	auto-generated
-packs/memory_gateway/backend.py::method::SqliteMemoryBackend.clear	method	missing	-	auto-generated
-packs/memory_gateway/backend.py::method::SqliteMemoryBackend.close	method	missing	-	auto-generated
-packs/memory_gateway/backend.py::method::SqliteMemoryBackend.count	method	missing	-	auto-generated
-packs/memory_gateway/backend.py::method::SqliteMemoryBackend.enforce_limit	method	missing	-	auto-generated
-packs/memory_gateway/backend.py::method::SqliteMemoryBackend.find_by_text	method	missing	-	auto-generated
-packs/memory_gateway/backend.py::method::SqliteMemoryBackend.get_subject	method	missing	-	auto-generated
-packs/memory_gateway/backend.py::method::SqliteMemoryBackend.retrieve_by_query	method	missing	-	auto-generated
-packs/memory_gateway/backend.py::method::SqliteMemoryBackend.set_reliability	method	missing	-	auto-generated
-packs/memory_gateway/backend.py::method::SqliteMemoryBackend.set_subject	method	missing	-	auto-generated
-packs/memory_gateway/backend.py::method::SqliteMemoryBackend.store_item	method	missing	-	auto-generated
-packs/memory_gateway/backend.py::method::SqliteMemoryBackend.update_retrieval	method	missing	-	auto-generated
-packs/memory_gateway/behaviors.py::const::BEHAVIORS	const	missing	-	auto-generated
-packs/memory_gateway/behaviors.py::function::_derive_subject_ref	function	missing	-	auto-generated
-packs/memory_gateway/behaviors.py::function::_provenance_verdict	function	missing	-	auto-generated
-packs/memory_gateway/behaviors.py::function::_source_admission_policy	function	missing	-	auto-generated
-packs/memory_gateway/behaviors.py::function::candidate_evaluator	function	missing	-	auto-generated
-packs/memory_gateway/behaviors.py::function::memory_promotion_proposer	function	missing	-	auto-generated
-packs/memory_gateway/behaviors.py::function::memory_ranker	function	missing	-	auto-generated
-packs/memory_gateway/behaviors.py::function::memory_reliability_applier	function	missing	-	auto-generated
-packs/memory_gateway/behaviors.py::function::memory_retriever	function	missing	-	auto-generated
-packs/memory_gateway/behaviors.py::function::memory_writer	function	missing	-	auto-generated
-packs/memory_gateway/embedders.py::class::HashEmbedder	class	missing	-	auto-generated
-packs/memory_gateway/embedders.py::class::OpenAIEmbedder	class	missing	-	auto-generated
-packs/memory_gateway/embedders.py::function::default_embedder_factory	function	missing	-	auto-generated
-packs/memory_gateway/embedders.py::method::HashEmbedder.__init__	method	missing	-	auto-generated
-packs/memory_gateway/embedders.py::method::HashEmbedder.embed	method	missing	-	auto-generated
-packs/memory_gateway/embedders.py::method::OpenAIEmbedder.__init__	method	missing	-	auto-generated
-packs/memory_gateway/embedders.py::method::OpenAIEmbedder.embed	method	missing	-	auto-generated
-packs/memory_gateway/fixtures/run_fixtures.py::class::_CountingProvider	class	missing	-	auto-generated
-packs/memory_gateway/fixtures/run_fixtures.py::class::_PoisonProvider	class	missing	-	auto-generated
-packs/memory_gateway/fixtures/run_fixtures.py::function::_run_fixture	function	missing	-	auto-generated
-packs/memory_gateway/fixtures/run_fixtures.py::function::_run_promotion_fixture	function	missing	-	auto-generated
-packs/memory_gateway/fixtures/run_fixtures.py::function::_run_recorded_embedding_fixture	function	missing	-	auto-generated
-packs/memory_gateway/fixtures/run_fixtures.py::function::main	function	missing	-	auto-generated
-packs/memory_gateway/fixtures/run_fixtures.py::function::record	function	missing	-	auto-generated
-packs/memory_gateway/fixtures/run_fixtures.py::method::_CountingProvider.__init__	method	missing	-	auto-generated
-packs/memory_gateway/fixtures/run_fixtures.py::method::_CountingProvider.embed	method	missing	-	auto-generated
-packs/memory_gateway/fixtures/run_fixtures.py::method::_PoisonProvider.embed	method	missing	-	auto-generated
-packs/memory_gateway/object_types.py::class::MemoryItem	class	missing	-	auto-generated
-packs/memory_gateway/object_types.py::class::MemoryPromotionProposal	class	missing	-	auto-generated
-packs/memory_gateway/object_types.py::class::MemoryQueryResolution	class	missing	-	auto-generated
-packs/memory_gateway/object_types.py::class::MemoryRanking	class	missing	-	auto-generated
-packs/memory_gateway/object_types.py::class::MemoryRetrieval	class	missing	-	auto-generated
-packs/memory_gateway/object_types.py::class::MemoryRetrievalRequest	class	missing	-	auto-generated
-packs/memory_gateway/object_types.py::const::OBJECT_TYPES	const	missing	-	auto-generated
-packs/memory_gateway/object_types.py::const::RELATION_TYPES	const	missing	-	auto-generated
-packs/memory_gateway/promotion.py::class::MemoryReplayIncompleteError	class	missing	-	auto-generated
-packs/memory_gateway/promotion.py::const::MEMORY_PROMOTION_RULES	const	missing	-	auto-generated
-packs/memory_gateway/promotion.py::function::_emit_event	function	missing	-	auto-generated
-packs/memory_gateway/promotion.py::function::_get_item	function	missing	-	auto-generated
-packs/memory_gateway/promotion.py::function::_objects	function	missing	-	auto-generated
-packs/memory_gateway/promotion.py::function::_source_replay_gaps	function	missing	-	auto-generated
-packs/memory_gateway/promotion.py::function::open_proposal_for	function	missing	-	auto-generated
-packs/memory_gateway/promotion.py::function::propose_memory_promotion_fn	function	missing	-	auto-generated
-packs/memory_gateway/promotion.py::function::resolve_memory_promotion_fn	function	missing	-	auto-generated
-packs/memory_gateway/promotion.py::function::verify_memory_replay_fn	function	missing	-	auto-generated
-packs/memory_gateway/settings.py::class::MemoryGatewaySettings	class	missing	-	auto-generated
-packs/memory_gateway/tools.py::const::TOOLS	const	missing	-	auto-generated
-packs/memory_gateway/tools.py::function::_subject_allows_evidence	function	missing	-	auto-generated
-packs/memory_gateway/tools.py::function::resolve_memory_query	function	missing	-	auto-generated
-packs/memory_gateway/tools.py::function::resolve_memory_query_fn	function	missing	-	auto-generated
-packs/memory_gateway/tools.py::function::retrieve_memories	function	missing	-	auto-generated
-packs/memory_gateway/tools.py::function::retrieve_memories_fn	function	missing	-	auto-generated
+packs/memory_gateway/adapters.py::class::Mem0Backend	class	deferred	-	host mem0 adapter
+packs/memory_gateway/adapters.py::function::register_mem0_backend	function	deferred	-	host mem0 adapter
+packs/memory_gateway/adapters.py::method::Mem0Backend.__init__	method	deferred	-	host mem0 adapter
+packs/memory_gateway/adapters.py::method::Mem0Backend._normalize	method	deferred	-	host mem0 adapter
+packs/memory_gateway/adapters.py::method::Mem0Backend._search	method	deferred	-	host mem0 adapter
+packs/memory_gateway/adapters.py::method::Mem0Backend.retrieve_by_query	method	deferred	-	host mem0 adapter
+packs/memory_gateway/adapters.py::method::Mem0Backend.store_item	method	deferred	-	host mem0 adapter
+packs/memory_gateway/backend.py::class::Embedder	class	deferred	-	slice 2: embedder seam
+packs/memory_gateway/backend.py::class::ExternalMemoryBackend	class	deferred	-	slice 2: external backends
+packs/memory_gateway/backend.py::class::MemoryBackend	class	deferred	-	slice 2: SQLite store
+packs/memory_gateway/backend.py::class::SqliteMemoryBackend	class	deferred	-	slice 2: SQLite store
+packs/memory_gateway/backend.py::const::STOPWORDS	const	deferred	-	ported (src/chronicle_packs/memory_gateway/backend.cr::Backend::STOPWORDS)
+packs/memory_gateway/backend.py::function::_cosine	function	deferred	-	slice 2: embedding cosine
+packs/memory_gateway/backend.py::function::_embed	function	deferred	-	slice 2: embedder
+packs/memory_gateway/backend.py::function::_invoke_embedder	function	deferred	-	slice 2: embedder
+packs/memory_gateway/backend.py::function::_jaccard	function	ported	src/chronicle_packs/memory_gateway/backend.cr::Backend	folded into lexical_score
+packs/memory_gateway/backend.py::function::_normalize_text	function	ported	src/chronicle_packs/memory_gateway/backend.cr::Backend._normalize_text	-
+packs/memory_gateway/backend.py::function::_recorded_embed_fn	function	deferred	-	slice 2: recorded embedding
+packs/memory_gateway/backend.py::function::_safe_embed	function	deferred	-	slice 2: embedder
+packs/memory_gateway/backend.py::function::_word_set	function	ported	src/chronicle_packs/memory_gateway/backend.cr::Backend._word_set	-
+packs/memory_gateway/backend.py::function::auto_configure_embedder	function	deferred	-	slice 2: embedder
+packs/memory_gateway/backend.py::function::clear_all_backends	function	deferred	-	slice 2: backend registry
+packs/memory_gateway/backend.py::function::clear_embedder	function	deferred	-	slice 2: embedder
+packs/memory_gateway/backend.py::function::close_all_backends	function	deferred	-	slice 2: backend registry
+packs/memory_gateway/backend.py::function::get_backend	function	deferred	-	slice 2: backend registry (graph-backed in slice 1)
+packs/memory_gateway/backend.py::function::get_embedder	function	deferred	-	slice 2: embedder
+packs/memory_gateway/backend.py::function::lexical_score	function	ported	src/chronicle_packs/memory_gateway/backend.cr::Backend.lexical_score	-
+packs/memory_gateway/backend.py::function::register_backend	function	deferred	-	slice 2: backend registry
+packs/memory_gateway/backend.py::function::runtime_recorded_embedding	function	deferred	-	slice 2: recorded embedding
+packs/memory_gateway/backend.py::function::set_embedder	function	deferred	-	slice 2: embedder
+packs/memory_gateway/backend.py::function::set_embedder_factory	function	deferred	-	slice 2: embedder
+packs/memory_gateway/backend.py::function::unregister_backend	function	deferred	-	slice 2: backend registry
+packs/memory_gateway/backend.py::method::Embedder.embed	method	deferred	-	slice 2: embedder seam
+packs/memory_gateway/backend.py::method::ExternalMemoryBackend.__init__	method	deferred	-	slice 2: external backends
+packs/memory_gateway/backend.py::method::ExternalMemoryBackend.apply_reliability	method	deferred	-	slice 2
+packs/memory_gateway/backend.py::method::ExternalMemoryBackend.clear	method	deferred	-	slice 2
+packs/memory_gateway/backend.py::method::ExternalMemoryBackend.close	method	deferred	-	slice 2
+packs/memory_gateway/backend.py::method::ExternalMemoryBackend.count	method	deferred	-	slice 2
+packs/memory_gateway/backend.py::method::ExternalMemoryBackend.enforce_limit	method	deferred	-	slice 2
+packs/memory_gateway/backend.py::method::ExternalMemoryBackend.find_by_text	method	deferred	-	slice 2
+packs/memory_gateway/backend.py::method::ExternalMemoryBackend.get_subject	method	deferred	-	slice 2
+packs/memory_gateway/backend.py::method::ExternalMemoryBackend.retrieve_by_query	method	deferred	-	slice 2
+packs/memory_gateway/backend.py::method::ExternalMemoryBackend.set_reliability	method	deferred	-	slice 2
+packs/memory_gateway/backend.py::method::ExternalMemoryBackend.set_subject	method	deferred	-	slice 2
+packs/memory_gateway/backend.py::method::ExternalMemoryBackend.store_item	method	deferred	-	slice 2
+packs/memory_gateway/backend.py::method::ExternalMemoryBackend.update_retrieval	method	deferred	-	slice 2
+packs/memory_gateway/backend.py::method::MemoryBackend.clear	method	deferred	-	slice 2: SQLite store
+packs/memory_gateway/backend.py::method::MemoryBackend.close	method	deferred	-	slice 2: SQLite store
+packs/memory_gateway/backend.py::method::MemoryBackend.count	method	deferred	-	slice 2: SQLite store
+packs/memory_gateway/backend.py::method::MemoryBackend.enforce_limit	method	ported	src/chronicle_packs/memory_gateway/backend.cr::Backend.enforce_limit	graph-backed LRU
+packs/memory_gateway/backend.py::method::MemoryBackend.find_by_text	method	ported	src/chronicle_packs/memory_gateway/backend.cr::Backend.find_by_text	graph-backed
+packs/memory_gateway/backend.py::method::MemoryBackend.get_subject	method	ported	src/chronicle_packs/memory_gateway/backend.cr::Backend.get_subject	graph-backed
+packs/memory_gateway/backend.py::method::MemoryBackend.retrieve_by_query	method	ported	src/chronicle_packs/memory_gateway/backend.cr::Backend.retrieve_by_query	graph-backed
+packs/memory_gateway/backend.py::method::MemoryBackend.set_reliability	method	ported	src/chronicle_packs/memory_gateway/backend.cr::Backend.set_reliability	graph-backed
+packs/memory_gateway/backend.py::method::MemoryBackend.set_subject	method	ported	src/chronicle_packs/memory_gateway/backend.cr::Backend.set_subject	graph-backed
+packs/memory_gateway/backend.py::method::MemoryBackend.store_item	method	deferred	-	slice 2: SQLite store
+packs/memory_gateway/backend.py::method::MemoryBackend.update_retrieval	method	ported	src/chronicle_packs/memory_gateway/backend.cr::Backend.update_retrieval	graph-backed
+packs/memory_gateway/backend.py::method::SqliteMemoryBackend.__init__	method	deferred	-	slice 2: SQLite store
+packs/memory_gateway/backend.py::method::SqliteMemoryBackend._setup	method	deferred	-	slice 2: SQLite store
+packs/memory_gateway/backend.py::method::SqliteMemoryBackend.clear	method	deferred	-	slice 2: SQLite store
+packs/memory_gateway/backend.py::method::SqliteMemoryBackend.close	method	deferred	-	slice 2: SQLite store
+packs/memory_gateway/backend.py::method::SqliteMemoryBackend.count	method	deferred	-	slice 2: SQLite store
+packs/memory_gateway/backend.py::method::SqliteMemoryBackend.enforce_limit	method	deferred	-	slice 2: SQLite store
+packs/memory_gateway/backend.py::method::SqliteMemoryBackend.find_by_text	method	deferred	-	slice 2: SQLite store
+packs/memory_gateway/backend.py::method::SqliteMemoryBackend.get_subject	method	deferred	-	slice 2: SQLite store
+packs/memory_gateway/backend.py::method::SqliteMemoryBackend.retrieve_by_query	method	deferred	-	slice 2: SQLite store
+packs/memory_gateway/backend.py::method::SqliteMemoryBackend.set_reliability	method	deferred	-	slice 2: SQLite store
+packs/memory_gateway/backend.py::method::SqliteMemoryBackend.set_subject	method	deferred	-	slice 2: SQLite store
+packs/memory_gateway/backend.py::method::SqliteMemoryBackend.store_item	method	deferred	-	slice 2: SQLite store
+packs/memory_gateway/backend.py::method::SqliteMemoryBackend.update_retrieval	method	deferred	-	slice 2: SQLite store
+packs/memory_gateway/behaviors.py::const::BEHAVIORS	const	ported	-	collected by DSL pack macro
+packs/memory_gateway/behaviors.py::function::_derive_subject_ref	function	ported	src/chronicle_packs/memory_gateway/behaviors.cr::_derive_subject_ref	-
+packs/memory_gateway/behaviors.py::function::_provenance_verdict	function	ported	src/chronicle_packs/memory_gateway/behaviors.cr::_provenance_verdict	-
+packs/memory_gateway/behaviors.py::function::_source_admission_policy	function	ported	src/chronicle_packs/memory_gateway/behaviors.cr::_source_admission_policy	-
+packs/memory_gateway/behaviors.py::function::candidate_evaluator	function	ported	src/chronicle_packs/memory_gateway/behaviors.cr::candidate_evaluator	-
+packs/memory_gateway/behaviors.py::function::memory_promotion_proposer	function	deferred	-	slice 2: promotion module
+packs/memory_gateway/behaviors.py::function::memory_ranker	function	ported	src/chronicle_packs/memory_gateway/behaviors.cr::memory_ranker	-
+packs/memory_gateway/behaviors.py::function::memory_reliability_applier	function	ported	src/chronicle_packs/memory_gateway/behaviors.cr::memory_reliability_applier	-
+packs/memory_gateway/behaviors.py::function::memory_retriever	function	ported	src/chronicle_packs/memory_gateway/behaviors.cr::memory_retriever	-
+packs/memory_gateway/behaviors.py::function::memory_writer	function	ported	src/chronicle_packs/memory_gateway/behaviors.cr::memory_writer	-
+packs/memory_gateway/embedders.py::class::HashEmbedder	class	deferred	-	slice 2: embedders
+packs/memory_gateway/embedders.py::class::OpenAIEmbedder	class	deferred	-	slice 2: embedders (API key)
+packs/memory_gateway/embedders.py::function::default_embedder_factory	function	deferred	-	slice 2: embedders
+packs/memory_gateway/embedders.py::method::HashEmbedder.__init__	method	deferred	-	slice 2: embedders
+packs/memory_gateway/embedders.py::method::HashEmbedder.embed	method	deferred	-	slice 2: embedders
+packs/memory_gateway/embedders.py::method::OpenAIEmbedder.__init__	method	deferred	-	slice 2: embedders
+packs/memory_gateway/embedders.py::method::OpenAIEmbedder.embed	method	deferred	-	slice 2: embedders
+packs/memory_gateway/fixtures/run_fixtures.py::class::_CountingProvider	class	skipped	-	fixture scripts; lifecycle driven by specs
+packs/memory_gateway/fixtures/run_fixtures.py::class::_PoisonProvider	class	skipped	-	fixture scripts; lifecycle driven by specs
+packs/memory_gateway/fixtures/run_fixtures.py::function::_run_fixture	function	skipped	-	fixture scripts; lifecycle driven by specs
+packs/memory_gateway/fixtures/run_fixtures.py::function::_run_promotion_fixture	function	skipped	-	fixture scripts; lifecycle driven by specs
+packs/memory_gateway/fixtures/run_fixtures.py::function::_run_recorded_embedding_fixture	function	skipped	-	fixture scripts; lifecycle driven by specs
+packs/memory_gateway/fixtures/run_fixtures.py::function::main	function	skipped	-	fixture scripts; lifecycle driven by specs
+packs/memory_gateway/fixtures/run_fixtures.py::function::record	function	skipped	-	fixture scripts; lifecycle driven by specs
+packs/memory_gateway/fixtures/run_fixtures.py::method::_CountingProvider.__init__	method	skipped	-	fixture scripts; lifecycle driven by specs
+packs/memory_gateway/fixtures/run_fixtures.py::method::_CountingProvider.embed	method	skipped	-	fixture scripts; lifecycle driven by specs
+packs/memory_gateway/fixtures/run_fixtures.py::method::_PoisonProvider.embed	method	skipped	-	fixture scripts; lifecycle driven by specs
+packs/memory_gateway/object_types.py::class::MemoryItem	class	ported	src/chronicle_packs/memory_gateway/object_types.cr::MemoryItem	reliability_verdict/promotion_status as enums
+packs/memory_gateway/object_types.py::class::MemoryPromotionProposal	class	ported	src/chronicle_packs/memory_gateway/object_types.cr::MemoryPromotionProposal	direction/status as enums
+packs/memory_gateway/object_types.py::class::MemoryQueryResolution	class	ported	src/chronicle_packs/memory_gateway/object_types.cr::MemoryQueryResolution	selected_tier as enum
+packs/memory_gateway/object_types.py::class::MemoryRanking	class	ported	src/chronicle_packs/memory_gateway/object_types.cr::MemoryRanking	-
+packs/memory_gateway/object_types.py::class::MemoryRetrieval	class	ported	src/chronicle_packs/memory_gateway/object_types.cr::MemoryRetrieval	-
+packs/memory_gateway/object_types.py::class::MemoryRetrievalRequest	class	ported	src/chronicle_packs/memory_gateway/object_types.cr::MemoryRetrievalRequest	-
+packs/memory_gateway/object_types.py::const::OBJECT_TYPES	const	ported	src/chronicle_packs/memory_gateway/pack.cr	collected by DSL pack macro
+packs/memory_gateway/object_types.py::const::RELATION_TYPES	const	ported	src/chronicle_packs/memory_gateway/pack.cr	collected by DSL pack macro
+packs/memory_gateway/promotion.py::class::MemoryReplayIncompleteError	class	deferred	-	slice 2: promotion module
+packs/memory_gateway/promotion.py::const::MEMORY_PROMOTION_RULES	const	deferred	-	slice 2: promotion module
+packs/memory_gateway/promotion.py::function::_emit_event	function	deferred	-	slice 2: promotion module
+packs/memory_gateway/promotion.py::function::_get_item	function	deferred	-	slice 2: promotion module
+packs/memory_gateway/promotion.py::function::_objects	function	deferred	-	slice 2: promotion module
+packs/memory_gateway/promotion.py::function::_source_replay_gaps	function	deferred	-	slice 2: promotion module
+packs/memory_gateway/promotion.py::function::open_proposal_for	function	deferred	-	slice 2: promotion module
+packs/memory_gateway/promotion.py::function::propose_memory_promotion_fn	function	deferred	-	slice 2: promotion module
+packs/memory_gateway/promotion.py::function::resolve_memory_promotion_fn	function	deferred	-	slice 2: promotion module
+packs/memory_gateway/promotion.py::function::verify_memory_replay_fn	function	deferred	-	slice 2: promotion module
+packs/memory_gateway/settings.py::class::MemoryGatewaySettings	class	ported	src/chronicle_packs/memory_gateway/settings.cr::MemoryGatewaySettings	-
+packs/memory_gateway/tools.py::const::TOOLS	const	ported	-	collected by DSL @[Tool] annotations
+packs/memory_gateway/tools.py::function::_subject_allows_evidence	function	deferred	-	slice 2: resolve_memory_query
+packs/memory_gateway/tools.py::function::resolve_memory_query	function	deferred	-	slice 2: procedure resolver
+packs/memory_gateway/tools.py::function::resolve_memory_query_fn	function	deferred	-	slice 2: procedure resolver
+packs/memory_gateway/tools.py::function::retrieve_memories	function	ported	src/chronicle_packs/memory_gateway/tools.cr::retrieve_memories_tool	tool wrapper; renamed with _tool suffix
+packs/memory_gateway/tools.py::function::retrieve_memories_fn	function	ported	src/chronicle_packs/memory_gateway/tools.cr::retrieve_memories_fn	graph-backed
 packs/research/behaviors.py::const::BEHAVIORS	const	missing	-	auto-generated
 packs/research/behaviors.py::const::STOPWORDS	const	missing	-	auto-generated
 packs/research/behaviors.py::function::_extract_keywords	function	missing	-	auto-generated

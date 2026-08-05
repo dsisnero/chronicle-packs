@@ -44,6 +44,17 @@ crystal spec                            # run tests
   `define_copy_with(field1, field2, ...)` (all fields as named params
   defaulting to the current ivar values) — no `JSON.parse(...).as_h` merge
   patches.
+- **Closed string sets are enums:** for validated, closed `Literal` sets
+  (source_category, connection_path, surface_status, replay_mode, risk
+  class, maintenance mode, ...) use a Crystal `enum`. Non-flags enums
+  serialize as the member name via `String#underscore` — so name members
+  as the CamelCase of the upstream string (`AiActivity` → `"ai_activity"`)
+  and `to_json`/`from_json` round-trip to the exact upstream value with no
+  converter, while `parse?` gives validation, `.each`/question methods give
+  iteration and case-matching. Keep `String` only for genuinely open values
+  (`metadata`, memory `category`, free-form labels). Values that do NOT
+  round-trip through underscore (e.g. `action_class` `"R0"` → `"r0"`) need
+  an explicit `wire`/`from_wire` converter or a `@[JSON::Field(converter:)]`.
 
 ## Relevant docs
 

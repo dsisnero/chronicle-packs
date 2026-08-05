@@ -18,7 +18,7 @@ Core (the universal substrate) lands before the infrastructure it requires,
 then communication, domain verticals, transport adapters, and the demo
 surface.
 
-**Progress: 511 / 2080 source API items ported, 41 skipped, 56 deferred.**
+**Progress: 543 / 2080 source API items ported, 51 skipped, 136 deferred.**
 
 ## Features
 
@@ -60,8 +60,12 @@ surface.
       enforcement, and the reference web_fetch capability are deferred)
 - [x] `secrets` — credential reference management, managed source registry
       (42/42) — `src/chronicle_packs/secrets/`
-- [ ] `memory_gateway` — candidate evaluation/promotion, SQLite backend,
-      retrieval ranking, embedder seam (0/122)
+- [~] `memory_gateway` — candidate evaluation/promotion, SQLite backend,
+      retrieval ranking, embedder seam (32/122, slice 1: graph-backed
+      lifecycle — candidate_evaluator/memory_writer/memory_retriever/
+      memory_ranker/memory_reliability_applier, lexical_score, retrieve_
+      memories; SQLite/embedder/adapters/promotion/resolve_memory_query
+      deferred)
 - [x] `identity_auth` — principal resolution, role-based access, permission
       checking (35/35) — `src/chronicle_packs/identity_auth/`
 - [x] `agent_profile` — goals, personality, standing instructions scoped by
@@ -350,6 +354,23 @@ surface.
   Deferred to slice 2: the catalog, standing scopes (ADR 0018), integration
   profiles, LLM proxies, registration enforcement, and the reference
   web_fetch capability (host runtime seam).
+- `memory_gateway` (slice 1 of 2, in progress): 6 typed object types + 5
+  relation types. Closed string sets are Crystal enums — non-flags enums
+  serialize as the underscored member name, so `ReliabilityVerdict::Harmful`
+  → `"harmful"` and `ResolutionTier::AnnotatedEvidence` →
+  `"annotated_evidence"` round-trip to the exact upstream value with
+  `parse?` validation. The store is graph-backed (memory_item graph objects
+  ARE the store; `lexical_score` = max of Jaccard overlap and query-term
+  coverage). `candidate_evaluator` runs the acceptance policy (threshold +
+  auto-accept category relief + provenance admission with Identity/Auth
+  verification when principals exist); `memory_writer` promotes accepted
+  candidates with subject-scoped dedup and LRU eviction; `memory_retriever`
+  fulfills graph-visible retrieval requests; `memory_ranker` scores each
+  result; `memory_reliability_applier` applies `reliability.changed` to an
+  item. `retrieve_memories_fn` returns outcome-adjusted ranked results.
+  Deferred to slice 2: the SQLite/embedding backends, adapters,
+  `memory_promotion_proposer` + the promotion module, and
+  `resolve_memory_query` (the procedure resolver).
 
 ## Inventory
 
