@@ -41,4 +41,12 @@ module Chronicle::Packs
     Revoked
     Failed
   end
+
+  # Shared outcome-derived reliability verdict (eval_outcome, memory_gateway).
+  enum ReliabilityVerdict
+    Supported
+    Weak
+    Harmful
+    Stale
+  end
 end

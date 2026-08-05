@@ -66,7 +66,7 @@ module Chronicle::Packs::ToolGateway
 
     if policy["decision"]?.try(&.as_s?) == "auto_approve"
       if current = graph.get_object(call_id)
-        graph.patch_object(call_id, CapabilityCall.from_json(current.data).copy_with(status: "approved").to_json)
+        graph.patch_object(call_id, CapabilityCall.from_json(current.data).copy_with(status: CallStatus::Approved).to_json)
       end
       metadata = {"risk_class" => JSON::Any.new(risk_class)}
       if !action_class.empty?
@@ -90,7 +90,7 @@ module Chronicle::Packs::ToolGateway
       graph.add_relation(call_id, approval_obj.id, "approved_by")
     else
       if current = graph.get_object(call_id)
-        graph.patch_object(call_id, CapabilityCall.from_json(current.data).copy_with(status: "policy_checking").to_json)
+        graph.patch_object(call_id, CapabilityCall.from_json(current.data).copy_with(status: CallStatus::PolicyChecking).to_json)
       end
       if !action_class.empty? && (current = graph.get_object(call_id))
         call = CapabilityCall.from_json(current.data)

@@ -169,6 +169,6 @@ module Chronicle::Packs::ToolGateway
     return if current.nil?
 
     call = CapabilityCall.from_json(current.data)
-    graph.patch_object(call_id, call.copy_with(status: status).to_json)
+    graph.patch_object(call_id, call.copy_with(status: CallStatus.parse?(status) || CallStatus::Failed).to_json)
   end
 end

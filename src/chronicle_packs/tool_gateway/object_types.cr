@@ -111,9 +111,43 @@ module Chronicle::Packs::ToolGateway
     getter budget : Int32
     getter? structural_only : Bool = true
     getter shape_fingerprint : String?
-    getter status : String = "proposed"
+    getter status : CallStatus = CallStatus::Proposed
     getter injection_flags : Array(String) = [] of String
     getter metadata : Hash(String, JSON::Any) = {} of String => JSON::Any
+  end
+
+  # Closed string-literal sets for the capability surface.
+
+  enum RiskClass
+    Low
+    Medium
+    High
+    Critical
+  end
+
+  enum CallStatus
+    Proposed
+    PolicyChecking
+    Approved
+    Rejected
+    Executing
+    Done
+    Failed
+  end
+
+  enum ProviderKind
+    Local
+    Api
+    Mcp
+    Sdk
+    Webhook
+  end
+
+  enum ToolPolicyStatus
+    Candidate
+    Promoted
+    Demoted
+    Disabled
   end
 
   # A standing-scope tool policy — automation as a promoted prediction.
@@ -126,7 +160,7 @@ module Chronicle::Packs::ToolGateway
     getter scope_key : String
     getter capability_key : String
     getter action_class : String
-    getter status : String = "candidate"
+    getter status : ToolPolicyStatus = ToolPolicyStatus::Candidate
     getter rule_id : String = ""
     getter rule_version : Int32 = 0
     getter evidence : Hash(String, JSON::Any) = {} of String => JSON::Any
@@ -145,7 +179,7 @@ module Chronicle::Packs::ToolGateway
     include JSON::Serializable
 
     getter name : String
-    getter kind : String
+    getter kind : ProviderKind
     getter base_url : String?
     getter description : String = ""
     getter capabilities : Array(String) = [] of String
@@ -166,9 +200,9 @@ module Chronicle::Packs::ToolGateway
     getter input_data : Hash(String, JSON::Any) = {} of String => JSON::Any
     getter credential_ref_name : String?
     getter credential_ref_id : String?
-    getter risk_class : String = "medium"
+    getter risk_class : RiskClass = RiskClass::Medium
     getter action_class : String = ""
-    getter status : String = "proposed"
+    getter status : CallStatus = CallStatus::Proposed
     getter proposed_by : String?
     getter frame_id : String?
     getter proposed_at : String?
@@ -178,7 +212,7 @@ module Chronicle::Packs::ToolGateway
       provider_id : String, capability_name : String,
       provider_name : String = "", input_data : Hash(String, JSON::Any) = {} of String => JSON::Any,
       credential_ref_name : String? = nil, credential_ref_id : String? = nil,
-      risk_class : String = "medium", action_class : String = "", status : String = "proposed",
+      risk_class : RiskClass = RiskClass::Medium, action_class : String = "", status : CallStatus = CallStatus::Proposed,
       proposed_by : String? = nil, frame_id : String? = nil, proposed_at : String? = nil,
       metadata : Hash(String, JSON::Any) = {} of String => JSON::Any,
     )

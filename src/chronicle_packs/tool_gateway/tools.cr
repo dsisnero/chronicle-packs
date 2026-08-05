@@ -141,7 +141,7 @@ module Chronicle::Packs::ToolGateway
       return {"ok" => JSON::Any.new(false), "approval_id" => JSON::Any.new(nil), "reason" => verdict["reason"]? || JSON::Any.new(nil)}
     end
 
-    call = CapabilityCall.from_json(call.data).copy_with(status: "approved")
+    call = CapabilityCall.from_json(call.data).copy_with(status: CallStatus::Approved)
     graph.patch_object(call_id, call.to_json)
     approval = CapabilityApproval.new(
       call_id,
@@ -181,7 +181,7 @@ module Chronicle::Packs::ToolGateway
       return {"ok" => JSON::Any.new(false), "denial_id" => JSON::Any.new(nil), "reason" => verdict["reason"]? || JSON::Any.new(nil)}
     end
 
-    call = CapabilityCall.from_json(call.data).copy_with(status: "rejected")
+    call = CapabilityCall.from_json(call.data).copy_with(status: CallStatus::Rejected)
     graph.patch_object(call_id, call.to_json)
     denial = CapabilityDenial.new(
       call_id, approver_ref, reason,

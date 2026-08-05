@@ -5,6 +5,84 @@ module Chronicle::Packs::ConnectorControl
   # packs/connector_control/object_types.py. Service/domain runs remain
   # authoritative; these objects are idempotent adapter outputs.
 
+  # Closed string-literal sets for the connector control-plane.
+
+  enum ConnectorFamily
+    Conversation
+    Schedule
+    Records
+    Documents
+    Telemetry
+  end
+
+  enum NativeViewState
+    Empty
+    Ready
+    Partial
+    Stale
+    Failed
+  end
+
+  enum MaintenanceMode
+    None
+    Manual
+    ForegroundPoll
+    Webhook
+    External
+  end
+
+  enum BindingStatus
+    Active
+    Stale
+    Revoked
+  end
+
+  enum CoverageKind
+    Unknown
+    Bounded
+    Current
+  end
+
+  enum ConnectorRunState
+    Queued
+    Running
+    Succeeded
+    Partial
+    Failed
+  end
+
+  enum ConnectorRunHealth
+    Connected
+    Working
+    Current
+    Partial
+    Stale
+    Failed
+  end
+
+  enum DeltaStatus
+    Collecting
+    Complete
+    Partial
+    Failed
+  end
+
+  enum PolicyStatus
+    Active
+    Superseded
+  end
+
+  enum MaintenanceRequestStatus
+    Proposed
+    Accepted
+    Failed
+    Rejected
+  end
+
+  enum MaintenanceKind
+    ManualRefresh
+  end
+
   # A service surface bound to one connector family.
   @[Chronicle::Packs::Annotations::ObjectType(name: "connector_surface_binding", description: "A service surface bound to one connector family.")]
   struct ConnectorSurfaceBinding
@@ -14,22 +92,22 @@ module Chronicle::Packs::ConnectorControl
     getter source_surface_id : String
     getter service : String
     getter account_ref : String
-    getter family : String
+    getter family : ConnectorFamily
     getter routes : Array(String) = [] of String
     getter active_route : String
     getter domain_run_type : String
     getter native_shape_version : Int32 = 1
-    getter maintenance_mode : String = "none"
+    getter maintenance_mode : MaintenanceMode = MaintenanceMode::None
     getter? manual_refresh_available : Bool = false
-    getter status : String = "active"
+    getter status : BindingStatus = BindingStatus::Active
     getter metadata : Hash(String, JSON::Any) = {} of String => JSON::Any
 
     def initialize(
       binding_identity : String, source_surface_id : String, service : String,
-      account_ref : String, family : String, active_route : String, domain_run_type : String,
+      account_ref : String, family : ConnectorFamily, active_route : String, domain_run_type : String,
       routes : Array(String) = [] of String, native_shape_version : Int32 = 1,
-      maintenance_mode : String = "none", manual_refresh_available : Bool = false,
-      status : String = "active", metadata : Hash(String, JSON::Any) = {} of String => JSON::Any,
+      maintenance_mode : MaintenanceMode = MaintenanceMode::None, manual_refresh_available : Bool = false,
+      status : BindingStatus = BindingStatus::Active, metadata : Hash(String, JSON::Any) = {} of String => JSON::Any,
     )
       @binding_identity = binding_identity
       @source_surface_id = source_surface_id
@@ -54,9 +132,9 @@ module Chronicle::Packs::ConnectorControl
     getter position_kind : String?
     getter? has_position : Bool = false
     getter? advanced : Bool = false
-    getter coverage : String = "unknown"
+    getter coverage : CoverageKind = CoverageKind::Unknown
 
-    def initialize(@position_kind : String? = nil, @has_position : Bool = false, @advanced : Bool = false, @coverage : String = "unknown")
+    def initialize(@position_kind : String? = nil, @has_position : Bool = false, @advanced : Bool = false, @coverage : CoverageKind = CoverageKind::Unknown)
     end
   end
 
@@ -70,10 +148,10 @@ module Chronicle::Packs::ConnectorControl
     getter source_surface_id : String
     getter service : String
     getter account_ref : String
-    getter family : String
+    getter family : ConnectorFamily
     getter route : String
-    getter state : String
-    getter health : String
+    getter state : ConnectorRunState
+    getter health : ConnectorRunHealth
     getter phase : String
     getter mode : String
     getter bounds : Hash(String, JSON::Any) = {} of String => JSON::Any
@@ -83,7 +161,7 @@ module Chronicle::Packs::ConnectorControl
     getter update_event_ids : Array(String) = [] of String
     getter terminal_event_ids : Array(String) = [] of String
     getter success_event_ids : Array(String) = [] of String
-    getter maintenance_mode : String = "none"
+    getter maintenance_mode : MaintenanceMode = MaintenanceMode::None
     getter? manual_refresh_available : Bool = false
     getter? next_sync_available : Bool = false
     getter error_code : String?
@@ -92,8 +170,8 @@ module Chronicle::Packs::ConnectorControl
 
     def initialize(
       observation_identity : String, domain_run_id : String, source_surface_id : String,
-      service : String, account_ref : String, family : String, route : String,
-      state : String, health : String, phase : String, mode : String,
+      service : String, account_ref : String, family : ConnectorFamily, route : String,
+      state : ConnectorRunState, health : ConnectorRunHealth, phase : String, mode : String,
       bounds : Hash(String, JSON::Any) = {} of String => JSON::Any,
       counts : Hash(String, Int64) = {} of String => Int64,
       cursor : CursorSummary = CursorSummary.new,
@@ -101,7 +179,7 @@ module Chronicle::Packs::ConnectorControl
       update_event_ids : Array(String) = [] of String,
       terminal_event_ids : Array(String) = [] of String,
       success_event_ids : Array(String) = [] of String,
-      maintenance_mode : String = "none", manual_refresh_available : Bool = false,
+      maintenance_mode : MaintenanceMode = MaintenanceMode::None, manual_refresh_available : Bool = false,
       next_sync_available : Bool = false, error_code : String? = nil, error : String? = nil,
       metadata : Hash(String, JSON::Any) = {} of String => JSON::Any,
     )
@@ -141,8 +219,8 @@ module Chronicle::Packs::ConnectorControl
     getter domain_run_id : String
     getter source_surface_id : String
     getter service : String
-    getter family : String
-    getter status : String = "collecting"
+    getter family : ConnectorFamily
+    getter status : DeltaStatus = DeltaStatus::Collecting
     getter evidence : Hash(String, Int64) = {} of String => Int64
     getter annotation_coverage : Hash(String, Int64) = {} of String => Int64
     getter resolutions : Hash(String, Int64) = {} of String => Int64
@@ -155,7 +233,7 @@ module Chronicle::Packs::ConnectorControl
 
     def initialize(
       delta_identity : String, domain_run_id : String, source_surface_id : String,
-      service : String, family : String, status : String = "collecting",
+      service : String, family : ConnectorFamily, status : DeltaStatus = DeltaStatus::Collecting,
       evidence : Hash(String, Int64) = {} of String => Int64,
       annotation_coverage : Hash(String, Int64) = {} of String => Int64,
       resolutions : Hash(String, Int64) = {} of String => Int64,
@@ -190,17 +268,17 @@ module Chronicle::Packs::ConnectorControl
     getter view_identity : String
     getter source_surface_id : String
     getter service : String
-    getter family : String
+    getter family : ConnectorFamily
     getter shape_version : Int32 = 1
-    getter state : String
+    getter state : NativeViewState
     getter data : Hash(String, JSON::Any) = {} of String => JSON::Any
     getter refs : Array(String) = [] of String
     getter service_extensions : Hash(String, JSON::Any) = {} of String => JSON::Any
     getter error : String?
 
     def initialize(
-      view_identity : String, source_surface_id : String, service : String, family : String,
-      state : String, data : Hash(String, JSON::Any) = {} of String => JSON::Any,
+      view_identity : String, source_surface_id : String, service : String, family : ConnectorFamily,
+      state : NativeViewState, data : Hash(String, JSON::Any) = {} of String => JSON::Any,
       shape_version : Int32 = 1, refs : Array(String) = [] of String,
       service_extensions : Hash(String, JSON::Any) = {} of String => JSON::Any,
       error : String? = nil,
@@ -225,7 +303,7 @@ module Chronicle::Packs::ConnectorControl
 
     getter policy_identity : String
     getter version : Int32 = 1
-    getter status : String = "active"
+    getter status : PolicyStatus = PolicyStatus::Active
     getter fixture_items : Int32 = 250
     getter ack_latency_ms : Int32 = 1_000
     getter first_progress_ms : Int32 = 2_000
@@ -241,7 +319,7 @@ module Chronicle::Packs::ConnectorControl
 
     def initialize(
       policy_identity : String, rationale : String, version : Int32 = 1,
-      status : String = "active", fixture_items : Int32 = 250, ack_latency_ms : Int32 = 1_000,
+      status : PolicyStatus = PolicyStatus::Active, fixture_items : Int32 = 250, ack_latency_ms : Int32 = 1_000,
       first_progress_ms : Int32 = 2_000, projection_read_p95_ms : Int32 = 500,
       max_unyielded_ms : Int32 = 500, max_events_per_evidence : Int32 = 100,
       max_annotations_per_evidence : Int32 = 20, max_behavior_firings_per_evidence : Int32 = 25,
@@ -275,17 +353,17 @@ module Chronicle::Packs::ConnectorControl
     getter source_surface_id : String
     getter service : String
     getter account_ref : String
-    getter kind : String = "manual_refresh"
+    getter kind : MaintenanceKind = MaintenanceKind::ManualRefresh
     getter requested_by : String
-    getter status : String = "proposed"
+    getter status : MaintenanceRequestStatus = MaintenanceRequestStatus::Proposed
     getter domain_run_id : String?
     getter error : String?
     getter metadata : Hash(String, JSON::Any) = {} of String => JSON::Any
 
     def initialize(
       request_identity : String, source_surface_id : String, service : String,
-      account_ref : String, requested_by : String, kind : String = "manual_refresh",
-      status : String = "proposed", domain_run_id : String? = nil, error : String? = nil,
+      account_ref : String, requested_by : String, kind : MaintenanceKind = MaintenanceKind::ManualRefresh,
+      status : MaintenanceRequestStatus = MaintenanceRequestStatus::Proposed, domain_run_id : String? = nil, error : String? = nil,
       metadata : Hash(String, JSON::Any) = {} of String => JSON::Any,
     )
       @request_identity = request_identity

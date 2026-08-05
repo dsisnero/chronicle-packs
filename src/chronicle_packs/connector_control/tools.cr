@@ -67,16 +67,21 @@ module Chronicle::Packs::ConnectorControl
     existing = _by_field(graph, "connector_surface_binding", "binding_identity", identity)
     prior_routes = existing ? (JSON.parse(existing.data)["routes"]?.try(&.as_a?.try(&.map(&.as_s))) || [] of String) : [] of String
     all_routes = _dedup(prior_routes + (routes || [] of String) + [active_route])
+    family_enum = ConnectorFamily.parse?(family)
+    if family_enum.nil?
+      raise Chronicle::Packs::PackError.new("unknown family #{family.inspect}")
+    end
     payload = ConnectorSurfaceBinding.new(
-      identity, source_surface_id, service, account_ref, family, active_route, domain_run_type,
+      identity, source_surface_id, service, account_ref, family_enum, active_route, domain_run_type,
       routes: all_routes, native_shape_version: native_shape_version,
-      maintenance_mode: maintenance_mode, manual_refresh_available: manual_refresh_available,
-      status: status, metadata: metadata,
+      maintenance_mode: MaintenanceMode.parse?(maintenance_mode) || MaintenanceMode::None, manual_refresh_available: manual_refresh_available,
+      status: BindingStatus.parse?(status) || BindingStatus::Active, metadata: metadata,
     )
     obj, created = _upsert(graph, "connector_surface_binding", "binding_identity", JSON.parse(payload.to_json).as_h, ["source_surface_id", "service", "account_ref", "family"])
     {"ok" => JSON::Any.new(true), "created" => JSON::Any.new(created), "binding" => JSON::Any.new(obj.id)}
   end
 
+  # ameba:disable Metrics/CyclomaticComplexity -- faithful port of upstream run-observation adapter
   def self.record_connector_run_observation_fn(graph : Chronicle::GraphProjection, domain_run_id : String, source_surface_id : String, service : String, account_ref : String, family : String, route : String, state : String, phase : String, mode : String, source_event_id : String? = nil, attempt : Bool = false, health : String? = nil, bounds : Hash(String, JSON::Any) = {} of String => JSON::Any, counts : Hash(String, Int64) = {} of String => Int64, cursor : Hash(String, JSON::Any) = {} of String => JSON::Any, maintenance_mode : String = "none", manual_refresh_available : Bool = false, next_sync_available : Bool = false, error_code : String? = nil, error : String? = nil, metadata : Hash(String, JSON::Any) = {} of String => JSON::Any) : Hash(String, JSON::Any)
     identity = stable_connector_id("connector_run", domain_run_id)
     existing = _by_field(graph, "connector_run_observation", "observation_identity", identity)
@@ -92,13 +97,21 @@ module Chronicle::Packs::ConnectorControl
     attempts = _append(prior["attempt_event_ids"]?.try(&.as_a?.try(&.map(&.as_s))) || [] of String, attempt ? source_event_id : nil)
     terminals = _append(prior["terminal_event_ids"]?.try(&.as_a?.try(&.map(&.as_s))) || [] of String, ControlPlane::TERMINAL_STATES.includes?(state) ? source_event_id : nil)
     successes = _append(prior["success_event_ids"]?.try(&.as_a?.try(&.map(&.as_s))) || [] of String, ControlPlane::SUCCESS_STATES.includes?(state) ? source_event_id : nil)
+    family_enum = ConnectorFamily.parse?(family)
+    if family_enum.nil?
+      raise Chronicle::Packs::PackError.new("unknown family #{family.inspect}")
+    end
+    state_enum = ConnectorRunState.parse?(state)
+    if state_enum.nil?
+      raise Chronicle::Packs::PackError.new("unknown state #{state.inspect}")
+    end
     payload = ConnectorRunObservation.new(
-      identity, domain_run_id, source_surface_id, service, account_ref, family, route,
-      state, derived_health, phase, mode,
+      identity, domain_run_id, source_surface_id, service, account_ref, family_enum, route,
+      state_enum, ConnectorRunHealth.parse?(derived_health) || ConnectorRunHealth::Connected, phase, mode,
       bounds: bounds, counts: counts, cursor: CursorSummary.from_json(JSON::Any.new(cursor).to_json),
       attempt_event_ids: attempts, update_event_ids: updates,
       terminal_event_ids: terminals, success_event_ids: successes,
-      maintenance_mode: maintenance_mode, manual_refresh_available: manual_refresh_available,
+      maintenance_mode: MaintenanceMode.parse?(maintenance_mode) || MaintenanceMode::None, manual_refresh_available: manual_refresh_available,
       next_sync_available: next_sync_available, error_code: error_code,
       error: error ? error[0, 500] : nil, metadata: metadata,
     )
@@ -108,9 +121,13 @@ module Chronicle::Packs::ConnectorControl
 
   def self.record_connector_learning_delta_fn(graph : Chronicle::GraphProjection, domain_run_id : String, source_surface_id : String, service : String, family : String, status : String = "collecting", evidence : Hash(String, Int64) = {} of String => Int64, annotation_coverage : Hash(String, Int64) = {} of String => Int64, resolutions : Hash(String, Int64) = {} of String => Int64, candidates : Hash(String, Hash(String, Int64)) = {} of String => Hash(String, Int64), failures : Int32 = 0, exceptions : Array(Hash(String, JSON::Any)) = [] of Hash(String, JSON::Any), cost : Hash(String, JSON::Any) = {} of String => JSON::Any, refs : Array(String) = [] of String, metadata : Hash(String, JSON::Any) = {} of String => JSON::Any, settings : ConnectorControlSettings = ConnectorControlSettings.new) : Hash(String, JSON::Any)
     identity = stable_connector_id("connector_delta", domain_run_id)
+    family_enum = ConnectorFamily.parse?(family)
+    if family_enum.nil?
+      raise Chronicle::Packs::PackError.new("unknown family #{family.inspect}")
+    end
     payload = ConnectorLearningDelta.new(
-      identity, domain_run_id, source_surface_id, service, family,
-      status: status, evidence: evidence, annotation_coverage: annotation_coverage,
+      identity, domain_run_id, source_surface_id, service, family_enum,
+      status: DeltaStatus.parse?(status) || DeltaStatus::Collecting, evidence: evidence, annotation_coverage: annotation_coverage,
       resolutions: resolutions, candidates: candidates, failures: failures,
       exceptions: exceptions[0, settings.max_exceptions_per_delta],
       cost: cost, refs: _dedup(refs)[0, settings.max_refs_per_delta], metadata: metadata,
@@ -122,8 +139,12 @@ module Chronicle::Packs::ConnectorControl
   def self.record_connector_native_view_fn(graph : Chronicle::GraphProjection, source_surface_id : String, service : String, family : String, state : String, data : Hash(String, JSON::Any) = {} of String => JSON::Any, shape_version : Int32 = 1, refs : Array(String) = [] of String, service_extensions : Hash(String, JSON::Any) = {} of String => JSON::Any, error : String? = nil) : Hash(String, JSON::Any)
     identity = stable_connector_id("connector_native_view", source_surface_id, family)
     canonical_data = validate_native_data(family, data)
+    family_enum = ConnectorFamily.parse?(family)
+    if family_enum.nil?
+      raise Chronicle::Packs::PackError.new("unknown family #{family.inspect}")
+    end
     payload = ConnectorNativeView.new(
-      identity, source_surface_id, service, family, state, data: canonical_data,
+      identity, source_surface_id, service, family_enum, NativeViewState.parse?(state) || NativeViewState::Empty, data: canonical_data,
       shape_version: shape_version, refs: _dedup(refs),
       service_extensions: service_extensions, error: error ? error[0, 500] : nil,
     )
