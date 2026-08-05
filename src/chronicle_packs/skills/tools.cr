@@ -241,7 +241,7 @@ module Chronicle::Packs::Skills
     usage = graph.add_object("skill_usage", SkillUsage.new(
       usage_id: usage_id, skill_id: skill_data["skill_id"].as_s,
       skill_version: skill_data["version"].as_s, skill_version_id: skill.id,
-      execution_ref: execution_ref, execution_kind: execution_kind, actor: actor,
+      execution_ref: execution_ref, execution_kind: ExecutionKind.parse?(execution_kind) || ExecutionKind::Real, actor: actor,
       source_context: source_context, required_capabilities: required,
       used_event_id: used.id, is_fixture: is_fixture,
     ).to_json)
@@ -350,7 +350,7 @@ module Chronicle::Packs::Skills
     end
 
     evidence = graph.add_object("skill_promotion_evidence", SkillPromotionEvidence.new(
-      evidence_id: evidence_id, skill_version_id: skill.id, kind: kind,
+      evidence_id: evidence_id, skill_version_id: skill.id, kind: SkillKind.parse?(kind) || SkillKind::Trial,
       reference_ids: refs, accepted: accepted, rationale: rationale, actor: actor, metadata: metadata,
     ).to_json)
     graph.add_relation(evidence.id, skill.id, "promotion_for")

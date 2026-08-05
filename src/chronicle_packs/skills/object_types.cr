@@ -39,6 +39,29 @@ module Chronicle::Packs::Skills
   end
 
   # One immutable definition version plus reversible lifecycle state.
+  # Closed string-literal sets for the skills surface.
+
+  enum SkillStatus
+    Candidate
+    Promoted
+    Demoted
+    Disabled
+  end
+
+  enum ExecutionKind
+    Real
+    Trial
+  end
+
+  enum SkillKind
+    Trial
+    Replay
+    RepeatedAcceptedUse
+    Verification
+    TaskCompletion
+    Proceduralization
+  end
+
   @[Chronicle::Packs::Annotations::ObjectType(name: "skill")]
   struct SkillArtifact
     include JSON::Serializable
@@ -54,7 +77,7 @@ module Chronicle::Packs::Skills
     getter contraindications : Array(String) = [] of String
     getter source_evidence_refs : Array(String) = [] of String
     getter source_candidate_id : String? = nil
-    getter status : String = "candidate"
+    getter status : SkillStatus = SkillStatus::Candidate
     getter outcome_summary : OutcomeSummary = OutcomeSummary.new
     getter promotion_history : Array(PromotionHistoryEntry) = [] of PromotionHistoryEntry
     getter? definition_locked : Bool = false
@@ -74,7 +97,7 @@ module Chronicle::Packs::Skills
       @contraindications : Array(String) = [] of String,
       @source_evidence_refs : Array(String) = [] of String,
       @source_candidate_id : String? = nil,
-      @status : String = "candidate",
+      @status : SkillStatus = SkillStatus::Candidate,
       @outcome_summary : OutcomeSummary = OutcomeSummary.new,
       @promotion_history : Array(PromotionHistoryEntry) = [] of PromotionHistoryEntry,
       @definition_locked : Bool = false,
@@ -95,7 +118,7 @@ module Chronicle::Packs::Skills
     getter skill_version : String
     getter skill_version_id : String
     getter execution_ref : String
-    getter execution_kind : String
+    getter execution_kind : ExecutionKind
     getter actor : String
     getter source_context : Hash(String, JSON::Any) = {} of String => JSON::Any
     getter required_capabilities : Array(String) = [] of String
@@ -110,7 +133,7 @@ module Chronicle::Packs::Skills
       @skill_version : String,
       @skill_version_id : String,
       @execution_ref : String,
-      @execution_kind : String,
+      @execution_kind : ExecutionKind,
       @actor : String,
       @source_context : Hash(String, JSON::Any) = {} of String => JSON::Any,
       @required_capabilities : Array(String) = [] of String,
@@ -129,7 +152,7 @@ module Chronicle::Packs::Skills
 
     getter evidence_id : String
     getter skill_version_id : String
-    getter kind : String
+    getter kind : SkillKind
     getter reference_ids : Array(String)
     getter? accepted : Bool = true
     getter rationale : String = ""
@@ -139,7 +162,7 @@ module Chronicle::Packs::Skills
     def initialize(
       @evidence_id : String,
       @skill_version_id : String,
-      @kind : String,
+      @kind : SkillKind,
       @reference_ids : Array(String),
       @accepted : Bool = true,
       @rationale : String = "",

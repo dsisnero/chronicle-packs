@@ -74,7 +74,7 @@ module Chronicle::Packs::EvalOutcome
     getter artifact_type : String
     getter artifact_version : String? = nil
     getter tallies : ReliabilityTallies = ReliabilityTallies.new
-    getter verdict : String = "weak"
+    getter verdict : Chronicle::Packs::ReliabilityVerdict = Chronicle::Packs::ReliabilityVerdict::Weak
     getter? eligible : Bool = true
     getter retrieval_multiplier : Float64 = 0.75
     getter latest_outcome_type : String
@@ -91,7 +91,7 @@ module Chronicle::Packs::EvalOutcome
       @latest_outcome_event_id : String,
       @artifact_version : String? = nil,
       @tallies : ReliabilityTallies = ReliabilityTallies.new,
-      @verdict : String = "weak",
+      @verdict : Chronicle::Packs::ReliabilityVerdict = Chronicle::Packs::ReliabilityVerdict::Weak,
       @eligible : Bool = true,
       @retrieval_multiplier : Float64 = 0.75,
       @latest_evaluation_id : String? = nil,

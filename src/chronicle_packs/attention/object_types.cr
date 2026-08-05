@@ -6,6 +6,48 @@ module Chronicle::Packs::Attention
   # Crystal structs parse JSON::Serializable (extra fields ignored).
 
   # One semantic user/system signal, never raw UI telemetry.
+  # Closed string-literal sets for the attention surface.
+
+  enum AttentionSignalType
+    Impression
+    Opened
+    ActiveDwell
+    Revisited
+    Created
+    Edited
+    Replied
+    Completed
+    Dismissed
+    Archived
+    ExplicitImportant
+    ExplicitNotImportant
+    NonresponseWindow
+    LlmJudgment
+  end
+
+  enum AttentionSource
+    Client
+    Connector
+    User
+    Agent
+    Importer
+  end
+
+  enum PriorityBand
+    Unranked
+    Low
+    Medium
+    High
+  end
+
+  enum AttentionVerdict
+    Unproven
+    Weak
+    Supported
+    Harmful
+  end
+
+  # One semantic user/system signal, never raw UI telemetry.
   @[Chronicle::Packs::Annotations::ObjectType(name: "attention_observation")]
   struct AttentionObservation
     include JSON::Serializable
@@ -13,7 +55,7 @@ module Chronicle::Packs::Attention
     getter observation_id : String
     getter subject_ref : String
     getter subject_kind : String = "object"
-    getter signal_type : String
+    getter signal_type : AttentionSignalType
     getter strength_milli : Int32 = 1_000
     getter context_key : String = "global"
     getter objective_ref : String? = nil
@@ -22,7 +64,7 @@ module Chronicle::Packs::Attention
     getter opportunity_id : String?
     getter active_ms : Int32?
     getter occurred_at : String?
-    getter source : String = "client"
+    getter source : AttentionSource = AttentionSource::Client
     getter? explicit : Bool = false
     getter evidence_refs : Array(String) = [] of String
     getter metadata : Hash(String, JSON::Any) = {} of String => JSON::Any
@@ -30,7 +72,7 @@ module Chronicle::Packs::Attention
     def initialize(
       @observation_id : String,
       @subject_ref : String,
-      @signal_type : String,
+      @signal_type : AttentionSignalType,
       @subject_kind : String = "object",
       @strength_milli : Int32 = 1000,
       @context_key : String = "global",
@@ -40,7 +82,7 @@ module Chronicle::Packs::Attention
       @opportunity_id : String? = nil,
       @active_ms : Int32? = nil,
       @occurred_at : String? = nil,
-      @source : String = "client",
+      @source : AttentionSource = AttentionSource::Client,
       @explicit : Bool = false,
       @evidence_refs : Array(String) = [] of String,
       @metadata : Hash(String, JSON::Any) = {} of String => JSON::Any,
@@ -98,7 +140,7 @@ module Chronicle::Packs::Attention
     getter horizon_key : String = "current"
     getter score_milli : Int32
     getter confidence_milli : Int32
-    getter priority_band : String
+    getter priority_band : PriorityBand
     getter support_milli : Int32 = 0
     getter oppose_milli : Int32 = 0
     getter features : Hash(String, JSON::Any) = {} of String => JSON::Any
@@ -117,7 +159,7 @@ module Chronicle::Packs::Attention
       @horizon_key : String,
       @score_milli : Int32,
       @confidence_milli : Int32,
-      @priority_band : String,
+      @priority_band : PriorityBand,
       @support_milli : Int32,
       @oppose_milli : Int32,
       @features : Hash(String, JSON::Any),
@@ -142,7 +184,7 @@ module Chronicle::Packs::Attention
     getter query_scope : String
     getter score_milli : Int32
     getter confidence_milli : Int32
-    getter verdict : String
+    getter verdict : AttentionVerdict
     getter support_milli : Int32 = 0
     getter challenge_milli : Int32 = 0
     getter features : Hash(String, JSON::Any) = {} of String => JSON::Any
@@ -160,7 +202,7 @@ module Chronicle::Packs::Attention
       @query_scope : String,
       @score_milli : Int32,
       @confidence_milli : Int32,
-      @verdict : String,
+      @verdict : AttentionVerdict,
       @support_milli : Int32,
       @challenge_milli : Int32,
       @features : Hash(String, JSON::Any),

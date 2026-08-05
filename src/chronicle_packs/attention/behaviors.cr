@@ -137,6 +137,7 @@ module Chronicle::Packs::Attention
 
   # Build an AttentionObservation from a signal row, or nil for a malformed
   # row. Absence is censored unless an opportunity is proven.
+  # ameba:disable Metrics/CyclomaticComplexity -- faithful port of upstream signal row builder
   def self._signal_observation(row : JSON::Any, producer : String) : AttentionObservation?
     return nil unless row.raw.is_a?(Hash)
 
@@ -157,10 +158,14 @@ module Chronicle::Packs::Attention
     end
     item.each { |key, value| metadata[key] = value }
 
+    signal_enum = AttentionSignalType.parse?(signal_type)
+    if signal_enum.nil?
+      raise Chronicle::Packs::PackError.new("unknown signal_type #{signal_type.inspect}")
+    end
     AttentionObservation.new(
       observation_id: observation_id,
       subject_ref: subject_ref,
-      signal_type: signal_type,
+      signal_type: signal_enum,
       subject_kind: _as_s(_take(item, "subject_kind"), "object"),
       strength_milli: _take(item, "strength_milli").try(&.as_i?) || 1_000,
       context_key: _as_s(_take(item, "context_key"), "global"),
@@ -170,7 +175,7 @@ module Chronicle::Packs::Attention
       opportunity_id: opportunity_id,
       active_ms: _take(item, "active_ms").try(&.as_i?),
       occurred_at: _take(item, "occurred_at").try(&.as_s?),
-      source: _as_s(_take(item, "source"), "connector"),
+      source: AttentionSource.parse?(_as_s(_take(item, "source"), "connector")) || AttentionSource::Connector,
       explicit: _take(item, "explicit").try(&.as_bool?) || false,
       evidence_refs: _take(item, "evidence_refs").try(&.as_a?.try(&.map(&.as_s))) || [] of String,
       metadata: metadata,
@@ -251,6 +256,7 @@ module Chronicle::Packs::Attention
     observation_ids << observation_id
 
     score, confidence, band = importance_score(support, oppose)
+    band_enum = PriorityBand.parse?(band) || PriorityBand::Unranked
     update = ImportanceVector.new(
       vector_key: vector_key,
       subject_ref: subject_ref,
@@ -260,7 +266,7 @@ module Chronicle::Packs::Attention
       horizon_key: horizon_key,
       score_milli: score,
       confidence_milli: confidence,
-      priority_band: band,
+      priority_band: band_enum,
       support_milli: support,
       oppose_milli: oppose,
       features: features,
@@ -321,6 +327,7 @@ module Chronicle::Packs::Attention
       event_ids << event.id
 
       score, confidence, verdict = trust_score(support, challenge)
+      verdict_enum = AttentionVerdict.parse?(verdict) || AttentionVerdict::Unproven
       update = SourceTrustVector.new(
         vector_key: vector_key,
         source_ref: source_ref,
@@ -329,7 +336,7 @@ module Chronicle::Packs::Attention
         query_scope: query_scope,
         score_milli: score,
         confidence_milli: confidence,
-        verdict: verdict,
+        verdict: verdict_enum,
         support_milli: support,
         challenge_milli: challenge,
         features: features,

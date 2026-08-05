@@ -19,13 +19,13 @@ module Chronicle::Packs::EvalOutcome
   end
 
   # The verdict and retrieval multiplier for an outcome event kind.
-  def self._verdict_and_multiplier(event_type : String, settings : EvalOutcomeSettings) : {String, Float64}
+  def self._verdict_and_multiplier(event_type : String, settings : EvalOutcomeSettings) : {Chronicle::Packs::ReliabilityVerdict, Float64}
     case event_type
-    when "outcome.helped"                       then {"supported", settings.supported_retrieval_multiplier}
-    when "outcome.hurt", "outcome.contradicted" then {"harmful", settings.harmful_retrieval_multiplier}
-    when "outcome.stale", "outcome.superseded"  then {"stale", settings.stale_retrieval_multiplier}
+    when "outcome.helped"                       then {Chronicle::Packs::ReliabilityVerdict::Supported, settings.supported_retrieval_multiplier}
+    when "outcome.hurt", "outcome.contradicted" then {Chronicle::Packs::ReliabilityVerdict::Harmful, settings.harmful_retrieval_multiplier}
+    when "outcome.stale", "outcome.superseded"  then {Chronicle::Packs::ReliabilityVerdict::Stale, settings.stale_retrieval_multiplier}
     else
-      {"weak", settings.weak_retrieval_multiplier}
+      {Chronicle::Packs::ReliabilityVerdict::Weak, settings.weak_retrieval_multiplier}
     end
   end
 
@@ -68,7 +68,7 @@ module Chronicle::Packs::EvalOutcome
         contradicted: tallies["contradicted"]? || 0, stale: tallies["stale"]? || 0, superseded: tallies["superseded"]? || 0,
       ),
       verdict: verdict,
-      eligible: !verdict.in?({"harmful", "stale"}),
+      eligible: !verdict.in?({Chronicle::Packs::ReliabilityVerdict::Harmful, Chronicle::Packs::ReliabilityVerdict::Stale}),
       retrieval_multiplier: multiplier,
       latest_outcome_type: kind,
       latest_outcome_event_id: event.id,
@@ -83,14 +83,14 @@ module Chronicle::Packs::EvalOutcome
   end
 
   # Emit the reliability.changed receipt for a projection update.
-  def self._emit_reliability_changed(graph : Chronicle::GraphProjection, payload : JSON::Any, event : Chronicle::Event, update : ArtifactReliability, verdict : String, multiplier : Float64, kind : String, evidence_ids : Array(String)) : Nil
+  def self._emit_reliability_changed(graph : Chronicle::GraphProjection, payload : JSON::Any, event : Chronicle::Event, update : ArtifactReliability, verdict : Chronicle::Packs::ReliabilityVerdict, multiplier : Float64, kind : String, evidence_ids : Array(String)) : Nil
     _emit_event(graph, "reliability.changed", {
       "artifact_id"             => JSON::Any.new(update.artifact_id),
       "artifact_type"           => JSON::Any.new(update.artifact_type),
       "artifact_version"        => update.artifact_version ? JSON::Any.new(update.artifact_version) : JSON::Any.new(nil),
       "tallies"                 => JSON::Any.new(update.tallies.to_json),
-      "verdict"                 => JSON::Any.new(verdict),
-      "eligible"                => JSON::Any.new(!verdict.in?({"harmful", "stale"})),
+      "verdict"                 => JSON.parse(verdict.to_json),
+      "eligible"                => JSON::Any.new(!verdict.in?({Chronicle::Packs::ReliabilityVerdict::Harmful, Chronicle::Packs::ReliabilityVerdict::Stale})),
       "retrieval_multiplier"    => JSON::Any.new(multiplier),
       "latest_outcome_type"     => JSON::Any.new(kind),
       "latest_outcome_event_id" => JSON::Any.new(event.id),

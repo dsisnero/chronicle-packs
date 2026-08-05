@@ -5,13 +5,37 @@ module Chronicle::Packs::Entity
   # Entity is the canonical record; EntityMention provides provenance;
   # dedup is via MergeCandidate + MergeDecision (never auto-merge).
 
+  # Closed string-literal sets for the entity surface.
+
+  enum EntityType
+    Person
+    Organization
+    Project
+    Product
+    Repo
+    Other
+  end
+
+  enum MergeCandidateStatus
+    Pending
+    Accepted
+    Rejected
+    Deferred
+  end
+
+  enum MentionDecision
+    Accepted
+    Rejected
+    Deferred
+  end
+
   # A canonical, deduped representation of a real-world entity.
   @[Chronicle::Packs::Annotations::ObjectType(name: "entity")]
   struct Entity
     include JSON::Serializable
 
     getter name : String
-    getter entity_type : String = "other"
+    getter entity_type : EntityType = EntityType::Other
     getter aliases : Array(String) = [] of String
     getter identifiers : Hash(String, JSON::Any) = {} of String => JSON::Any
     getter confidence : Float64 = 0.8
@@ -46,7 +70,7 @@ module Chronicle::Packs::Entity
     getter entity_a_id : String
     getter entity_b_id : String
     getter similarity_score : Float64
-    getter status : String = "pending"
+    getter status : MergeCandidateStatus = MergeCandidateStatus::Pending
     getter similarity_reasons : Array(String) = [] of String
     getter frame_id : String? = nil
     getter metadata : Hash(String, JSON::Any) = {} of String => JSON::Any
@@ -58,7 +82,7 @@ module Chronicle::Packs::Entity
     include JSON::Serializable
 
     getter merge_candidate_id : String
-    getter decision : String
+    getter decision : MentionDecision
     getter surviving_entity_id : String? = nil
     getter rationale : String = ""
     getter decided_by : String? = nil

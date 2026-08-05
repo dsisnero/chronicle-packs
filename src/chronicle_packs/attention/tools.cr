@@ -33,7 +33,7 @@ module Chronicle::Packs::Attention
     AttentionObservation.new(
       observation_id: _as_s(_take(item, "observation_id")),
       subject_ref: _as_s(_take(item, "subject_ref")),
-      signal_type: signal_type,
+      signal_type: AttentionSignalType.parse?(signal_type) || AttentionSignalType::Opened,
       subject_kind: _as_s(_take(item, "subject_kind"), "object"),
       strength_milli: _take(item, "strength_milli").try(&.as_i?) || 1_000,
       context_key: _as_s(_take(item, "context_key"), "global"),
@@ -43,7 +43,7 @@ module Chronicle::Packs::Attention
       opportunity_id: opportunity_id,
       active_ms: _take(item, "active_ms").try(&.as_i?),
       occurred_at: _take(item, "occurred_at").try(&.as_s?),
-      source: _as_s(_take(item, "source"), default_source),
+      source: AttentionSource.parse?(_as_s(_take(item, "source"), default_source)) || AttentionSource::Client,
       explicit: _take(item, "explicit").try(&.as_bool?) || false,
       evidence_refs: _take(item, "evidence_refs").try(&.as_a?.try(&.map(&.as_s))) || [] of String,
       metadata: metadata,
@@ -81,11 +81,11 @@ module Chronicle::Packs::Attention
     end
 
     observation = AttentionObservation.new(
-      observation_id: observation_id, subject_ref: subject_ref, signal_type: signal_type,
+      observation_id: observation_id, subject_ref: subject_ref, signal_type: AttentionSignalType.parse?(signal_type) || AttentionSignalType::Opened,
       subject_kind: subject_kind, strength_milli: strength_milli, context_key: context_key,
       objective_ref: objective_ref, horizon_key: horizon_key, session_id: session_id,
       opportunity_id: opportunity_id, active_ms: active_ms, occurred_at: occurred_at,
-      source: source, explicit: explicit, evidence_refs: evidence_refs, metadata: metadata,
+      source: AttentionSource.parse?(source) || AttentionSource::Client, explicit: explicit, evidence_refs: evidence_refs, metadata: metadata,
     )
 
     if existing = _object_by_field(graph, "attention_observation", "observation_id", observation_id)
