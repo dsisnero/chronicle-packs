@@ -18,7 +18,7 @@ Core (the universal substrate) lands before the infrastructure it requires,
 then communication, domain verticals, transport adapters, and the demo
 surface.
 
-**Progress: 331 / 2080 source API items ported, 24 skipped, 16 deferred.**
+**Progress: 390 / 2080 source API items ported, 27 skipped, 16 deferred.**
 
 ## Features
 
@@ -74,8 +74,8 @@ surface.
       floor + LLM upgrade seam, coverage tracking (0/156)
 - [ ] `usage` — source surfaces, connector handoffs, stable cursors,
       settlement, interaction facts (0/77)
-- [ ] `connector_control` — service/account/surface status, run adapters,
-      learning deltas (0/62)
+- [x] `connector_control` — service/account/surface status, run adapters,
+      learning deltas (59/62) — `src/chronicle_packs/connector_control/`
 - [x] `attention` — engagement observations, bounded session batches (36/36)
       — `src/chronicle_packs/attention/`
 - [x] `skills` — skill lifecycle + verification/replay (43/44, 1 deferred)
@@ -287,6 +287,24 @@ surface.
   preserving evidence) are `@[Tool]` wrappers over the host-bound seam.
   Deferred until semantic_extraction lands: the annotation layer and the
   ADR 0026 shared-extraction behaviors (migration/selection/projector).
+- `connector_control` materializes 6 `JSON::Serializable` struct types with
+  zero relation types. The record adapters are idempotent upserts keyed by a
+  sha256 `*_identity` (immutable provenance fields cannot change; changed
+  fields merge onto the existing object via chronicle's replace-patch).
+  `record_connector_binding` accumulates routes across refreshes;
+  `record_connector_run_observation` derives health per state and appends
+  attempt/update/terminal/success event ids; `record_connector_learning_delta`
+  caps refs/exceptions by settings; `record_connector_native_view` validates
+  the family payload through the `contracts.cr` family models. The control
+  plane and learning-delta projections are pure sorted reads. Maintenance is
+  a handler registry: `request_connector_refresh` validates the binding
+  (single, active, manual-refresh-capable), rejects already-running surfaces,
+  and dispatches a registered service handler (accepted with `domain_run_id`
+  or failed with a bounded error). Behaviors seed the versioned operational
+  policy once (`seed_connector_operational_policy`, idempotent by
+  `policy_identity`) and project `source.lifecycle_changed` onto binding
+  status. `measure_connector_run`/`operational_budget_violations` implement
+  the non-persisted conformance measurer against the seeded policy.
 
 ## Inventory
 

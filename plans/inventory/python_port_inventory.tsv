@@ -387,68 +387,68 @@ packs/composio/tools.py::function::request_composio_link	function	missing	-	auto
 packs/composio/tools.py::function::request_composio_link_fn	function	missing	-	auto-generated
 packs/composio/tools.py::function::request_composio_status	function	missing	-	auto-generated
 packs/composio/tools.py::function::request_composio_status_fn	function	missing	-	auto-generated
-packs/connector_control/behaviors.py::const::BEHAVIORS	const	missing	-	auto-generated
-packs/connector_control/behaviors.py::function::project_source_lifecycle_to_connector_binding	function	missing	-	auto-generated
-packs/connector_control/behaviors.py::function::seed_connector_operational_policy	function	missing	-	auto-generated
-packs/connector_control/contracts.py::class::AgendaNativeData	class	missing	-	auto-generated
-packs/connector_control/contracts.py::class::AgendaOccurrence	class	missing	-	auto-generated
-packs/connector_control/contracts.py::class::ConversationNativeData	class	missing	-	auto-generated
-packs/connector_control/contracts.py::class::ConversationThreadSummary	class	missing	-	auto-generated
-packs/connector_control/contracts.py::class::LibraryItem	class	missing	-	auto-generated
-packs/connector_control/contracts.py::class::LibraryNativeData	class	missing	-	auto-generated
-packs/connector_control/contracts.py::class::RecordColumn	class	missing	-	auto-generated
-packs/connector_control/contracts.py::class::RecordsNativeData	class	missing	-	auto-generated
-packs/connector_control/contracts.py::class::TelemetryNativeData	class	missing	-	auto-generated
-packs/connector_control/contracts.py::class::TelemetryPoint	class	missing	-	auto-generated
-packs/connector_control/contracts.py::class::_StrictModel	class	missing	-	auto-generated
-packs/connector_control/contracts.py::const::NATIVE_DATA_MODELS	const	missing	-	auto-generated
-packs/connector_control/contracts.py::function::validate_native_data	function	missing	-	auto-generated
-packs/connector_control/fixtures/run_fixtures.py::function::run_fixture	function	missing	-	auto-generated
-packs/connector_control/maintenance.py::function::_stable_id	function	missing	-	auto-generated
-packs/connector_control/maintenance.py::function::clear_connector_maintenance_handlers	function	missing	-	auto-generated
-packs/connector_control/maintenance.py::function::register_connector_maintenance_handler	function	missing	-	auto-generated
-packs/connector_control/maintenance.py::function::request_connector_refresh_fn	function	missing	-	auto-generated
-packs/connector_control/maintenance.py::function::unregister_connector_maintenance_handler	function	missing	-	auto-generated
-packs/connector_control/object_types.py::class::ConnectorLearningDelta	class	missing	-	auto-generated
-packs/connector_control/object_types.py::class::ConnectorMaintenanceRequest	class	missing	-	auto-generated
-packs/connector_control/object_types.py::class::ConnectorNativeView	class	missing	-	auto-generated
-packs/connector_control/object_types.py::class::ConnectorOperationalPolicy	class	missing	-	auto-generated
-packs/connector_control/object_types.py::class::ConnectorRunObservation	class	missing	-	auto-generated
-packs/connector_control/object_types.py::class::ConnectorSurfaceBinding	class	missing	-	auto-generated
-packs/connector_control/object_types.py::class::CursorSummary	class	missing	-	auto-generated
-packs/connector_control/object_types.py::class::_StrictModel	class	missing	-	auto-generated
-packs/connector_control/object_types.py::const::OBJECT_TYPES	const	missing	-	auto-generated
-packs/connector_control/object_types.py::const::RELATION_TYPES	const	missing	-	auto-generated
-packs/connector_control/operational.py::class::ConnectorOperationalMeasurement	class	missing	-	auto-generated
-packs/connector_control/operational.py::const::OPERATIONAL_POLICY_ID	const	missing	-	auto-generated
-packs/connector_control/operational.py::function::_event_start	function	missing	-	auto-generated
-packs/connector_control/operational.py::function::_run_evidence	function	missing	-	auto-generated
-packs/connector_control/operational.py::function::measure_connector_run	function	missing	-	auto-generated
-packs/connector_control/operational.py::function::operational_budget_violations	function	missing	-	auto-generated
-packs/connector_control/operational.py::function::operational_policy_payload	function	missing	-	auto-generated
-packs/connector_control/settings.py::class::ConnectorControlSettings	class	missing	-	auto-generated
-packs/connector_control/tools.py::const::CONTROL_CONTRACT_VERSION	const	missing	-	auto-generated
-packs/connector_control/tools.py::const::SUCCESS_STATES	const	missing	-	auto-generated
-packs/connector_control/tools.py::const::TERMINAL_STATES	const	missing	-	auto-generated
-packs/connector_control/tools.py::const::TOOLS	const	missing	-	auto-generated
-packs/connector_control/tools.py::function::_append	function	missing	-	auto-generated
-packs/connector_control/tools.py::function::_by_field	function	missing	-	auto-generated
-packs/connector_control/tools.py::function::_event_index	function	missing	-	auto-generated
-packs/connector_control/tools.py::function::_upsert	function	missing	-	auto-generated
-packs/connector_control/tools.py::function::project_connector_control_plane	function	missing	-	auto-generated
-packs/connector_control/tools.py::function::project_connector_control_plane_fn	function	missing	-	auto-generated
-packs/connector_control/tools.py::function::project_connector_learning_deltas	function	missing	-	auto-generated
-packs/connector_control/tools.py::function::project_connector_learning_deltas_fn	function	missing	-	auto-generated
-packs/connector_control/tools.py::function::record_connector_binding	function	missing	-	auto-generated
-packs/connector_control/tools.py::function::record_connector_binding_fn	function	missing	-	auto-generated
-packs/connector_control/tools.py::function::record_connector_learning_delta	function	missing	-	auto-generated
-packs/connector_control/tools.py::function::record_connector_learning_delta_fn	function	missing	-	auto-generated
-packs/connector_control/tools.py::function::record_connector_native_view	function	missing	-	auto-generated
-packs/connector_control/tools.py::function::record_connector_native_view_fn	function	missing	-	auto-generated
-packs/connector_control/tools.py::function::record_connector_run_observation	function	missing	-	auto-generated
-packs/connector_control/tools.py::function::record_connector_run_observation_fn	function	missing	-	auto-generated
-packs/connector_control/tools.py::function::request_connector_refresh	function	missing	-	auto-generated
-packs/connector_control/tools.py::function::stable_connector_id	function	missing	-	auto-generated
+packs/connector_control/behaviors.py::const::BEHAVIORS	const	ported	-	collected by DSL pack macro
+packs/connector_control/behaviors.py::function::project_source_lifecycle_to_connector_binding	function	ported	src/chronicle_packs/connector_control/behaviors.cr::project_source_lifecycle_to_connector_binding	-
+packs/connector_control/behaviors.py::function::seed_connector_operational_policy	function	ported	src/chronicle_packs/connector_control/behaviors.cr::seed_connector_operational_policy	-
+packs/connector_control/contracts.py::class::AgendaNativeData	class	ported	src/chronicle_packs/connector_control/contracts.cr::AgendaNativeData	-
+packs/connector_control/contracts.py::class::AgendaOccurrence	class	ported	src/chronicle_packs/connector_control/contracts.cr::AgendaOccurrence	-
+packs/connector_control/contracts.py::class::ConversationNativeData	class	ported	src/chronicle_packs/connector_control/contracts.cr::ConversationNativeData	-
+packs/connector_control/contracts.py::class::ConversationThreadSummary	class	ported	src/chronicle_packs/connector_control/contracts.cr::ConversationThreadSummary	-
+packs/connector_control/contracts.py::class::LibraryItem	class	ported	src/chronicle_packs/connector_control/contracts.cr::LibraryItem	-
+packs/connector_control/contracts.py::class::LibraryNativeData	class	ported	src/chronicle_packs/connector_control/contracts.cr::LibraryNativeData	-
+packs/connector_control/contracts.py::class::RecordColumn	class	ported	src/chronicle_packs/connector_control/contracts.cr::RecordColumn	-
+packs/connector_control/contracts.py::class::RecordsNativeData	class	ported	src/chronicle_packs/connector_control/contracts.cr::RecordsNativeData	-
+packs/connector_control/contracts.py::class::TelemetryNativeData	class	ported	src/chronicle_packs/connector_control/contracts.cr::TelemetryNativeData	-
+packs/connector_control/contracts.py::class::TelemetryPoint	class	ported	src/chronicle_packs/connector_control/contracts.cr::TelemetryPoint	-
+packs/connector_control/contracts.py::class::_StrictModel	class	skipped	-	pydantic extra=forbid not enforced; unknown keys tolerated
+packs/connector_control/contracts.py::const::NATIVE_DATA_MODELS	const	ported	src/chronicle_packs/connector_control/contracts.cr::validate_native_data	folded into the family case dispatch
+packs/connector_control/contracts.py::function::validate_native_data	function	ported	src/chronicle_packs/connector_control/contracts.cr::validate_native_data	-
+packs/connector_control/fixtures/run_fixtures.py::function::run_fixture	function	skipped	-	fixture script; lifecycle driven by specs
+packs/connector_control/maintenance.py::function::_stable_id	function	ported	src/chronicle_packs/connector_control/maintenance.cr::_stable_id	-
+packs/connector_control/maintenance.py::function::clear_connector_maintenance_handlers	function	ported	src/chronicle_packs/connector_control/maintenance.cr::clear_connector_maintenance_handlers	-
+packs/connector_control/maintenance.py::function::register_connector_maintenance_handler	function	ported	src/chronicle_packs/connector_control/maintenance.cr::register_connector_maintenance_handler	-
+packs/connector_control/maintenance.py::function::request_connector_refresh_fn	function	ported	src/chronicle_packs/connector_control/maintenance.cr::request_connector_refresh_fn	-
+packs/connector_control/maintenance.py::function::unregister_connector_maintenance_handler	function	ported	src/chronicle_packs/connector_control/maintenance.cr::unregister_connector_maintenance_handler	-
+packs/connector_control/object_types.py::class::ConnectorLearningDelta	class	ported	src/chronicle_packs/connector_control/object_types.cr::ConnectorLearningDelta	-
+packs/connector_control/object_types.py::class::ConnectorMaintenanceRequest	class	ported	src/chronicle_packs/connector_control/object_types.cr::ConnectorMaintenanceRequest	-
+packs/connector_control/object_types.py::class::ConnectorNativeView	class	ported	src/chronicle_packs/connector_control/object_types.cr::ConnectorNativeView	-
+packs/connector_control/object_types.py::class::ConnectorOperationalPolicy	class	ported	src/chronicle_packs/connector_control/object_types.cr::ConnectorOperationalPolicy	-
+packs/connector_control/object_types.py::class::ConnectorRunObservation	class	ported	src/chronicle_packs/connector_control/object_types.cr::ConnectorRunObservation	-
+packs/connector_control/object_types.py::class::ConnectorSurfaceBinding	class	ported	src/chronicle_packs/connector_control/object_types.cr::ConnectorSurfaceBinding	-
+packs/connector_control/object_types.py::class::CursorSummary	class	ported	src/chronicle_packs/connector_control/object_types.cr::CursorSummary	-
+packs/connector_control/object_types.py::class::_StrictModel	class	skipped	-	pydantic extra=forbid not enforced; unknown keys tolerated
+packs/connector_control/object_types.py::const::OBJECT_TYPES	const	ported	src/chronicle_packs/connector_control/pack.cr	collected by DSL pack macro
+packs/connector_control/object_types.py::const::RELATION_TYPES	const	ported	src/chronicle_packs/connector_control/pack.cr	empty; no relation types
+packs/connector_control/operational.py::class::ConnectorOperationalMeasurement	class	ported	src/chronicle_packs/connector_control/operational.cr::ConnectorOperationalMeasurement	-
+packs/connector_control/operational.py::const::OPERATIONAL_POLICY_ID	const	ported	src/chronicle_packs/connector_control/operational.cr::Policy::OPERATIONAL_POLICY_ID	nested module
+packs/connector_control/operational.py::function::_event_start	function	ported	src/chronicle_packs/connector_control/operational.cr::_event_start_index	-
+packs/connector_control/operational.py::function::_run_evidence	function	ported	src/chronicle_packs/connector_control/operational.cr::_run_evidence	-
+packs/connector_control/operational.py::function::measure_connector_run	function	ported	src/chronicle_packs/connector_control/operational.cr::measure_connector_run	-
+packs/connector_control/operational.py::function::operational_budget_violations	function	ported	src/chronicle_packs/connector_control/operational.cr::operational_budget_violations	-
+packs/connector_control/operational.py::function::operational_policy_payload	function	ported	src/chronicle_packs/connector_control/operational.cr::operational_policy_payload	-
+packs/connector_control/settings.py::class::ConnectorControlSettings	class	ported	src/chronicle_packs/connector_control/settings.cr::ConnectorControlSettings	-
+packs/connector_control/tools.py::const::CONTROL_CONTRACT_VERSION	const	ported	src/chronicle_packs/connector_control/tools.cr::ControlPlane::CONTRACT_VERSION	nested module
+packs/connector_control/tools.py::const::SUCCESS_STATES	const	ported	src/chronicle_packs/connector_control/tools.cr::ControlPlane::SUCCESS_STATES	nested module
+packs/connector_control/tools.py::const::TERMINAL_STATES	const	ported	src/chronicle_packs/connector_control/tools.cr::ControlPlane::TERMINAL_STATES	nested module
+packs/connector_control/tools.py::const::TOOLS	const	ported	-	collected by DSL @[Tool] annotations
+packs/connector_control/tools.py::function::_append	function	ported	src/chronicle_packs/connector_control/tools.cr::_append	-
+packs/connector_control/tools.py::function::_by_field	function	ported	src/chronicle_packs/connector_control/tools.cr::_by_field	-
+packs/connector_control/tools.py::function::_event_index	function	ported	src/chronicle_packs/connector_control/tools.cr::_event_index	-
+packs/connector_control/tools.py::function::_upsert	function	ported	src/chronicle_packs/connector_control/tools.cr::_upsert	merge patch (chronicle replaces)
+packs/connector_control/tools.py::function::project_connector_control_plane	function	ported	src/chronicle_packs/connector_control/tools.cr::project_connector_control_plane_tool	tool wrapper; renamed with _tool suffix
+packs/connector_control/tools.py::function::project_connector_control_plane_fn	function	ported	src/chronicle_packs/connector_control/tools.cr::project_connector_control_plane_fn	-
+packs/connector_control/tools.py::function::project_connector_learning_deltas	function	ported	src/chronicle_packs/connector_control/tools.cr::project_connector_learning_deltas_tool	tool wrapper; renamed with _tool suffix
+packs/connector_control/tools.py::function::project_connector_learning_deltas_fn	function	ported	src/chronicle_packs/connector_control/tools.cr::project_connector_learning_deltas_fn	-
+packs/connector_control/tools.py::function::record_connector_binding	function	ported	src/chronicle_packs/connector_control/tools.cr::record_connector_binding_tool	tool wrapper; renamed with _tool suffix
+packs/connector_control/tools.py::function::record_connector_binding_fn	function	ported	src/chronicle_packs/connector_control/tools.cr::record_connector_binding_fn	-
+packs/connector_control/tools.py::function::record_connector_learning_delta	function	ported	src/chronicle_packs/connector_control/tools.cr::record_connector_learning_delta_tool	tool wrapper; renamed with _tool suffix
+packs/connector_control/tools.py::function::record_connector_learning_delta_fn	function	ported	src/chronicle_packs/connector_control/tools.cr::record_connector_learning_delta_fn	-
+packs/connector_control/tools.py::function::record_connector_native_view	function	ported	src/chronicle_packs/connector_control/tools.cr::record_connector_native_view_tool	tool wrapper; renamed with _tool suffix
+packs/connector_control/tools.py::function::record_connector_native_view_fn	function	ported	src/chronicle_packs/connector_control/tools.cr::record_connector_native_view_fn	-
+packs/connector_control/tools.py::function::record_connector_run_observation	function	ported	src/chronicle_packs/connector_control/tools.cr::record_connector_run_observation_tool	tool wrapper; renamed with _tool suffix
+packs/connector_control/tools.py::function::record_connector_run_observation_fn	function	ported	src/chronicle_packs/connector_control/tools.cr::record_connector_run_observation_fn	-
+packs/connector_control/tools.py::function::request_connector_refresh	function	ported	src/chronicle_packs/connector_control/tools.cr::request_connector_refresh_tool	tool wrapper; renamed with _tool suffix
+packs/connector_control/tools.py::function::stable_connector_id	function	ported	src/chronicle_packs/connector_control/tools.cr::stable_connector_id	-
 packs/core/behaviors.py::const::BEHAVIORS	const	ported	src/chronicle_packs/core.cr	collected by DSL pack macro
 packs/core/behaviors.py::const::STOPWORDS	const	ported	src/chronicle_packs/core/behaviors.cr::Helpers::STOPWORDS	-
 packs/core/behaviors.py::function::_infer_category	function	ported	src/chronicle_packs/core/behaviors.cr::_infer_category	-
