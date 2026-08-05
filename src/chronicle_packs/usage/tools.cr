@@ -270,12 +270,13 @@ module Chronicle::Packs::Usage
   end
 
   # Record one idempotent neutral interaction fact.
+  # ameba:disable Metrics/CyclomaticComplexity -- faithful port of upstream idempotent usage recording
   def self.record_usage_fn(graph : Chronicle::GraphProjection, usage_identity : String, surface_id : String, interaction_type : String, evidence_identity : String? = nil, provider_time : String? = nil, count : Int32 = 1, is_fixture : Bool = false, provenance : Hash(String, JSON::Any) = {} of String => JSON::Any, metadata : Hash(String, JSON::Any) = {} of String => JSON::Any) : Hash(String, JSON::Any)
     raise ArgumentError.new("usage_identity and interaction_type are required") if usage_identity.empty? || interaction_type.empty?
     raise ArgumentError.new("count must be positive") if count < 1
     surface = _find_surface(graph, surface_id)
     raise ArgumentError.new("unknown connection surface #{surface_id.inspect}") if surface.nil?
-    category = validate_source_category(JSON.parse(surface.data)["category"]?.try(&.as_s?) || "")
+    category = Chronicle::Packs::SourceCategory.parse?(JSON.parse(surface.data)["category"]?.try(&.as_s?) || "") || Chronicle::Packs::SourceCategory::Communication
     canonical_time = provider_time ? _require_timestamp(provider_time, "provider_time") : nil
     record = UsageRecord.new(
       usage_identity, surface_id, category, interaction_type,

@@ -78,7 +78,7 @@ module Chronicle::Packs::Usage
       settled_event = _emit_event(graph, "source.settled", {
         "surface_id"            => JSON::Any.new(surface_id),
         "source_surface_id"     => JSON::Any.new(surface_id),
-        "category"              => JSON::Any.new(surface_data.category.wire),
+        "category"              => JSON.parse(surface_data.category.to_json),
         "gate_id"               => JSON::Any.new(gate.gate_id),
         "gate_version"          => JSON::Any.new(gate.gate_version),
         "unique_evidence_count" => JSON::Any.new(unique_count),
@@ -88,7 +88,7 @@ module Chronicle::Packs::Usage
         "passed_thresholds"     => JSON::Any.new(thresholds.map { |threshold| JSON::Any.new(threshold) }),
       })
       record = SettlementRecord.new(
-        settlement_identity, surface_id, surface_data.category.wire,
+        settlement_identity, surface_id, surface_data.category,
         gate.gate_id, gate.gate_version, unique_count, coverage["coverage_days"]?.try(&.as_i) || 0,
         coverage["earliest"]?.try(&.as_s?), coverage["latest"]?.try(&.as_s?),
         thresholds, settled_event.id, event.id,
@@ -126,7 +126,7 @@ module Chronicle::Packs::Usage
                if surface_data.status != Chronicle::Packs::SurfaceStatus::Settling
                  _emit_event(graph, "source.settling", {
                    "surface_id"            => JSON::Any.new(surface_id),
-                   "category"              => JSON::Any.new(surface_data.category.wire),
+                   "category"              => JSON.parse(surface_data.category.to_json),
                    "gate_id"               => JSON::Any.new(gate.gate_id),
                    "gate_version"          => JSON::Any.new(gate.gate_version),
                    "unique_evidence_count" => JSON::Any.new(unique_count),
@@ -232,7 +232,7 @@ module Chronicle::Packs::Usage
   end
 
   # Build the typed usage_evidence row for one ingested event.
-  def self._build_usage_evidence(payload : Hash(String, JSON::Any), surface_id : String, category : String, existing : Chronicle::GraphObject?, event : Chronicle::Event, qualifying : Bool) : UsageEvidence
+  def self._build_usage_evidence(payload : Hash(String, JSON::Any), surface_id : String, category : Chronicle::Packs::SourceCategory, existing : Chronicle::GraphObject?, event : Chronicle::Event, qualifying : Bool) : UsageEvidence
     prior = existing ? UsageEvidence.from_json(existing.data) : nil
     UsageEvidence.new(
       payload["evidence_identity"].as_s, payload["evidence_id"].as_s, payload["revision_id"].as_s,
@@ -273,7 +273,9 @@ module Chronicle::Packs::Usage
       return
     end
     surface_data = ConnectionSurface.from_json(surface.data)
-    if category != surface_data.category.wire || payload["connection_path"]?.try(&.as_s?) != surface_data.path.wire
+    payload_category = Chronicle::Packs::SourceCategory.parse?(category)
+    payload_path = payload["connection_path"]?.try(&.as_s?).try { |path| Chronicle::Packs::ConnectionPath.parse?(path) }
+    if payload_category != surface_data.category || payload_path != surface_data.path
       _failure(graph, event, code: "surface_metadata_mismatch", message: "evidence category/path does not match its connection surface", payload: payload)
       return
     end
@@ -286,7 +288,11 @@ module Chronicle::Packs::Usage
     qualifying = !(payload["invalidated"]?.try(&.as_bool?) || false) &&
                  !(payload["is_fixture"]?.try(&.as_bool?) || false) &&
                  !surface_data.is_fixture?
-    row = _build_usage_evidence(payload, surface_id, category, existing, event, qualifying)
+    category_enum = Chronicle::Packs::SourceCategory.parse?(category)
+    if category_enum.nil?
+      raise Chronicle::Packs::PackError.new("unknown source category #{category.inspect}")
+    end
+    row = _build_usage_evidence(payload, surface_id, category_enum, existing, event, qualifying)
 
     if existing.nil?
       index = graph.add_object("usage_evidence", row.to_json)

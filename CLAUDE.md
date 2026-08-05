@@ -50,11 +50,12 @@ crystal spec                            # run tests
   serialize as the member name via `String#underscore` — so name members
   as the CamelCase of the upstream string (`AiActivity` → `"ai_activity"`)
   and `to_json`/`from_json` round-trip to the exact upstream value with no
-  converter, while `parse?` gives validation, `.each`/question methods give
-  iteration and case-matching. Keep `String` only for genuinely open values
-  (`metadata`, memory `category`, free-form labels). Values that do NOT
-  round-trip through underscore (e.g. `action_class` `"R0"` → `"r0"`) need
-  an explicit `wire`/`from_wire` converter or a `@[JSON::Field(converter:)]`.
+  converter or `wire` helper, while `parse?` gives validation and `.each`/
+  question methods give iteration and case-matching. For a raw `JSON::Any`
+  boundary use `JSON.parse(enum.to_json)`; for a `String` comparison parse
+  the wire value with `Enum.parse?` and compare enums. Keep `String` only
+  for genuinely open values (`metadata`, memory `category`, free-form
+  labels).
 
 ## Relevant docs
 

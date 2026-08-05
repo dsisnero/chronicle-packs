@@ -15,15 +15,6 @@ module Chronicle::Packs
     LocalKnowledge
     ToolAutomation
     OutcomeEvaluation
-
-    # The upstream wire string (member name underscored).
-    def wire : String
-      to_s.underscore
-    end
-
-    def self.from_wire(value : String) : self
-      parse?(value) || raise ArgumentError.new("unknown #{name} #{value.inspect}")
-    end
   end
 
   enum ConnectionPath
@@ -34,28 +25,12 @@ module Chronicle::Packs
     Local
     Pack
     Manual
-
-    def wire : String
-      to_s.underscore
-    end
-
-    def self.from_wire(value : String) : self
-      parse?(value) || raise ArgumentError.new("unknown #{name} #{value.inspect}")
-    end
   end
 
   enum ReplayMode
     Inline
     Artifact
     ReferenceOnly
-
-    def wire : String
-      to_s.underscore
-    end
-
-    def self.from_wire(value : String) : self
-      parse?(value) || raise ArgumentError.new("unknown #{name} #{value.inspect}")
-    end
   end
 
   enum SurfaceStatus
@@ -65,13 +40,5 @@ module Chronicle::Packs
     Stale
     Revoked
     Failed
-
-    def wire : String
-      to_s.underscore
-    end
-
-    def self.from_wire(value : String) : self
-      parse?(value) || raise ArgumentError.new("unknown #{name} #{value.inspect}")
-    end
   end
 end

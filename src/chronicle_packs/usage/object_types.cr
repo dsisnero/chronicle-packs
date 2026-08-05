@@ -135,7 +135,7 @@ module Chronicle::Packs::Usage
     getter revision_id : String
     getter revision_number : Int32
     getter source_surface_id : String
-    getter source_category : String
+    getter source_category : Chronicle::Packs::SourceCategory
     getter connection_path : String
     getter source_ref : String
     getter provider_time : String?
@@ -150,7 +150,7 @@ module Chronicle::Packs::Usage
 
     def initialize(
       evidence_identity : String, evidence_id : String, revision_id : String,
-      revision_number : Int32, source_surface_id : String, source_category : String,
+      revision_number : Int32, source_surface_id : String, source_category : Chronicle::Packs::SourceCategory,
       connection_path : String, source_ref : String, importer_id : String,
       importer_version : String, first_ingested_event_id : String,
       last_ingested_event_id : String, provider_time : String? = nil,
@@ -184,7 +184,7 @@ module Chronicle::Packs::Usage
 
     getter settlement_identity : String
     getter source_surface_id : String
-    getter source_category : String
+    getter source_category : Chronicle::Packs::SourceCategory
     getter gate_id : String
     getter gate_version : Int32
     getter unique_evidence_count : Int32
@@ -196,7 +196,7 @@ module Chronicle::Packs::Usage
     getter evaluated_at_event_id : String
 
     def initialize(
-      settlement_identity : String, source_surface_id : String, source_category : String,
+      settlement_identity : String, source_surface_id : String, source_category : Chronicle::Packs::SourceCategory,
       gate_id : String, gate_version : Int32, unique_evidence_count : Int32,
       coverage_days : Int32, coverage_start : String?, coverage_end : String?,
       passed_thresholds : Array(String), source_settled_event_id : String,
@@ -224,7 +224,7 @@ module Chronicle::Packs::Usage
 
     getter usage_identity : String
     getter source_surface_id : String
-    getter source_category : String
+    getter source_category : Chronicle::Packs::SourceCategory
     getter interaction_type : String
     getter evidence_identity : String?
     getter provider_time : String?
@@ -234,7 +234,7 @@ module Chronicle::Packs::Usage
     getter metadata : Hash(String, JSON::Any) = {} of String => JSON::Any
 
     def initialize(
-      usage_identity : String, source_surface_id : String, source_category : String,
+      usage_identity : String, source_surface_id : String, source_category : Chronicle::Packs::SourceCategory,
       interaction_type : String, evidence_identity : String? = nil,
       provider_time : String? = nil, count : Int32 = 1, is_fixture : Bool = false,
       source_provenance : Hash(String, JSON::Any) = {} of String => JSON::Any,
