@@ -63,6 +63,24 @@ crystal spec                            # run tests
   the wire value with `Enum.parse?` and compare enums. Keep `String` only
   for genuinely open values (`metadata`, memory `category`, free-form
   labels).
+- **LLM tool surface: Crig is the transport, the gateway owns policy.** A
+  model-facing tool is never a raw capability handler — it is a
+  `CrigGatewayTool` (a `Crig::DynamicTool` implementing `Crig::ToolDyn`)
+  whose callback runs the shared gateway pipeline
+  (`evaluate_call_policy` → `capability_call` audit-before-action → inline
+  `execute_approved_call` for auto-approvals, or a structured
+  `held_for_approval` result for held calls). `decide_policy`,
+  `execute_approved_call`, and the capability_call/approval/result state
+  machine stay in `Chronicle::Packs::ToolGateway` and are shared by the
+  reactive behaviors and the synchronous proxy path. Crig supplies only the
+  tool transport: JSON arg parsing, `Tool::ToolContext` (persist
+  `tool_call_id`, run/turn, behavior identity, idempotency on the
+  capability_call via `GatewayToolMetadata`), `Tool::ToolResult`, provider
+  formats, and retries. Never hand raw provider/capability handlers to a
+  model; register only the gateway proxies in Crig's `ToolSet`. Keep a
+  `Chronicle::AgentHook` (if any) narrowed to generic `llm.requested` /
+  `tool.requested` / `tool.responded` telemetry — do not duplicate gateway
+  audit events there.
 
 ## Relevant docs
 

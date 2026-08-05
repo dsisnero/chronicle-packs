@@ -18,7 +18,7 @@ Core (the universal substrate) lands before the infrastructure it requires,
 then communication, domain verticals, transport adapters, and the demo
 surface.
 
-**Progress: 655 / 2080 source API items ported, 51 skipped, 180 deferred.**
+**Progress: 659 / 2080 source API items ported, 51 skipped, 176 deferred.**
 
 ## Features
 
@@ -54,14 +54,17 @@ surface.
 
 - [~] `tool_gateway` — capability registry, approval policy, execute/spec/
       pending-approvals tools, catalog, standing scopes, untrusted-content
-      scan (87/98, slice 1: object surface + registry + sanitizer + injection
+      scan (91/98, slice 1: object surface + registry + sanitizer + injection
       scan + policy decision + approval resolution + 4 core behaviors + the
       capability catalog + registration enforcement + ADR 0018 standing
       scopes (propose/promote/demote/disable + the R2 auto-approval read
       path) + the tool_policy_reliability_guard behavior + the integration
       profile chassis (aggregator/profile/exploration receipts, stable ids
       and shape fingerprints) + the reference web.fetch_url capability
-      (host seam, fails closed); LLM proxies are deferred)
+      (host seam, fails closed) + LLM tool proxies (CrigGatewayTool as a
+      Crig::ToolDyn: audit-before-action capability_call, shared
+      decide_policy/execute_approved_call, held calls return structured
+      held_for_approval; Crig supplies the tool transport only)
 - [x] `secrets` — credential reference management, managed source registry
       (42/42) — `src/chronicle_packs/secrets/`
 - [~] `memory_gateway` — candidate evaluation/promotion, SQLite backend,

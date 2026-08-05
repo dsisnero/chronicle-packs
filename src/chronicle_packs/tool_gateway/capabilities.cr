@@ -35,6 +35,7 @@ module Chronicle::Packs::ToolGateway
       description: "Fetch the text of a public web page by URL (HTTP GET, follows redirects, read-only).",
       risk_class: risk_class,
       action_class: "R0",
+      input_schema: JSON.parse(%({"type":"object","properties":{"url":{"type":"string"},"timeout_seconds":{"type":"number"}},"required":["url"]})),
     )
   end
 end

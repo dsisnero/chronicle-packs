@@ -12,6 +12,7 @@ require "./standing_scopes"
 require "./tools"
 require "./integrations"
 require "./capabilities"
+require "./llm_tools"
 require "./behaviors"
 
 # Tool Gateway Pack — the host tool dispatch surface. Ported from upstream

@@ -1891,10 +1891,10 @@ packs/tool_gateway/integrations.py::function::record_integration_profile_fn	func
 packs/tool_gateway/integrations.py::function::safe_sha256_fingerprint	function	ported	src/chronicle_packs/tool_gateway/integrations.cr::safe_sha256_fingerprint	-
 packs/tool_gateway/integrations.py::function::shape_fingerprint	function	ported	src/chronicle_packs/tool_gateway/integrations.cr::shape_fingerprint	-
 packs/tool_gateway/integrations.py::function::stable_integration_id	function	ported	src/chronicle_packs/tool_gateway/integrations.cr::stable_integration_id	-
-packs/tool_gateway/llm_tools.py::function::_now_iso	function	deferred	-	slice 2: LLM proxies
-packs/tool_gateway/llm_tools.py::function::_proxy	function	deferred	-	slice 2: LLM proxies
-packs/tool_gateway/llm_tools.py::function::as_llm_tool	function	deferred	-	slice 2: LLM proxies
-packs/tool_gateway/llm_tools.py::function::llm_tools_for	function	deferred	-	slice 2: LLM proxies
+packs/tool_gateway/llm_tools.py::function::_now_iso	function	ported	src/chronicle_packs/tool_gateway/llm_tools.cr::_now_iso	-
+packs/tool_gateway/llm_tools.py::function::_proxy	function	ported	src/chronicle_packs/tool_gateway/llm_tools.cr::_llm_proxy_pipeline	shared gateway pipeline; Crig supplies the tool transport
+packs/tool_gateway/llm_tools.py::function::as_llm_tool	function	ported	src/chronicle_packs/tool_gateway/llm_tools.cr::as_llm_tool	returns CrigGatewayTool (a Crig::ToolDyn/DynamicTool)
+packs/tool_gateway/llm_tools.py::function::llm_tools_for	function	ported	src/chronicle_packs/tool_gateway/llm_tools.cr::llm_tools_for	Array(Crig::ToolDyn) for Crig::ToolSet
 packs/tool_gateway/object_types.py::class::AggregatorProfile	class	ported	src/chronicle_packs/tool_gateway/object_types.cr::AggregatorProfile	-
 packs/tool_gateway/object_types.py::class::CapabilityApproval	class	ported	src/chronicle_packs/tool_gateway/object_types.cr::CapabilityApproval	-
 packs/tool_gateway/object_types.py::class::CapabilityCall	class	ported	src/chronicle_packs/tool_gateway/object_types.cr::CapabilityCall	-
