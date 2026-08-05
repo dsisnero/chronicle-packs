@@ -18,7 +18,7 @@ Core (the universal substrate) lands before the infrastructure it requires,
 then communication, domain verticals, transport adapters, and the demo
 surface.
 
-**Progress: 543 / 2080 source API items ported, 51 skipped, 136 deferred.**
+**Progress: 593 / 2080 source API items ported, 51 skipped, 242 deferred.**
 
 ## Features
 
@@ -77,8 +77,12 @@ surface.
       16 depend on the semantic_extraction pack: the annotation layer,
       the ADR 0026 shared-extraction selection/migration behaviors, and the
       structure-candidate projector)
-- [ ] `semantic_extraction` — typed source-anchored annotations, deterministic
-      floor + LLM upgrade seam, coverage tracking (0/156)
+- [~] `semantic_extraction` — typed source-anchored annotations, deterministic
+      floor + LLM upgrade seam, coverage tracking (50/156, slice 1: the
+      deterministic zero-key floor (DeterministicExtractorV1) + facets +
+      seeded extraction_profile + the eager annotate pipeline with cache
+      idempotency; procedures, the LLM seam, selection extraction, and the
+      candidate projectors are deferred)
 - [x] `usage` — source surfaces, connector handoffs, stable cursors,
       settlement, interaction facts (71/77) — `src/chronicle_packs/usage/`
 - [x] `connector_control` — service/account/surface status, run adapters,
@@ -294,6 +298,24 @@ surface.
   preserving evidence) are `@[Tool]` wrappers over the host-bound seam.
   Deferred until semantic_extraction lands: the annotation layer and the
   ADR 0026 shared-extraction behaviors (migration/selection/projector).
+- `semantic_extraction` (slice 1 of 2, in progress): 11 typed object types +
+  8 relation types; the `semantic_annotation` envelope carries
+  annotation_identity/facet/body/selector/extractor identity/config hash/
+  attribution/modality/polarity. The deterministic zero-key floor
+  (`DeterministicExtractorV1`, `semantic.deterministic@0.1.0`) implements
+  entity_mention (email/url/handle/proper-noun with overlap dedup),
+  assertion (sentence-level, modality/polarity cues), question,
+  preference_expression, temporal_expression (ISO/MDY/DMY/MY date
+  normalization), and topic_tag (frequency-ranked) — byte-deterministic and
+  capped per facet, registered through the shared extractor registry.
+  `run_annotation_extraction` is cache-identified by
+  `(revision, extractor identity, config_hash, requested_facets)` with
+  per-facet coverage; `seed_extraction_profile` mints the D041 eager-floor
+  profile, and `annotate_evidence` runs it eagerly per evidence revision,
+  emitting `extraction_run` + `semantic_annotation` (annotation_for/
+  produced_annotation/run_for) + `extraction_coverage`. Deferred to slice 2:
+  procedures, the LLM extractor seam (`semantic.llm`), selection extraction,
+  and the profile/memory candidate projectors.
 - `connector_control` materializes 6 `JSON::Serializable` struct types with
   zero relation types. The record adapters are idempotent upserts keyed by a
   sha256 `*_identity` (immutable provenance fields cannot change; changed

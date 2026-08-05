@@ -1581,162 +1581,162 @@ packs/secrets/tools.py::function::resolve_and_audit_fn	function	ported	src/chron
 packs/secrets/tools.py::function::resolve_credential	function	ported	src/chronicle_packs/secrets/tools.cr::resolve_credential_tool	tool wrapper; renamed with _tool suffix (pure, no graph)
 packs/secrets/tools.py::function::resolve_credential_fn	function	ported	src/chronicle_packs/secrets/tools.cr::resolve_credential_fn	-
 packs/secrets/tools.py::function::resolve_credential_with_source_fn	function	ported	src/chronicle_packs/secrets/tools.cr::resolve_credential_with_source_fn	-
-packs/semantic_extraction/behaviors.py::const::BEHAVIORS	const	missing	-	auto-generated
-packs/semantic_extraction/behaviors.py::const::LLM_EXTRACTOR_REF	const	missing	-	auto-generated
-packs/semantic_extraction/behaviors.py::function::_existing_candidate_identities	function	missing	-	auto-generated
-packs/semantic_extraction/behaviors.py::function::_llm_upgrade_active	function	missing	-	auto-generated
-packs/semantic_extraction/behaviors.py::function::annotate_evidence	function	missing	-	auto-generated
-packs/semantic_extraction/behaviors.py::function::extract_selected_evidence	function	missing	-	auto-generated
-packs/semantic_extraction/behaviors.py::function::project_memory_candidates	function	missing	-	auto-generated
-packs/semantic_extraction/behaviors.py::function::project_profile_candidates	function	missing	-	auto-generated
-packs/semantic_extraction/behaviors.py::function::seed_extraction_profile	function	missing	-	auto-generated
-packs/semantic_extraction/engine.py::function::_active_profile	function	missing	-	auto-generated
-packs/semantic_extraction/engine.py::function::_attribution	function	missing	-	auto-generated
-packs/semantic_extraction/engine.py::function::_facets_covered	function	missing	-	auto-generated
-packs/semantic_extraction/engine.py::function::active_profile_extractor_map	function	missing	-	auto-generated
-packs/semantic_extraction/engine.py::function::active_profile_facets	function	missing	-	auto-generated
-packs/semantic_extraction/engine.py::function::annotation_identity_for	function	missing	-	auto-generated
-packs/semantic_extraction/engine.py::function::extractor_disabled	function	missing	-	auto-generated
-packs/semantic_extraction/engine.py::function::parse_extractor_ref	function	missing	-	auto-generated
-packs/semantic_extraction/engine.py::function::patch	function	missing	-	auto-generated
-packs/semantic_extraction/engine.py::function::resolve_extractor	function	missing	-	auto-generated
-packs/semantic_extraction/engine.py::function::run_annotation_extraction	function	missing	-	auto-generated
-packs/semantic_extraction/engine.py::function::run_profile_extraction	function	missing	-	auto-generated
-packs/semantic_extraction/engine.py::function::stable_id	function	missing	-	auto-generated
-packs/semantic_extraction/extractor.py::class::AnnotationDraft	class	missing	-	auto-generated
-packs/semantic_extraction/extractor.py::class::AnnotationExtractor	class	missing	-	auto-generated
-packs/semantic_extraction/extractor.py::class::DeterministicExtractorV1	class	missing	-	auto-generated
-packs/semantic_extraction/extractor.py::function::_sentences	function	missing	-	auto-generated
-packs/semantic_extraction/extractor.py::function::_strip_bullet	function	missing	-	auto-generated
-packs/semantic_extraction/extractor.py::function::config_hash_for	function	missing	-	auto-generated
-packs/semantic_extraction/extractor.py::function::get_annotation_extractor	function	missing	-	auto-generated
-packs/semantic_extraction/extractor.py::function::register_annotation_extractor	function	missing	-	auto-generated
-packs/semantic_extraction/extractor.py::method::AnnotationExtractor.config	method	missing	-	auto-generated
-packs/semantic_extraction/extractor.py::method::AnnotationExtractor.extract	method	missing	-	auto-generated
-packs/semantic_extraction/extractor.py::method::AnnotationExtractor.implemented_facets	method	missing	-	auto-generated
-packs/semantic_extraction/extractor.py::method::DeterministicExtractorV1.__init__	method	missing	-	auto-generated
-packs/semantic_extraction/extractor.py::method::DeterministicExtractorV1._add	method	missing	-	auto-generated
-packs/semantic_extraction/extractor.py::method::DeterministicExtractorV1._extract_assertion	method	missing	-	auto-generated
-packs/semantic_extraction/extractor.py::method::DeterministicExtractorV1._extract_entity_mention	method	missing	-	auto-generated
-packs/semantic_extraction/extractor.py::method::DeterministicExtractorV1._extract_preference_expression	method	missing	-	auto-generated
-packs/semantic_extraction/extractor.py::method::DeterministicExtractorV1._extract_question	method	missing	-	auto-generated
-packs/semantic_extraction/extractor.py::method::DeterministicExtractorV1._extract_temporal_expression	method	missing	-	auto-generated
-packs/semantic_extraction/extractor.py::method::DeterministicExtractorV1._extract_topic_tag	method	missing	-	auto-generated
-packs/semantic_extraction/extractor.py::method::DeterministicExtractorV1.config	method	missing	-	auto-generated
-packs/semantic_extraction/extractor.py::method::DeterministicExtractorV1.extract	method	missing	-	auto-generated
-packs/semantic_extraction/extractor.py::method::DeterministicExtractorV1.implemented_facets	method	missing	-	auto-generated
-packs/semantic_extraction/facets.py::class::AssertionBody	class	missing	-	auto-generated
-packs/semantic_extraction/facets.py::class::EntityMentionBody	class	missing	-	auto-generated
-packs/semantic_extraction/facets.py::class::EventMentionBody	class	missing	-	auto-generated
-packs/semantic_extraction/facets.py::class::PreferenceExpressionBody	class	missing	-	auto-generated
-packs/semantic_extraction/facets.py::class::QuestionBody	class	missing	-	auto-generated
-packs/semantic_extraction/facets.py::class::RelationMentionBody	class	missing	-	auto-generated
-packs/semantic_extraction/facets.py::class::TemporalExpressionBody	class	missing	-	auto-generated
-packs/semantic_extraction/facets.py::class::TopicTagBody	class	missing	-	auto-generated
-packs/semantic_extraction/facets.py::class::_StrictModel	class	missing	-	auto-generated
-packs/semantic_extraction/facets.py::const::BODY_SCHEMAS	const	missing	-	auto-generated
-packs/semantic_extraction/facets.py::const::DEFAULT_EAGER_FLOOR	const	missing	-	auto-generated
-packs/semantic_extraction/facets.py::const::LLM_IMPLEMENTED_FACETS	const	missing	-	auto-generated
-packs/semantic_extraction/facets.py::const::LLM_UPGRADE_FACETS	const	missing	-	auto-generated
-packs/semantic_extraction/facets.py::const::STANDARD_FACETS	const	missing	-	auto-generated
-packs/semantic_extraction/facets.py::const::V1_IMPLEMENTED_FACETS	const	missing	-	auto-generated
-packs/semantic_extraction/facets.py::function::validate_body	function	missing	-	auto-generated
-packs/semantic_extraction/fixtures/run_fixtures.py::class::_PoisonProvider	class	missing	-	auto-generated
-packs/semantic_extraction/fixtures/run_fixtures.py::const::DIGEST	const	missing	-	auto-generated
-packs/semantic_extraction/fixtures/run_fixtures.py::const::SUMMARY	const	missing	-	auto-generated
-packs/semantic_extraction/fixtures/run_fixtures.py::function::_acquire	function	missing	-	auto-generated
-packs/semantic_extraction/fixtures/run_fixtures.py::function::_build	function	missing	-	auto-generated
-packs/semantic_extraction/fixtures/run_fixtures.py::function::run_all	function	missing	-	auto-generated
-packs/semantic_extraction/fixtures/run_fixtures.py::function::run_eager_annotation_fixture	function	missing	-	auto-generated
-packs/semantic_extraction/fixtures/run_fixtures.py::function::run_facet_incremental_fixture	function	missing	-	auto-generated
-packs/semantic_extraction/fixtures/run_fixtures.py::function::run_idempotent_reextraction_fixture	function	missing	-	auto-generated
-packs/semantic_extraction/fixtures/run_fixtures.py::function::run_invalidation_fixture	function	missing	-	auto-generated
-packs/semantic_extraction/fixtures/run_fixtures.py::function::run_llm_upgrade_trial_fixture	function	missing	-	auto-generated
-packs/semantic_extraction/fixtures/run_fixtures.py::method::_PoisonProvider.complete	method	missing	-	auto-generated
-packs/semantic_extraction/fixtures/seed_llm_records.py::class::ScriptedProvider	class	missing	-	auto-generated
-packs/semantic_extraction/fixtures/seed_llm_records.py::const::FIXTURE_MODEL	const	missing	-	auto-generated
-packs/semantic_extraction/fixtures/seed_llm_records.py::const::RECORD_DIR	const	missing	-	auto-generated
-packs/semantic_extraction/fixtures/seed_llm_records.py::const::SUMMARY	const	missing	-	auto-generated
-packs/semantic_extraction/fixtures/seed_llm_records.py::function::_live_inner	function	missing	-	auto-generated
-packs/semantic_extraction/fixtures/seed_llm_records.py::function::main	function	missing	-	auto-generated
-packs/semantic_extraction/fixtures/seed_llm_records.py::method::ScriptedProvider.complete	method	missing	-	auto-generated
-packs/semantic_extraction/fixtures/seed_llm_records.py::method::ScriptedProvider.count_tokens	method	missing	-	auto-generated
-packs/semantic_extraction/fixtures/seed_llm_records.py::method::ScriptedProvider.estimate_cost	method	missing	-	auto-generated
-packs/semantic_extraction/fixtures/seed_llm_records.py::method::ScriptedProvider.recognizes_model	method	missing	-	auto-generated
-packs/semantic_extraction/fixtures/seed_llm_records.py::method::ScriptedProvider.supports_native_structured_output	method	missing	-	auto-generated
-packs/semantic_extraction/llm_extractor.py::class::LLMExtractorV1	class	missing	-	auto-generated
-packs/semantic_extraction/llm_extractor.py::class::ReplayFirstProvider	class	missing	-	auto-generated
-packs/semantic_extraction/llm_extractor.py::function::_clamp	function	missing	-	auto-generated
-packs/semantic_extraction/llm_extractor.py::function::_locate	function	missing	-	auto-generated
-packs/semantic_extraction/llm_extractor.py::function::_strip_code_fence	function	missing	-	auto-generated
-packs/semantic_extraction/llm_extractor.py::function::build_llm_extractor	function	missing	-	auto-generated
-packs/semantic_extraction/llm_extractor.py::method::LLMExtractorV1.__init__	method	missing	-	auto-generated
-packs/semantic_extraction/llm_extractor.py::method::LLMExtractorV1._complete	method	missing	-	auto-generated
-packs/semantic_extraction/llm_extractor.py::method::LLMExtractorV1._facet_body	method	missing	-	auto-generated
-packs/semantic_extraction/llm_extractor.py::method::LLMExtractorV1._parse_items	method	missing	-	auto-generated
-packs/semantic_extraction/llm_extractor.py::method::LLMExtractorV1._verify_and_draft	method	missing	-	auto-generated
-packs/semantic_extraction/llm_extractor.py::method::LLMExtractorV1.config	method	missing	-	auto-generated
-packs/semantic_extraction/llm_extractor.py::method::LLMExtractorV1.extract	method	missing	-	auto-generated
-packs/semantic_extraction/llm_extractor.py::method::LLMExtractorV1.implemented_facets	method	missing	-	auto-generated
-packs/semantic_extraction/llm_extractor.py::method::ReplayFirstProvider.__init__	method	missing	-	auto-generated
-packs/semantic_extraction/llm_extractor.py::method::ReplayFirstProvider.complete	method	missing	-	auto-generated
-packs/semantic_extraction/object_types.py::class::AnnotationExtractorState	class	missing	-	auto-generated
-packs/semantic_extraction/object_types.py::class::ExtractionCoverage	class	missing	-	auto-generated
-packs/semantic_extraction/object_types.py::class::ExtractionProfile	class	missing	-	auto-generated
-packs/semantic_extraction/object_types.py::class::ExtractionRun	class	missing	-	auto-generated
-packs/semantic_extraction/object_types.py::class::ExtractorPromotionEvidence	class	missing	-	auto-generated
-packs/semantic_extraction/object_types.py::class::ProcedureCandidate	class	missing	-	auto-generated
-packs/semantic_extraction/object_types.py::class::ProcedureDeoptimization	class	missing	-	auto-generated
-packs/semantic_extraction/object_types.py::class::ProcedureEvaluation	class	missing	-	auto-generated
-packs/semantic_extraction/object_types.py::class::ProcedureGuard	class	missing	-	auto-generated
-packs/semantic_extraction/object_types.py::class::SelectionExtraction	class	missing	-	auto-generated
-packs/semantic_extraction/object_types.py::class::SelectionExtractionRequest	class	missing	-	auto-generated
-packs/semantic_extraction/object_types.py::class::SemanticAnnotation	class	missing	-	auto-generated
-packs/semantic_extraction/object_types.py::class::_StrictModel	class	missing	-	auto-generated
-packs/semantic_extraction/object_types.py::const::OBJECT_TYPES	const	missing	-	auto-generated
-packs/semantic_extraction/object_types.py::const::RELATION_TYPES	const	missing	-	auto-generated
-packs/semantic_extraction/object_types.py::function::_is_standard_or_namespaced	function	missing	-	auto-generated
-packs/semantic_extraction/object_types.py::method::ExtractionRun._valid_hash	method	missing	-	auto-generated
-packs/semantic_extraction/object_types.py::method::SemanticAnnotation._exact_selector	method	missing	-	auto-generated
-packs/semantic_extraction/object_types.py::method::SemanticAnnotation._known_facet	method	missing	-	auto-generated
-packs/semantic_extraction/object_types.py::method::SemanticAnnotation._valid_hash	method	missing	-	auto-generated
-packs/semantic_extraction/procedures.py::class::RequestRuleExtractorV1	class	missing	-	auto-generated
-packs/semantic_extraction/procedures.py::const::POLICY_ID	const	missing	-	auto-generated
-packs/semantic_extraction/procedures.py::const::REFERENCE_REF	const	missing	-	auto-generated
-packs/semantic_extraction/procedures.py::const::REQUEST_PROCEDURE_REF	const	missing	-	auto-generated
-packs/semantic_extraction/procedures.py::function::_accepted_corrections	function	missing	-	auto-generated
-packs/semantic_extraction/procedures.py::function::_evaluate_set	function	missing	-	auto-generated
-packs/semantic_extraction/procedures.py::function::_objects	function	missing	-	auto-generated
-packs/semantic_extraction/procedures.py::function::_reference_annotations	function	missing	-	auto-generated
-packs/semantic_extraction/procedures.py::function::_selector_keys	function	missing	-	auto-generated
-packs/semantic_extraction/procedures.py::function::active_procedure_for	function	missing	-	auto-generated
-packs/semantic_extraction/procedures.py::function::evaluate_request_procedure_fn	function	missing	-	auto-generated
-packs/semantic_extraction/procedures.py::function::guard_admits	function	missing	-	auto-generated
-packs/semantic_extraction/procedures.py::function::promote_request_procedure_fn	function	missing	-	auto-generated
-packs/semantic_extraction/procedures.py::function::record_deoptimization	function	missing	-	auto-generated
-packs/semantic_extraction/procedures.py::function::shape_fingerprint	function	missing	-	auto-generated
-packs/semantic_extraction/procedures.py::function::synthesize_request_procedure_fn	function	missing	-	auto-generated
-packs/semantic_extraction/procedures.py::method::RequestRuleExtractorV1.config	method	missing	-	auto-generated
-packs/semantic_extraction/procedures.py::method::RequestRuleExtractorV1.extract	method	missing	-	auto-generated
-packs/semantic_extraction/procedures.py::method::RequestRuleExtractorV1.implemented_facets	method	missing	-	auto-generated
-packs/semantic_extraction/settings.py::class::SemanticExtractionSettings	class	missing	-	auto-generated
-packs/semantic_extraction/tools.py::const::TOOLS	const	missing	-	auto-generated
-packs/semantic_extraction/tools.py::function::_keyed	function	missing	-	auto-generated
-packs/semantic_extraction/tools.py::function::annotation_coverage	function	missing	-	auto-generated
-packs/semantic_extraction/tools.py::function::annotation_coverage_fn	function	missing	-	auto-generated
-packs/semantic_extraction/tools.py::function::ensure_llm_extraction_profile_fn	function	missing	-	auto-generated
-packs/semantic_extraction/tools.py::function::extract_annotations	function	missing	-	auto-generated
-packs/semantic_extraction/tools.py::function::extract_annotations_fn	function	missing	-	auto-generated
-packs/semantic_extraction/tools.py::function::invalidate_annotation_extractor	function	missing	-	auto-generated
-packs/semantic_extraction/tools.py::function::invalidate_annotation_extractor_fn	function	missing	-	auto-generated
-packs/semantic_extraction/tools.py::function::promote_llm_extractor	function	missing	-	auto-generated
-packs/semantic_extraction/tools.py::function::promote_llm_extractor_fn	function	missing	-	auto-generated
-packs/semantic_extraction/tools.py::function::promote_request_procedure	function	missing	-	auto-generated
-packs/semantic_extraction/tools.py::function::run_extractor_trial	function	missing	-	auto-generated
-packs/semantic_extraction/tools.py::function::run_extractor_trial_fn	function	missing	-	auto-generated
-packs/semantic_extraction/tools.py::function::synthesize_request_procedure	function	missing	-	auto-generated
-packs/semantic_extraction/tools.py::function::update_extraction_profile	function	missing	-	auto-generated
-packs/semantic_extraction/tools.py::function::update_extraction_profile_fn	function	missing	-	auto-generated
+packs/semantic_extraction/behaviors.py::const::BEHAVIORS	const	ported	-	collected by DSL pack macro
+packs/semantic_extraction/behaviors.py::const::LLM_EXTRACTOR_REF	const	deferred	-	slice 2: LLM seam
+packs/semantic_extraction/behaviors.py::function::_existing_candidate_identities	function	deferred	-	slice 2: projectors
+packs/semantic_extraction/behaviors.py::function::_llm_upgrade_active	function	deferred	-	slice 2: LLM seam
+packs/semantic_extraction/behaviors.py::function::annotate_evidence	function	ported	src/chronicle_packs/semantic_extraction/behaviors.cr::annotate_evidence	-
+packs/semantic_extraction/behaviors.py::function::extract_selected_evidence	function	deferred	-	slice 2: selection extraction
+packs/semantic_extraction/behaviors.py::function::project_memory_candidates	function	deferred	-	slice 2: projectors
+packs/semantic_extraction/behaviors.py::function::project_profile_candidates	function	deferred	-	slice 2: projectors
+packs/semantic_extraction/behaviors.py::function::seed_extraction_profile	function	ported	src/chronicle_packs/semantic_extraction/behaviors.cr::seed_extraction_profile	-
+packs/semantic_extraction/engine.py::function::_active_profile	function	ported	src/chronicle_packs/semantic_extraction/engine.cr::_active_profile	-
+packs/semantic_extraction/engine.py::function::_attribution	function	ported	src/chronicle_packs/semantic_extraction/engine.cr::_attribution	-
+packs/semantic_extraction/engine.py::function::_facets_covered	function	ported	src/chronicle_packs/semantic_extraction/engine.cr::_facets_covered	-
+packs/semantic_extraction/engine.py::function::active_profile_extractor_map	function	ported	src/chronicle_packs/semantic_extraction/engine.cr::active_profile_extractor_map	-
+packs/semantic_extraction/engine.py::function::active_profile_facets	function	ported	src/chronicle_packs/semantic_extraction/engine.cr::active_profile_facets	-
+packs/semantic_extraction/engine.py::function::annotation_identity_for	function	ported	src/chronicle_packs/semantic_extraction/engine.cr::annotation_identity_for	-
+packs/semantic_extraction/engine.py::function::extractor_disabled	function	ported	src/chronicle_packs/semantic_extraction/engine.cr::extractor_disabled	-
+packs/semantic_extraction/engine.py::function::parse_extractor_ref	function	ported	src/chronicle_packs/semantic_extraction/engine.cr::_parse_extractor_ref	-
+packs/semantic_extraction/engine.py::function::patch	function	deferred	-	slice 2
+packs/semantic_extraction/engine.py::function::resolve_extractor	function	deferred	-	slice 2
+packs/semantic_extraction/engine.py::function::run_annotation_extraction	function	ported	src/chronicle_packs/semantic_extraction/engine.cr::run_annotation_extraction	-
+packs/semantic_extraction/engine.py::function::run_profile_extraction	function	ported	src/chronicle_packs/semantic_extraction/engine.cr::run_profile_extraction	procedure routing deferred; single default extractor
+packs/semantic_extraction/engine.py::function::stable_id	function	ported	src/chronicle_packs/semantic_extraction/engine.cr::stable_id	-
+packs/semantic_extraction/extractor.py::class::AnnotationDraft	class	ported	src/chronicle_packs/semantic_extraction/extractor.cr::AnnotationDraft	record
+packs/semantic_extraction/extractor.py::class::AnnotationExtractor	class	deferred	-	slice 2
+packs/semantic_extraction/extractor.py::class::DeterministicExtractorV1	class	ported	src/chronicle_packs/semantic_extraction/extractor.cr::Extractors::DeterministicExtractorV1	-
+packs/semantic_extraction/extractor.py::function::_sentences	function	deferred	-	slice 2
+packs/semantic_extraction/extractor.py::function::_strip_bullet	function	deferred	-	slice 2
+packs/semantic_extraction/extractor.py::function::config_hash_for	function	ported	src/chronicle_packs/semantic_extraction/extractor.cr::config_hash_for	-
+packs/semantic_extraction/extractor.py::function::get_annotation_extractor	function	ported	src/chronicle_packs/semantic_extraction/extractor.cr::Extractors.get_annotation_extractor	-
+packs/semantic_extraction/extractor.py::function::register_annotation_extractor	function	ported	src/chronicle_packs/semantic_extraction/extractor.cr::Extractors.register_annotation_extractor	-
+packs/semantic_extraction/extractor.py::method::AnnotationExtractor.config	method	deferred	-	slice 2
+packs/semantic_extraction/extractor.py::method::AnnotationExtractor.extract	method	deferred	-	slice 2
+packs/semantic_extraction/extractor.py::method::AnnotationExtractor.implemented_facets	method	deferred	-	slice 2
+packs/semantic_extraction/extractor.py::method::DeterministicExtractorV1.__init__	method	deferred	-	slice 2
+packs/semantic_extraction/extractor.py::method::DeterministicExtractorV1._add	method	deferred	-	slice 2
+packs/semantic_extraction/extractor.py::method::DeterministicExtractorV1._extract_assertion	method	ported	src/chronicle_packs/semantic_extraction/extractor.cr::Extractors::DeterministicExtractorV1#_extract_assertion	private
+packs/semantic_extraction/extractor.py::method::DeterministicExtractorV1._extract_entity_mention	method	ported	src/chronicle_packs/semantic_extraction/extractor.cr::Extractors::DeterministicExtractorV1#_extract_entity_mention	private
+packs/semantic_extraction/extractor.py::method::DeterministicExtractorV1._extract_preference_expression	method	ported	src/chronicle_packs/semantic_extraction/extractor.cr::Extractors::DeterministicExtractorV1#_extract_preference_expression	private
+packs/semantic_extraction/extractor.py::method::DeterministicExtractorV1._extract_question	method	ported	src/chronicle_packs/semantic_extraction/extractor.cr::Extractors::DeterministicExtractorV1#_extract_question	private
+packs/semantic_extraction/extractor.py::method::DeterministicExtractorV1._extract_temporal_expression	method	ported	src/chronicle_packs/semantic_extraction/extractor.cr::Extractors::DeterministicExtractorV1#_extract_temporal_expression	private
+packs/semantic_extraction/extractor.py::method::DeterministicExtractorV1._extract_topic_tag	method	ported	src/chronicle_packs/semantic_extraction/extractor.cr::Extractors::DeterministicExtractorV1#_extract_topic_tag	private
+packs/semantic_extraction/extractor.py::method::DeterministicExtractorV1.config	method	ported	src/chronicle_packs/semantic_extraction/extractor.cr::Extractors::DeterministicExtractorV1#config	-
+packs/semantic_extraction/extractor.py::method::DeterministicExtractorV1.extract	method	ported	src/chronicle_packs/semantic_extraction/extractor.cr::Extractors::DeterministicExtractorV1#extract	-
+packs/semantic_extraction/extractor.py::method::DeterministicExtractorV1.implemented_facets	method	ported	src/chronicle_packs/semantic_extraction/extractor.cr::Extractors::DeterministicExtractorV1#implemented_facets	-
+packs/semantic_extraction/facets.py::class::AssertionBody	class	deferred	-	slice 2
+packs/semantic_extraction/facets.py::class::EntityMentionBody	class	deferred	-	slice 2
+packs/semantic_extraction/facets.py::class::EventMentionBody	class	deferred	-	slice 2
+packs/semantic_extraction/facets.py::class::PreferenceExpressionBody	class	deferred	-	slice 2
+packs/semantic_extraction/facets.py::class::QuestionBody	class	deferred	-	slice 2
+packs/semantic_extraction/facets.py::class::RelationMentionBody	class	deferred	-	slice 2
+packs/semantic_extraction/facets.py::class::TemporalExpressionBody	class	deferred	-	slice 2
+packs/semantic_extraction/facets.py::class::TopicTagBody	class	deferred	-	slice 2
+packs/semantic_extraction/facets.py::class::_StrictModel	class	deferred	-	slice 2
+packs/semantic_extraction/facets.py::const::BODY_SCHEMAS	const	deferred	-	slice 2
+packs/semantic_extraction/facets.py::const::DEFAULT_EAGER_FLOOR	const	ported	src/chronicle_packs/semantic_extraction/facets.cr::Facets::DEFAULT_EAGER_FLOOR	-
+packs/semantic_extraction/facets.py::const::LLM_IMPLEMENTED_FACETS	const	ported	src/chronicle_packs/semantic_extraction/facets.cr::Facets::LLM_IMPLEMENTED_FACETS	-
+packs/semantic_extraction/facets.py::const::LLM_UPGRADE_FACETS	const	ported	src/chronicle_packs/semantic_extraction/facets.cr::Facets::LLM_UPGRADE_FACETS	-
+packs/semantic_extraction/facets.py::const::STANDARD_FACETS	const	ported	src/chronicle_packs/semantic_extraction/facets.cr::Facets::STANDARD_FACETS	-
+packs/semantic_extraction/facets.py::const::V1_IMPLEMENTED_FACETS	const	ported	src/chronicle_packs/semantic_extraction/facets.cr::Facets::V1_IMPLEMENTED_FACETS	-
+packs/semantic_extraction/facets.py::function::validate_body	function	ported	src/chronicle_packs/semantic_extraction/facets.cr::validate_body	-
+packs/semantic_extraction/fixtures/run_fixtures.py::class::_PoisonProvider	class	deferred	-	slice 2
+packs/semantic_extraction/fixtures/run_fixtures.py::const::DIGEST	const	deferred	-	slice 2
+packs/semantic_extraction/fixtures/run_fixtures.py::const::SUMMARY	const	deferred	-	slice 2
+packs/semantic_extraction/fixtures/run_fixtures.py::function::_acquire	function	deferred	-	slice 2
+packs/semantic_extraction/fixtures/run_fixtures.py::function::_build	function	deferred	-	slice 2
+packs/semantic_extraction/fixtures/run_fixtures.py::function::run_all	function	deferred	-	slice 2
+packs/semantic_extraction/fixtures/run_fixtures.py::function::run_eager_annotation_fixture	function	deferred	-	slice 2
+packs/semantic_extraction/fixtures/run_fixtures.py::function::run_facet_incremental_fixture	function	deferred	-	slice 2
+packs/semantic_extraction/fixtures/run_fixtures.py::function::run_idempotent_reextraction_fixture	function	deferred	-	slice 2
+packs/semantic_extraction/fixtures/run_fixtures.py::function::run_invalidation_fixture	function	deferred	-	slice 2
+packs/semantic_extraction/fixtures/run_fixtures.py::function::run_llm_upgrade_trial_fixture	function	deferred	-	slice 2
+packs/semantic_extraction/fixtures/run_fixtures.py::method::_PoisonProvider.complete	method	deferred	-	slice 2
+packs/semantic_extraction/fixtures/seed_llm_records.py::class::ScriptedProvider	class	deferred	-	slice 2
+packs/semantic_extraction/fixtures/seed_llm_records.py::const::FIXTURE_MODEL	const	deferred	-	slice 2
+packs/semantic_extraction/fixtures/seed_llm_records.py::const::RECORD_DIR	const	deferred	-	slice 2
+packs/semantic_extraction/fixtures/seed_llm_records.py::const::SUMMARY	const	deferred	-	slice 2
+packs/semantic_extraction/fixtures/seed_llm_records.py::function::_live_inner	function	deferred	-	slice 2
+packs/semantic_extraction/fixtures/seed_llm_records.py::function::main	function	deferred	-	slice 2
+packs/semantic_extraction/fixtures/seed_llm_records.py::method::ScriptedProvider.complete	method	deferred	-	slice 2
+packs/semantic_extraction/fixtures/seed_llm_records.py::method::ScriptedProvider.count_tokens	method	deferred	-	slice 2
+packs/semantic_extraction/fixtures/seed_llm_records.py::method::ScriptedProvider.estimate_cost	method	deferred	-	slice 2
+packs/semantic_extraction/fixtures/seed_llm_records.py::method::ScriptedProvider.recognizes_model	method	deferred	-	slice 2
+packs/semantic_extraction/fixtures/seed_llm_records.py::method::ScriptedProvider.supports_native_structured_output	method	deferred	-	slice 2
+packs/semantic_extraction/llm_extractor.py::class::LLMExtractorV1	class	deferred	-	slice 2
+packs/semantic_extraction/llm_extractor.py::class::ReplayFirstProvider	class	deferred	-	slice 2
+packs/semantic_extraction/llm_extractor.py::function::_clamp	function	deferred	-	slice 2
+packs/semantic_extraction/llm_extractor.py::function::_locate	function	deferred	-	slice 2
+packs/semantic_extraction/llm_extractor.py::function::_strip_code_fence	function	deferred	-	slice 2
+packs/semantic_extraction/llm_extractor.py::function::build_llm_extractor	function	deferred	-	slice 2
+packs/semantic_extraction/llm_extractor.py::method::LLMExtractorV1.__init__	method	deferred	-	slice 2
+packs/semantic_extraction/llm_extractor.py::method::LLMExtractorV1._complete	method	deferred	-	slice 2
+packs/semantic_extraction/llm_extractor.py::method::LLMExtractorV1._facet_body	method	deferred	-	slice 2
+packs/semantic_extraction/llm_extractor.py::method::LLMExtractorV1._parse_items	method	deferred	-	slice 2
+packs/semantic_extraction/llm_extractor.py::method::LLMExtractorV1._verify_and_draft	method	deferred	-	slice 2
+packs/semantic_extraction/llm_extractor.py::method::LLMExtractorV1.config	method	deferred	-	slice 2
+packs/semantic_extraction/llm_extractor.py::method::LLMExtractorV1.extract	method	deferred	-	slice 2
+packs/semantic_extraction/llm_extractor.py::method::LLMExtractorV1.implemented_facets	method	deferred	-	slice 2
+packs/semantic_extraction/llm_extractor.py::method::ReplayFirstProvider.__init__	method	deferred	-	slice 2
+packs/semantic_extraction/llm_extractor.py::method::ReplayFirstProvider.complete	method	deferred	-	slice 2
+packs/semantic_extraction/object_types.py::class::AnnotationExtractorState	class	ported	src/chronicle_packs/semantic_extraction/object_types.cr::AnnotationExtractorState	-
+packs/semantic_extraction/object_types.py::class::ExtractionCoverage	class	ported	src/chronicle_packs/semantic_extraction/object_types.cr::ExtractionCoverage	-
+packs/semantic_extraction/object_types.py::class::ExtractionProfile	class	ported	src/chronicle_packs/semantic_extraction/object_types.cr::ExtractionProfile	-
+packs/semantic_extraction/object_types.py::class::ExtractionRun	class	ported	src/chronicle_packs/semantic_extraction/object_types.cr::ExtractionRun	-
+packs/semantic_extraction/object_types.py::class::ExtractorPromotionEvidence	class	ported	src/chronicle_packs/semantic_extraction/object_types.cr::ExtractorPromotionEvidence	-
+packs/semantic_extraction/object_types.py::class::ProcedureCandidate	class	ported	src/chronicle_packs/semantic_extraction/object_types.cr::ProcedureCandidate	-
+packs/semantic_extraction/object_types.py::class::ProcedureDeoptimization	class	ported	src/chronicle_packs/semantic_extraction/object_types.cr::ProcedureDeoptimization	-
+packs/semantic_extraction/object_types.py::class::ProcedureEvaluation	class	ported	src/chronicle_packs/semantic_extraction/object_types.cr::ProcedureEvaluation	-
+packs/semantic_extraction/object_types.py::class::ProcedureGuard	class	ported	src/chronicle_packs/semantic_extraction/object_types.cr::ProcedureGuard	-
+packs/semantic_extraction/object_types.py::class::SelectionExtraction	class	deferred	-	slice 2
+packs/semantic_extraction/object_types.py::class::SelectionExtractionRequest	class	ported	src/chronicle_packs/semantic_extraction/object_types.cr::SelectionExtractionRequest	-
+packs/semantic_extraction/object_types.py::class::SemanticAnnotation	class	ported	src/chronicle_packs/semantic_extraction/object_types.cr::SemanticAnnotation	-
+packs/semantic_extraction/object_types.py::class::_StrictModel	class	deferred	-	slice 2
+packs/semantic_extraction/object_types.py::const::OBJECT_TYPES	const	ported	src/chronicle_packs/semantic_extraction/pack.cr	collected by DSL pack macro
+packs/semantic_extraction/object_types.py::const::RELATION_TYPES	const	ported	src/chronicle_packs/semantic_extraction/pack.cr	collected by DSL pack macro
+packs/semantic_extraction/object_types.py::function::_is_standard_or_namespaced	function	deferred	-	slice 2
+packs/semantic_extraction/object_types.py::method::ExtractionRun._valid_hash	method	deferred	-	slice 2
+packs/semantic_extraction/object_types.py::method::SemanticAnnotation._exact_selector	method	deferred	-	slice 2
+packs/semantic_extraction/object_types.py::method::SemanticAnnotation._known_facet	method	deferred	-	slice 2
+packs/semantic_extraction/object_types.py::method::SemanticAnnotation._valid_hash	method	deferred	-	slice 2
+packs/semantic_extraction/procedures.py::class::RequestRuleExtractorV1	class	deferred	-	slice 2
+packs/semantic_extraction/procedures.py::const::POLICY_ID	const	deferred	-	slice 2
+packs/semantic_extraction/procedures.py::const::REFERENCE_REF	const	deferred	-	slice 2
+packs/semantic_extraction/procedures.py::const::REQUEST_PROCEDURE_REF	const	deferred	-	slice 2
+packs/semantic_extraction/procedures.py::function::_accepted_corrections	function	deferred	-	slice 2
+packs/semantic_extraction/procedures.py::function::_evaluate_set	function	deferred	-	slice 2
+packs/semantic_extraction/procedures.py::function::_objects	function	deferred	-	slice 2
+packs/semantic_extraction/procedures.py::function::_reference_annotations	function	deferred	-	slice 2
+packs/semantic_extraction/procedures.py::function::_selector_keys	function	deferred	-	slice 2
+packs/semantic_extraction/procedures.py::function::active_procedure_for	function	deferred	-	slice 2
+packs/semantic_extraction/procedures.py::function::evaluate_request_procedure_fn	function	deferred	-	slice 2
+packs/semantic_extraction/procedures.py::function::guard_admits	function	deferred	-	slice 2
+packs/semantic_extraction/procedures.py::function::promote_request_procedure_fn	function	deferred	-	slice 2
+packs/semantic_extraction/procedures.py::function::record_deoptimization	function	deferred	-	slice 2
+packs/semantic_extraction/procedures.py::function::shape_fingerprint	function	deferred	-	slice 2
+packs/semantic_extraction/procedures.py::function::synthesize_request_procedure_fn	function	deferred	-	slice 2
+packs/semantic_extraction/procedures.py::method::RequestRuleExtractorV1.config	method	deferred	-	slice 2
+packs/semantic_extraction/procedures.py::method::RequestRuleExtractorV1.extract	method	deferred	-	slice 2
+packs/semantic_extraction/procedures.py::method::RequestRuleExtractorV1.implemented_facets	method	deferred	-	slice 2
+packs/semantic_extraction/settings.py::class::SemanticExtractionSettings	class	ported	src/chronicle_packs/semantic_extraction/settings.cr::SemanticExtractionSettings	-
+packs/semantic_extraction/tools.py::const::TOOLS	const	deferred	-	slice 2
+packs/semantic_extraction/tools.py::function::_keyed	function	deferred	-	slice 2
+packs/semantic_extraction/tools.py::function::annotation_coverage	function	ported	src/chronicle_packs/semantic_extraction/tools.cr::annotation_coverage_tool	tool wrapper; renamed with _tool suffix
+packs/semantic_extraction/tools.py::function::annotation_coverage_fn	function	deferred	-	slice 2
+packs/semantic_extraction/tools.py::function::ensure_llm_extraction_profile_fn	function	deferred	-	slice 2
+packs/semantic_extraction/tools.py::function::extract_annotations	function	ported	src/chronicle_packs/semantic_extraction/tools.cr::extract_annotations_tool	tool wrapper; renamed with _tool suffix
+packs/semantic_extraction/tools.py::function::extract_annotations_fn	function	deferred	-	slice 2
+packs/semantic_extraction/tools.py::function::invalidate_annotation_extractor	function	deferred	-	slice 2
+packs/semantic_extraction/tools.py::function::invalidate_annotation_extractor_fn	function	deferred	-	slice 2
+packs/semantic_extraction/tools.py::function::promote_llm_extractor	function	deferred	-	slice 2
+packs/semantic_extraction/tools.py::function::promote_llm_extractor_fn	function	deferred	-	slice 2
+packs/semantic_extraction/tools.py::function::promote_request_procedure	function	deferred	-	slice 2
+packs/semantic_extraction/tools.py::function::run_extractor_trial	function	deferred	-	slice 2
+packs/semantic_extraction/tools.py::function::run_extractor_trial_fn	function	deferred	-	slice 2
+packs/semantic_extraction/tools.py::function::synthesize_request_procedure	function	deferred	-	slice 2
+packs/semantic_extraction/tools.py::function::update_extraction_profile	function	deferred	-	slice 2
+packs/semantic_extraction/tools.py::function::update_extraction_profile_fn	function	deferred	-	slice 2
 packs/skills/behaviors.py::const::BEHAVIORS	const	ported	src/chronicle_packs/skills/pack.cr	collected by DSL pack macro
 packs/skills/behaviors.py::function::skill_candidate_author	function	ported	src/chronicle_packs/skills/behaviors.cr::skill_candidate_author	-
 packs/skills/behaviors.py::function::skill_evaluation_linker	function	ported	src/chronicle_packs/skills/behaviors.cr::skill_evaluation_linker	-
