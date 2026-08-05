@@ -30,7 +30,7 @@ include WebFetchSupport
 describe "web.fetch_url capability" do
   it "registers web.fetch_url with low risk and R0 action" do
     with_gateway_runtime do |_store, _graph, _rt|
-      reset_seams
+      WebFetchSupport.reset_seams
       spec = Chronicle::Packs::ToolGateway.register_web_fetch_capability
       spec.provider_name.should eq("web")
       spec.capability_name.should eq("fetch_url")
@@ -42,7 +42,7 @@ describe "web.fetch_url capability" do
 
   it "executes through the host fetcher seam when set" do
     with_gateway_runtime do |_store, _graph, _rt|
-      reset_seams
+      WebFetchSupport.reset_seams
       Chronicle::Packs::ToolGateway.register_web_fetch_capability
       Chronicle::Packs::ToolGateway.web_fetch_fetcher = ->(url : String, timeout : Float64) { {"<html>hello #{url}</html>", 200, url} }
       result = Chronicle::Packs::ToolGateway.execute_capability_fn("web", "fetch_url", {"url" => JSON::Any.new("https://example.com"), "timeout_seconds" => JSON::Any.new(10.0)})
@@ -56,7 +56,7 @@ describe "web.fetch_url capability" do
 
   it "fails closed when the host fetcher seam is unset" do
     with_gateway_runtime do |_store, _graph, _rt|
-      reset_seams
+      WebFetchSupport.reset_seams
       Chronicle::Packs::ToolGateway.register_web_fetch_capability
       result = Chronicle::Packs::ToolGateway.execute_capability_fn("web", "fetch_url", {"url" => JSON::Any.new("https://example.com")})
       result["success"].as_bool.should be_false

@@ -30,7 +30,7 @@ include LlmToolsSupport
 describe "llm tool proxies (Crig tool transport)" do
   it "wraps a registered capability as a Crig ToolDyn with the real schema" do
     with_gateway_runtime do |_store, graph, _rt|
-      reset_seams
+      LlmToolsSupport.reset_seams
       spec = Chronicle::Packs::ToolGateway.register_web_fetch_capability
       tool = Chronicle::Packs::ToolGateway.as_llm_tool(graph, spec, settings: Chronicle::Packs::ToolGateway::ToolGatewaySettings.new)
       tool.should be_a(Crig::ToolDyn)
@@ -43,7 +43,7 @@ describe "llm tool proxies (Crig tool transport)" do
 
   it "refuses tools the gateway can never offer to a model" do
     with_gateway_runtime do |_store, graph, _rt|
-      reset_seams
+      LlmToolsSupport.reset_seams
       spec = Chronicle::Packs::ToolGateway.register_local_capability(
         "gateway", "approve_capability", ->(input : Hash(String, JSON::Any)) { {"ok" => JSON::Any.new(true)} },
         description: "approve held calls", risk_class: "low", action_class: "R0",
@@ -56,7 +56,7 @@ describe "llm tool proxies (Crig tool transport)" do
 
   it "refuses capabilities without an input schema" do
     with_gateway_runtime do |_store, graph, _rt|
-      reset_seams
+      LlmToolsSupport.reset_seams
       spec = Chronicle::Packs::ToolGateway.register_local_capability(
         "svc", "op", ->(input : Hash(String, JSON::Any)) { {"ok" => JSON::Any.new(true)} },
         description: "schema-less op", risk_class: "low", action_class: "R0",
@@ -70,7 +70,7 @@ describe "llm tool proxies (Crig tool transport)" do
 
   it "executes an auto-approved call inline and records the full audit trail" do
     with_gateway_runtime do |_store, graph, _rt|
-      reset_seams
+      LlmToolsSupport.reset_seams
       Chronicle::Packs::ToolGateway.register_web_fetch_capability
       Chronicle::Packs::ToolGateway.web_fetch_fetcher = ->(url : String, timeout : Float64) { {"<p>cached #{url}</p>", 200, url} }
       spec = Chronicle::Packs::ToolGateway.get_capability_spec("web.fetch_url").not_nil!
@@ -98,7 +98,7 @@ describe "llm tool proxies (Crig tool transport)" do
 
   it "holds a non-auto-approvable call for explicit approval" do
     with_gateway_runtime do |_store, graph, _rt|
-      reset_seams
+      LlmToolsSupport.reset_seams
       Chronicle::Packs::ToolGateway.register_local_capability(
         "svc", "risky", ->(input : Hash(String, JSON::Any)) { {"ok" => JSON::Any.new(true)} },
         description: "high-risk op", risk_class: "high", action_class: "R1",
@@ -119,7 +119,7 @@ describe "llm tool proxies (Crig tool transport)" do
 
   it "registers gateway proxies in a Crig ToolSet and fails loud on unknown keys" do
     with_gateway_runtime do |_store, graph, _rt|
-      reset_seams
+      LlmToolsSupport.reset_seams
       Chronicle::Packs::ToolGateway.register_web_fetch_capability
       tools = Chronicle::Packs::ToolGateway.llm_tools_for(graph, ["web.fetch_url"], settings: Chronicle::Packs::ToolGateway::ToolGatewaySettings.new)
       tools.size.should eq(1)

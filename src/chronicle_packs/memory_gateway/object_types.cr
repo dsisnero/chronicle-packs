@@ -64,6 +64,10 @@ module Chronicle::Packs::MemoryGateway
     getter promotion_status : PromotionStatus = PromotionStatus::Admitted
     getter artifact_version : String = "1"
     getter promotion_history : Array(Hash(String, JSON::Any)) = [] of Hash(String, JSON::Any)
+    getter embedding : Array(Float64)? = nil
+    getter embedding_model : String?
+    getter embedding_dimensions : Int32?
+    getter embedding_version : String?
 
     def initialize(
       text : String, category : String? = nil, confidence : Float64 = 0.7,
@@ -75,6 +79,8 @@ module Chronicle::Packs::MemoryGateway
       reliability_event_id : String? = nil, promotion_status : PromotionStatus = PromotionStatus::Admitted,
       artifact_version : String = "1",
       promotion_history : Array(Hash(String, JSON::Any)) = [] of Hash(String, JSON::Any),
+      embedding : Array(Float64)? = nil, embedding_model : String? = nil,
+      embedding_dimensions : Int32? = nil, embedding_version : String? = nil,
     )
       @text = text
       @category = category
@@ -92,6 +98,10 @@ module Chronicle::Packs::MemoryGateway
       @promotion_status = promotion_status
       @artifact_version = artifact_version
       @promotion_history = promotion_history
+      @embedding = embedding
+      @embedding_model = embedding_model
+      @embedding_dimensions = embedding_dimensions
+      @embedding_version = embedding_version
     end
 
     define_copy_with

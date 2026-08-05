@@ -176,6 +176,7 @@ module Chronicle::Packs::MemoryGateway
       return
     end
 
+    outcome = Backend._safe_embed(graph, [text], Chronicle::Packs::MemoryGateway::EmbeddingPurpose::MemoryWrite, idempotency_key: subject_id, metadata: {"subject_ref" => JSON::Any.new(subject_ref || "")})
     item = MemoryItem.new(
       text,
       category: candidate_data["category"]?.try(&.as_s?),
@@ -183,6 +184,10 @@ module Chronicle::Packs::MemoryGateway
       source_ids: candidate_data["source_ids"]?.try(&.as_a?.try(&.map(&.as_s))) || [] of String,
       candidate_id: subject_id, created_at: now, retrieval_count: 0,
       subject_ref: subject_ref,
+      embedding: outcome.try(&.vectors[0]),
+      embedding_model: outcome.try(&.model),
+      embedding_dimensions: outcome.try(&.dimensions),
+      embedding_version: outcome.try(&.version),
     )
     item_obj = graph.add_object("memory_item", item.to_json)
 

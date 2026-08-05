@@ -81,6 +81,26 @@ crystal spec                            # run tests
   `Chronicle::AgentHook` (if any) narrowed to generic `llm.requested` /
   `tool.requested` / `tool.responded` telemetry — do not duplicate gateway
   audit events there.
+- **Embedding boundary: Crig computes vectors, Chronicle makes them
+  durable, MemoryGateway decides memory semantics.** The pack never
+  instantiates a provider directly — its backend depends on a small
+  per-runtime recorded interface (`MemoryGateway::EmbeddingService`, the
+  future chronicle-owned shape: `embed_texts(texts, purpose,
+  idempotency_key, metadata)`). Bind it per graph via
+  `Backend.set_embedding_service(graph, service)` so configuration never
+  leaks across runtime instances; `RecordedEmbeddingService` is the pack's
+  reference impl (emits `embedding.requested`/`embedding.responded` and
+  replays a prior result from the log by idempotency key). `set_embedder`
+  stays only as the direct/legacy seam for third-party embedders.
+  Preserve the retrieval contract: lexical always available; embeddings
+  improve recall but never reduce it (score = max(lexical, cosine));
+  provider failure/unavailable replay degrades to lexical; embedded and
+  non-embedded items coexist. Store embedding-space identity on the object
+  (`embedding_model`/`_dimensions`/`_version`) and NEVER cosine-compare
+  across spaces — a model/version change lexical-fallbacks those entries.
+  Crig's vector store is optional acceleration, never the source of truth;
+  the graph records stay authoritative for access, subject scope,
+  reliability, lifecycle, and replay.
 
 ## Relevant docs
 

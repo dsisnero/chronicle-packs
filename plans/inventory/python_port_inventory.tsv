@@ -1354,30 +1354,30 @@ packs/memory_gateway/adapters.py::method::Mem0Backend._normalize	method	deferred
 packs/memory_gateway/adapters.py::method::Mem0Backend._search	method	deferred	-	host mem0 adapter
 packs/memory_gateway/adapters.py::method::Mem0Backend.retrieve_by_query	method	deferred	-	host mem0 adapter
 packs/memory_gateway/adapters.py::method::Mem0Backend.store_item	method	deferred	-	host mem0 adapter
-packs/memory_gateway/backend.py::class::Embedder	class	deferred	-	slice 2: embedder seam
+packs/memory_gateway/backend.py::class::Embedder	class	ported	src/chronicle_packs/memory_gateway/backend.cr::Embedder	abstract class; the pack-facing recorded seam
 packs/memory_gateway/backend.py::class::ExternalMemoryBackend	class	deferred	-	slice 2: external backends
 packs/memory_gateway/backend.py::class::MemoryBackend	class	deferred	-	slice 2: SQLite store
 packs/memory_gateway/backend.py::class::SqliteMemoryBackend	class	deferred	-	slice 2: SQLite store
 packs/memory_gateway/backend.py::const::STOPWORDS	const	deferred	-	ported (src/chronicle_packs/memory_gateway/backend.cr::Backend::STOPWORDS)
-packs/memory_gateway/backend.py::function::_cosine	function	deferred	-	slice 2: embedding cosine
-packs/memory_gateway/backend.py::function::_embed	function	deferred	-	slice 2: embedder
-packs/memory_gateway/backend.py::function::_invoke_embedder	function	deferred	-	slice 2: embedder
+packs/memory_gateway/backend.py::function::_cosine	function	ported	src/chronicle_packs/memory_gateway/backend.cr::_cosine	clamped [0,1]
+packs/memory_gateway/backend.py::function::_embed	function	ported	src/chronicle_packs/memory_gateway/embedding_service.cr::RecordedEmbeddingService	folded into the recorded service closure
+packs/memory_gateway/backend.py::function::_invoke_embedder	function	ported	src/chronicle_packs/memory_gateway/backend.cr::_invoke_embedder	-
 packs/memory_gateway/backend.py::function::_jaccard	function	ported	src/chronicle_packs/memory_gateway/backend.cr::Backend	folded into lexical_score
 packs/memory_gateway/backend.py::function::_normalize_text	function	ported	src/chronicle_packs/memory_gateway/backend.cr::Backend._normalize_text	-
-packs/memory_gateway/backend.py::function::_recorded_embed_fn	function	deferred	-	slice 2: recorded embedding
-packs/memory_gateway/backend.py::function::_safe_embed	function	deferred	-	slice 2: embedder
+packs/memory_gateway/backend.py::function::_recorded_embed_fn	function	ported	src/chronicle_packs/memory_gateway/backend.cr::_recorded_embed_fn	per-graph EmbeddingService lookup
+packs/memory_gateway/backend.py::function::_safe_embed	function	ported	src/chronicle_packs/memory_gateway/backend.cr::_safe_embed	returns EmbeddingOutcome (vectors + space identity)
 packs/memory_gateway/backend.py::function::_word_set	function	ported	src/chronicle_packs/memory_gateway/backend.cr::Backend._word_set	-
-packs/memory_gateway/backend.py::function::auto_configure_embedder	function	deferred	-	slice 2: embedder
+packs/memory_gateway/backend.py::function::auto_configure_embedder	function	ported	src/chronicle_packs/memory_gateway/backend.cr::auto_configure_embedder	-
 packs/memory_gateway/backend.py::function::clear_all_backends	function	deferred	-	slice 2: backend registry
-packs/memory_gateway/backend.py::function::clear_embedder	function	deferred	-	slice 2: embedder
+packs/memory_gateway/backend.py::function::clear_embedder	function	ported	src/chronicle_packs/memory_gateway/backend.cr::clear_embedder	-
 packs/memory_gateway/backend.py::function::close_all_backends	function	deferred	-	slice 2: backend registry
 packs/memory_gateway/backend.py::function::get_backend	function	deferred	-	slice 2: backend registry (graph-backed in slice 1)
-packs/memory_gateway/backend.py::function::get_embedder	function	deferred	-	slice 2: embedder
+packs/memory_gateway/backend.py::function::get_embedder	function	ported	src/chronicle_packs/memory_gateway/backend.cr::get_embedder	legacy direct seam
 packs/memory_gateway/backend.py::function::lexical_score	function	ported	src/chronicle_packs/memory_gateway/backend.cr::Backend.lexical_score	-
 packs/memory_gateway/backend.py::function::register_backend	function	deferred	-	slice 2: backend registry
-packs/memory_gateway/backend.py::function::runtime_recorded_embedding	function	deferred	-	slice 2: recorded embedding
-packs/memory_gateway/backend.py::function::set_embedder	function	deferred	-	slice 2: embedder
-packs/memory_gateway/backend.py::function::set_embedder_factory	function	deferred	-	slice 2: embedder
+packs/memory_gateway/backend.py::function::runtime_recorded_embedding	function	ported	src/chronicle_packs/memory_gateway/backend.cr::runtime_recorded_embedding	per-graph binding
+packs/memory_gateway/backend.py::function::set_embedder	function	ported	src/chronicle_packs/memory_gateway/backend.cr::set_embedder	legacy direct seam
+packs/memory_gateway/backend.py::function::set_embedder_factory	function	ported	src/chronicle_packs/memory_gateway/backend.cr::set_embedder_factory	-
 packs/memory_gateway/backend.py::function::unregister_backend	function	deferred	-	slice 2: backend registry
 packs/memory_gateway/backend.py::method::Embedder.embed	method	deferred	-	slice 2: embedder seam
 packs/memory_gateway/backend.py::method::ExternalMemoryBackend.__init__	method	deferred	-	slice 2: external backends
@@ -1427,13 +1427,13 @@ packs/memory_gateway/behaviors.py::function::memory_ranker	function	ported	src/c
 packs/memory_gateway/behaviors.py::function::memory_reliability_applier	function	ported	src/chronicle_packs/memory_gateway/behaviors.cr::memory_reliability_applier	-
 packs/memory_gateway/behaviors.py::function::memory_retriever	function	ported	src/chronicle_packs/memory_gateway/behaviors.cr::memory_retriever	-
 packs/memory_gateway/behaviors.py::function::memory_writer	function	ported	src/chronicle_packs/memory_gateway/behaviors.cr::memory_writer	-
-packs/memory_gateway/embedders.py::class::HashEmbedder	class	deferred	-	slice 2: embedders
-packs/memory_gateway/embedders.py::class::OpenAIEmbedder	class	deferred	-	slice 2: embedders (API key)
-packs/memory_gateway/embedders.py::function::default_embedder_factory	function	deferred	-	slice 2: embedders
-packs/memory_gateway/embedders.py::method::HashEmbedder.__init__	method	deferred	-	slice 2: embedders
-packs/memory_gateway/embedders.py::method::HashEmbedder.embed	method	deferred	-	slice 2: embedders
-packs/memory_gateway/embedders.py::method::OpenAIEmbedder.__init__	method	deferred	-	slice 2: embedders
-packs/memory_gateway/embedders.py::method::OpenAIEmbedder.embed	method	deferred	-	slice 2: embedders
+packs/memory_gateway/embedders.py::class::HashEmbedder	class	ported	src/chronicle_packs/memory_gateway/embedders.cr::HashEmbedder	-
+packs/memory_gateway/embedders.py::class::OpenAIEmbedder	class	ported	src/chronicle_packs/memory_gateway/embedders.cr::OpenAIEmbedder	HTTP post via host seam
+packs/memory_gateway/embedders.py::function::default_embedder_factory	function	ported	src/chronicle_packs/memory_gateway/embedders.cr::default_embedder_factory	-
+packs/memory_gateway/embedders.py::method::HashEmbedder.__init__	method	ported	src/chronicle_packs/memory_gateway/embedders.cr::HashEmbedder#initialize	-
+packs/memory_gateway/embedders.py::method::HashEmbedder.embed	method	ported	src/chronicle_packs/memory_gateway/embedders.cr::HashEmbedder#embed	-
+packs/memory_gateway/embedders.py::method::OpenAIEmbedder.__init__	method	ported	src/chronicle_packs/memory_gateway/embedders.cr::OpenAIEmbedder#initialize	-
+packs/memory_gateway/embedders.py::method::OpenAIEmbedder.embed	method	ported	src/chronicle_packs/memory_gateway/embedders.cr::OpenAIEmbedder#embed	-
 packs/memory_gateway/fixtures/run_fixtures.py::class::_CountingProvider	class	skipped	-	fixture scripts; lifecycle driven by specs
 packs/memory_gateway/fixtures/run_fixtures.py::class::_PoisonProvider	class	skipped	-	fixture scripts; lifecycle driven by specs
 packs/memory_gateway/fixtures/run_fixtures.py::function::_run_fixture	function	skipped	-	fixture scripts; lifecycle driven by specs
