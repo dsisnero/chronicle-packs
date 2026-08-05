@@ -23,12 +23,12 @@ module Chronicle::Packs::Usage
     include JSON::Serializable
 
     getter surface_id : String
-    getter category : String
+    getter category : Chronicle::Packs::SourceCategory
     getter provider : Hash(String, JSON::Any) = {} of String => JSON::Any
-    getter path : String
+    getter path : Chronicle::Packs::ConnectionPath
     getter adapter : String?
     getter acquisition_mode : String = "snapshot"
-    getter status : String = "connected"
+    getter status : Chronicle::Packs::SurfaceStatus = Chronicle::Packs::SurfaceStatus::Connected
     getter privacy_scope : String = "source"
     getter cursor_state : CursorState = CursorState.new
     getter? is_fixture : Bool = false
@@ -43,10 +43,10 @@ module Chronicle::Packs::Usage
     getter metadata : Hash(String, JSON::Any) = {} of String => JSON::Any
 
     def initialize(
-      surface_id : String, category : String, path : String,
+      surface_id : String, category : Chronicle::Packs::SourceCategory, path : Chronicle::Packs::ConnectionPath,
       provider : Hash(String, JSON::Any) = {} of String => JSON::Any,
       adapter : String? = nil, acquisition_mode : String = "snapshot",
-      status : String = "connected", privacy_scope : String = "source",
+      status : Chronicle::Packs::SurfaceStatus = Chronicle::Packs::SurfaceStatus::Connected, privacy_scope : String = "source",
       cursor_state : CursorState = CursorState.new, is_fixture : Bool = false,
       events_seen : Int32 = 0, unique_evidence_count : Int32 = 0,
       first_seen : String? = nil, last_seen : String? = nil,
@@ -83,9 +83,9 @@ module Chronicle::Packs::Usage
 
     getter request_identity : String
     getter surface_id : String
-    getter category : String
+    getter category : Chronicle::Packs::SourceCategory
     getter provider : Hash(String, JSON::Any) = {} of String => JSON::Any
-    getter path : String
+    getter path : Chronicle::Packs::ConnectionPath
     getter privacy_scope : String = "account"
     getter adapter : String?
     getter acquisition_mode : String = "backfill"

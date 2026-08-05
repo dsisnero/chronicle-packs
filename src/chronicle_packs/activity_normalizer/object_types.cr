@@ -18,7 +18,7 @@ module Chronicle::Packs::ActivityNormalizer
     getter source_ref : String
     getter source_hash : String?
     getter provider_time : String?
-    getter replay_mode : String
+    getter replay_mode : Chronicle::Packs::ReplayMode
     getter replay_payload_ref : String
     getter replay_payload_hash : String
     getter media_type : String
@@ -34,8 +34,8 @@ module Chronicle::Packs::ActivityNormalizer
     getter acquired_item_id : String
     getter normalized_content : String
     getter normalized_metadata : Hash(String, JSON::Any)
-    getter source_category : String
-    getter connection_path : String
+    getter source_category : Chronicle::Packs::SourceCategory
+    getter connection_path : Chronicle::Packs::ConnectionPath
     getter? is_fixture : Bool
   end
 
@@ -85,7 +85,7 @@ module Chronicle::Packs::ActivityNormalizer
     getter source_hash : String?
     getter content_hash : String
     getter provider_time : String?
-    getter replay_mode : String
+    getter replay_mode : Chronicle::Packs::ReplayMode
     getter replay_payload_ref : String
     getter replay_payload_hash : String
     getter? replay_complete : Bool
@@ -95,8 +95,8 @@ module Chronicle::Packs::ActivityNormalizer
     getter acquired_at_event_id : String
     getter normalized_content : String
     getter normalized_metadata : Hash(String, JSON::Any) = {} of String => JSON::Any
-    getter source_category : String
-    getter connection_path : String
+    getter source_category : Chronicle::Packs::SourceCategory
+    getter connection_path : Chronicle::Packs::ConnectionPath
     getter importer_id : String
     getter importer_version : String
     getter? is_fixture : Bool = false
@@ -106,11 +106,11 @@ module Chronicle::Packs::ActivityNormalizer
       evidence_identity : String, revision_id : String, revision_number : Int32,
       acquired_item_id : String, acquired_content_id : String,
       source_surface_id : String, dedup_key : String, source_ref : String,
-      content_hash : String, replay_mode : String,
+      content_hash : String, replay_mode : Chronicle::Packs::ReplayMode,
       replay_payload_ref : String, replay_payload_hash : String,
       replay_complete : Bool, media_type : String, acquired_at_event_id : String,
-      normalized_content : String, source_category : String,
-      connection_path : String, importer_id : String, importer_version : String,
+      normalized_content : String, source_category : Chronicle::Packs::SourceCategory,
+      connection_path : Chronicle::Packs::ConnectionPath, importer_id : String, importer_version : String,
       status : String = "current", provider_item_id : String? = nil,
       source_hash : String? = nil, provider_time : String? = nil,
       encoding : String = "utf-8", retention_policy : String = "source_default",

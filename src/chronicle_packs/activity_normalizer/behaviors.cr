@@ -214,12 +214,12 @@ module Chronicle::Packs::ActivityNormalizer
       "source_ref"        => JSON::Any.new(item.source_ref),
       "content_hash"      => JSON::Any.new(content_hash),
       "provider_time"     => item.provider_time.try { |v| JSON::Any.new(v) } || JSON::Any.new(nil),
-      "source_category"   => JSON::Any.new(handoff.source_category),
-      "connection_path"   => JSON::Any.new(handoff.connection_path),
+      "source_category"   => JSON::Any.new(handoff.source_category.wire),
+      "connection_path"   => JSON::Any.new(handoff.connection_path.wire),
       "importer_id"       => JSON::Any.new(item.importer_id),
       "importer_version"  => JSON::Any.new(item.importer_version),
       "is_fixture"        => JSON::Any.new(handoff.is_fixture?),
-      "replay_complete"   => JSON::Any.new(item.replay_mode != "reference_only"),
+      "replay_complete"   => JSON::Any.new(item.replay_mode != Chronicle::Packs::ReplayMode::ReferenceOnly),
       "invalidated"       => JSON::Any.new(false),
     }, caused_by: caused_by)
   end
@@ -243,7 +243,7 @@ module Chronicle::Packs::ActivityNormalizer
       item.source_surface_id, item.dedup_key, item.source_ref,
       content_hash, item.replay_mode,
       item.replay_payload_ref, item.replay_payload_hash,
-      item.replay_mode != "reference_only", item.media_type, event_id,
+      item.replay_mode != Chronicle::Packs::ReplayMode::ReferenceOnly, item.media_type, event_id,
       handoff.normalized_content[0, settings.max_normalized_content_chars], handoff.source_category,
       handoff.connection_path, item.importer_id, item.importer_version,
       provider_item_id: item.provider_item_id, source_hash: item.source_hash,
@@ -281,7 +281,7 @@ module Chronicle::Packs::ActivityNormalizer
     begin
       # Validate the retained replay payload is available and verifiable for
       # non-reference_only modes (upstream: read_replay_payload at ingestion).
-      if item.replay_mode != "reference_only"
+      if item.replay_mode != Chronicle::Packs::ReplayMode::ReferenceOnly
         Replay.read_replay_payload(JSON.parse(item.to_json).as_h, settings)
       end
       content_hash = item.source_hash || item.replay_payload_hash

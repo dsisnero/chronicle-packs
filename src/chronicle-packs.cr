@@ -1,6 +1,7 @@
 require "chronicle"
 
 require "./chronicle_packs/copy_with"
+require "./chronicle_packs/closed_sets"
 require "./chronicle_packs/core"
 require "./chronicle_packs/identity_auth/pack"
 require "./chronicle_packs/agent_profile/pack"

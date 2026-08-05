@@ -78,7 +78,7 @@ module Chronicle::Packs::Usage
       settled_event = _emit_event(graph, "source.settled", {
         "surface_id"            => JSON::Any.new(surface_id),
         "source_surface_id"     => JSON::Any.new(surface_id),
-        "category"              => JSON::Any.new(surface_data.category),
+        "category"              => JSON::Any.new(surface_data.category.wire),
         "gate_id"               => JSON::Any.new(gate.gate_id),
         "gate_version"          => JSON::Any.new(gate.gate_version),
         "unique_evidence_count" => JSON::Any.new(unique_count),
@@ -88,7 +88,7 @@ module Chronicle::Packs::Usage
         "passed_thresholds"     => JSON::Any.new(thresholds.map { |threshold| JSON::Any.new(threshold) }),
       })
       record = SettlementRecord.new(
-        settlement_identity, surface_id, surface_data.category,
+        settlement_identity, surface_id, surface_data.category.wire,
         gate.gate_id, gate.gate_version, unique_count, coverage["coverage_days"]?.try(&.as_i) || 0,
         coverage["earliest"]?.try(&.as_s?), coverage["latest"]?.try(&.as_s?),
         thresholds, settled_event.id, event.id,
@@ -123,10 +123,10 @@ module Chronicle::Packs::Usage
     status = if existing
                "stale"
              elsif !evidence_rows.empty?
-               if surface_data.status != "settling"
+               if surface_data.status != Chronicle::Packs::SurfaceStatus::Settling
                  _emit_event(graph, "source.settling", {
                    "surface_id"            => JSON::Any.new(surface_id),
-                   "category"              => JSON::Any.new(surface_data.category),
+                   "category"              => JSON::Any.new(surface_data.category.wire),
                    "gate_id"               => JSON::Any.new(gate.gate_id),
                    "gate_version"          => JSON::Any.new(gate.gate_version),
                    "unique_evidence_count" => JSON::Any.new(unique_count),
@@ -164,7 +164,7 @@ module Chronicle::Packs::Usage
     thresholds << "volume" if volume_passed
     thresholds << "coverage" if coverage_passed
 
-    if surface_data.status.in?({"stale", "revoked", "failed"}) && event.type != "source.connected"
+    if surface_data.status.in?(Chronicle::Packs::SurfaceStatus::Stale, Chronicle::Packs::SurfaceStatus::Revoked, Chronicle::Packs::SurfaceStatus::Failed) && event.type != "source.connected"
       current = JSON.parse(surface.data).as_h
       current["unique_evidence_count"] = JSON::Any.new(unique_count)
       current["first_seen"] = coverage["earliest"]? || JSON::Any.new(nil)
@@ -273,7 +273,7 @@ module Chronicle::Packs::Usage
       return
     end
     surface_data = ConnectionSurface.from_json(surface.data)
-    if category != surface_data.category || payload["connection_path"]?.try(&.as_s?) != surface_data.path
+    if category != surface_data.category.wire || payload["connection_path"]?.try(&.as_s?) != surface_data.path.wire
       _failure(graph, event, code: "surface_metadata_mismatch", message: "evidence category/path does not match its connection surface", payload: payload)
       return
     end
