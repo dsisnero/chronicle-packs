@@ -23,6 +23,20 @@ crystal spec                            # run tests
 - Port behavior first; Crystal idioms only where semantics stay unchanged.
 - Upstream tests and fixtures are normative; do not weaken them.
 - Parity inventory under `plans/inventory/` tracks port status; `plans/parity.md` is the roadmap.
+- **Typed by default:** domain types (object types, tool parameters, event
+  payloads, projection state, behaviors' object reads) are `struct`s (or
+  classes where genuinely mutable/resource-owning) with `JSON::Serializable`
+  and explicit initializers — never `JSON.parse(...).as_h` chains. Raw
+  `Hash(String, JSON::Any)` only for genuinely open-shaped data: provider
+  payloads, `metadata`, and `service_extensions`. Use
+  `@[JSON::Field(converter: ...)]` for typed fields like ISO-8601 `Time`.
+- **Immutable structs use `record`:** declare simple immutable structs with
+  the `record Name, field : Type = default, ... do include JSON::Serializable
+  end` form — it generates getters, defaults, the initializer, and
+  `copy_with`. For bool fields, avoid `is_`/`has_` prefixes (they trip ameba
+  `Naming/QueryBoolMethods` under `record`'s plain getters); name them
+  `fixture`, `passed`, etc. and keep the upstream JSON key via
+  `@[JSON::Field(key: "is_fixture")]` when it differs.
 
 ## Relevant docs
 

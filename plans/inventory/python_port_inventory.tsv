@@ -1953,83 +1953,83 @@ packs/tool_gateway/untrusted.py::const::UNTRUSTED_CLOSE	const	missing	-	auto-gen
 packs/tool_gateway/untrusted.py::const::UNTRUSTED_OPEN	const	missing	-	auto-generated
 packs/tool_gateway/untrusted.py::function::scan_for_injection	function	missing	-	auto-generated
 packs/tool_gateway/untrusted.py::function::wrap_untrusted	function	missing	-	auto-generated
-packs/usage/behaviors.py::const::BEHAVIORS	const	missing	-	auto-generated
-packs/usage/behaviors.py::function::_clock_times	function	missing	-	auto-generated
-packs/usage/behaviors.py::function::_current_evidence	function	missing	-	auto-generated
-packs/usage/behaviors.py::function::_evaluate_surface	function	missing	-	auto-generated
-packs/usage/behaviors.py::function::_failure	function	missing	-	auto-generated
-packs/usage/behaviors.py::function::_gate	function	missing	-	auto-generated
-packs/usage/behaviors.py::function::_surface	function	missing	-	auto-generated
-packs/usage/behaviors.py::function::fulfill_source_connection_request	function	missing	-	auto-generated
-packs/usage/behaviors.py::function::observe_cursor_progress	function	missing	-	auto-generated
-packs/usage/behaviors.py::function::observe_evidence_invalidation	function	missing	-	auto-generated
-packs/usage/behaviors.py::function::observe_normalized_evidence	function	missing	-	auto-generated
-packs/usage/behaviors.py::function::observe_source_clock	function	missing	-	auto-generated
-packs/usage/behaviors.py::function::observe_surface_connection	function	missing	-	auto-generated
-packs/usage/fixtures/run_fixtures.py::function::_chat_message	function	missing	-	auto-generated
-packs/usage/fixtures/run_fixtures.py::function::_vision_source	function	missing	-	auto-generated
-packs/usage/fixtures/run_fixtures.py::function::_write_chatgpt_export	function	missing	-	auto-generated
-packs/usage/fixtures/run_fixtures.py::function::main	function	missing	-	auto-generated
-packs/usage/fixtures/run_fixtures.py::function::run_dogfood_fixture	function	missing	-	auto-generated
-packs/usage/object_types.py::class::ConnectionSurface	class	missing	-	auto-generated
-packs/usage/object_types.py::class::CursorState	class	missing	-	auto-generated
-packs/usage/object_types.py::class::SettlementRecord	class	missing	-	auto-generated
-packs/usage/object_types.py::class::SettlingGate	class	missing	-	auto-generated
-packs/usage/object_types.py::class::SourceConnectionRequest	class	missing	-	auto-generated
-packs/usage/object_types.py::class::UsageEvidence	class	missing	-	auto-generated
-packs/usage/object_types.py::class::UsageProjectionFailure	class	missing	-	auto-generated
-packs/usage/object_types.py::class::UsageRecord	class	missing	-	auto-generated
-packs/usage/object_types.py::class::_StrictModel	class	missing	-	auto-generated
-packs/usage/object_types.py::const::OBJECT_TYPES	const	missing	-	auto-generated
-packs/usage/object_types.py::const::RELATION_TYPES	const	missing	-	auto-generated
-packs/usage/object_types.py::const::SOURCE_CATEGORIES	const	missing	-	auto-generated
-packs/usage/settings.py::class::UsageSettings	class	missing	-	auto-generated
-packs/usage/tools.py::const::CONNECTION_PATHS	const	missing	-	auto-generated
-packs/usage/tools.py::const::DEFAULT_GATE	const	missing	-	auto-generated
-packs/usage/tools.py::const::EXPLICIT_LIFECYCLE_STATUSES	const	missing	-	auto-generated
-packs/usage/tools.py::const::LIVE_CONNECTION_PATHS	const	missing	-	auto-generated
-packs/usage/tools.py::const::PRIVACY_SCOPES	const	missing	-	auto-generated
-packs/usage/tools.py::const::SOURCE_CATEGORIES	const	missing	-	auto-generated
-packs/usage/tools.py::const::SOURCE_CATEGORY_SET	const	missing	-	auto-generated
-packs/usage/tools.py::const::SURFACE_STATUSES	const	missing	-	auto-generated
-packs/usage/tools.py::const::TOOLS	const	missing	-	auto-generated
-packs/usage/tools.py::function::_canonical_json	function	missing	-	auto-generated
-packs/usage/tools.py::function::_coverage_from_times	function	missing	-	auto-generated
-packs/usage/tools.py::function::_cursor_default	function	missing	-	auto-generated
-packs/usage/tools.py::function::_emit_event	function	missing	-	auto-generated
-packs/usage/tools.py::function::_empty_counter	function	missing	-	auto-generated
-packs/usage/tools.py::function::_events_through	function	missing	-	auto-generated
-packs/usage/tools.py::function::_find_gate	function	missing	-	auto-generated
-packs/usage/tools.py::function::_find_surface	function	missing	-	auto-generated
-packs/usage/tools.py::function::_increment_counter	function	missing	-	auto-generated
-packs/usage/tools.py::function::_parse_timestamp	function	missing	-	auto-generated
-packs/usage/tools.py::function::_qualifying_evidence	function	missing	-	auto-generated
-packs/usage/tools.py::function::_require_timestamp	function	missing	-	auto-generated
-packs/usage/tools.py::function::_stable_id	function	missing	-	auto-generated
-packs/usage/tools.py::function::_surface_from_connected	function	missing	-	auto-generated
-packs/usage/tools.py::function::_surface_logical_id	function	missing	-	auto-generated
-packs/usage/tools.py::function::connect_source_surface	function	missing	-	auto-generated
-packs/usage/tools.py::function::connect_surface_fn	function	missing	-	auto-generated
-packs/usage/tools.py::function::ensure_default_gate_fn	function	missing	-	auto-generated
-packs/usage/tools.py::function::get_coverage_fn	function	missing	-	auto-generated
-packs/usage/tools.py::function::get_coverage_statistics	function	missing	-	auto-generated
-packs/usage/tools.py::function::get_outcome_statistics	function	missing	-	auto-generated
-packs/usage/tools.py::function::get_outcome_stats_fn	function	missing	-	auto-generated
-packs/usage/tools.py::function::get_settlement_fn	function	missing	-	auto-generated
-packs/usage/tools.py::function::get_settlement_state	function	missing	-	auto-generated
-packs/usage/tools.py::function::get_usage_statistics	function	missing	-	auto-generated
-packs/usage/tools.py::function::get_usage_stats_fn	function	missing	-	auto-generated
-packs/usage/tools.py::function::list_source_surfaces	function	missing	-	auto-generated
-packs/usage/tools.py::function::list_surfaces_fn	function	missing	-	auto-generated
-packs/usage/tools.py::function::project_usage_fn	function	missing	-	auto-generated
-packs/usage/tools.py::function::query_usage	function	missing	-	auto-generated
-packs/usage/tools.py::function::record_source_clock	function	missing	-	auto-generated
-packs/usage/tools.py::function::record_source_clock_fn	function	missing	-	auto-generated
-packs/usage/tools.py::function::record_usage	function	missing	-	auto-generated
-packs/usage/tools.py::function::record_usage_fn	function	missing	-	auto-generated
-packs/usage/tools.py::function::set_source_surface_status	function	missing	-	auto-generated
-packs/usage/tools.py::function::set_surface_status_fn	function	missing	-	auto-generated
-packs/usage/tools.py::function::validate_source_category	function	missing	-	auto-generated
+packs/usage/behaviors.py::const::BEHAVIORS	const	ported	-	collected by DSL pack macro
+packs/usage/behaviors.py::function::_clock_times	function	ported	src/chronicle_packs/usage/behaviors.cr::_clock_times	-
+packs/usage/behaviors.py::function::_current_evidence	function	ported	src/chronicle_packs/usage/behaviors.cr::_current_evidence	returns typed UsageEvidence
+packs/usage/behaviors.py::function::_evaluate_surface	function	ported	src/chronicle_packs/usage/behaviors.cr::_evaluate_surface	-
+packs/usage/behaviors.py::function::_failure	function	ported	src/chronicle_packs/usage/behaviors.cr::_failure	-
+packs/usage/behaviors.py::function::_gate	function	ported	src/chronicle_packs/usage/behaviors.cr::_gate	returns typed SettlingGate
+packs/usage/behaviors.py::function::_surface	function	ported	src/chronicle_packs/usage/behaviors.cr::_surface	-
+packs/usage/behaviors.py::function::fulfill_source_connection_request	function	ported	src/chronicle_packs/usage/behaviors.cr::fulfill_source_connection_request	-
+packs/usage/behaviors.py::function::observe_cursor_progress	function	ported	src/chronicle_packs/usage/behaviors.cr::observe_cursor_progress	-
+packs/usage/behaviors.py::function::observe_evidence_invalidation	function	ported	src/chronicle_packs/usage/behaviors.cr::observe_evidence_invalidation	-
+packs/usage/behaviors.py::function::observe_normalized_evidence	function	ported	src/chronicle_packs/usage/behaviors.cr::observe_normalized_evidence	-
+packs/usage/behaviors.py::function::observe_source_clock	function	ported	src/chronicle_packs/usage/behaviors.cr::observe_source_clock	-
+packs/usage/behaviors.py::function::observe_surface_connection	function	ported	src/chronicle_packs/usage/behaviors.cr::observe_surface_connection	-
+packs/usage/fixtures/run_fixtures.py::function::_chat_message	function	skipped	-	fixture scripts; lifecycle driven by specs
+packs/usage/fixtures/run_fixtures.py::function::_vision_source	function	skipped	-	fixture scripts; lifecycle driven by specs
+packs/usage/fixtures/run_fixtures.py::function::_write_chatgpt_export	function	skipped	-	fixture scripts; lifecycle driven by specs
+packs/usage/fixtures/run_fixtures.py::function::main	function	skipped	-	fixture scripts; lifecycle driven by specs
+packs/usage/fixtures/run_fixtures.py::function::run_dogfood_fixture	function	skipped	-	fixture scripts; lifecycle driven by specs
+packs/usage/object_types.py::class::ConnectionSurface	class	ported	src/chronicle_packs/usage/object_types.cr::ConnectionSurface	-
+packs/usage/object_types.py::class::CursorState	class	ported	src/chronicle_packs/usage/object_types.cr::CursorState	-
+packs/usage/object_types.py::class::SettlementRecord	class	ported	src/chronicle_packs/usage/object_types.cr::SettlementRecord	-
+packs/usage/object_types.py::class::SettlingGate	class	ported	src/chronicle_packs/usage/object_types.cr::SettlingGate	-
+packs/usage/object_types.py::class::SourceConnectionRequest	class	ported	src/chronicle_packs/usage/object_types.cr::SourceConnectionRequest	-
+packs/usage/object_types.py::class::UsageEvidence	class	ported	src/chronicle_packs/usage/object_types.cr::UsageEvidence	-
+packs/usage/object_types.py::class::UsageProjectionFailure	class	ported	src/chronicle_packs/usage/object_types.cr::UsageProjectionFailure	-
+packs/usage/object_types.py::class::UsageRecord	class	ported	src/chronicle_packs/usage/object_types.cr::UsageRecord	-
+packs/usage/object_types.py::class::_StrictModel	class	skipped	-	pydantic extra=forbid not enforced; unknown keys tolerated
+packs/usage/object_types.py::const::OBJECT_TYPES	const	ported	src/chronicle_packs/usage/pack.cr	collected by DSL pack macro
+packs/usage/object_types.py::const::RELATION_TYPES	const	ported	src/chronicle_packs/usage/pack.cr	collected by DSL pack macro
+packs/usage/object_types.py::const::SOURCE_CATEGORIES	const	ported	src/chronicle_packs/usage/tools.cr::Categories::SOURCE_CATEGORIES	nested module
+packs/usage/settings.py::class::UsageSettings	class	ported	src/chronicle_packs/usage/settings.cr::UsageSettings	-
+packs/usage/tools.py::const::CONNECTION_PATHS	const	ported	src/chronicle_packs/usage/tools.cr::Categories::CONNECTION_PATHS	nested module
+packs/usage/tools.py::const::DEFAULT_GATE	const	ported	src/chronicle_packs/usage/tools.cr::Categories::DEFAULT_GATE	nested module
+packs/usage/tools.py::const::EXPLICIT_LIFECYCLE_STATUSES	const	ported	src/chronicle_packs/usage/tools.cr::Categories::EXPLICIT_LIFECYCLE_STATUSES	nested module
+packs/usage/tools.py::const::LIVE_CONNECTION_PATHS	const	ported	src/chronicle_packs/usage/tools.cr::Categories::LIVE_CONNECTION_PATHS	nested module
+packs/usage/tools.py::const::PRIVACY_SCOPES	const	ported	src/chronicle_packs/usage/tools.cr::Categories::PRIVACY_SCOPES	nested module
+packs/usage/tools.py::const::SOURCE_CATEGORIES	const	ported	src/chronicle_packs/usage/tools.cr::Categories::SOURCE_CATEGORIES	nested module
+packs/usage/tools.py::const::SOURCE_CATEGORY_SET	const	ported	src/chronicle_packs/usage/tools.cr::Categories::SOURCE_CATEGORY_SET	nested module
+packs/usage/tools.py::const::SURFACE_STATUSES	const	ported	src/chronicle_packs/usage/tools.cr::Categories::SURFACE_STATUSES	nested module
+packs/usage/tools.py::const::TOOLS	const	ported	-	collected by DSL @[Tool] annotations
+packs/usage/tools.py::function::_canonical_json	function	ported	src/chronicle_packs/usage/tools.cr::_canonical_json	-
+packs/usage/tools.py::function::_coverage_from_times	function	ported	src/chronicle_packs/usage/tools.cr::_coverage_from_times	-
+packs/usage/tools.py::function::_cursor_default	function	ported	src/chronicle_packs/usage/tools.cr::_cursor_default	-
+packs/usage/tools.py::function::_emit_event	function	ported	src/chronicle_packs/usage/tools.cr::_emit_event	-
+packs/usage/tools.py::function::_empty_counter	function	ported	src/chronicle_packs/usage/tools.cr::_empty_counter	-
+packs/usage/tools.py::function::_events_through	function	ported	src/chronicle_packs/usage/tools.cr::_events_through	-
+packs/usage/tools.py::function::_find_gate	function	ported	src/chronicle_packs/usage/tools.cr::_find_gate	-
+packs/usage/tools.py::function::_find_surface	function	ported	src/chronicle_packs/usage/tools.cr::_find_surface	-
+packs/usage/tools.py::function::_increment_counter	function	ported	src/chronicle_packs/usage/tools.cr::_increment_counter	-
+packs/usage/tools.py::function::_parse_timestamp	function	ported	src/chronicle_packs/usage/tools.cr::_parse_timestamp	-
+packs/usage/tools.py::function::_qualifying_evidence	function	ported	src/chronicle_packs/usage/tools.cr::_qualifying_evidence	-
+packs/usage/tools.py::function::_require_timestamp	function	ported	src/chronicle_packs/usage/tools.cr::_require_timestamp	-
+packs/usage/tools.py::function::_stable_id	function	ported	src/chronicle_packs/usage/tools.cr::_stable_id	-
+packs/usage/tools.py::function::_surface_from_connected	function	ported	src/chronicle_packs/usage/tools.cr::_surface_from_connected	-
+packs/usage/tools.py::function::_surface_logical_id	function	ported	src/chronicle_packs/usage/tools.cr::_surface_logical_id	-
+packs/usage/tools.py::function::connect_source_surface	function	ported	src/chronicle_packs/usage/tools.cr::connect_source_surface_tool	tool wrapper; renamed with _tool suffix
+packs/usage/tools.py::function::connect_surface_fn	function	ported	src/chronicle_packs/usage/tools.cr::connect_surface_fn	-
+packs/usage/tools.py::function::ensure_default_gate_fn	function	ported	src/chronicle_packs/usage/tools.cr::ensure_default_gate_fn	-
+packs/usage/tools.py::function::get_coverage_fn	function	ported	src/chronicle_packs/usage/tools.cr::get_coverage_fn	-
+packs/usage/tools.py::function::get_coverage_statistics	function	ported	src/chronicle_packs/usage/tools.cr::get_coverage_statistics_tool	tool wrapper; renamed with _tool suffix
+packs/usage/tools.py::function::get_outcome_statistics	function	ported	src/chronicle_packs/usage/tools.cr::get_outcome_statistics_tool	tool wrapper; renamed with _tool suffix
+packs/usage/tools.py::function::get_outcome_stats_fn	function	ported	src/chronicle_packs/usage/tools.cr::get_outcome_stats_fn	-
+packs/usage/tools.py::function::get_settlement_fn	function	ported	src/chronicle_packs/usage/tools.cr::get_settlement_fn	-
+packs/usage/tools.py::function::get_settlement_state	function	ported	src/chronicle_packs/usage/tools.cr::get_settlement_state_tool	tool wrapper; renamed with _tool suffix
+packs/usage/tools.py::function::get_usage_statistics	function	ported	src/chronicle_packs/usage/tools.cr::get_usage_statistics_tool	tool wrapper; renamed with _tool suffix
+packs/usage/tools.py::function::get_usage_stats_fn	function	ported	src/chronicle_packs/usage/tools.cr::get_usage_stats_fn	-
+packs/usage/tools.py::function::list_source_surfaces	function	ported	src/chronicle_packs/usage/tools.cr::list_source_surfaces_tool	tool wrapper; renamed with _tool suffix
+packs/usage/tools.py::function::list_surfaces_fn	function	ported	src/chronicle_packs/usage/tools.cr::list_surfaces_fn	-
+packs/usage/tools.py::function::project_usage_fn	function	ported	src/chronicle_packs/usage/tools.cr::project_usage_fn	-
+packs/usage/tools.py::function::query_usage	function	ported	src/chronicle_packs/usage/tools.cr::query_usage_tool	tool wrapper; renamed with _tool suffix
+packs/usage/tools.py::function::record_source_clock	function	ported	src/chronicle_packs/usage/tools.cr::record_source_clock_tool	tool wrapper; renamed with _tool suffix
+packs/usage/tools.py::function::record_source_clock_fn	function	ported	src/chronicle_packs/usage/tools.cr::record_source_clock_fn	-
+packs/usage/tools.py::function::record_usage	function	ported	src/chronicle_packs/usage/tools.cr::record_usage_tool	tool wrapper; renamed with _tool suffix
+packs/usage/tools.py::function::record_usage_fn	function	ported	src/chronicle_packs/usage/tools.cr::record_usage_fn	-
+packs/usage/tools.py::function::set_source_surface_status	function	ported	src/chronicle_packs/usage/tools.cr::set_source_surface_status_tool	tool wrapper; renamed with _tool suffix
+packs/usage/tools.py::function::set_surface_status_fn	function	ported	src/chronicle_packs/usage/tools.cr::set_surface_status_fn	-
+packs/usage/tools.py::function::validate_source_category	function	ported	src/chronicle_packs/usage/tools.cr::validate_source_category	-
 packs/whatsapp/behaviors.py::const::BEHAVIORS	const	missing	-	auto-generated
 packs/whatsapp/behaviors.py::function::_now_iso	function	missing	-	auto-generated
 packs/whatsapp/behaviors.py::function::clear_seen_messages	function	missing	-	auto-generated

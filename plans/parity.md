@@ -18,7 +18,7 @@ Core (the universal substrate) lands before the infrastructure it requires,
 then communication, domain verticals, transport adapters, and the demo
 surface.
 
-**Progress: 390 / 2080 source API items ported, 27 skipped, 16 deferred.**
+**Progress: 461 / 2080 source API items ported, 33 skipped, 16 deferred.**
 
 ## Features
 
@@ -72,8 +72,8 @@ surface.
       structure-candidate projector)
 - [ ] `semantic_extraction` — typed source-anchored annotations, deterministic
       floor + LLM upgrade seam, coverage tracking (0/156)
-- [ ] `usage` — source surfaces, connector handoffs, stable cursors,
-      settlement, interaction facts (0/77)
+- [x] `usage` — source surfaces, connector handoffs, stable cursors,
+      settlement, interaction facts (71/77) — `src/chronicle_packs/usage/`
 - [x] `connector_control` — service/account/surface status, run adapters,
       learning deltas (59/62) — `src/chronicle_packs/connector_control/`
 - [x] `attention` — engagement observations, bounded session batches (36/36)
@@ -305,6 +305,25 @@ surface.
   `policy_identity`) and project `source.lifecycle_changed` onto binding
   status. `measure_connector_run`/`operational_budget_violations` implement
   the non-persisted conformance measurer against the seeded policy.
+- `usage` materializes 7 typed object types and 3 relation types. The tool
+  adapters are idempotent: `connect_surface_fn` mints exactly one surface
+  (reconnect emits a new `source.connected` fact without a second surface,
+  and immutable fields cannot change), `record_source_clock_fn` is
+  clock_id-idempotent for live surfaces only, and `record_usage_fn` rejects
+  a divergent fact for the same `usage_identity`. Behaviors are
+  event-driven: `fulfill_source_connection_request` (connectors request,
+  Usage owns identity), `observe_normalized_evidence` (indexes
+  `usage_evidence` + evaluates the gate, settling/settling/settled),
+  `observe_cursor_progress`/`observe_source_clock`/`observe_surface_connection`
+  re-evaluate without duplicating settlement, and
+  `observe_evidence_invalidation` de-qualifies without erasing. Gate
+  semantics are immutable (`usage.category.default@1` rejects mutation).
+  `project_usage_fn` replays the log through an explicit event horizon into
+  surfaces/coverage/usage/outcome projections; the settlement and coverage
+  sub-objects are typed `record` structs (`SettlementProjection`,
+  `CoverageStats`). Tool parameters are typed `record` structs with an
+  ISO-8601 `Time` converter; bools avoid `is_` prefixes (JSON key preserved
+  via `@[JSON::Field(key: ...)]`).
 
 ## Inventory
 
