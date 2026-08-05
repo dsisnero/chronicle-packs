@@ -73,7 +73,8 @@ module Chronicle::Packs::SemanticExtraction
   end
 
   def self._validate_facet_ref(facet : String, ref : String?) : Nil
-    raise Chronicle::Packs::PackError.new("unknown facet #{facet.inspect}") unless Facets::STANDARD_FACETS.includes?(facet) || facet.includes?(".")
+    standard = Facet.parse?(facet) != nil
+    raise Chronicle::Packs::PackError.new("unknown facet #{facet.inspect}") unless standard || facet.includes?(".")
     if ref
       parts = ref.split("@")
       if parts.size != 2 || parts[0].empty? || parts[1].empty?

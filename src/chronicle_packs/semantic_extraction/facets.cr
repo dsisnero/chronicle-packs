@@ -4,6 +4,24 @@ module Chronicle::Packs::SemanticExtraction
   # The standard extraction facets and their typed annotation bodies.
   # Ported from upstream packs/semantic_extraction/facets.py.
 
+  # Closed standard facet set (AGENTS.md: closed string-literal sets are
+  # enums). Facet FIELDS stay String because the facet domain is open:
+  # activity_normalizer registers dotted extension facets
+  # (activity.preference, task) against the same contract. Use `Facet.parse?`
+  # to validate the standard members; dotted names pass through untouched.
+  enum Facet
+    Assertion
+    EntityMention
+    Question
+    Idea
+    EventMention
+    RelationMention
+    PreferenceExpression
+    TemporalExpression
+    QuantityMention
+    TopicTag
+  end
+
   # Nested so the DSL pack macro (which assumes direct module constants are
   # types) can enumerate the surface.
   module Facets
