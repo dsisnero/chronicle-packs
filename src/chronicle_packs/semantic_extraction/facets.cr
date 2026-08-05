@@ -12,6 +12,7 @@ module Chronicle::Packs::SemanticExtraction
     V1_IMPLEMENTED_FACETS  = ["assertion", "entity_mention", "preference_expression", "question", "temporal_expression", "topic_tag"]
     LLM_IMPLEMENTED_FACETS = ["assertion", "entity_mention", "event_mention", "preference_expression", "relation_mention"]
     LLM_UPGRADE_FACETS     = ["event_mention", "relation_mention"]
+    LLM_EXTRACTOR_REF      = "semantic.llm@0.1.0"
   end
 
   # ---- facet body schemas -------------------------------------------------

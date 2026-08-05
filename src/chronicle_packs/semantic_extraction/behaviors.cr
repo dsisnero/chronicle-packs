@@ -6,20 +6,54 @@ module Chronicle::Packs::SemanticExtraction
   # annotate_evidence). The selection/projection behaviors and the procedure
   # pipeline are deferred.
 
+  # Whether the default profile should route the LLM-only facets to
+  # semantic.llm: an LLM provider is configured AND the upgrade isn't
+  # switched off. No provider -> the seeded profile (and every downstream
+  # byte) is identical to the zero-key mode.
+  def self._llm_upgrade_active(settings : SemanticExtractionSettings) : Bool
+    return false unless settings.llm_upgrade_enabled?
+
+    Chronicle::Packs::LLMProvider.configured_llm_provider.configured?
+  end
+
   # Seed extraction_profile v1 on pack load if none exists.
-  @[Chronicle::Packs::Annotations::Behavior(name: "seed_extraction_profile", on: ["pack.loaded"], where: {"name" => "semantic_extraction"}, creates: ["extraction_profile"])]
+  @[Chronicle::Packs::Annotations::Behavior(name: "seed_extraction_profile", on: ["pack.loaded"], where: {"name" => "semantic_extraction"}, creates: ["extraction_profile", "annotation_extractor_state"])]
   def seed_extraction_profile(event : Chronicle::Event, graph : Chronicle::GraphProjection, _ctx : Chronicle::Packs::BehaviorContext, settings : SemanticExtractionSettings) : Nil
     return if !settings.seed_default_profile?
 
     existing = graph.objects(type: "extraction_profile").any? { |obj| JSON.parse(obj.data)["status"]?.try(&.as_s?) == "active" }
     return if existing
 
+    upgraded = _llm_upgrade_active(settings)
+    default_facets = settings.default_profile_facets.sort
+    extractor_by_facet = {} of String => String
+    rationale = "D041: seeded eager facet floor; owner-editable policy artifact (D042)"
+    if upgraded
+      default_facets = (default_facets.to_set + Facets::LLM_UPGRADE_FACETS.to_set).to_a.sort
+      Facets::LLM_UPGRADE_FACETS.each { |facet| extractor_by_facet[facet] = Facets::LLM_EXTRACTOR_REF }
+      rationale += "; relation_mention/event_mention upgraded to semantic.llm (provider configured, D025 stage two)"
+    end
+
     profile = ExtractionProfile.new(
-      stable_id("extraction_profile", 1), 1, settings.default_profile_facets.sort, "semantic_extraction.seed",
+      stable_id("extraction_profile", 1), 1, default_facets, "semantic_extraction.seed",
       facets_by_source_category: settings.default_facets_by_source_category.transform_values(&.sort),
-      rationale: "D041: seeded eager facet floor; owner-editable policy artifact (D042)",
+      extractor_by_facet: extractor_by_facet,
+      rationale: rationale,
     )
     graph.add_object("extraction_profile", profile.to_json)
+
+    if upgraded && !graph.objects(type: "annotation_extractor_state").any? { |obj| JSON.parse(obj.data)["extractor_id"]?.try(&.as_s?) == "semantic.llm" }
+      graph.add_object("annotation_extractor_state", JSON.build do |json|
+        json.object do
+          json.field "state_identity", stable_id("annotation_extractor_state", "semantic.llm", "0.1.0", "candidate")
+          json.field "extractor_id", "semantic.llm"
+          json.field "extractor_version", "0.1.0"
+          json.field "status", "candidate"
+          json.field "reason", "fork-trial-promote (ADR 0014): candidate for floor facets pending recorded trial evidence and explicit promotion; serves the LLM-only facets meanwhile"
+          json.field "metadata", JSON::Any.new({} of String => JSON::Any)
+        end
+      end)
+    end
   end
 
   # Run the profile's extractor policy eagerly over each new evidence revision.
@@ -38,6 +72,78 @@ module Chronicle::Packs::SemanticExtraction
     return if metadata["interpretation_family"]?.try(&.as_s?)
 
     run_profile_extraction(graph, evidence_obj, settings: settings)
+  end
+
+  # Settle an exact-span request without giving the caller provider access.
+  # The pack verifies evidence_id + revision_id and the authoritative span
+  # hashes (inside run_profile_extraction) — the model never supplies
+  # authoritative offsets. On success the request carries run_ids and
+  # annotation_ids; failures settle as failed with a named error.
+  @[Chronicle::Packs::Annotations::Behavior(name: "extract_selected_evidence", on: ["object.created"], where: {"type" => "selection_extraction_request"}, creates: ["semantic_annotation", "extraction_run", "extraction_coverage"])]
+  # ameba:disable Metrics/CyclomaticComplexity -- faithful port of the upstream settle-with-failure paths
+  def extract_selected_evidence(event : Chronicle::Event, graph : Chronicle::GraphProjection, _ctx : Chronicle::Packs::BehaviorContext, settings : SemanticExtractionSettings) : Nil
+    payload = JSON.parse(event.payload).as_h
+    request_id = payload["id"]?.try(&.as_s?) || ""
+    data = payload["data"]?.try(&.as_h) || {} of String => JSON::Any
+    return unless data["status"]?.try(&.as_s?) == "proposed"
+    return if request_id.empty?
+
+    evidence_id = data["evidence_id"]?.try(&.as_s?) || ""
+    evidence = evidence_id.empty? ? nil : graph.get_object(evidence_id)
+    if evidence.nil? || evidence.type != "activity_evidence"
+      _settle_selection(graph, request_id, "evidence_not_found", [] of String, [] of String)
+      return
+    end
+    if JSON.parse(evidence.data)["revision_id"]?.try(&.as_s?) != data["revision_id"]?.try(&.as_s?)
+      _settle_selection(graph, request_id, "revision_mismatch", [] of String, [] of String)
+      return
+    end
+
+    requested_facets = (data["requested_facets"]?.try(&.as_a) || [] of JSON::Any).map(&.as_s)
+    selection_id = data["selection_id"]?.try(&.as_s?)
+    content_segments = (data["selections"]?.try(&.as_a) || [] of JSON::Any).map(&.as_h)
+
+    begin
+      results = run_profile_extraction(
+        graph, evidence, settings: settings,
+        requested_facets: requested_facets,
+        selection_id: selection_id,
+        content_segments: content_segments,
+      )
+    rescue ex
+      _settle_selection(graph, request_id, "#{ex.class}: #{ex.message}"[0, 500], [] of String, [] of String)
+      return
+    end
+
+    run_ids = results.map { |result| result["run"]?.try(&.as_s?) || "" }.reject(&.empty?)
+    annotation_ids = results.flat_map { |result| (result["annotations"]?.try(&.as_a) || [] of JSON::Any).map(&.as_s) }
+    _settle_selection(graph, request_id, nil, run_ids, annotation_ids)
+  end
+
+  private def _settle_selection(graph : Chronicle::GraphProjection, request_id : String, error : String?, run_ids : Array(String), annotation_ids : Array(String)) : Nil
+    updates = {
+      "status"         => JSON::Any.new(error ? "failed" : "completed"),
+      "run_ids"        => JSON::Any.new(run_ids.map { |id| JSON::Any.new(id) }),
+      "annotation_ids" => JSON::Any.new(annotation_ids.map { |id| JSON::Any.new(id) }),
+    }
+    updates["error"] = error ? JSON::Any.new(error) : JSON::Any.new(nil)
+    patch(graph, request_id, updates)
+
+    graph.emit(Chronicle::Event.new(
+      schema_version: 1_u16,
+      sequence: graph.events.size.to_u64 + 1,
+      id: "selection_settled_#{graph.events.size + 1}",
+      type: "semantic.selection_extraction_settled",
+      actor: "semantic_extraction",
+      caused_by: nil,
+      payload: {
+        "request_id"     => JSON::Any.new(request_id),
+        "status"         => JSON::Any.new(error ? "failed" : "completed"),
+        "run_ids"        => JSON::Any.new(run_ids.map { |id| JSON::Any.new(id) }),
+        "annotation_ids" => JSON::Any.new(annotation_ids.map { |id| JSON::Any.new(id) }),
+        "error"          => error ? JSON::Any.new(error) : JSON::Any.new(nil),
+      }.to_json,
+    ))
   end
 
   # Domain policy: which annotations merit a profile candidate. Everything

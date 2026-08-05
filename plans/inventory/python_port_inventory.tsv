@@ -1582,11 +1582,11 @@ packs/secrets/tools.py::function::resolve_credential	function	ported	src/chronic
 packs/secrets/tools.py::function::resolve_credential_fn	function	ported	src/chronicle_packs/secrets/tools.cr::resolve_credential_fn	-
 packs/secrets/tools.py::function::resolve_credential_with_source_fn	function	ported	src/chronicle_packs/secrets/tools.cr::resolve_credential_with_source_fn	-
 packs/semantic_extraction/behaviors.py::const::BEHAVIORS	const	ported	-	collected by DSL pack macro
-packs/semantic_extraction/behaviors.py::const::LLM_EXTRACTOR_REF	const	deferred	-	slice 2: LLM seam
+packs/semantic_extraction/behaviors.py::const::LLM_EXTRACTOR_REF	const	ported	src/chronicle_packs/semantic_extraction/facets.cr::Facets::LLM_EXTRACTOR_REF	-
 packs/semantic_extraction/behaviors.py::function::_existing_candidate_identities	function	ported	src/chronicle_packs/semantic_extraction/behaviors.cr::project_profile_candidates	folded into the projector
-packs/semantic_extraction/behaviors.py::function::_llm_upgrade_active	function	deferred	-	slice 2: LLM seam
+packs/semantic_extraction/behaviors.py::function::_llm_upgrade_active	function	ported	src/chronicle_packs/semantic_extraction/behaviors.cr::_llm_upgrade_active	-
 packs/semantic_extraction/behaviors.py::function::annotate_evidence	function	ported	src/chronicle_packs/semantic_extraction/behaviors.cr::annotate_evidence	-
-packs/semantic_extraction/behaviors.py::function::extract_selected_evidence	function	deferred	-	slice 2: selection extraction
+packs/semantic_extraction/behaviors.py::function::extract_selected_evidence	function	ported	src/chronicle_packs/semantic_extraction/behaviors.cr::extract_selected_evidence	verifies evidence/revision; spans verified + remapped in run_profile_extraction
 packs/semantic_extraction/behaviors.py::function::project_memory_candidates	function	ported	src/chronicle_packs/semantic_extraction/behaviors.cr::project_memory_candidates	-
 packs/semantic_extraction/behaviors.py::function::project_profile_candidates	function	ported	src/chronicle_packs/semantic_extraction/behaviors.cr::project_profile_candidates	-
 packs/semantic_extraction/behaviors.py::function::seed_extraction_profile	function	ported	src/chronicle_packs/semantic_extraction/behaviors.cr::seed_extraction_profile	-
@@ -1598,21 +1598,21 @@ packs/semantic_extraction/engine.py::function::active_profile_facets	function	po
 packs/semantic_extraction/engine.py::function::annotation_identity_for	function	ported	src/chronicle_packs/semantic_extraction/engine.cr::annotation_identity_for	-
 packs/semantic_extraction/engine.py::function::extractor_disabled	function	ported	src/chronicle_packs/semantic_extraction/engine.cr::extractor_disabled	-
 packs/semantic_extraction/engine.py::function::parse_extractor_ref	function	ported	src/chronicle_packs/semantic_extraction/engine.cr::_parse_extractor_ref	-
-packs/semantic_extraction/engine.py::function::patch	function	deferred	-	slice 2
-packs/semantic_extraction/engine.py::function::resolve_extractor	function	deferred	-	slice 2
+packs/semantic_extraction/engine.py::function::patch	function	ported	src/chronicle_packs/semantic_extraction/engine.cr::patch	merge-patch
+packs/semantic_extraction/engine.py::function::resolve_extractor	function	ported	src/chronicle_packs/semantic_extraction/engine.cr::run_annotation_extraction	inlined: extractor_ref ? registry lookup : settings selector
 packs/semantic_extraction/engine.py::function::run_annotation_extraction	function	ported	src/chronicle_packs/semantic_extraction/engine.cr::run_annotation_extraction	-
 packs/semantic_extraction/engine.py::function::run_profile_extraction	function	ported	src/chronicle_packs/semantic_extraction/engine.cr::run_profile_extraction	procedure routing deferred; single default extractor
 packs/semantic_extraction/engine.py::function::stable_id	function	ported	src/chronicle_packs/semantic_extraction/engine.cr::stable_id	-
 packs/semantic_extraction/extractor.py::class::AnnotationDraft	class	ported	src/chronicle_packs/semantic_extraction/extractor.cr::AnnotationDraft	record
-packs/semantic_extraction/extractor.py::class::AnnotationExtractor	class	deferred	-	slice 2
+packs/semantic_extraction/extractor.py::class::AnnotationExtractor	class	ported	src/chronicle_packs/semantic_extraction/extractor.cr::AnnotationExtractor	abstract interface (Array(String) facets per design review)
 packs/semantic_extraction/extractor.py::class::DeterministicExtractorV1	class	ported	src/chronicle_packs/semantic_extraction/extractor.cr::Extractors::DeterministicExtractorV1	-
-packs/semantic_extraction/extractor.py::function::_sentences	function	deferred	-	slice 2
-packs/semantic_extraction/extractor.py::function::_strip_bullet	function	deferred	-	slice 2
+packs/semantic_extraction/extractor.py::function::_sentences	function	ported	src/chronicle_packs/semantic_extraction/extractor.cr::Extractors::_sentences	-
+packs/semantic_extraction/extractor.py::function::_strip_bullet	function	ported	src/chronicle_packs/semantic_extraction/extractor.cr::Extractors::_strip_bullet	-
 packs/semantic_extraction/extractor.py::function::config_hash_for	function	ported	src/chronicle_packs/semantic_extraction/extractor.cr::config_hash_for	-
 packs/semantic_extraction/extractor.py::function::get_annotation_extractor	function	ported	src/chronicle_packs/semantic_extraction/extractor.cr::Extractors.get_annotation_extractor	-
 packs/semantic_extraction/extractor.py::function::register_annotation_extractor	function	ported	src/chronicle_packs/semantic_extraction/extractor.cr::Extractors.register_annotation_extractor	-
-packs/semantic_extraction/extractor.py::method::AnnotationExtractor.config	method	deferred	-	slice 2
-packs/semantic_extraction/extractor.py::method::AnnotationExtractor.extract	method	deferred	-	slice 2
+packs/semantic_extraction/extractor.py::method::AnnotationExtractor.config	method	ported	src/chronicle_packs/semantic_extraction/extractor.cr::AnnotationExtractor#config	abstract; DeterministicExtractorV1 implements
+packs/semantic_extraction/extractor.py::method::AnnotationExtractor.extract	method	ported	src/chronicle_packs/semantic_extraction/extractor.cr::AnnotationExtractor#extract	abstract; DeterministicExtractorV1 implements
 packs/semantic_extraction/extractor.py::method::AnnotationExtractor.implemented_facets	method	deferred	-	slice 2
 packs/semantic_extraction/extractor.py::method::DeterministicExtractorV1.__init__	method	deferred	-	slice 2
 packs/semantic_extraction/extractor.py::method::DeterministicExtractorV1._add	method	deferred	-	slice 2
