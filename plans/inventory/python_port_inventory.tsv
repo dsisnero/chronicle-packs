@@ -1358,7 +1358,7 @@ packs/memory_gateway/backend.py::class::Embedder	class	ported	src/chronicle_pack
 packs/memory_gateway/backend.py::class::ExternalMemoryBackend	class	deferred	-	slice 2: external backends
 packs/memory_gateway/backend.py::class::MemoryBackend	class	deferred	-	slice 2: SQLite store
 packs/memory_gateway/backend.py::class::SqliteMemoryBackend	class	deferred	-	slice 2: SQLite store
-packs/memory_gateway/backend.py::const::STOPWORDS	const	deferred	-	ported (src/chronicle_packs/memory_gateway/backend.cr::Backend::STOPWORDS)
+packs/memory_gateway/backend.py::const::STOPWORDS	const	ported	src/chronicle_packs/memory_gateway/backend.cr::Backend::STOPWORDS	-
 packs/memory_gateway/backend.py::function::_cosine	function	ported	src/chronicle_packs/memory_gateway/backend.cr::_cosine	clamped [0,1]
 packs/memory_gateway/backend.py::function::_embed	function	ported	src/chronicle_packs/memory_gateway/embedding_service.cr::RecordedEmbeddingService	folded into the recorded service closure
 packs/memory_gateway/backend.py::function::_invoke_embedder	function	ported	src/chronicle_packs/memory_gateway/backend.cr::_invoke_embedder	-
@@ -1422,7 +1422,7 @@ packs/memory_gateway/behaviors.py::function::_derive_subject_ref	function	ported
 packs/memory_gateway/behaviors.py::function::_provenance_verdict	function	ported	src/chronicle_packs/memory_gateway/behaviors.cr::_provenance_verdict	-
 packs/memory_gateway/behaviors.py::function::_source_admission_policy	function	ported	src/chronicle_packs/memory_gateway/behaviors.cr::_source_admission_policy	-
 packs/memory_gateway/behaviors.py::function::candidate_evaluator	function	ported	src/chronicle_packs/memory_gateway/behaviors.cr::candidate_evaluator	-
-packs/memory_gateway/behaviors.py::function::memory_promotion_proposer	function	deferred	-	slice 2: promotion module
+packs/memory_gateway/behaviors.py::function::memory_promotion_proposer	function	ported	src/chronicle_packs/memory_gateway/behaviors.cr::memory_promotion_proposer	-
 packs/memory_gateway/behaviors.py::function::memory_ranker	function	ported	src/chronicle_packs/memory_gateway/behaviors.cr::memory_ranker	-
 packs/memory_gateway/behaviors.py::function::memory_reliability_applier	function	ported	src/chronicle_packs/memory_gateway/behaviors.cr::memory_reliability_applier	-
 packs/memory_gateway/behaviors.py::function::memory_retriever	function	ported	src/chronicle_packs/memory_gateway/behaviors.cr::memory_retriever	-
@@ -1452,16 +1452,16 @@ packs/memory_gateway/object_types.py::class::MemoryRetrieval	class	ported	src/ch
 packs/memory_gateway/object_types.py::class::MemoryRetrievalRequest	class	ported	src/chronicle_packs/memory_gateway/object_types.cr::MemoryRetrievalRequest	-
 packs/memory_gateway/object_types.py::const::OBJECT_TYPES	const	ported	src/chronicle_packs/memory_gateway/pack.cr	collected by DSL pack macro
 packs/memory_gateway/object_types.py::const::RELATION_TYPES	const	ported	src/chronicle_packs/memory_gateway/pack.cr	collected by DSL pack macro
-packs/memory_gateway/promotion.py::class::MemoryReplayIncompleteError	class	deferred	-	slice 2: promotion module
-packs/memory_gateway/promotion.py::const::MEMORY_PROMOTION_RULES	const	deferred	-	slice 2: promotion module
-packs/memory_gateway/promotion.py::function::_emit_event	function	deferred	-	slice 2: promotion module
-packs/memory_gateway/promotion.py::function::_get_item	function	deferred	-	slice 2: promotion module
-packs/memory_gateway/promotion.py::function::_objects	function	deferred	-	slice 2: promotion module
-packs/memory_gateway/promotion.py::function::_source_replay_gaps	function	deferred	-	slice 2: promotion module
-packs/memory_gateway/promotion.py::function::open_proposal_for	function	deferred	-	slice 2: promotion module
-packs/memory_gateway/promotion.py::function::propose_memory_promotion_fn	function	deferred	-	slice 2: promotion module
-packs/memory_gateway/promotion.py::function::resolve_memory_promotion_fn	function	deferred	-	slice 2: promotion module
-packs/memory_gateway/promotion.py::function::verify_memory_replay_fn	function	deferred	-	slice 2: promotion module
+packs/memory_gateway/promotion.py::class::MemoryReplayIncompleteError	class	ported	src/chronicle_packs/memory_gateway/promotion.cr::MemoryReplayIncompleteError	-
+packs/memory_gateway/promotion.py::const::MEMORY_PROMOTION_RULES	const	ported	src/chronicle_packs/memory_gateway/promotion.cr::PromotionRules::RULES	versioned
+packs/memory_gateway/promotion.py::function::_emit_event	function	ported	src/chronicle_packs/memory_gateway/promotion.cr::_emit_event	-
+packs/memory_gateway/promotion.py::function::_get_item	function	ported	src/chronicle_packs/memory_gateway/promotion.cr::_get_item	-
+packs/memory_gateway/promotion.py::function::_objects	function	ported	src/chronicle_packs/memory_gateway/promotion.cr graph.objects()	inlined
+packs/memory_gateway/promotion.py::function::_source_replay_gaps	function	ported	src/chronicle_packs/memory_gateway/promotion.cr::_source_replay_gaps	reads metadata.acquisition.replay_mode too
+packs/memory_gateway/promotion.py::function::open_proposal_for	function	ported	src/chronicle_packs/memory_gateway/promotion.cr::open_proposal_for	direction is the PromotionDirection enum
+packs/memory_gateway/promotion.py::function::propose_memory_promotion_fn	function	ported	src/chronicle_packs/memory_gateway/promotion.cr::propose_memory_promotion_fn	-
+packs/memory_gateway/promotion.py::function::resolve_memory_promotion_fn	function	ported	src/chronicle_packs/memory_gateway/promotion.cr::resolve_memory_promotion_fn	memory.promoted/demoted, approver-gated
+packs/memory_gateway/promotion.py::function::verify_memory_replay_fn	function	ported	src/chronicle_packs/memory_gateway/promotion.cr::verify_memory_replay_fn	backend IS the graph store; no backend_url/runtime params
 packs/memory_gateway/settings.py::class::MemoryGatewaySettings	class	ported	src/chronicle_packs/memory_gateway/settings.cr::MemoryGatewaySettings	-
 packs/memory_gateway/tools.py::const::TOOLS	const	ported	-	collected by DSL @[Tool] annotations
 packs/memory_gateway/tools.py::function::_subject_allows_evidence	function	ported	src/chronicle_packs/memory_gateway/tools.cr::_subject_allows_evidence	-

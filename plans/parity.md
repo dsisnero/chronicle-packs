@@ -18,7 +18,7 @@ Core (the universal substrate) lands before the infrastructure it requires,
 then communication, domain verticals, transport adapters, and the demo
 surface.
 
-**Progress: 688 / 2080 source API items ported, 51 skipped, 147 deferred.**
+**Progress: 700 / 2080 source API items ported, 51 skipped, 135 deferred.**
 
 ## Features
 
@@ -68,15 +68,17 @@ surface.
 - [x] `secrets` — credential reference management, managed source registry
       (42/42) — `src/chronicle_packs/secrets/`
 - [~] `memory_gateway` — candidate evaluation/promotion, SQLite backend,
-      retrieval ranking, embedder seam (54/122, slice 1: graph-backed
+      retrieval ranking, embedder seam (66/122, slices 1-2: graph-backed
       lifecycle — candidate_evaluator/memory_writer/memory_retriever/
       memory_ranker/memory_reliability_applier, lexical_score, retrieve_
       memories, resolve_memory_query (evidence-authoritative), the
       EmbeddingService boundary (HashEmbedder/OpenAIEmbedder,
       default_embedder_factory, per-graph recorded service with
       embedding.requested/responded + idempotency replay, space-aware
-      cosine blend stored on memory_item);
-      SQLite/adapters/promotion deferred)
+      cosine blend stored on memory_item), and versioned promotion
+      (propose/resolve with memory.promoted/memory.demoted,
+      memory_promotion_proposer behavior, verify_memory_replay_fn);
+      SQLite/adapters deferred)
 - [x] `identity_auth` — principal resolution, role-based access, permission
       checking (35/35) — `src/chronicle_packs/identity_auth/`
 - [x] `agent_profile` — goals, personality, standing instructions scoped by

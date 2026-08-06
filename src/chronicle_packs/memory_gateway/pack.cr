@@ -6,6 +6,7 @@ require "./relation_types"
 require "./embedding_service"
 require "./backend"
 require "./embedders"
+require "./promotion"
 require "./behaviors"
 require "./tools"
 

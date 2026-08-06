@@ -290,4 +290,44 @@ module Chronicle::Packs::MemoryGateway
       graph.patch_object(item_id, memory_item.copy_with(reliability_verdict: parsed_verdict, reliability_multiplier: multiplier, reliability_event_id: event.id).to_json)
     end
   end
+
+  # Generate promote/demote proposals from reliability evidence (P6).
+  # Proposes only — resolution (memory.promoted / memory.demoted) requires
+  # an explicit approver through resolve_memory_promotion_fn.
+  @[Chronicle::Packs::Annotations::Behavior(name: "memory_promotion_proposer", on: ["reliability.changed"], creates: ["memory_promotion_proposal"])]
+  # ameba:disable Metrics/CyclomaticComplexity -- faithful port of the upstream promote/demote gating
+  def memory_promotion_proposer(event : Chronicle::Event, graph : Chronicle::GraphProjection, _ctx : Chronicle::Packs::BehaviorContext, settings : MemoryGatewaySettings) : Nil
+    payload = JSON.parse(event.payload).as_h
+    return unless payload["artifact_type"]?.try(&.as_s?) == "memory_item"
+
+    item_id = payload["artifact_id"]?.try(&.as_s?) || ""
+    item = graph.get_object(item_id)
+    return if item.nil? || item.type != "memory_item"
+
+    verdict = payload["verdict"]?.try(&.as_s?) || "weak"
+    tallies = payload["tallies"]?.try(&.as_h) || {} of String => JSON::Any
+    helped = tallies["helped"]?.try(&.as_i?) || 0
+    status = JSON.parse(item.data)["promotion_status"]?.try(&.as_s?) || "admitted"
+    evidence = (payload["evidence_event_ids"]?.try(&.as_a) || [] of JSON::Any).map(&.as_s)
+    evidence << event.id unless evidence.includes?(event.id)
+
+    rules = PromotionRules::RULES
+    if verdict == rules["required_verdict"].as(String) && helped >= rules["min_helped_outcomes"].as(Int32) && status != "promoted" && open_proposal_for(graph, item_id, PromotionDirection::Promote).nil?
+      propose_memory_promotion_fn(
+        graph, item_id, direction: PromotionDirection::Promote,
+        reliability_verdict: verdict, helped_outcomes: helped,
+        evidence_event_ids: evidence,
+        rationale: "reliability is #{verdict.inspect} with #{helped} helped outcomes (rule #{rules["rule_id"].as(String)}@#{rules["rule_version"].as(Int32)})",
+        is_fixture: payload["is_fixture"]?.try(&.as_bool?) || false,
+      )
+    elsif rules["demote_on_verdicts"].as(Array(String)).includes?(verdict) && status == "promoted" && open_proposal_for(graph, item_id, PromotionDirection::Demote).nil?
+      propose_memory_promotion_fn(
+        graph, item_id, direction: PromotionDirection::Demote,
+        reliability_verdict: verdict, helped_outcomes: helped,
+        evidence_event_ids: evidence,
+        rationale: "reliability fell to #{verdict.inspect} for a promoted version (rule #{rules["rule_id"].as(String)}@#{rules["rule_version"].as(Int32)})",
+        is_fixture: payload["is_fixture"]?.try(&.as_bool?) || false,
+      )
+    end
+  end
 end
