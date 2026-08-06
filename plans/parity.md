@@ -18,7 +18,7 @@ Core (the universal substrate) lands before the infrastructure it requires,
 then communication, domain verticals, transport adapters, and the demo
 surface.
 
-**Progress: 724 / 2080 source API items ported, 51 skipped, 111 deferred.**
+**Progress: 725 / 2080 source API items ported, 51 skipped, 110 deferred.**
 
 ## Features
 

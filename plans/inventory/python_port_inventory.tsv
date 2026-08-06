@@ -1724,7 +1724,7 @@ packs/semantic_extraction/tools.py::const::TOOLS	const	deferred	-	slice 2
 packs/semantic_extraction/tools.py::function::_keyed	function	ported	src/chronicle_packs/semantic_extraction/tools.cr::_trial_keys	renamed
 packs/semantic_extraction/tools.py::function::annotation_coverage	function	ported	src/chronicle_packs/semantic_extraction/tools.cr::annotation_coverage_tool	tool wrapper; renamed with _tool suffix
 packs/semantic_extraction/tools.py::function::annotation_coverage_fn	function	deferred	-	slice 2
-packs/semantic_extraction/tools.py::function::ensure_llm_extraction_profile_fn	function	deferred	-	slice 2
+packs/semantic_extraction/tools.py::function::ensure_llm_extraction_profile_fn	function	ported	src/chronicle_packs/semantic_extraction/tools.cr::ensure_llm_extraction_profile_fn	mints a policy version routing the model-only facets
 packs/semantic_extraction/tools.py::function::extract_annotations	function	ported	src/chronicle_packs/semantic_extraction/tools.cr::extract_annotations_tool	tool wrapper; renamed with _tool suffix
 packs/semantic_extraction/tools.py::function::extract_annotations_fn	function	deferred	-	slice 2
 packs/semantic_extraction/tools.py::function::invalidate_annotation_extractor	function	ported	src/chronicle_packs/semantic_extraction/tools.cr::invalidate_annotation_extractor_tool	tool wrapper; renamed with _tool suffix

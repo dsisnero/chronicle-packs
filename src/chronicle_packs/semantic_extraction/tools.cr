@@ -134,6 +134,55 @@ module Chronicle::Packs::SemanticExtraction
     {"ok" => JSON::Any.new(true), "extractor_ref" => JSON::Any.new(ref), "routed_facets" => JSON::Any.new(routed.map { |facet| JSON::Any.new(facet) })}.merge(profile)
   end
 
+  # Add the model-only facets to the active extraction policy. Provider
+  # configuration and graph policy are deliberately separate: enabling a
+  # provider mints a new policy version rather than leaving the key unused.
+  def self.ensure_llm_extraction_profile_fn(graph : Chronicle::GraphProjection, actor : String) : Hash(String, JSON::Any)
+    raise Chronicle::Packs::PackError.new("LLM profile activation requires a named actor") if actor.empty?
+
+    profiles = graph.objects(type: "extraction_profile").sort_by! { |obj| JSON.parse(obj.data)["version"]?.try(&.as_i) || 0 }
+    current = profiles.reverse.find { |obj| JSON.parse(obj.data)["status"]?.try(&.as_s?) == "active" }
+    return {"ok" => JSON::Any.new(false), "profile_updated" => JSON::Any.new(false), "reason" => JSON::Any.new("profile_missing")} if current.nil?
+
+    current_data = JSON.parse(current.data).as_h
+    extractor_by_facet = (current_data["extractor_by_facet"]?.try(&.as_h) || {} of String => JSON::Any).transform_values(&.as_s)
+    ref = "semantic.llm@0.1.0"
+    already_active = Facets::LLM_UPGRADE_FACETS.all? { |facet| extractor_by_facet[facet.to_s]? == ref }
+    if already_active
+      return {"ok" => JSON::Any.new(true), "profile_updated" => JSON::Any.new(false), "profile_id" => JSON::Any.new(current.id), "version" => current_data["version"]? || JSON::Any.new(0)}
+    end
+
+    Facets::LLM_UPGRADE_FACETS.each { |facet| extractor_by_facet[facet.to_s] = ref }
+    default_facets = ((current_data["default_facets"]?.try(&.as_a) || [] of JSON::Any).map(&.as_s).to_set + Facets::LLM_UPGRADE_FACETS.to_set).to_a.sort
+    llm_state_exists = graph.objects(type: "annotation_extractor_state").any? do |obj|
+      data = JSON.parse(obj.data)
+      data["extractor_id"]?.try(&.as_s?) == "semantic.llm" &&
+        data["extractor_version"]?.try(&.as_s?) == "0.1.0" &&
+        data["status"]?.try(&.as_s?).in?({"candidate", "promoted"})
+    end
+    unless llm_state_exists
+      graph.add_object("annotation_extractor_state", JSON.build do |json|
+        json.object do
+          json.field "state_identity", stable_id("annotation_extractor_state", "semantic.llm", "0.1.0", "candidate")
+          json.field "extractor_id", "semantic.llm"
+          json.field "extractor_version", "0.1.0"
+          json.field "status", "candidate"
+          json.field "reason", "provider configured; model-only facets enabled"
+          json.field "metadata", JSON::Any.new({} of String => JSON::Any)
+        end
+      end)
+    end
+    result = update_extraction_profile_fn(
+      graph,
+      default_facets: default_facets,
+      extractor_by_facet: extractor_by_facet,
+      rationale: "enable relation_mention/event_mention through semantic.llm after an explicit provider configuration (D025 stage two)",
+      created_by: actor,
+    )
+    result["profile_updated"] = JSON::Any.new(true)
+    result
+  end
+
   # Read the coverage record for one extraction run.
   def self.annotation_coverage_fn(graph : Chronicle::GraphProjection, run_id : String) : JSON::Any?
     coverage = graph.objects(type: "extraction_coverage").find { |obj| JSON.parse(obj.data)["run_id"]?.try(&.as_s?) == run_id }
