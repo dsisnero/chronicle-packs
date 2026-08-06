@@ -20,6 +20,120 @@ module Chronicle::Packs::SemanticExtraction
     last
   end
 
+  # Fork-trial the candidate extractor against the baseline (ADR 0014).
+  # Drafts only — no annotations materialized, no policy changes. The
+  # per-facet comparison lands as extractor_promotion_evidence.
+  # ameba:disable Metrics/CyclomaticComplexity -- faithful port of the upstream trial verdict
+  def self.run_extractor_trial_fn(graph : Chronicle::GraphProjection, evidence_ids : Array(String), candidate_ref : String = "semantic.llm@0.1.0", baseline_ref : String = "semantic.deterministic@0.1.0", facets : Array(String)? = nil, settings : SemanticExtractionSettings? = nil, created_by : String = "owner") : Hash(String, JSON::Any)
+    candidate = Extractors.get_annotation_extractor(*_parse_extractor_ref(candidate_ref))
+    baseline = Extractors.get_annotation_extractor(*_parse_extractor_ref(baseline_ref))
+    trial_facets = (facets || candidate.implemented_facets).to_set.to_a.sort
+    trial_facets.each do |facet|
+      raise Chronicle::Packs::PackError.new("unknown facet #{facet.inspect}") unless Facet.parse?(facet) || facet.includes?(".")
+    end
+
+    evidence_objs = [] of Chronicle::GraphObject
+    evidence_ids.each do |evidence_id|
+      obj = graph.get_object(evidence_id)
+      raise Chronicle::Packs::PackError.new("no activity_evidence with id #{evidence_id.inspect}") if obj.nil? || obj.type != "activity_evidence"
+
+      evidence_objs << obj
+    end
+    raise Chronicle::Packs::PackError.new("an extractor trial needs at least one evidence id") if evidence_objs.empty?
+
+    comparison = {} of String => Hash(String, Int32)
+    trial_facets.each { |facet| comparison[facet] = {"baseline" => 0, "candidate" => 0, "candidate_only" => 0, "baseline_only" => 0} }
+    evidence_objs.each do |obj|
+      evidence_data = JSON.parse(obj.data).as_h
+      content = evidence_data["normalized_content"]?.try(&.as_s?) || ""
+      metadata = evidence_data["normalized_metadata"]?.try(&.as_h) || {} of String => JSON::Any
+      baseline_keys = _trial_keys(baseline.extract(content, metadata, trial_facets))
+      candidate_keys = _trial_keys(candidate.extract(content, metadata, trial_facets))
+      trial_facets.each do |facet|
+        base_f = baseline_keys.select { |key| key[0] == facet }.to_set
+        cand_f = candidate_keys.select { |key| key[0] == facet }.to_set
+        entry = comparison[facet]
+        entry["baseline"] += base_f.size
+        entry["candidate"] += cand_f.size
+        entry["candidate_only"] += (cand_f - base_f).size
+        entry["baseline_only"] += (base_f - cand_f).size
+      end
+    end
+
+    facet_gains = comparison.values.count { |entry| entry["candidate"] > 0 && entry["baseline"] == 0 }
+    facet_losses = comparison.values.count { |entry| entry["baseline"] > 0 && entry["candidate"] == 0 }
+    verdict = if facet_gains > facet_losses
+                "candidate_richer"
+              elsif facet_losses > facet_gains
+                "baseline_richer"
+              else
+                "neutral"
+              end
+
+    candidate_id, candidate_version = _parse_extractor_ref(candidate_ref)
+    baseline_id, baseline_version = _parse_extractor_ref(baseline_ref)
+    revision_ids = evidence_objs.map { |obj| JSON.parse(obj.data)["revision_id"]?.try(&.as_s?) || "" }.sort!
+    evidence = graph.add_object("extractor_promotion_evidence", JSON.build do |json|
+      json.object do
+        json.field "evidence_identity", stable_id("extractor_trial", candidate_ref, baseline_ref, revision_ids.join(","), trial_facets.join(","))
+        json.field "candidate_extractor_id", candidate_id
+        json.field "candidate_extractor_version", candidate_version
+        json.field "baseline_extractor_id", baseline_id
+        json.field "baseline_extractor_version", baseline_version
+        json.field "evidence_ids", JSON::Any.new(evidence_objs.map { |obj| JSON::Any.new(obj.id) })
+        json.field "facets", JSON::Any.new(trial_facets.map { |facet| JSON::Any.new(facet) })
+        json.field "comparison", JSON::Any.new(comparison.transform_values { |entry| JSON::Any.new(entry.transform_values { |count| JSON::Any.new(count) }) })
+        json.field "verdict", verdict
+        json.field "rationale", "recorded-content trial: candidate vs baseline drafts, keyed by (facet, start, end, exact)"
+        json.field "created_by", created_by
+        json.field "metadata", JSON::Any.new({"candidate_config" => JSON::Any.new(candidate.config), "baseline_config" => JSON::Any.new(baseline.config)})
+      end
+    end)
+    {"ok" => JSON::Any.new(true), "evidence_id" => JSON::Any.new(evidence.id), "verdict" => JSON::Any.new(verdict), "comparison" => JSON::Any.new(comparison.transform_values { |entry| JSON::Any.new(entry.transform_values { |count| JSON::Any.new(count) }) })}
+  end
+
+  private def self._trial_keys(drafts : Array(AnnotationDraft)) : Set({String, Int32, Int32, String})
+    drafts.map { |draft| {draft.facet, draft.start, draft.end, draft.exact} }.to_set
+  end
+
+  # Promote the candidate extractor citing recorded trial evidence (ADR
+  # 0014): flips the extractor state to promoted and routes the covered
+  # facets to it in the next profile version.
+  # ameba:disable Metrics/CyclomaticComplexity -- faithful port of the upstream promotion
+  def self.promote_llm_extractor_fn(graph : Chronicle::GraphProjection, promotion_evidence_id : String, approver : String, facets : Array(String)? = nil) : Hash(String, JSON::Any)
+    raise Chronicle::Packs::PackError.new("promotion requires an explicit approver") if approver.empty?
+
+    evidence = graph.get_object(promotion_evidence_id)
+    raise Chronicle::Packs::PackError.new("no extractor_promotion_evidence with id #{promotion_evidence_id.inspect}") if evidence.nil? || evidence.type != "extractor_promotion_evidence"
+
+    evidence_data = JSON.parse(evidence.data).as_h
+    ref = "#{evidence_data["candidate_extractor_id"]?.try(&.as_s?) || ""}@#{evidence_data["candidate_extractor_version"]?.try(&.as_s?) || ""}"
+    routed = (facets || (evidence_data["facets"]?.try(&.as_a) || [] of JSON::Any).map(&.as_s)).sort
+    raise Chronicle::Packs::PackError.new("nothing to route: the trial covered no facets") if routed.empty?
+
+    graph.add_object("annotation_extractor_state", JSON.build do |json|
+      json.object do
+        json.field "state_identity", stable_id("annotation_extractor_state", ref, "promoted", promotion_evidence_id)
+        json.field "extractor_id", evidence_data["candidate_extractor_id"]?.try(&.as_s?) || ""
+        json.field "extractor_version", evidence_data["candidate_extractor_version"]?.try(&.as_s?) || ""
+        json.field "status", "promoted"
+        json.field "reason", "promoted by #{approver} citing #{promotion_evidence_id}"
+        json.field "metadata", JSON::Any.new({"promotion_evidence_id" => JSON::Any.new(promotion_evidence_id)})
+      end
+    end)
+
+    current = graph.objects(type: "extraction_profile").sort_by! { |obj| JSON.parse(obj.data)["version"]?.try(&.as_i) || 0 }.reverse.find { |obj| JSON.parse(obj.data)["status"]?.try(&.as_s?) == "active" }
+    merged = (current ? (JSON.parse(current.data)["extractor_by_facet"]?.try(&.as_h) || {} of String => JSON::Any) : {} of String => JSON::Any).transform_values(&.as_s)
+    routed.each { |facet| merged[facet] = ref }
+    profile = update_extraction_profile_fn(
+      graph,
+      extractor_by_facet: merged,
+      rationale: "promote #{ref} for #{routed.join(", ")} (evidence #{promotion_evidence_id}, approved by #{approver})",
+      created_by: approver,
+    )
+    {"ok" => JSON::Any.new(true), "extractor_ref" => JSON::Any.new(ref), "routed_facets" => JSON::Any.new(routed.map { |facet| JSON::Any.new(facet) })}.merge(profile)
+  end
+
   # Read the coverage record for one extraction run.
   def self.annotation_coverage_fn(graph : Chronicle::GraphProjection, run_id : String) : JSON::Any?
     coverage = graph.objects(type: "extraction_coverage").find { |obj| JSON.parse(obj.data)["run_id"]?.try(&.as_s?) == run_id }
