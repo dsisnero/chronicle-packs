@@ -1664,22 +1664,22 @@ packs/semantic_extraction/fixtures/seed_llm_records.py::method::ScriptedProvider
 packs/semantic_extraction/fixtures/seed_llm_records.py::method::ScriptedProvider.estimate_cost	method	deferred	-	slice 2
 packs/semantic_extraction/fixtures/seed_llm_records.py::method::ScriptedProvider.recognizes_model	method	deferred	-	slice 2
 packs/semantic_extraction/fixtures/seed_llm_records.py::method::ScriptedProvider.supports_native_structured_output	method	deferred	-	slice 2
-packs/semantic_extraction/llm_extractor.py::class::LLMExtractorV1	class	deferred	-	slice 2
-packs/semantic_extraction/llm_extractor.py::class::ReplayFirstProvider	class	deferred	-	slice 2
-packs/semantic_extraction/llm_extractor.py::function::_clamp	function	deferred	-	slice 2
-packs/semantic_extraction/llm_extractor.py::function::_locate	function	deferred	-	slice 2
-packs/semantic_extraction/llm_extractor.py::function::_strip_code_fence	function	deferred	-	slice 2
-packs/semantic_extraction/llm_extractor.py::function::build_llm_extractor	function	deferred	-	slice 2
-packs/semantic_extraction/llm_extractor.py::method::LLMExtractorV1.__init__	method	deferred	-	slice 2
-packs/semantic_extraction/llm_extractor.py::method::LLMExtractorV1._complete	method	deferred	-	slice 2
-packs/semantic_extraction/llm_extractor.py::method::LLMExtractorV1._facet_body	method	deferred	-	slice 2
-packs/semantic_extraction/llm_extractor.py::method::LLMExtractorV1._parse_items	method	deferred	-	slice 2
-packs/semantic_extraction/llm_extractor.py::method::LLMExtractorV1._verify_and_draft	method	deferred	-	slice 2
-packs/semantic_extraction/llm_extractor.py::method::LLMExtractorV1.config	method	deferred	-	slice 2
-packs/semantic_extraction/llm_extractor.py::method::LLMExtractorV1.extract	method	deferred	-	slice 2
-packs/semantic_extraction/llm_extractor.py::method::LLMExtractorV1.implemented_facets	method	deferred	-	slice 2
-packs/semantic_extraction/llm_extractor.py::method::ReplayFirstProvider.__init__	method	deferred	-	slice 2
-packs/semantic_extraction/llm_extractor.py::method::ReplayFirstProvider.complete	method	deferred	-	slice 2
+packs/semantic_extraction/llm_extractor.py::class::LLMExtractorV1	class	ported	src/chronicle_packs/semantic_extraction/llm_extractor.cr::Extractors::LLMExtractorV1	registered via build_llm_extractor (replace: true)
+packs/semantic_extraction/llm_extractor.py::class::ReplayFirstProvider	class	ported	src/chronicle_packs/semantic_extraction/recorded_completion.cr::RecordedCompletionService	pack reference impl of the chronicle-owned recorded-completion boundary
+packs/semantic_extraction/llm_extractor.py::function::_clamp	function	ported	src/chronicle_packs/semantic_extraction/llm_extractor.cr::Extractors::LLMExtractorV1#_clamp	-
+packs/semantic_extraction/llm_extractor.py::function::_locate	function	ported	src/chronicle_packs/semantic_extraction/llm_extractor.cr::Extractors::LLMExtractorV1#_locate	byte-exact anchor
+packs/semantic_extraction/llm_extractor.py::function::_strip_code_fence	function	ported	src/chronicle_packs/semantic_extraction/llm_extractor.cr::Extractors::LLMExtractorV1#_strip_code_fence	-
+packs/semantic_extraction/llm_extractor.py::function::build_llm_extractor	function	ported	src/chronicle_packs/semantic_extraction/llm_extractor.cr::build_llm_extractor	-
+packs/semantic_extraction/llm_extractor.py::method::LLMExtractorV1.__init__	method	ported	src/chronicle_packs/semantic_extraction/llm_extractor.cr::Extractors::LLMExtractorV1#initialize	-
+packs/semantic_extraction/llm_extractor.py::method::LLMExtractorV1._complete	method	ported	src/chronicle_packs/semantic_extraction/llm_extractor.cr::Extractors::LLMExtractorV1#_complete	prompt-hash idempotency key
+packs/semantic_extraction/llm_extractor.py::method::LLMExtractorV1._facet_body	method	ported	src/chronicle_packs/semantic_extraction/llm_extractor.cr::Extractors::LLMExtractorV1#_facet_body	-
+packs/semantic_extraction/llm_extractor.py::method::LLMExtractorV1._parse_items	method	ported	src/chronicle_packs/semantic_extraction/llm_extractor.cr::Extractors::LLMExtractorV1#_parse_items	-
+packs/semantic_extraction/llm_extractor.py::method::LLMExtractorV1._verify_and_draft	method	ported	src/chronicle_packs/semantic_extraction/llm_extractor.cr::Extractors::LLMExtractorV1#_verify_and_draft	drops non-verbatim spans
+packs/semantic_extraction/llm_extractor.py::method::LLMExtractorV1.config	method	ported	src/chronicle_packs/semantic_extraction/llm_extractor.cr::Extractors::LLMExtractorV1#config	model is part of the cache identity
+packs/semantic_extraction/llm_extractor.py::method::LLMExtractorV1.extract	method	ported	src/chronicle_packs/semantic_extraction/llm_extractor.cr::Extractors::LLMExtractorV1#extract	per-facet cap
+packs/semantic_extraction/llm_extractor.py::method::LLMExtractorV1.implemented_facets	method	ported	src/chronicle_packs/semantic_extraction/llm_extractor.cr::Extractors::LLMExtractorV1#implemented_facets	-
+packs/semantic_extraction/llm_extractor.py::method::ReplayFirstProvider.__init__	method	ported	src/chronicle_packs/semantic_extraction/recorded_completion.cr::RecordedCompletionService#initialize	-
+packs/semantic_extraction/llm_extractor.py::method::ReplayFirstProvider.complete	method	ported	src/chronicle_packs/semantic_extraction/recorded_completion.cr::RecordedCompletionService#structured	llm.requested/responded + idempotency replay
 packs/semantic_extraction/object_types.py::class::AnnotationExtractorState	class	ported	src/chronicle_packs/semantic_extraction/object_types.cr::AnnotationExtractorState	-
 packs/semantic_extraction/object_types.py::class::ExtractionCoverage	class	ported	src/chronicle_packs/semantic_extraction/object_types.cr::ExtractionCoverage	-
 packs/semantic_extraction/object_types.py::class::ExtractionProfile	class	ported	src/chronicle_packs/semantic_extraction/object_types.cr::ExtractionProfile	-
