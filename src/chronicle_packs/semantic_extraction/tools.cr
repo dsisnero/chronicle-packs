@@ -173,6 +173,37 @@ module Chronicle::Packs::SemanticExtraction
     result.to_json
   end
 
+  # Declare a guarded procedure candidate once its reference annotations were
+  # reviewed (three witnesses, two held-out, a counterexample set).
+  @[Chronicle::Packs::Annotations::Tool(name: "synthesize_request_procedure", description: "Declare a guarded deterministic request extractor from reviewed reference annotations (three witnesses, two held-out, counterexamples).", deterministic: true)]
+  def synthesize_request_procedure_tool(args : String) : String
+    input = JSON.parse(args).as_h
+    witness = (input["witness_evidence_ids"]?.try(&.as_a) || [] of JSON::Any).map(&.as_s)
+    held = (input["held_out_evidence_ids"]?.try(&.as_a) || [] of JSON::Any).map(&.as_s)
+    counter = (input["counterexample_evidence_ids"]?.try(&.as_a) || [] of JSON::Any).map(&.as_s)
+    result = synthesize_request_procedure_fn(
+      bound_graph_or_raise,
+      witness_evidence_ids: witness, held_out_evidence_ids: held,
+      counterexample_evidence_ids: counter,
+      created_by: input["created_by"]?.try(&.as_s?) || "owner",
+    )
+    result.to_json
+  end
+
+  # Promote a guarded procedure only with its passing evaluation and a named
+  # approver.
+  @[Chronicle::Packs::Annotations::Tool(name: "promote_request_procedure", description: "Promote a guarded deterministic request extractor only with its passing forked evaluation and a named approver.", deterministic: true)]
+  def promote_request_procedure_tool(args : String) : String
+    input = JSON.parse(args).as_h
+    result = promote_request_procedure_fn(
+      bound_graph_or_raise,
+      input["candidate_id"]?.try(&.as_s?) || "",
+      input["evaluation_id"]?.try(&.as_s?) || "",
+      approver: input["approver"]?.try(&.as_s?) || "",
+    )
+    result.to_json
+  end
+
   private def self.bound_graph_or_raise : Chronicle::GraphProjection
     bound_graph || raise Chronicle::Packs::PackError.new(
       "semantic_extraction tools require a bound graph (set SemanticExtraction.bound_graph)"

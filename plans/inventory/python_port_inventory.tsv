@@ -1731,10 +1731,10 @@ packs/semantic_extraction/tools.py::function::invalidate_annotation_extractor	fu
 packs/semantic_extraction/tools.py::function::invalidate_annotation_extractor_fn	function	ported	src/chronicle_packs/semantic_extraction/tools.cr::invalidate_annotation_extractor_fn	-
 packs/semantic_extraction/tools.py::function::promote_llm_extractor	function	deferred	-	slice 2
 packs/semantic_extraction/tools.py::function::promote_llm_extractor_fn	function	deferred	-	slice 2
-packs/semantic_extraction/tools.py::function::promote_request_procedure	function	deferred	-	slice 2
+packs/semantic_extraction/tools.py::function::promote_request_procedure	function	ported	src/chronicle_packs/semantic_extraction/tools.cr::promote_request_procedure_tool	@[Tool]
 packs/semantic_extraction/tools.py::function::run_extractor_trial	function	deferred	-	slice 2
 packs/semantic_extraction/tools.py::function::run_extractor_trial_fn	function	deferred	-	slice 2
-packs/semantic_extraction/tools.py::function::synthesize_request_procedure	function	deferred	-	slice 2
+packs/semantic_extraction/tools.py::function::synthesize_request_procedure	function	ported	src/chronicle_packs/semantic_extraction/tools.cr::synthesize_request_procedure_tool	@[Tool]
 packs/semantic_extraction/tools.py::function::update_extraction_profile	function	ported	src/chronicle_packs/semantic_extraction/tools.cr::update_extraction_profile_tool	tool wrapper; renamed with _tool suffix
 packs/semantic_extraction/tools.py::function::update_extraction_profile_fn	function	ported	src/chronicle_packs/semantic_extraction/tools.cr::update_extraction_profile_fn	-
 packs/skills/behaviors.py::const::BEHAVIORS	const	ported	src/chronicle_packs/skills/pack.cr	collected by DSL pack macro
