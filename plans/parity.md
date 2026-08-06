@@ -52,9 +52,9 @@ surface.
 
 ### Phase 2 — Infrastructure packs
 
-- [~] `tool_gateway` — capability registry, approval policy, execute/spec/
+- [x] `tool_gateway` — capability registry, approval policy, execute/spec/
       pending-approvals tools, catalog, standing scopes, untrusted-content
-      scan (91/98, slice 1: object surface + registry + sanitizer + injection
+      scan (90/98: object surface + registry + sanitizer + injection
       scan + policy decision + approval resolution + 4 core behaviors + the
       capability catalog + registration enforcement + ADR 0018 standing
       scopes (propose/promote/demote/disable + the R2 auto-approval read
@@ -64,7 +64,8 @@ surface.
       (host seam, fails closed) + LLM tool proxies (CrigGatewayTool as a
       Crig::ToolDyn: audit-before-action capability_call, shared
       decide_policy/execute_approved_call, held calls return structured
-      held_for_approval; Crig supplies the tool transport only)
+      held_for_approval; Crig supplies the tool transport only); the 8
+      skipped items are fixture-runner CLI helpers + `_StrictModel`)
 - [x] `secrets` — credential reference management, managed source registry
       (42/42) — `src/chronicle_packs/secrets/`
 - [~] `memory_gateway` — candidate evaluation/promotion, SQLite backend,
@@ -91,7 +92,7 @@ surface.
       shared-extraction selection/migration, and the structure-candidate
       projector now complete)
 - [~] `semantic_extraction` — typed source-anchored annotations, deterministic
-      floor + LLM upgrade seam, coverage tracking (67/156, slices 1-2b: the
+      floor + LLM upgrade seam, coverage tracking (108/156, slices 1-2c: the
       deterministic zero-key floor (DeterministicExtractorV1) + facets +
       seeded extraction_profile (incl. the D025 LLM-upgrade branch routing
       event/relation_mention to semantic.llm when a provider is configured)
@@ -99,8 +100,22 @@ surface.
       profile/memory candidate projectors + the profile-update/
       extractor-invalidation tools + extract_selected_evidence (exact-span
       requests settle with run_ids/annotation_ids; evidence/revision
-      verified, spans hash-verified and remapped by the pack);
-      procedures and the LlmExtractorV1 adapter remain deferred)
+      verified, spans hash-verified and remapped by the pack) + the guarded
+      proceduralization lifecycle (RequestRuleExtractorV1,
+      synthesize/evaluate/promote, guard_admits + shape fingerprint,
+      active_procedure_for, record_deoptimization with drift auto-demote;
+      evaluation is graph-direct, no runtime fork) + the
+      synthesize_request_procedure / promote_request_procedure tools + the
+      ADR 0014 fork-trial-promote surface (run_extractor_trial_fn
+      drafts-only comparison keyed by facet/start/end/exact,
+      promote_llm_extractor_fn routing the covered facets) +
+      ensure_llm_extraction_profile_fn (mints a policy version routing the
+      model-only facets after an explicit provider configuration) + the
+      LLMExtractorV1 adapter (semantic.llm@0.1.0 behind the registry:
+      byte-exact anchor verification, facet-body shaping, per-facet caps,
+      prompt-hash idempotency, riding a RecordedCompletion boundary with
+      llm.requested/responded + replay);
+      fixture generators remain deferred)
 - [x] `usage` — source surfaces, connector handoffs, stable cursors,
       settlement, interaction facts (71/77) — `src/chronicle_packs/usage/`
 - [x] `connector_control` — service/account/surface status, run adapters,
@@ -337,9 +352,23 @@ surface.
   per-facet coverage; `seed_extraction_profile` mints the D041 eager-floor
   profile, and `annotate_evidence` runs it eagerly per evidence revision,
   emitting `extraction_run` + `semantic_annotation` (annotation_for/
-  produced_annotation/run_for) + `extraction_coverage`. Deferred to slice 2:
-  procedures, the LLM extractor seam (`semantic.llm`), selection extraction,
-  and the profile/memory candidate projectors.
+  produced_annotation/run_for) + `extraction_coverage`. Selection extraction
+  (`extract_selected_evidence`) settles exact-span requests with
+  evidence/revision verification and the pack-owned hash verification +
+  offset remapping inside `run_profile_extraction`. The guarded
+  proceduralization lifecycle (ADR 0029) declares a deterministic
+  request-rule procedure from reviewed reference annotations, evaluates it
+  graph-direct (no runtime fork; parity over the (facet, start, end, exact)
+  selector keys), and promotes it approver-gated; the ADR 0014
+  fork-trial-promote surface compares a candidate against the baseline
+  drafts-only. The `LLMExtractorV1` (semantic.llm@0.1.0) rides a
+  `RecordedCompletion` boundary (durable llm.requested/responded +
+  idempotency-key replay) and verifies every LLM-proposed span
+  byte-for-byte before materialization. The `Facet` enum models the closed
+  standard set; facet FIELDS stay String because activity_normalizer
+  registers dotted extension facets (`activity.preference`, `task`) against
+  the same contract. Remaining deferred: the fixture generators
+  (`fixtures/run_fixtures.py`, `fixtures/seed_llm_records.py`).
 - `connector_control` materializes 6 `JSON::Serializable` struct types with
   zero relation types. The record adapters are idempotent upserts keyed by a
   sha256 `*_identity` (immutable provenance fields cannot change; changed
@@ -377,7 +406,7 @@ surface.
   `CoverageStats`). Tool parameters are typed `record` structs with an
   ISO-8601 `Time` converter; bools avoid `is_` prefixes (JSON key preserved
   via `@[JSON::Field(key: ...)]`).
-- `tool_gateway` (slice 1 of 2, in progress): 10 typed object types + 8
+- `tool_gateway` (complete): 10 typed object types + 8
   relation types. The capability registry (`CapabilitySpec` as a `record`,
   `register_local_capability`) dispatches registered handlers or a mock.
   `decide_policy_detail` evaluates the legacy risk dimension and the
@@ -397,9 +426,19 @@ surface.
   verification against Identity/Auth when principals are registered;
   `identity_unverified` otherwise). Status transitions use the shared
   `Chronicle::Packs::CopyWith#define_copy_with` instead of hash merges.
-  Deferred to slice 2: the catalog, standing scopes (ADR 0018), integration
-  profiles, LLM proxies, registration enforcement, and the reference
-  web_fetch capability (host runtime seam).
+  Slice 2 completes the surface: the capability catalog
+  (`catalog_entries`/`register_catalog_capability`), registration
+  enforcement (arm/disarm; undeclared pairs, risk/action drift, and
+  disabled-pack claims refused), ADR 0018 standing scopes (propose/promote/
+  demote/disable + the R2 auto-approval read path) and the
+  `tool_policy_reliability_guard` behavior, the integration profile chassis
+  (aggregator/profile/exploration receipts, stable ids and shape
+  fingerprints), the reference `web.fetch_url` capability (host seam, fails
+  closed), and the LLM tool proxies — `CrigGatewayTool` is a
+  `Crig::DynamicTool` (Crig::ToolDyn) whose callback runs the shared
+  gateway pipeline; Crig supplies only the tool transport (JSON args,
+  ToolContext metadata persisted on the capability_call, ToolResult), the
+  gateway owns the policy state machine.
 - `memory_gateway` (slice 1 of 2, in progress): 6 typed object types + 5
   relation types. Closed string sets are Crystal enums — non-flags enums
   serialize as the underscored member name, so `ReliabilityVerdict::Harmful`
@@ -413,12 +452,18 @@ surface.
   candidates with subject-scoped dedup and LRU eviction; `memory_retriever`
   fulfills graph-visible retrieval requests; `memory_ranker` scores each
   result; `memory_reliability_applier` applies `reliability.changed` to an
-  item. `retrieve_memories_fn` returns outcome-adjusted ranked results, and
+  item.   `retrieve_memories_fn` returns outcome-adjusted ranked results, and
   `resolve_memory_query_fn` resolves over the evidence-authoritative tiers
   (raw evidence floor, annotations, admitted items) with source-trust
   arbitration from the attention pack, writing a `memory_query_resolution`.
-  Deferred to slice 2: the SQLite/embedding backends, adapters, and
-  `memory_promotion_proposer` + the promotion module.
+  The EmbeddingService boundary (HashEmbedder/OpenAIEmbedder, per-graph
+  recorded service with embedding.requested/responded + idempotency replay,
+  space-aware cosine blend stored on memory_item with model/version
+  identity, never blended across spaces) and versioned promotion
+  (propose/resolve with approver-gated memory.promoted/memory.demoted,
+  `memory_promotion_proposer`, `verify_memory_replay_fn`) are ported.
+  Remaining deferred: the SQLite backend (the port's graph-backed store
+  replaces it), the backend registry + external adapters (`Mem0Backend`).
 
 ## Inventory
 
