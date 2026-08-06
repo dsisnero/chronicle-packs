@@ -1700,25 +1700,25 @@ packs/semantic_extraction/object_types.py::method::ExtractionRun._valid_hash	met
 packs/semantic_extraction/object_types.py::method::SemanticAnnotation._exact_selector	method	deferred	-	slice 2
 packs/semantic_extraction/object_types.py::method::SemanticAnnotation._known_facet	method	deferred	-	slice 2
 packs/semantic_extraction/object_types.py::method::SemanticAnnotation._valid_hash	method	deferred	-	slice 2
-packs/semantic_extraction/procedures.py::class::RequestRuleExtractorV1	class	deferred	-	slice 2
-packs/semantic_extraction/procedures.py::const::POLICY_ID	const	deferred	-	slice 2
-packs/semantic_extraction/procedures.py::const::REFERENCE_REF	const	deferred	-	slice 2
-packs/semantic_extraction/procedures.py::const::REQUEST_PROCEDURE_REF	const	deferred	-	slice 2
-packs/semantic_extraction/procedures.py::function::_accepted_corrections	function	deferred	-	slice 2
-packs/semantic_extraction/procedures.py::function::_evaluate_set	function	deferred	-	slice 2
-packs/semantic_extraction/procedures.py::function::_objects	function	deferred	-	slice 2
-packs/semantic_extraction/procedures.py::function::_reference_annotations	function	deferred	-	slice 2
-packs/semantic_extraction/procedures.py::function::_selector_keys	function	deferred	-	slice 2
-packs/semantic_extraction/procedures.py::function::active_procedure_for	function	deferred	-	slice 2
-packs/semantic_extraction/procedures.py::function::evaluate_request_procedure_fn	function	deferred	-	slice 2
-packs/semantic_extraction/procedures.py::function::guard_admits	function	deferred	-	slice 2
-packs/semantic_extraction/procedures.py::function::promote_request_procedure_fn	function	deferred	-	slice 2
-packs/semantic_extraction/procedures.py::function::record_deoptimization	function	deferred	-	slice 2
-packs/semantic_extraction/procedures.py::function::shape_fingerprint	function	deferred	-	slice 2
-packs/semantic_extraction/procedures.py::function::synthesize_request_procedure_fn	function	deferred	-	slice 2
-packs/semantic_extraction/procedures.py::method::RequestRuleExtractorV1.config	method	deferred	-	slice 2
-packs/semantic_extraction/procedures.py::method::RequestRuleExtractorV1.extract	method	deferred	-	slice 2
-packs/semantic_extraction/procedures.py::method::RequestRuleExtractorV1.implemented_facets	method	deferred	-	slice 2
+packs/semantic_extraction/procedures.py::class::RequestRuleExtractorV1	class	ported	src/chronicle_packs/semantic_extraction/extractor.cr::Extractors::RequestRuleExtractorV1	registered in the extractor registry
+packs/semantic_extraction/procedures.py::const::POLICY_ID	const	ported	src/chronicle_packs/semantic_extraction/procedures.cr::ProcedureConstants::POLICY_ID	-
+packs/semantic_extraction/procedures.py::const::REFERENCE_REF	const	ported	src/chronicle_packs/semantic_extraction/procedures.cr::ProcedureConstants::REFERENCE_REF	-
+packs/semantic_extraction/procedures.py::const::REQUEST_PROCEDURE_REF	const	ported	src/chronicle_packs/semantic_extraction/procedures.cr::ProcedureConstants::REQUEST_PROCEDURE_REF	-
+packs/semantic_extraction/procedures.py::function::_accepted_corrections	function	ported	src/chronicle_packs/semantic_extraction/procedures.cr::_accepted_corrections	-
+packs/semantic_extraction/procedures.py::function::_evaluate_set	function	ported	src/chronicle_packs/semantic_extraction/procedures.cr::_evaluate_set	-
+packs/semantic_extraction/procedures.py::function::_objects	function	ported	src/chronicle_packs/semantic_extraction/procedures.cr graph.objects()	inlined
+packs/semantic_extraction/procedures.py::function::_reference_annotations	function	ported	src/chronicle_packs/semantic_extraction/procedures.cr::_reference_annotations	-
+packs/semantic_extraction/procedures.py::function::_selector_keys	function	ported	src/chronicle_packs/semantic_extraction/procedures.cr::_selector_keys	facet_exact_selector equivalence
+packs/semantic_extraction/procedures.py::function::active_procedure_for	function	ported	src/chronicle_packs/semantic_extraction/procedures.cr::active_procedure_for	-
+packs/semantic_extraction/procedures.py::function::evaluate_request_procedure_fn	function	ported	src/chronicle_packs/semantic_extraction/procedures.cr::evaluate_request_procedure_fn	graph-direct (no runtime fork)
+packs/semantic_extraction/procedures.py::function::guard_admits	function	ported	src/chronicle_packs/semantic_extraction/procedures.cr::guard_admits	-
+packs/semantic_extraction/procedures.py::function::promote_request_procedure_fn	function	ported	src/chronicle_packs/semantic_extraction/procedures.cr::promote_request_procedure_fn	approver-gated
+packs/semantic_extraction/procedures.py::function::record_deoptimization	function	ported	src/chronicle_packs/semantic_extraction/procedures.cr::record_deoptimization	auto-demote past drift threshold
+packs/semantic_extraction/procedures.py::function::shape_fingerprint	function	ported	src/chronicle_packs/semantic_extraction/procedures.cr::shape_fingerprint	-
+packs/semantic_extraction/procedures.py::function::synthesize_request_procedure_fn	function	ported	src/chronicle_packs/semantic_extraction/procedures.cr::synthesize_request_procedure_fn	-
+packs/semantic_extraction/procedures.py::method::RequestRuleExtractorV1.config	method	ported	src/chronicle_packs/semantic_extraction/extractor.cr::Extractors::RequestRuleExtractorV1#config	-
+packs/semantic_extraction/procedures.py::method::RequestRuleExtractorV1.extract	method	ported	src/chronicle_packs/semantic_extraction/extractor.cr::Extractors::RequestRuleExtractorV1#extract	-
+packs/semantic_extraction/procedures.py::method::RequestRuleExtractorV1.implemented_facets	method	ported	src/chronicle_packs/semantic_extraction/extractor.cr::Extractors::RequestRuleExtractorV1#implemented_facets	-
 packs/semantic_extraction/settings.py::class::SemanticExtractionSettings	class	ported	src/chronicle_packs/semantic_extraction/settings.cr::SemanticExtractionSettings	-
 packs/semantic_extraction/tools.py::const::TOOLS	const	deferred	-	slice 2
 packs/semantic_extraction/tools.py::function::_keyed	function	deferred	-	slice 2

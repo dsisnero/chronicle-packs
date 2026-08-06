@@ -7,6 +7,7 @@ require "./relation_types"
 require "./extractor"
 require "./engine"
 require "./behaviors"
+require "./procedures"
 require "./tools"
 
 # Semantic Extraction Pack — the shared annotation layer (ADR 0026). Ported
