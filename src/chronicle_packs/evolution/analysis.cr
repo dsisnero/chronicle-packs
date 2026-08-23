@@ -54,5 +54,32 @@ module Chronicle::Packs::Evolution
       violations << "total source #{total} bytes exceeds cap #{max_total}" if total > max_total
       violations
     end
+
+    # Gate 4: candidate runtime imports are an explicit allow-list. Fixture
+    # code receives its narrow extra list and may import the candidate pack.
+    def check_imports(files : Hash(String, String), allow : Array(String), fixture_extra : Array(String), *, pack_name : String = "") : Array(String)
+      violations = [] of String
+      files.each do |path, source|
+        next unless path.ends_with?(".py")
+        permitted = allow.dup
+        if path == FIXTURE_FILE
+          permitted.concat(fixture_extra)
+          permitted << pack_name unless pack_name.empty?
+        end
+        source.each_line do |line|
+          names = [] of String
+          if match = line.match(/^\s*import\s+(.+)$/)
+            match[1].split(',').each { |part| names << part.strip.split(/\s+as\s+/)[0] }
+          elsif match = line.match(/^\s*from\s+([\.\w]+)\s+import\s+/)
+            names << match[1] unless match[1].starts_with?(".")
+          end
+          names.each do |name|
+            next if permitted.any? { |entry| name == entry || name.starts_with?("#{entry}.") }
+            violations << "#{path}: import '#{name}' not in allow-list"
+          end
+        end
+      end
+      violations
+    end
   end
 end

@@ -50,4 +50,15 @@ describe Chronicle::Packs::Evolution::Analysis do
       "total source 5 bytes exceeds cap 4",
     ])
   end
+
+  it "allows only configured runtime and fixture imports" do
+    files = {
+      "tools.py"                 => "import json\nfrom .helpers import local\nfrom os.path import join\n",
+      "fixtures/run_fixtures.py" => "import sys\nimport candidate_pack\n",
+    }
+
+    Chronicle::Packs::Evolution::Analysis.check_imports(
+      files, ["json"], ["sys"], pack_name: "candidate_pack"
+    ).should eq(["tools.py: import 'os.path' not in allow-list"])
+  end
 end
