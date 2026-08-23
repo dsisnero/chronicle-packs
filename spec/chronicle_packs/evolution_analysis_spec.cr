@@ -73,4 +73,24 @@ describe Chronicle::Packs::Evolution::Analysis do
       "tools.py: getattr with computed name",
     ])
   end
+
+  it "extracts a Crystal pack's annotated object and relation surface" do
+    files = {
+      "object_types.cr" => <<-'CRYSTAL',
+        @[Chronicle::Packs::Annotations::ObjectType(name: "note")]
+        struct Note
+        end
+      CRYSTAL
+      "relation_types.cr" => <<-'CRYSTAL',
+        @[Chronicle::Packs::Annotations::RelationType(name: "notes")]
+        struct Notes
+        end
+      CRYSTAL
+    }
+
+    Chronicle::Packs::Evolution::Analysis.extract_crystal_surface(files).should eq({
+      "object_types"   => ["note"],
+      "relation_types" => ["notes"],
+    })
+  end
 end

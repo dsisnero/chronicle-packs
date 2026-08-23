@@ -102,5 +102,23 @@ module Chronicle::Packs::Evolution
       end
       violations
     end
+
+    # Crystal-native replacement for the Python AST surface extractor. The
+    # pack DSL's type annotations are the authoritative declared type surface.
+    def extract_crystal_surface(files : Hash(String, String)) : Hash(String, Array(String))
+      surface = {
+        "object_types"   => [] of String,
+        "relation_types" => [] of String,
+      }
+      files.each do |path, source|
+        next unless path.ends_with?(".cr")
+        source.scan(/Annotations::(ObjectType|RelationType)\(name:\s*"([^"]+)"/) do |match|
+          key = match[1] == "ObjectType" ? "object_types" : "relation_types"
+          surface[key] << match[2]
+        end
+      end
+      surface.each_value(&.sort!)
+      surface
+    end
   end
 end
