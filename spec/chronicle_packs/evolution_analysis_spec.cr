@@ -111,4 +111,10 @@ describe Chronicle::Packs::Evolution::Analysis do
 
     Chronicle::Packs::Evolution::Analysis.extract_crystal_behaviors(files).should eq(["summarize"])
   end
+
+  it "extracts declared Crystal tool names" do
+    files = {"tools.cr" => "@[Chronicle::Packs::Annotations::Tool(name: \"summarize_note\")]\ndef summarize_note\nend\n"}
+
+    Chronicle::Packs::Evolution::Analysis.extract_crystal_tools(files).should eq(["summarize_note"])
+  end
 end

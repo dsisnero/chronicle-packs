@@ -155,5 +155,18 @@ module Chronicle::Packs::Evolution
       end
       names.sort!
     end
+
+    # Extract tools exposed by an authored Crystal pack's DSL annotations.
+    def extract_crystal_tools(files : Hash(String, String)) : Array(String)
+      if violation = check_crystal_syntax(files).first?
+        raise ArgumentError.new(violation)
+      end
+      names = [] of String
+      files.each do |path, source|
+        next unless path.ends_with?(".cr")
+        source.scan(/Annotations::Tool\(name:\s*"([^"]+)"/) { |match| names << match[1] }
+      end
+      names.sort!
+    end
   end
 end
