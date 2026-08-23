@@ -81,5 +81,26 @@ module Chronicle::Packs::Evolution
       end
       violations
     end
+
+    # Gate 5: dynamic code loading and computed attribute names cannot enter
+    # authored runtime code. Fixtures are governed by their own import gate.
+    def check_banned_constructs(files : Hash(String, String)) : Array(String)
+      violations = [] of String
+      files.each do |path, source|
+        next if path == FIXTURE_FILE || !path.ends_with?(".py")
+        source.each_line do |line|
+          {"exec", "eval", "compile", "__import__"}.each do |name|
+            violations << "#{path}: banned call #{name}()" if line.matches?(/\b#{name}\s*\(/)
+          end
+          if match = line.match(/\bgetattr\s*\([^,]+,\s*([^\)]+)\)/)
+            argument = match[1].strip
+            unless (argument.starts_with?("\"") && argument.ends_with?("\"")) || (argument.starts_with?("'") && argument.ends_with?("'"))
+              violations << "#{path}: getattr with computed name"
+            end
+          end
+        end
+      end
+      violations
+    end
   end
 end

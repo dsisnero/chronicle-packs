@@ -61,4 +61,16 @@ describe Chronicle::Packs::Evolution::Analysis do
       files, ["json"], ["sys"], pack_name: "candidate_pack"
     ).should eq(["tools.py: import 'os.path' not in allow-list"])
   end
+
+  it "rejects dynamic runtime constructs but exempts fixtures" do
+    files = {
+      "tools.py"                 => "exec(code)\ngetattr(obj, name)\n",
+      "fixtures/run_fixtures.py" => "eval('fixture-only')\n",
+    }
+
+    Chronicle::Packs::Evolution::Analysis.check_banned_constructs(files).should eq([
+      "tools.py: banned call exec()",
+      "tools.py: getattr with computed name",
+    ])
+  end
 end
