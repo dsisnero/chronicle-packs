@@ -105,4 +105,10 @@ describe Chronicle::Packs::Evolution::Analysis do
       Chronicle::Packs::Evolution::Analysis.extract_crystal_surface({"pack.cr" => "module Candidate\n"})
     end
   end
+
+  it "extracts declared Crystal behavior names" do
+    files = {"behaviors.cr" => "@[Chronicle::Packs::Annotations::Behavior(name: \"summarize\", on: [\"object.created\"])]\ndef summarize\nend\n"}
+
+    Chronicle::Packs::Evolution::Analysis.extract_crystal_behaviors(files).should eq(["summarize"])
+  end
 end

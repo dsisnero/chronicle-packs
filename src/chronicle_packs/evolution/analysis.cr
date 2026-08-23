@@ -141,5 +141,19 @@ module Chronicle::Packs::Evolution
       end
       violations
     end
+
+    # Extract the behavior names that the pack DSL registers from Crystal
+    # annotations, after compiler-parser validation has established syntax.
+    def extract_crystal_behaviors(files : Hash(String, String)) : Array(String)
+      if violation = check_crystal_syntax(files).first?
+        raise ArgumentError.new(violation)
+      end
+      names = [] of String
+      files.each do |path, source|
+        next unless path.ends_with?(".cr")
+        source.scan(/Annotations::Behavior\(name:\s*"([^"]+)"/) { |match| names << match[1] }
+      end
+      names.sort!
+    end
   end
 end
