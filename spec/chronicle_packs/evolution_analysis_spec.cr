@@ -99,4 +99,10 @@ describe Chronicle::Packs::Evolution::Analysis do
       {"pack.cr" => "module Candidate\n"}
     ).first.should start_with("pack.cr: syntax error:")
   end
+
+  it "refuses surface extraction from malformed Crystal" do
+    expect_raises(ArgumentError, /pack\.cr: syntax error:/) do
+      Chronicle::Packs::Evolution::Analysis.extract_crystal_surface({"pack.cr" => "module Candidate\n"})
+    end
+  end
 end
