@@ -16,6 +16,7 @@ require "./chronicle_packs/connector_control/pack"
 require "./chronicle_packs/usage/pack"
 require "./chronicle_packs/tool_gateway/pack"
 require "./chronicle_packs/memory_gateway/pack"
+require "./chronicle_packs/evolution/pack"
 require "./chronicle_packs/llm_provider"
 require "./chronicle_packs/fixture_runner"
 

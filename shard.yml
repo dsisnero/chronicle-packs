@@ -11,6 +11,9 @@ license: MIT
 dependencies:
   chronicle:
     github: dsisnero/chronicle
+  similar:
+    github: dsisnero/similar.cr
+    version: ~> 0.1.0
   toml:
     github: crystal-community/toml.cr
     version: ~> 0.8.1
