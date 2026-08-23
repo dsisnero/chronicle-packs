@@ -31,5 +31,14 @@ module Chronicle::Packs::Evolution
       end
       violations
     end
+
+    # The fixture is executed by the trial child, which invokes only a
+    # top-level `main(rt)` function. Nested definitions are not entrypoints.
+    def check_fixture_entrypoint(files : Hash(String, String)) : Array(String)
+      source = files[FIXTURE_FILE]? || ""
+      return [] of String if source.each_line.any? { |line| line.matches?(/^def main\(rt\):/) }
+
+      ["#{FIXTURE_FILE}: no module-level `def main(rt)` (the trial child's scenario entrypoint)"]
+    end
   end
 end

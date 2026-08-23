@@ -26,4 +26,17 @@ describe Chronicle::Packs::Evolution::Analysis do
       "authored file 'policy.md' targets reserved path (charter and other human-PR-only files are never authorable)",
     ])
   end
+
+  it "requires a module-level fixture main entrypoint" do
+    missing = {"fixtures/run_fixtures.py" => "def helper():\n  pass\n"}
+    nested = {"fixtures/run_fixtures.py" => "class Scenario:\n  def main(rt):\n    pass\n"}
+
+    Chronicle::Packs::Evolution::Analysis.check_fixture_entrypoint(missing).should eq([
+      "fixtures/run_fixtures.py: no module-level `def main(rt)` (the trial child's scenario entrypoint)",
+    ])
+    Chronicle::Packs::Evolution::Analysis.check_fixture_entrypoint(nested).should eq([
+      "fixtures/run_fixtures.py: no module-level `def main(rt)` (the trial child's scenario entrypoint)",
+    ])
+    Chronicle::Packs::Evolution::Analysis.check_fixture_entrypoint({"fixtures/run_fixtures.py" => "def main(rt):\n  pass\n"}).should be_empty
+  end
 end
