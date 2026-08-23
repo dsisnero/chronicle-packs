@@ -1,3 +1,5 @@
+require "compiler/crystal/syntax"
+
 module Chronicle::Packs::Evolution
   # Pure, non-executing checks over a candidate pack's authored files.
   module Analysis
@@ -119,6 +121,22 @@ module Chronicle::Packs::Evolution
       end
       surface.each_value(&.sort!)
       surface
+    end
+
+    # Parse candidate Crystal with the compiler's own grammar before any
+    # semantic surface extraction. This is syntax validation only: candidate
+    # code is never required, interpreted, or executed.
+    def check_crystal_syntax(files : Hash(String, String)) : Array(String)
+      violations = [] of String
+      files.each do |path, source|
+        next unless path.ends_with?(".cr")
+        begin
+          Crystal::Parser.parse(source)
+        rescue ex : Crystal::SyntaxException
+          violations << "#{path}: syntax error: #{ex.message}"
+        end
+      end
+      violations
     end
   end
 end

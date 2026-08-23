@@ -93,4 +93,10 @@ describe Chronicle::Packs::Evolution::Analysis do
       "relation_types" => ["notes"],
     })
   end
+
+  it "uses Crystal's parser to reject malformed candidate source" do
+    Chronicle::Packs::Evolution::Analysis.check_crystal_syntax(
+      {"pack.cr" => "module Candidate\n"}
+    ).first.should start_with("pack.cr: syntax error:")
+  end
 end
