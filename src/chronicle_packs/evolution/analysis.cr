@@ -40,5 +40,19 @@ module Chronicle::Packs::Evolution
 
       ["#{FIXTURE_FILE}: no module-level `def main(rt)` (the trial child's scenario entrypoint)"]
     end
+
+    # Gate 7: review surface limits are UTF-8 byte limits, not character
+    # counts, matching Python's `len(text.encode())` contract.
+    def check_size_caps(files : Hash(String, String), *, max_total : Int32, max_file : Int32) : Array(String)
+      violations = [] of String
+      total = 0
+      files.each do |path, text|
+        size = text.bytesize
+        total += size
+        violations << "#{path}: #{size} bytes exceeds per-file cap #{max_file}" if size > max_file
+      end
+      violations << "total source #{total} bytes exceeds cap #{max_total}" if total > max_total
+      violations
+    end
   end
 end

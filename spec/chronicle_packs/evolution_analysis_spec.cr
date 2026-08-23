@@ -39,4 +39,15 @@ describe Chronicle::Packs::Evolution::Analysis do
     ])
     Chronicle::Packs::Evolution::Analysis.check_fixture_entrypoint({"fixtures/run_fixtures.py" => "def main(rt):\n  pass\n"}).should be_empty
   end
+
+  it "enforces per-file and total UTF-8 byte caps" do
+    files = {"one.py" => "é", "two.py" => "abc"}
+
+    Chronicle::Packs::Evolution::Analysis.check_size_caps(
+      files, max_total: 4, max_file: 2
+    ).should eq([
+      "two.py: 3 bytes exceeds per-file cap 2",
+      "total source 5 bytes exceeds cap 4",
+    ])
+  end
 end
