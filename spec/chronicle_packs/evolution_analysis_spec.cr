@@ -12,4 +12,18 @@ describe Chronicle::Packs::Evolution::Analysis do
       "missing required file: fixtures/run_fixtures.py",
     ])
   end
+
+  it "rejects reserved paths by exact path and basename" do
+    files = {
+      "nested/author_charter.md" => "tamper",
+      "policy.md"                => "tamper",
+    }
+
+    Chronicle::Packs::Evolution::Analysis.check_reserved_paths(
+      files, ["author_charter.md", "policy.md"]
+    ).should eq([
+      "authored file 'nested/author_charter.md' targets reserved path (charter and other human-PR-only files are never authorable)",
+      "authored file 'policy.md' targets reserved path (charter and other human-PR-only files are never authorable)",
+    ])
+  end
 end
