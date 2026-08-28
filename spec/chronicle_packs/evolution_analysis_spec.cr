@@ -151,4 +151,40 @@ describe Chronicle::Packs::Evolution::Analysis do
       "behaviors: source defines 'source_only' undeclared",
     ])
   end
+
+  it "extracts the complete declared Crystal pack surface in one parser-validated pass" do
+    files = {
+      "pack.cr" => <<-'CRYSTAL',
+        @[Chronicle::Packs::Annotations::ObjectType(name: "note")]
+        struct Note
+        end
+
+        @[Chronicle::Packs::Annotations::RelationType(name: "references")]
+        struct References
+        end
+
+        @[Chronicle::Packs::Annotations::Behavior(name: "summarize", on: ["object.created"])]
+        def summarize
+        end
+
+        @[Chronicle::Packs::Annotations::Tool(name: "summarize_note")]
+        def summarize_note
+        end
+
+        Chronicle::Packs::CapabilityDecl.new(
+          provider: "notes",
+          capability: "summarize",
+          risk_class: "low",
+        )
+      CRYSTAL
+    }
+
+    Chronicle::Packs::Evolution::Analysis.extract_crystal_declared_surface(files).should eq({
+      "behaviors"      => ["summarize"],
+      "tools"          => ["summarize_note"],
+      "object_types"   => ["note"],
+      "relation_types" => ["references"],
+      "capabilities"   => ["notes.summarize"],
+    })
+  end
 end

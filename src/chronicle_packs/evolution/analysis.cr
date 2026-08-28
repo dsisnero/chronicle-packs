@@ -142,6 +142,35 @@ module Chronicle::Packs::Evolution
       violations
     end
 
+    # Build the entire governed declaration surface in one parser-validated
+    # scan. This is the canonical input to manifest/source parity checks.
+    def extract_crystal_declared_surface(files : Hash(String, String)) : Hash(String, Array(String))
+      if violation = check_crystal_syntax(files).first?
+        raise ArgumentError.new(violation)
+      end
+      surface = {
+        "behaviors"      => [] of String,
+        "tools"          => [] of String,
+        "object_types"   => [] of String,
+        "relation_types" => [] of String,
+        "capabilities"   => [] of String,
+      }
+      files.each do |path, source|
+        next unless path.ends_with?(".cr")
+        source.scan(/Annotations::(ObjectType|RelationType)\(name:\s*"([^"]+)"/) do |match|
+          key = match[1] == "ObjectType" ? "object_types" : "relation_types"
+          surface[key] << match[2]
+        end
+        source.scan(/Annotations::Behavior\(name:\s*"([^"]+)"/) { |match| surface["behaviors"] << match[1] }
+        source.scan(/Annotations::Tool\(name:\s*"([^"]+)"/) { |match| surface["tools"] << match[1] }
+        source.scan(/CapabilityDecl\.new\(.*?provider:\s*"([^"]+)".*?capability:\s*"([^"]+)"/m) do |match|
+          surface["capabilities"] << "#{match[1]}.#{match[2]}"
+        end
+      end
+      surface.each_value(&.sort!)
+      surface
+    end
+
     # Extract the behavior names that the pack DSL registers from Crystal
     # annotations, after compiler-parser validation has established syntax.
     def extract_crystal_behaviors(files : Hash(String, String)) : Array(String)
