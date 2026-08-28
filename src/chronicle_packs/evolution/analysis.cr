@@ -168,5 +168,20 @@ module Chronicle::Packs::Evolution
       end
       names.sort!
     end
+
+    # Extract governed capability declarations from the Crystal pack DSL.
+    def extract_crystal_capabilities(files : Hash(String, String)) : Array(String)
+      if violation = check_crystal_syntax(files).first?
+        raise ArgumentError.new(violation)
+      end
+      capabilities = [] of String
+      files.each do |path, source|
+        next unless path.ends_with?(".cr")
+        source.scan(/CapabilityDecl\.new\(.*?provider:\s*"([^"]+)".*?capability:\s*"([^"]+)"/m) do |match|
+          capabilities << "#{match[1]}.#{match[2]}"
+        end
+      end
+      capabilities.sort!
+    end
   end
 end

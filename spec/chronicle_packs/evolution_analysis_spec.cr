@@ -117,4 +117,16 @@ describe Chronicle::Packs::Evolution::Analysis do
 
     Chronicle::Packs::Evolution::Analysis.extract_crystal_tools(files).should eq(["summarize_note"])
   end
+
+  it "extracts declared Crystal capability pairs" do
+    files = {"pack.cr" => <<-'CRYSTAL'}
+      Chronicle::Packs::CapabilityDecl.new(
+        provider: "notes",
+        capability: "summarize",
+        risk_class: "low",
+      )
+    CRYSTAL
+
+    Chronicle::Packs::Evolution::Analysis.extract_crystal_capabilities(files).should eq(["notes.summarize"])
+  end
 end
