@@ -9,20 +9,27 @@ module Chronicle::Packs::ToolGateway
   # registrations claiming a disabled pack's surface.
 
   class_property enforcement_graph : Chronicle::GraphProjection? = nil
+  class_property enforcement_store : Chronicle::EventStore? = nil
 
-  def self.arm_registration_enforcement(graph : Chronicle::GraphProjection) : Nil
+  # Runtime pack lifecycle events are durable events owned by Runtime#store.
+  # GraphProjection#events contains only events emitted through the projection,
+  # so callers that arm after Runtime#load_pack must provide that store.
+  def self.arm_registration_enforcement(graph : Chronicle::GraphProjection, store : Chronicle::EventStore? = nil) : Nil
     self.enforcement_graph = graph
+    self.enforcement_store = store
   end
 
   def self.disarm_registration_enforcement : Nil
     self.enforcement_graph = nil
+    self.enforcement_store = nil
   end
 
   # {pack_name: {"disabled": Bool, "capabilities": {pair => {risk, action}}}}
   # derived from pack.loaded / pack.disabled events, latest event wins.
   def self._pack_states(graph : Chronicle::GraphProjection) : Hash(String, {Bool, Hash({String, String}, {String, String})})
+    events = enforcement_store.try(&.iter_events) || graph.events
     states = {} of String => {Bool, Hash({String, String}, {String, String})}
-    graph.events.each do |event|
+    events.each do |event|
       if event.type == "pack.loaded"
         payload = JSON.parse(event.payload).as_h
         name = payload["name"]?.try(&.as_s?) || ""

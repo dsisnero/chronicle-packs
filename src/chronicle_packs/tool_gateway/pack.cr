@@ -29,5 +29,21 @@ module Chronicle::Packs::ToolGateway
     version: "0.1.0",
     description: "Normalizes, records, policy-checks, and executes external capability calls; maps results back to Core sources.",
     settings_schema: ToolGatewaySettings,
+    capabilities: [
+      Chronicle::Packs::CapabilityDecl.new(
+        provider: "catalog",
+        capability: "search",
+        risk_class: "low",
+        credential_ref: "",
+        action_class: "R0",
+      ),
+      Chronicle::Packs::CapabilityDecl.new(
+        provider: "web",
+        capability: "fetch_url",
+        risk_class: "low",
+        credential_ref: "",
+        action_class: "R0",
+      ),
+    ],
   )
 end

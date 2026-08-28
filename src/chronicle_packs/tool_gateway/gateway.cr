@@ -130,7 +130,7 @@ module Chronicle::Packs::ToolGateway
     result = CapabilityResult.new(
       call_id, provider_name, capability_name,
       output_data: stored_output, error: result_data["error"]?.try(&.as_s?),
-      success: result_data["success"]?.try(&.as_bool?) || true,
+      success: result_data["success"]?.try(&.as_bool?) != false,
       executed_at: result_data["executed_at"]?.try(&.as_s?),
       sanitized: was_sanitized, untrusted: true, injection_flags: injection_flags,
       frame_id: frame_id,

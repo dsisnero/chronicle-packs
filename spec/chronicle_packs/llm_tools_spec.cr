@@ -90,9 +90,83 @@ describe "llm tool proxies (Crig tool transport)" do
       call_data["proposed_by"].as_s.should eq("assistant")
       call_data["metadata"].as_h["tool_call_id"].as_s.should eq("tc_1")
       call_data["metadata"].as_h["run_id"].as_s.should eq("run_9")
-      graph.objects(type: "capability_approval").size.should eq(1)
+      call_data["metadata"].as_h["initiated_by"].as_s.should eq("llm_tool_loop")
+
+      approvals = graph.objects(type: "capability_approval")
+      approvals.size.should eq(1)
+      approval_data = JSON.parse(approvals.first.data)
+      approval_data["policy_decision"].as_s.should eq("auto_approved")
+      approval_data["metadata"].as_h["executed"].as_s.should eq("inline")
+
       graph.objects(type: "capability_result").size.should eq(1)
       graph.relations.any? { |rel| rel.type == "produces_result" }.should be_true
+
+      # Settle: call_recorder / result_sourcer react; call_executor must NOT
+      # re-execute (the approval was recorded after the call was already done).
+      _rt.run_until_idle
+      graph.objects(type: "capability_result").size.should eq(1)
+
+      # The result was bridged to Core (result_sourcer) as a tool_result source.
+      sources = graph.objects(type: "source").select do |obj|
+        JSON.parse(obj.data)["kind"]?.try(&.as_s?) == "tool_result"
+      end
+      sources.size.should eq(1)
+    end
+  end
+
+  it "holds a non-auto-approvable call, then executes on explicit approval" do
+    with_gateway_runtime do |_store, graph, _rt|
+      LlmToolsSupport.reset_seams
+      Chronicle::Packs::ToolGateway.register_local_capability(
+        "mail", "send", ->(input : Hash(String, JSON::Any)) { {"sent" => JSON::Any.new("the memo")} },
+        description: "Send mail.", risk_class: "high", action_class: "R2",
+      )
+      spec = Chronicle::Packs::ToolGateway.get_capability_spec("mail.send").not_nil!
+      tool = Chronicle::Packs::ToolGateway.as_llm_tool(graph, spec, settings: Chronicle::Packs::ToolGateway::ToolGatewaySettings.new)
+
+      result = tool.execute(%({"text": "the memo"}), Crig::Tool::ToolContext.new)
+      result.success?.should be_true
+      result.output.render.should contain("held_for_approval")
+      held = graph.objects(type: "capability_call").first
+      call_id = JSON.parse(held.data)["id"]?.try(&.as_s?) || held.id
+      JSON.parse(held.data)["status"].as_s.should eq("policy_checking")
+      graph.objects(type: "capability_result").should be_empty
+      pending = Chronicle::Packs::ToolGateway.pending_approvals_fn(graph).map { |p| p["call_id"]?.try(&.as_s?) }
+      pending.should contain(call_id)
+
+      verdict = Chronicle::Packs::ToolGateway.approve_capability_fn(graph, call_id, "user:owner")
+      verdict["ok"].as_bool.should be_true
+      _rt.run_until_idle
+
+      JSON.parse(graph.get_object(call_id).not_nil!.data)["status"].as_s.should eq("done")
+      graph.objects(type: "capability_result").size.should eq(1)
+    end
+  end
+
+  it "holds a call and never executes it on denial" do
+    with_gateway_runtime do |_store, graph, _rt|
+      LlmToolsSupport.reset_seams
+      Chronicle::Packs::ToolGateway.register_local_capability(
+        "mail", "send", ->(input : Hash(String, JSON::Any)) { {"sent" => JSON::Any.new("the memo")} },
+        description: "Send mail.", risk_class: "high", action_class: "R2",
+      )
+      spec = Chronicle::Packs::ToolGateway.get_capability_spec("mail.send").not_nil!
+      tool = Chronicle::Packs::ToolGateway.as_llm_tool(graph, spec, settings: Chronicle::Packs::ToolGateway::ToolGatewaySettings.new)
+
+      result = tool.execute(%({"text": "the memo"}), Crig::Tool::ToolContext.new)
+      result.success?.should be_true
+      held = graph.objects(type: "capability_call").first
+      call_id = JSON.parse(held.data)["id"]?.try(&.as_s?) || held.id
+
+      verdict = Chronicle::Packs::ToolGateway.deny_capability_fn(graph, call_id, "user:owner", reason: "Not now.")
+      verdict["ok"].as_bool.should be_true
+      _rt.run_until_idle
+
+      JSON.parse(graph.get_object(call_id).not_nil!.data)["status"].as_s.should eq("rejected")
+      graph.objects(type: "capability_result").should be_empty
+      denials = graph.objects(type: "capability_denial")
+      denials.size.should eq(1)
+      JSON.parse(denials.first.data)["reason"].as_s.should eq("Not now.")
     end
   end
 
