@@ -99,13 +99,17 @@ describe Chronicle::Packs::Attention do
     end
 
     it "fails closed on a nonresponse_window without an opportunity" do
-      with_attention_runtime do |_store, graph, rt|
-        emit(graph, "attention.signal_observed", %({"observations":[
-          {"observation_id":"obs_2","subject_ref":"email/msg/9","signal_type":"nonresponse_window"}
-        ]}), 2_u64)
+      with_attention_runtime do |_store, graph, _rt|
         expect_raises(Chronicle::Packs::PackError, /nonresponse_window requires opportunity_id/) do
-          rt.run_until_idle
+          Chronicle::Packs::Attention.record_interaction_batch_fn(
+            graph, batch_id: "batch_bad", session_id: "session_bad", batch_sequence: 0, client_id: "fixture",
+            observations: [
+              {"subject_ref" => JSON::Any.new("email_1"), "signal_type" => JSON::Any.new("opened")},
+              {"subject_ref" => JSON::Any.new("email_2"), "signal_type" => JSON::Any.new("nonresponse_window")},
+            ]
+          )
         end
+        graph.objects(type: "attention_observation").size.should eq(0)
       end
     end
   end

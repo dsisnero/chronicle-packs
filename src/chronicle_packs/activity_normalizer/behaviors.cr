@@ -131,7 +131,7 @@ module Chronicle::Packs::ActivityNormalizer
         json.object do
           json.field "text", draft.text
           json.field "confidence", draft.confidence
-          json.field "source_ids", [evidence.acquired_item_id]
+          json.field "source_ids", [evidence_id]
           json.field "observation_ids", [] of String
           json.field "category", _draft_field(draft, "category", "context")
           json.field "subject_ref", JSON::Any.new(nil)
