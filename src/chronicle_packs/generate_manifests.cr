@@ -1,0 +1,186 @@
+require "json"
+
+module Chronicle::Packs
+  # Generate manifest.toml for a Crystal pack (upstream
+  # scripts/generate_manifests.py).
+  #
+  # Identity, version, description, and the loader-verified surface come from
+  # the live `Chronicle::Packs::Pack` object; capabilities and consumes come
+  # from the same extraction seam CI validates against (ManifestTools / the
+  # Pack's declared capabilities); the content hash comes from chronicle's
+  # reference implementation (`compute_content_hash`) over the pack's Crystal
+  # source directory.
+  #
+  # Rerunnable and idempotent: edit a pack, rerun, CI fails on a stale hash.
+  module ManifestGenerator
+    CREATED_AT = "2026-07-08T00:00:00Z"
+    AUTHOR     = "Yohei Nakajima"
+    SOURCE_URL = "https://github.com/yoheinakajima/activegraph-packs"
+    # The v1.9 contract floor (canonical action_class authority).
+    RUNTIME_RANGE = ">=1.9,<2.0"
+    PYTHON_RANGE  = ">=3.11"
+    DEP_RANGE     = ">=0.1"
+
+    # Registered pack name → relative directory under packs/. The mapping is
+    # explicit so a nested importer's entry-point name never leaks into its
+    # module or artifact path.
+    PACK_PATHS = {
+      "core"                              => "core",
+      "activity_normalizer"               => "activity_normalizer",
+      "usage"                             => "usage",
+      "skills"                            => "skills",
+      "eval_outcome"                      => "eval_outcome",
+      "importer_local_files"              => "importers/local_files",
+      "importer_chatgpt_export"           => "importers/chatgpt_export",
+      "importer_claude_export"            => "importers/claude_export",
+      "importer_assistant_self_summary"   => "importers/assistant_self_summary",
+      "importer_assistant_local_sessions" => "importers/assistant_local_sessions",
+      "importer_public_presence"          => "importers/public_presence",
+      "semantic_extraction"               => "semantic_extraction",
+      "attention"                         => "attention",
+      "connector_control"                 => "connector_control",
+      "tool_gateway"                      => "tool_gateway",
+      "secrets"                           => "secrets",
+      "memory_gateway"                    => "memory_gateway",
+      "identity_auth"                     => "identity_auth",
+      "agent_profile"                     => "agent_profile",
+      "subject_profile"                   => "subject_profile",
+      "entity"                            => "entity",
+      "communication"                     => "communication",
+      "chat"                              => "chat",
+      "email"                             => "email",
+      "schedule"                          => "schedule",
+      "telegram"                          => "telegram",
+      "whatsapp"                          => "whatsapp",
+      "mcp"                               => "mcp",
+      "composio"                          => "composio",
+      "gmail"                             => "gmail",
+      "research"                          => "research",
+      "codebase"                          => "codebase",
+      "team_ops"                          => "team_ops",
+      "meeting"                           => "meeting",
+      "bridges"                           => "bridges",
+      "evolution"                         => "evolution",
+    }
+
+    ALL_PACKS = PACK_PATHS.keys.sort!
+
+    # CapabilityDecl-shaped dicts for every capability a live Pack declares.
+    def self.extract_capability_registrations(pack : Chronicle::Packs::Pack) : Array(Hash(String, String))
+      pack.capabilities.map do |decl|
+        {
+          "provider"       => decl.provider,
+          "capability"     => decl.capability,
+          "risk_class"     => decl.risk_class,
+          "credential_ref" => decl.credential_ref,
+          "action_class"   => decl.action_class,
+        }
+      end.sort_by! { |decl_row| {decl_row["provider"], decl_row["capability"]} }
+    end
+
+    # Capability keys this pack's declared capabilities reference.
+    def self.extract_consumed_capabilities(pack : Chronicle::Packs::Pack) : Array(String)
+      pack.capabilities.map { |decl| "#{decl.provider}.#{decl.capability}" }.sort!
+    end
+
+    # Generate one manifest selected by its registered pack name. Writes
+    # `<pack_dir>/manifest.toml`; returns the path relative to repo_root.
+    def self.generate(pack_name : String, *, repo_root : Path, pack_dir : Path) : String
+      relative_dir = PACK_PATHS[pack_name]?
+      if relative_dir.nil?
+        choices = ALL_PACKS.join(", ")
+        raise PackError.new("unknown pack #{pack_name.inspect}; expected one of: #{choices}")
+      end
+
+      pack = registry_pack(pack_name)
+      requires, integrates = ManifestTools.parse_dep_comments(init_text(pack_dir))
+
+      content_hash = Chronicle::Packs.compute_content_hash(pack_dir.to_s)
+
+      lines = [] of String
+      lines << "# Generated by scripts/generate_manifests.py; rerun after editing the"
+      lines << "# pack (CI verifies the content hash and the declared surface)."
+      lines << ""
+      lines << "[pack]"
+      lines << "name = #{ManifestTools.toml_str(pack.name)}"
+      lines << "version = #{ManifestTools.toml_str(pack.version)}"
+      lines << "description = #{ManifestTools.toml_str(pack.description.split.join(' '))}"
+      lines << "license = \"Apache-2.0\""
+      lines << ""
+      lines << "[pack.provenance]"
+      lines << "authors = [#{ManifestTools.toml_str(AUTHOR)}]"
+      lines << "authored_by = \"human\""
+      lines << "generator = \"\""
+      lines << "source_url = #{ManifestTools.toml_str(SOURCE_URL)}"
+      lines << "created_at = #{ManifestTools.toml_str(CREATED_AT)}"
+      lines << ""
+      lines << "[pack.integrity]"
+      lines << "content_hash = #{ManifestTools.toml_str(content_hash)}"
+      lines << ""
+      lines << "[dependencies]"
+      lines << "activegraph = #{ManifestTools.toml_str(RUNTIME_RANGE)}"
+      lines << "python = #{ManifestTools.toml_str(PYTHON_RANGE)}"
+      lines << "python-deps = []"
+      unless requires.empty?
+        lines << ""
+        lines << "[dependencies.packs]"
+        requires.each { |name| lines << "#{name} = #{ManifestTools.toml_str(DEP_RANGE)}" }
+      end
+      unless integrates.empty?
+        lines << ""
+        lines << "[dependencies.optional-packs]"
+        integrates.each { |name| lines << "#{name} = #{ManifestTools.toml_str(DEP_RANGE)}" }
+      end
+      lines << ""
+      lines << "[surface]"
+      lines << "object_types = #{ManifestTools.toml_list(pack.object_types.map(&.name))}"
+      lines << "relation_types = #{ManifestTools.toml_list(pack.relation_types.map(&.name))}"
+      lines << "behaviors = #{ManifestTools.toml_list(pack.behaviors.map(&.name))}"
+      lines << "tools = #{ManifestTools.toml_list(pack.tools.map(&.name))}"
+      lines << "settings_schema = #{ManifestTools.toml_str(pack.settings_schema == "EmptySettings" ? "" : pack.settings_schema)}"
+      consumes = extract_consumed_capabilities(pack)
+      unless consumes.empty?
+        lines << "consumes = #{ManifestTools.toml_list(consumes)}"
+      end
+      extract_capability_registrations(pack).each do |decl|
+        lines << ""
+        lines << "[[surface.capabilities]]"
+        lines << "provider = #{ManifestTools.toml_str(decl["provider"])}"
+        lines << "capability = #{ManifestTools.toml_str(decl["capability"])}"
+        lines << "risk_class = #{ManifestTools.toml_str(decl["risk_class"])}"
+        lines << "credential_ref = #{ManifestTools.toml_str(decl["credential_ref"])}"
+        # The canonical dimension is written only when declared, so a pack
+        # without action classes keeps its exact pre-v1.9 manifest shape.
+        unless decl["action_class"].empty?
+          lines << "action_class = #{ManifestTools.toml_str(decl["action_class"])}"
+        end
+      end
+      lines << ""
+      lines << "[fixtures]"
+      lines << "entrypoint = \"fixtures/run_fixtures.py\""
+      lines << "deterministic = true"
+      lines << ""
+
+      manifest_path = pack_dir / "manifest.toml"
+      File.write(manifest_path, lines.join("\n"))
+      # The content hash excludes manifest.toml, so writing the manifest does
+      # not invalidate the hash just written into it.
+      (Path.new("packs") / relative_dir / "manifest.toml").to_s
+    end
+
+    # The live Crystal Pack for a registered name, looked up from the
+    # chronicle-pack registry by the pack's short name.
+    private def self.registry_pack(pack_name : String) : Chronicle::Packs::Pack
+      Registry.discover.each do |discovered|
+        return discovered.pack if discovered.name == pack_name
+      end
+      raise PackError.new("pack #{pack_name.inspect} is not registered")
+    end
+
+    # The pack's __init__ text — the Crystal analog of the Python `__init__.py`
+    # the upstream reads for the `# requires=`/`integrates_with=` convention.
+    private def self.init_text(pack_dir : Path) : String
+      File.read((pack_dir / "pack.cr").to_s)
+    end
+  end
+end
