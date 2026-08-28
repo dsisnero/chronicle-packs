@@ -38,7 +38,7 @@ module Chronicle::Packs::Evolution
     # top-level `main(rt)` function. Nested definitions are not entrypoints.
     def check_fixture_entrypoint(files : Hash(String, String)) : Array(String)
       source = files[FIXTURE_FILE]? || ""
-      return [] of String if source.each_line.any? { |line| line.matches?(/^def main\(rt\):/) }
+      return [] of String if source.each_line.any?(&.matches?(/^def main\(rt\):/))
 
       ["#{FIXTURE_FILE}: no module-level `def main(rt)` (the trial child's scenario entrypoint)"]
     end
@@ -182,6 +182,23 @@ module Chronicle::Packs::Evolution
         end
       end
       capabilities.sort!
+    end
+
+    # Gate 3: the manifest and parser-validated Crystal surface must agree
+    # exactly. Both omissions and undeclared executable surface are refusals.
+    def check_declared_vs_crystal_surface(declared : Hash(String, Array(String)), actual : Hash(String, Array(String))) : Array(String)
+      violations = [] of String
+      declared.each do |kind, names|
+        expected = names.to_set
+        found = (actual[kind]? || [] of String).to_set
+        (expected - found).to_a.sort!.each do |name|
+          violations << "#{kind}: declared '#{name}' not found in source"
+        end
+        (found - expected).to_a.sort!.each do |name|
+          violations << "#{kind}: source defines '#{name}' undeclared"
+        end
+      end
+      violations
     end
   end
 end

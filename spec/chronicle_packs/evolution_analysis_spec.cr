@@ -129,4 +129,26 @@ describe Chronicle::Packs::Evolution::Analysis do
 
     Chronicle::Packs::Evolution::Analysis.extract_crystal_capabilities(files).should eq(["notes.summarize"])
   end
+
+  it "compares declared and extracted Crystal surfaces in both directions" do
+    declared = {
+      "behaviors"      => ["declared_only"],
+      "tools"          => [] of String,
+      "object_types"   => [] of String,
+      "relation_types" => [] of String,
+      "capabilities"   => [] of String,
+    }
+    actual = {
+      "behaviors"      => ["source_only"],
+      "tools"          => [] of String,
+      "object_types"   => [] of String,
+      "relation_types" => [] of String,
+      "capabilities"   => [] of String,
+    }
+
+    Chronicle::Packs::Evolution::Analysis.check_declared_vs_crystal_surface(declared, actual).should eq([
+      "behaviors: declared 'declared_only' not found in source",
+      "behaviors: source defines 'source_only' undeclared",
+    ])
+  end
 end
