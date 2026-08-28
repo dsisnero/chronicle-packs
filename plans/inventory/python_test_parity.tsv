@@ -23,23 +23,23 @@ tests/test_action_class_policy.py::test::test_register_rejects_invalid_action_cl
 tests/test_action_class_policy.py::test::test_registration_refuses_action_class_drift	missing	-	baseline
 tests/test_action_class_policy.py::test::test_stricter_capability_ceiling_lowers_never_raises	missing	-	baseline
 tests/test_action_class_policy.py::test::test_stricter_per_call_manual_requirement_beats_both_grant_dimensions	missing	-	baseline
-tests/test_activity_normalizer.py::class::_Pipeline	missing	-	baseline
-tests/test_activity_normalizer.py::function::_candidates	missing	-	baseline
-tests/test_activity_normalizer.py::function::_downstream_identity_snapshot	missing	-	baseline
-tests/test_activity_normalizer.py::function::_evidence	missing	-	baseline
-tests/test_activity_normalizer.py::function::_objects	missing	-	baseline
-tests/test_activity_normalizer.py::function::_write_source	missing	-	baseline
-tests/test_activity_normalizer.py::function::pipeline	missing	-	baseline
-tests/test_activity_normalizer.py::method::_Pipeline.graph	missing	-	baseline
-tests/test_activity_normalizer.py::method::_Pipeline.import_snapshot	missing	-	baseline
-tests/test_activity_normalizer.py::test::test_edited_item_creates_linked_superseding_revision	missing	-	baseline
-tests/test_activity_normalizer.py::test::test_every_candidate_has_full_evidence_and_version_provenance	missing	-	baseline
-tests/test_activity_normalizer.py::test::test_lost_replay_artifact_marks_evidence_incomplete	missing	-	baseline
-tests/test_activity_normalizer.py::test::test_malformed_input_records_failure_and_no_partial_evidence	missing	-	baseline
-tests/test_activity_normalizer.py::test::test_overlapping_snapshot_reconciles_by_normalizer_identity	missing	-	baseline
-tests/test_activity_normalizer.py::test::test_reextract_after_deleting_source_uses_recorded_artifact	missing	-	baseline
-tests/test_activity_normalizer.py::test::test_reference_only_records_incomplete_and_replay_fails_loudly	missing	-	baseline
-tests/test_activity_normalizer.py::test::test_repeat_import_has_no_new_evidence_or_downstream_duplicates	missing	-	baseline
+tests/test_activity_normalizer.py::class::_Pipeline	ported	spec/chronicle_packs/activity_normalizer_contract_spec.cr::pipeline	-
+tests/test_activity_normalizer.py::function::_candidates	ported	spec/chronicle_packs/activity_normalizer_contract_spec.cr::candidates	-
+tests/test_activity_normalizer.py::function::_downstream_identity_snapshot	ported	spec/chronicle_packs/activity_normalizer_contract_spec.cr::downstream_identity_snapshot	-
+tests/test_activity_normalizer.py::function::_evidence	ported	spec/chronicle_packs/activity_normalizer_contract_spec.cr	graph.objects(type: activity_evidence) inlined
+tests/test_activity_normalizer.py::function::_objects	ported	spec/chronicle_packs/activity_normalizer_contract_spec.cr	graph.objects inlined
+tests/test_activity_normalizer.py::function::_write_source	ported	spec/chronicle_packs/activity_normalizer_contract_spec.cr::write_source	-
+tests/test_activity_normalizer.py::function::pipeline	ported	spec/chronicle_packs/activity_normalizer_contract_spec.cr::pipeline	-
+tests/test_activity_normalizer.py::method::_Pipeline.graph	ported	spec/chronicle_packs/activity_normalizer_contract_spec.cr::pipeline	-
+tests/test_activity_normalizer.py::method::_Pipeline.import_snapshot	ported	spec/chronicle_packs/activity_normalizer_contract_spec.cr::import	-
+tests/test_activity_normalizer.py::test::test_edited_item_creates_linked_superseding_revision	ported	spec/chronicle_packs/activity_normalizer_contract_spec.cr	-
+tests/test_activity_normalizer.py::test::test_every_candidate_has_full_evidence_and_version_provenance	ported	spec/chronicle_packs/activity_normalizer_contract_spec.cr	memory source_ids = evidence id (port fix)
+tests/test_activity_normalizer.py::test::test_lost_replay_artifact_marks_evidence_incomplete	ported	spec/chronicle_packs/activity_normalizer_contract_spec.cr	-
+tests/test_activity_normalizer.py::test::test_malformed_input_records_failure_and_no_partial_evidence	ported	spec/chronicle_packs/local_files_spec.cr	malformed JSON failure + no partial evidence
+tests/test_activity_normalizer.py::test::test_overlapping_snapshot_reconciles_by_normalizer_identity	ported	spec/chronicle_packs/activity_normalizer_contract_spec.cr	-
+tests/test_activity_normalizer.py::test::test_reextract_after_deleting_source_uses_recorded_artifact	ported	spec/chronicle_packs/activity_normalizer_contract_spec.cr	replay.verified path
+tests/test_activity_normalizer.py::test::test_reference_only_records_incomplete_and_replay_fails_loudly	ported	spec/chronicle_packs/activity_normalizer_contract_spec.cr	-
+tests/test_activity_normalizer.py::test::test_repeat_import_has_no_new_evidence_or_downstream_duplicates	ported	spec/chronicle_packs/activity_normalizer_contract_spec.cr	-
 tests/test_agentic_chat.py::class::LookupInput	missing	-	baseline
 tests/test_agentic_chat.py::class::ScriptedToolProvider	missing	-	baseline
 tests/test_agentic_chat.py::function::_isolate	missing	-	baseline
@@ -50,13 +50,13 @@ tests/test_agentic_chat.py::method::ScriptedToolProvider.estimate_cost	missing	-
 tests/test_agentic_chat.py::method::ScriptedToolProvider.recognizes_model	missing	-	baseline
 tests/test_agentic_chat.py::test::test_agentic_chat_grounds_reply_in_gateway_tool_result	missing	-	baseline
 tests/test_agentic_chat.py::test::test_empty_allow_list_is_conversational_only	missing	-	baseline
-tests/test_approval_auth.py::const::TOKEN	missing	-	baseline
-tests/test_approval_auth.py::function::_denials	missing	-	baseline
-tests/test_approval_auth.py::test::test_correct_token_passes	missing	-	baseline
-tests/test_approval_auth.py::test::test_missing_token_refused_and_audited	missing	-	baseline
-tests/test_approval_auth.py::test::test_no_token_with_evolution_on_refuses	missing	-	baseline
-tests/test_approval_auth.py::test::test_no_token_without_evolution_stays_open	missing	-	baseline
-tests/test_approval_auth.py::test::test_wrong_token_refused_and_audited	missing	-	baseline
+tests/test_approval_auth.py::const::TOKEN	ported	spec/chronicle_packs/demo_server_spec.cr::check_approval_auth	-
+tests/test_approval_auth.py::function::_denials	ported	spec/chronicle_packs/demo_server_spec.cr::check_approval_auth	audit read inlined in spec
+tests/test_approval_auth.py::test::test_correct_token_passes	ported	spec/chronicle_packs/demo_server_spec.cr::check_approval_auth	matching bearer token passes, no denial
+tests/test_approval_auth.py::test::test_missing_token_refused_and_audited	ported	spec/chronicle_packs/demo_server_spec.cr::check_approval_auth	missing token refused + denial audited
+tests/test_approval_auth.py::test::test_no_token_with_evolution_on_refuses	ported	spec/chronicle_packs/demo_server_spec.cr::check_approval_auth	evolution-on refuses without token
+tests/test_approval_auth.py::test::test_no_token_without_evolution_stays_open	ported	spec/chronicle_packs/demo_server_spec.cr::check_approval_auth	no token + no evolution stays open
+tests/test_approval_auth.py::test::test_wrong_token_refused_and_audited	ported	spec/chronicle_packs/demo_server_spec.cr::check_approval_auth	wrong token refused + denial audited
 tests/test_assistant_local_sessions_importer.py::function::_build_claude_root	missing	-	baseline
 tests/test_assistant_local_sessions_importer.py::function::_claude_line	missing	-	baseline
 tests/test_assistant_local_sessions_importer.py::function::_claude_session	missing	-	baseline
@@ -85,27 +85,27 @@ tests/test_assistant_self_summary_importer.py::test::test_invalid_transport_fail
 tests/test_assistant_self_summary_importer.py::test::test_one_set_of_annotations_across_transports	missing	-	baseline
 tests/test_assistant_self_summary_importer.py::test::test_same_summary_via_manual_and_mcp_is_one_evidence_identity	missing	-	baseline
 tests/test_assistant_self_summary_importer.py::test::test_transport_is_recorded_as_connection_path	missing	-	baseline
-tests/test_attention_vectors.py::function::_observe	missing	-	baseline
-tests/test_attention_vectors.py::function::_runtime	missing	-	baseline
-tests/test_attention_vectors.py::test::test_explicit_signal_requires_explicit_owner_act_and_absence_requires_opportunity	missing	-	baseline
-tests/test_attention_vectors.py::test::test_importance_is_context_scoped_explainable_and_not_llm_asserted	missing	-	baseline
-tests/test_attention_vectors.py::test::test_outbound_conversation_reply_learns_thread_and_cross_thread_person_importance	missing	-	baseline
-tests/test_attention_vectors.py::test::test_ranking_reserves_deterministic_exploration_and_exposes_reason	missing	-	baseline
-tests/test_attention_vectors.py::test::test_source_self_description_without_outcome_never_creates_trust	missing	-	baseline
-tests/test_attention_vectors.py::test::test_source_trust_is_domain_scoped_and_only_canonical_outcomes_count	missing	-	baseline
-tests/test_capability_catalog.py::class::EchoInput	missing	-	baseline
-tests/test_capability_catalog.py::function::_call	missing	-	baseline
-tests/test_capability_catalog.py::function::_ctx	missing	-	baseline
-tests/test_capability_catalog.py::function::inbound	missing	-	baseline
-tests/test_capability_catalog.py::function::populated_registry	missing	-	baseline
-tests/test_capability_catalog.py::test::test_allow_list_annotation	missing	-	baseline
-tests/test_capability_catalog.py::test::test_catalog_filters	missing	-	baseline
-tests/test_capability_catalog.py::test::test_catalog_search_runs_through_gateway	missing	-	baseline
-tests/test_capability_catalog.py::test::test_catalog_shape_and_origin	missing	-	baseline
-tests/test_capability_catalog.py::test::test_inbound_catalog_is_role_scoped	missing	-	baseline
-tests/test_capability_catalog.py::test::test_inbound_catalog_never_reveals_unexposed_registry	missing	-	baseline
-tests/test_capability_catalog.py::test::test_inbound_catalog_respects_its_own_exposure	missing	-	baseline
-tests/test_capability_catalog.py::test::test_never_llm_callable_is_flagged_not_hidden	missing	-	baseline
+tests/test_attention_vectors.py::function::_observe	ported	spec/chronicle_packs/attention_vectors_spec.cr::observe	-
+tests/test_attention_vectors.py::function::_runtime	ported	spec/chronicle_packs/attention_vectors_spec.cr::with_attention_runtime	-
+tests/test_attention_vectors.py::test::test_explicit_signal_requires_explicit_owner_act_and_absence_requires_opportunity	ported	spec/chronicle_packs/attention_vectors_spec.cr	-
+tests/test_attention_vectors.py::test::test_importance_is_context_scoped_explainable_and_not_llm_asserted	ported	spec/chronicle_packs/attention_vectors_spec.cr	-
+tests/test_attention_vectors.py::test::test_outbound_conversation_reply_learns_thread_and_cross_thread_person_importance	ported	spec/chronicle_packs/attention_vectors_spec.cr	-
+tests/test_attention_vectors.py::test::test_ranking_reserves_deterministic_exploration_and_exposes_reason	ported	spec/chronicle_packs/attention_vectors_spec.cr	-
+tests/test_attention_vectors.py::test::test_source_self_description_without_outcome_never_creates_trust	ported	spec/chronicle_packs/attention_vectors_spec.cr	-
+tests/test_attention_vectors.py::test::test_source_trust_is_domain_scoped_and_only_canonical_outcomes_count	ported	spec/chronicle_packs/attention_vectors_spec.cr	-
+tests/test_capability_catalog.py::class::EchoInput	ported	spec/chronicle_packs/tool_gateway_catalog_spec.cr	input hash shape inlined
+tests/test_capability_catalog.py::function::_call	ported	spec/chronicle_packs/mcp_spec.cr	rpc/tool_call helper inlined
+tests/test_capability_catalog.py::function::_ctx	ported	spec/chronicle_packs/tool_gateway_catalog_spec.cr	GatewayToolMetadata ToolContext inlined
+tests/test_capability_catalog.py::function::inbound	ported	spec/chronicle_packs/mcp_spec.cr	MCPGateway + ensure_default_exposures
+tests/test_capability_catalog.py::function::populated_registry	ported	spec/chronicle_packs/tool_gateway_catalog_spec.cr	native + mcp-derived + never-callable registry
+tests/test_capability_catalog.py::test::test_allow_list_annotation	ported	spec/chronicle_packs/tool_gateway_catalog_spec.cr	null without a list; true/false with one
+tests/test_capability_catalog.py::test::test_catalog_filters	ported	spec/chronicle_packs/tool_gateway_catalog_spec.cr	origin/risk/query filters
+tests/test_capability_catalog.py::test::test_catalog_search_runs_through_gateway	ported	spec/chronicle_packs/tool_gateway_catalog_spec.cr	governed catalog.search records capability_call
+tests/test_capability_catalog.py::test::test_catalog_shape_and_origin	ported	spec/chronicle_packs/tool_gateway_catalog_spec.cr	origin/risk/ordering
+tests/test_capability_catalog.py::test::test_inbound_catalog_is_role_scoped	ported	spec/chronicle_packs/mcp_spec.cr	tools/list scoping + exposure edits (held_on_call detail via exposure)
+tests/test_capability_catalog.py::test::test_inbound_catalog_never_reveals_unexposed_registry	ported	spec/chronicle_packs/mcp_spec.cr	unexposed registry never leaks
+tests/test_capability_catalog.py::test::test_inbound_catalog_respects_its_own_exposure	ported	spec/chronicle_packs/mcp_spec.cr	disabled exposure -> -32003
+tests/test_capability_catalog.py::test::test_never_llm_callable_is_flagged_not_hidden	ported	spec/chronicle_packs/tool_gateway_catalog_spec.cr	never_llm_callable flagged
 tests/test_chatgpt_export_importer.py::function::_message	missing	-	baseline
 tests/test_chatgpt_export_importer.py::function::_write_branching_export	missing	-	baseline
 tests/test_chatgpt_export_importer.py::function::metadata	missing	-	baseline
@@ -180,18 +180,18 @@ tests/test_doctor.py::test::test_store_path_fails_on_directory_target	missing	-	
 tests/test_doctor.py::test::test_store_path_fails_on_readonly_existing_file	missing	-	baseline
 tests/test_doctor.py::test::test_store_path_fails_on_unwritable_parent	missing	-	baseline
 tests/test_doctor.py::test::test_store_path_skips_without_store	missing	-	baseline
-tests/test_eval_outcome.py::function::_artifact_and_evaluation	missing	-	baseline
-tests/test_eval_outcome.py::function::_memory_runtime	missing	-	baseline
-tests/test_eval_outcome.py::function::_runtime	missing	-	baseline
-tests/test_eval_outcome.py::function::_seed_memories	missing	-	baseline
-tests/test_eval_outcome.py::test::test_correction_uses_supersession_and_never_duplicates_old_terminal	missing	-	baseline
-tests/test_eval_outcome.py::test::test_every_outcome_has_subject_trace_and_maintenance_composite_key	missing	-	baseline
-tests/test_eval_outcome.py::test::test_gateway_result_acceptance_evaluation_captures_helped	missing	-	baseline
-tests/test_eval_outcome.py::test::test_memory_demotes_in_retrieval_and_later_helped_restores_it	missing	-	baseline
-tests/test_eval_outcome.py::test::test_negative_valence_is_queryable_reliability_not_player_state	missing	-	baseline
-tests/test_eval_outcome.py::test::test_skill_eligibility_uses_the_same_reversible_reliability_handoff	missing	-	baseline
-tests/test_eval_outcome.py::test::test_task_and_memory_contradiction_evaluations_capture_without_ui	missing	-	baseline
-tests/test_eval_outcome.py::test::test_terminal_outcomes_are_mutually_exclusive_per_evaluation	missing	-	baseline
+tests/test_eval_outcome.py::function::_artifact_and_evaluation	ported	spec/chronicle_packs/eval_outcome_contract_spec.cr::artifact_and_evaluation	-
+tests/test_eval_outcome.py::function::_memory_runtime	ported	spec/chronicle_packs/eval_outcome_contract_spec.cr::with_runtime	memory: true
+tests/test_eval_outcome.py::function::_runtime	ported	spec/chronicle_packs/eval_outcome_contract_spec.cr::with_runtime	-
+tests/test_eval_outcome.py::function::_seed_memories	ported	spec/chronicle_packs/eval_outcome_contract_spec.cr::seed_memories	-
+tests/test_eval_outcome.py::test::test_correction_uses_supersession_and_never_duplicates_old_terminal	ported	spec/chronicle_packs/eval_outcome_contract_spec.cr	-
+tests/test_eval_outcome.py::test::test_every_outcome_has_subject_trace_and_maintenance_composite_key	ported	spec/chronicle_packs/eval_outcome_spec.cr	contribution_key + evidence_revision_id validation
+tests/test_eval_outcome.py::test::test_gateway_result_acceptance_evaluation_captures_helped	ported	spec/chronicle_packs/eval_outcome_contract_spec.cr	-
+tests/test_eval_outcome.py::test::test_memory_demotes_in_retrieval_and_later_helped_restores_it	ported	spec/chronicle_packs/eval_outcome_contract_spec.cr	x0.1 demote + restore in retrieval
+tests/test_eval_outcome.py::test::test_negative_valence_is_queryable_reliability_not_player_state	ported	spec/chronicle_packs/eval_outcome_contract_spec.cr	-
+tests/test_eval_outcome.py::test::test_skill_eligibility_uses_the_same_reversible_reliability_handoff	ported	spec/chronicle_packs/skills_spec.cr	skill_reliability_eligibility demotes on harmful verdict
+tests/test_eval_outcome.py::test::test_task_and_memory_contradiction_evaluations_capture_without_ui	ported	spec/chronicle_packs/eval_outcome_contract_spec.cr	-
+tests/test_eval_outcome.py::test::test_terminal_outcomes_are_mutually_exclusive_per_evaluation	ported	spec/chronicle_packs/eval_outcome_contract_spec.cr	-
 tests/test_extraction_proceduralization.py::class::RequestReferenceProvider	missing	-	baseline
 tests/test_extraction_proceduralization.py::function::_accepted_reference	missing	-	baseline
 tests/test_extraction_proceduralization.py::function::_evidence	missing	-	baseline
@@ -221,50 +221,50 @@ tests/test_gmail_connector.py::test::test_local_draft_is_r1_and_send_is_never_au
 tests/test_gmail_connector.py::test::test_owner_correction_supersedes_an_integration_claim	missing	-	baseline
 tests/test_gmail_connector.py::test::test_rate_limit_retries_but_invalid_cursor_requires_reanchor	missing	-	baseline
 tests/test_gmail_connector.py::test::test_unexpected_shape_records_drift_and_forced_reexploration	missing	-	baseline
-tests/test_injection_posture.py::class::ApproveInput	missing	-	baseline
-tests/test_injection_posture.py::class::FetchInput	missing	-	baseline
-tests/test_injection_posture.py::const::BENIGN_PAYLOAD	missing	-	baseline
-tests/test_injection_posture.py::const::INJECTION_PAYLOAD	missing	-	baseline
-tests/test_injection_posture.py::function::_ctx	missing	-	baseline
-tests/test_injection_posture.py::function::rt_with_capability	missing	-	baseline
-tests/test_injection_posture.py::test::test_approval_capabilities_are_never_llm_callable	missing	-	baseline
-tests/test_injection_posture.py::test::test_benign_output_is_fenced_but_unflagged	missing	-	baseline
-tests/test_injection_posture.py::test::test_envelope_can_be_disabled_for_fixtures	missing	-	baseline
-tests/test_injection_posture.py::test::test_envelope_carries_flag_warning	missing	-	baseline
-tests/test_injection_posture.py::test::test_envelope_fences_content	missing	-	baseline
-tests/test_injection_posture.py::test::test_envelope_neutralizes_fence_spoofing	missing	-	baseline
-tests/test_injection_posture.py::test::test_flagged_output_creates_audit_objects	missing	-	baseline
-tests/test_injection_posture.py::test::test_scanner_clean_on_benign_content	missing	-	baseline
-tests/test_injection_posture.py::test::test_scanner_individual_patterns	missing	-	baseline
-tests/test_injection_posture.py::test::test_scanner_matches_known_shapes	missing	-	baseline
+tests/test_injection_posture.py::class::ApproveInput	ported	spec/chronicle_packs/injection_posture_spec.cr	input hash shape inlined
+tests/test_injection_posture.py::class::FetchInput	ported	spec/chronicle_packs/injection_posture_spec.cr	input hash shape inlined
+tests/test_injection_posture.py::const::BENIGN_PAYLOAD	ported	spec/chronicle_packs/injection_posture_spec.cr::BENIGN_PAYLOAD	-
+tests/test_injection_posture.py::const::INJECTION_PAYLOAD	ported	spec/chronicle_packs/injection_posture_spec.cr::INJECTION_PAYLOAD	-
+tests/test_injection_posture.py::function::_ctx	ported	spec/chronicle_packs/injection_posture_spec.cr	ToolContext inlined
+tests/test_injection_posture.py::function::rt_with_capability	ported	spec/chronicle_packs/injection_posture_spec.cr::with_capability_runtime	-
+tests/test_injection_posture.py::test::test_approval_capabilities_are_never_llm_callable	ported	spec/chronicle_packs/injection_posture_spec.cr	NEVER_LLM_CALLABLE wall via as_llm_tool + llm_tools_for
+tests/test_injection_posture.py::test::test_benign_output_is_fenced_but_unflagged	ported	spec/chronicle_packs/injection_posture_spec.cr	-
+tests/test_injection_posture.py::test::test_envelope_can_be_disabled_for_fixtures	ported	spec/chronicle_packs/injection_posture_spec.cr	envelope_llm_output=false
+tests/test_injection_posture.py::test::test_envelope_carries_flag_warning	ported	spec/chronicle_packs/injection_posture_spec.cr	-
+tests/test_injection_posture.py::test::test_envelope_fences_content	ported	spec/chronicle_packs/injection_posture_spec.cr	-
+tests/test_injection_posture.py::test::test_envelope_neutralizes_fence_spoofing	ported	spec/chronicle_packs/injection_posture_spec.cr	-
+tests/test_injection_posture.py::test::test_flagged_output_creates_audit_objects	ported	spec/chronicle_packs/injection_posture_spec.cr	injection_flag audit + fenced model-visible output
+tests/test_injection_posture.py::test::test_scanner_clean_on_benign_content	ported	spec/chronicle_packs/injection_posture_spec.cr	-
+tests/test_injection_posture.py::test::test_scanner_individual_patterns	ported	spec/chronicle_packs/injection_posture_spec.cr	role_hijack/system_prompt_probe/exfiltration_ask
+tests/test_injection_posture.py::test::test_scanner_matches_known_shapes	ported	spec/chronicle_packs/injection_posture_spec.cr	instruction_override + approval_solicitation
 tests/test_l2_habit_loop.py::test::test_closed_l2_habit_loop	missing	-	baseline
-tests/test_llm_provider.py::const::FAKE_ANTHROPIC_KEY	missing	-	baseline
-tests/test_llm_provider.py::const::FAKE_OPENAI_KEY	missing	-	baseline
-tests/test_llm_provider.py::function::_boom	missing	-	baseline
-tests/test_llm_provider.py::function::_clean_registry	missing	-	baseline
-tests/test_llm_provider.py::test::test_both_env_keys_without_setting_break_toward_anthropic	missing	-	baseline
-tests/test_llm_provider.py::test::test_build_constructs_runtime_providers_not_reimplementations	missing	-	baseline
-tests/test_llm_provider.py::test::test_doctor_env_state_reports_provider_and_source	missing	-	baseline
-tests/test_llm_provider.py::test::test_doctor_exit_zero_with_and_without_a_key	missing	-	baseline
-tests/test_llm_provider.py::test::test_doctor_live_flag_does_one_minimal_ping	missing	-	baseline
-tests/test_llm_provider.py::test::test_doctor_makes_no_network_calls_by_default	missing	-	baseline
-tests/test_llm_provider.py::test::test_doctor_none_state_is_a_pass_with_note_never_a_failure	missing	-	baseline
-tests/test_llm_provider.py::test::test_doctor_setting_state_reports_provider_and_source	missing	-	baseline
-tests/test_llm_provider.py::test::test_doctor_setting_without_its_key_fails_naming_only_the_env_var	missing	-	baseline
-tests/test_llm_provider.py::test::test_env_fallback_selects_by_which_key_is_present	missing	-	baseline
-tests/test_llm_provider.py::test::test_explicit_setting_wins_on_conflict_with_env	missing	-	baseline
-tests/test_llm_provider.py::test::test_key_material_never_appears_in_logs_errors_or_doctor_output	missing	-	baseline
-tests/test_llm_provider.py::test::test_no_setting_no_env_resolves_to_none	missing	-	baseline
-tests/test_llm_provider.py::test::test_process_registry_configure_then_get	missing	-	baseline
-tests/test_llm_provider.py::test::test_setting_can_override_model_and_key_env_name	missing	-	baseline
-tests/test_llm_tool_proxies.py::class::EchoInput	missing	-	baseline
-tests/test_llm_tool_proxies.py::function::_ctx	missing	-	baseline
-tests/test_llm_tool_proxies.py::function::gateway_rt	missing	-	baseline
-tests/test_llm_tool_proxies.py::test::test_auto_approved_call_executes_inline_exactly_once	missing	-	baseline
-tests/test_llm_tool_proxies.py::test::test_capability_without_schema_cannot_be_llm_exposed	missing	-	baseline
-tests/test_llm_tool_proxies.py::test::test_held_call_denial_never_executes	missing	-	baseline
-tests/test_llm_tool_proxies.py::test::test_held_call_waits_then_executes_on_approval	missing	-	baseline
-tests/test_llm_tool_proxies.py::test::test_unknown_capability_key_fails_loud	missing	-	baseline
+tests/test_llm_provider.py::const::FAKE_ANTHROPIC_KEY	ported	spec/chronicle_packs/doctor_spec.cr	hermetic key material (inline literals)
+tests/test_llm_provider.py::const::FAKE_OPENAI_KEY	ported	spec/chronicle_packs/doctor_spec.cr	hermetic key material (inline literals)
+tests/test_llm_provider.py::function::_boom	ported	spec/chronicle_packs/doctor_spec.cr::check_llm_provider	live ping failure proc inlined
+tests/test_llm_provider.py::function::_clean_registry	ported	src/chronicle_packs/llm_provider.cr::clear_llm_provider	-
+tests/test_llm_provider.py::test::test_both_env_keys_without_setting_break_toward_anthropic	ported	spec/chronicle_packs/llm_provider_spec.cr::resolve_llm_provider	-
+tests/test_llm_provider.py::test::test_build_constructs_runtime_providers_not_reimplementations	ported	spec/chronicle_packs/llm_provider_spec.cr::build_llm_provider	port builds ProviderConfig seam, not a live client (divergence)
+tests/test_llm_provider.py::test::test_doctor_env_state_reports_provider_and_source	ported	spec/chronicle_packs/doctor_spec.cr::check_llm_provider	-
+tests/test_llm_provider.py::test::test_doctor_exit_zero_with_and_without_a_key	ported	spec/chronicle_packs/doctor_spec.cr::main	-
+tests/test_llm_provider.py::test::test_doctor_live_flag_does_one_minimal_ping	ported	spec/chronicle_packs/doctor_spec.cr::check_llm_provider	injectable live_ping (no live client in pack)
+tests/test_llm_provider.py::test::test_doctor_makes_no_network_calls_by_default	ported	spec/chronicle_packs/doctor_spec.cr::check_llm_provider	-
+tests/test_llm_provider.py::test::test_doctor_none_state_is_a_pass_with_note_never_a_failure	ported	spec/chronicle_packs/doctor_spec.cr::check_llm_provider	-
+tests/test_llm_provider.py::test::test_doctor_setting_state_reports_provider_and_source	ported	spec/chronicle_packs/doctor_spec.cr::check_llm_provider	-
+tests/test_llm_provider.py::test::test_doctor_setting_without_its_key_fails_naming_only_the_env_var	ported	spec/chronicle_packs/doctor_spec.cr::check_llm_provider	-
+tests/test_llm_provider.py::test::test_env_fallback_selects_by_which_key_is_present	ported	spec/chronicle_packs/llm_provider_spec.cr::resolve_llm_provider	-
+tests/test_llm_provider.py::test::test_explicit_setting_wins_on_conflict_with_env	ported	spec/chronicle_packs/llm_provider_spec.cr::resolve_llm_provider	-
+tests/test_llm_provider.py::test::test_key_material_never_appears_in_logs_errors_or_doctor_output	ported	spec/chronicle_packs/doctor_spec.cr	key-leak grep over doctor text/JSON + resolution verdict
+tests/test_llm_provider.py::test::test_no_setting_no_env_resolves_to_none	ported	spec/chronicle_packs/llm_provider_spec.cr::resolve_llm_provider	-
+tests/test_llm_provider.py::test::test_process_registry_configure_then_get	ported	spec/chronicle_packs/llm_provider_spec.cr	-
+tests/test_llm_provider.py::test::test_setting_can_override_model_and_key_env_name	ported	spec/chronicle_packs/llm_provider_spec.cr::resolve_llm_provider	-
+tests/test_llm_tool_proxies.py::class::EchoInput	ported	spec/chronicle_packs/llm_tools_spec.cr	input hash shape inlined
+tests/test_llm_tool_proxies.py::function::_ctx	ported	spec/chronicle_packs/llm_tools_spec.cr	GatewayToolMetadata ToolContext inlined
+tests/test_llm_tool_proxies.py::function::gateway_rt	ported	spec/chronicle_packs/llm_tools_spec.cr::with_gateway_runtime	-
+tests/test_llm_tool_proxies.py::test::test_auto_approved_call_executes_inline_exactly_once	ported	spec/chronicle_packs/llm_tools_spec.cr	inline execute + audit trail + exactly one result after idle
+tests/test_llm_tool_proxies.py::test::test_capability_without_schema_cannot_be_llm_exposed	ported	spec/chronicle_packs/llm_tools_spec.cr	refuses capabilities without an input schema
+tests/test_llm_tool_proxies.py::test::test_held_call_denial_never_executes	ported	spec/chronicle_packs/llm_tools_spec.cr	held call denied never executes + denial recorded
+tests/test_llm_tool_proxies.py::test::test_held_call_waits_then_executes_on_approval	ported	spec/chronicle_packs/llm_tools_spec.cr	held call executes on explicit approval
+tests/test_llm_tool_proxies.py::test::test_unknown_capability_key_fails_loud	ported	spec/chronicle_packs/llm_tools_spec.cr	fails loud on unknown keys
 tests/test_managed_auth.py::class::ExplodingSource	missing	-	baseline
 tests/test_managed_auth.py::class::FakeProvider	missing	-	baseline
 tests/test_managed_auth.py::const::REFRESHED	missing	-	baseline
@@ -284,14 +284,14 @@ tests/test_managed_auth.py::test::test_expired_without_refresh_path_fails_closed
 tests/test_managed_auth.py::test::test_resolution_chain_env_wins	missing	-	baseline
 tests/test_managed_auth.py::test::test_source_returns_live_token_and_refreshes_expired	missing	-	baseline
 tests/test_managed_auth.py::test::test_store_roundtrip_and_names_never_values	missing	-	baseline
-tests/test_manifests.py::const::PACKS	missing	-	baseline
-tests/test_manifests.py::const::REPO	missing	-	baseline
-tests/test_manifests.py::function::_pack_dir	missing	-	baseline
-tests/test_manifests.py::function::_pack_module	missing	-	baseline
-tests/test_manifests.py::test::test_bundle_hash_catches_manifest_only_swap	missing	-	baseline
-tests/test_manifests.py::test::test_capability_declarations_match_source	missing	-	baseline
-tests/test_manifests.py::test::test_manifest_validates_and_hash_pins	missing	-	baseline
-tests/test_manifests.py::test::test_stale_hash_is_caught	missing	-	baseline
+tests/test_manifests.py::const::PACKS	ported	spec/chronicle_packs/manifests_spec.cr::all_packs	port-matching pack set (drift packs excluded)
+tests/test_manifests.py::const::REPO	ported	spec/chronicle_packs/manifests_spec.cr	vendor checkout root
+tests/test_manifests.py::function::_pack_dir	ported	spec/chronicle_packs/manifests_spec.cr::vendor_pack_dir	-
+tests/test_manifests.py::function::_pack_module	ported	spec/chronicle_packs/manifests_spec.cr	uses live Pack objects, not importlib
+tests/test_manifests.py::test::test_bundle_hash_catches_manifest_only_swap	ported	spec/chronicle_packs/manifests_spec.cr	compute_bundle_hash + verify_bundle_hash
+tests/test_manifests.py::test::test_capability_declarations_match_source	ported	spec/chronicle_packs/manifests_spec.cr	declared vs live Pack surface (no Python AST)
+tests/test_manifests.py::test::test_manifest_validates_and_hash_pins	ported	spec/chronicle_packs/manifests_spec.cr	aggregate per-pack schema+hash+surface+fixtures
+tests/test_manifests.py::test::test_stale_hash_is_caught	ported	spec/chronicle_packs/manifests_spec.cr	tamper a pack file, verify_content_hash raises
 tests/test_mcp_client.py::class::FakeTransport	missing	-	baseline
 tests/test_mcp_client.py::const::TOOLS	missing	-	baseline
 tests/test_mcp_client.py::function::_ctx	missing	-	baseline
@@ -440,15 +440,15 @@ tests/test_memory_subject_scoping.py::test::test_strict_scope_excludes_global_nu
 tests/test_memory_subject_scoping.py::test::test_unscoped_retrieval_returns_all	missing	-	baseline
 tests/test_pack_fixtures.py::const::PACKS	missing	-	baseline
 tests/test_pack_fixtures.py::test::test_pack_fixtures	missing	-	baseline
-tests/test_preflight.py::class::_NewCapabilityDecl	missing	-	baseline
-tests/test_preflight.py::class::_OldCapabilityDecl	missing	-	baseline
-tests/test_preflight.py::function::_stub_runtime	missing	-	baseline
-tests/test_preflight.py::test::test_current_environment_passes_and_import_ran_the_check	missing	-	baseline
-tests/test_preflight.py::test::test_lying_new_version_string_still_fails_on_missing_feature	missing	-	baseline
-tests/test_preflight.py::test::test_lying_old_version_string_passes_when_feature_present	missing	-	baseline
-tests/test_preflight.py::test::test_old_runtime_raises_the_exact_promised_message	missing	-	baseline
-tests/test_preflight.py::test::test_runtime_missing_manifest_module_entirely_raises	missing	-	baseline
-tests/test_preflight.py::test::test_runtime_without_version_attribute_reports_unknown	missing	-	baseline
+tests/test_preflight.py::class::_NewCapabilityDecl	deferred	-	deferred: Python stub module (port uses compile-time feature detect)
+tests/test_preflight.py::class::_OldCapabilityDecl	deferred	-	deferred: Python stub module (port uses compile-time feature detect)
+tests/test_preflight.py::function::_stub_runtime	deferred	-	deferred: Python stub-module injection (no runtime module in Crystal)
+tests/test_preflight.py::test::test_current_environment_passes_and_import_ran_the_check	ported	spec/chronicle_packs/preflight_spec.cr::assert_runtime_compatible	feature detect + assert no-op
+tests/test_preflight.py::test::test_lying_new_version_string_still_fails_on_missing_feature	ported	spec/chronicle_packs/preflight_spec.cr::preflight_message	message embeds found 1.9.0
+tests/test_preflight.py::test::test_lying_old_version_string_passes_when_feature_present	deferred	-	deferred: needs injected old-runtime stub (compile-time feature detect is the decider)
+tests/test_preflight.py::test::test_old_runtime_raises_the_exact_promised_message	ported	spec/chronicle_packs/preflight_spec.cr::preflight_message	verbatim too-old message
+tests/test_preflight.py::test::test_runtime_missing_manifest_module_entirely_raises	ported	spec/chronicle_packs/preflight_spec.cr::preflight_message	message embeds found 0.9.0
+tests/test_preflight.py::test::test_runtime_without_version_attribute_reports_unknown	ported	spec/chronicle_packs/preflight_spec.cr::preflight_message	message embeds found unknown
 tests/test_promotion_loop.py::function::_admit_memory	missing	-	baseline
 tests/test_promotion_loop.py::function::_clean	missing	-	baseline
 tests/test_promotion_loop.py::function::_open_proposals	missing	-	baseline
@@ -502,18 +502,18 @@ tests/test_public_presence.py::test::test_hostile_page_is_flagged_and_inert	miss
 tests/test_public_presence.py::test::test_html_to_text_strips_scripts_and_collapses_whitespace	missing	-	baseline
 tests/test_public_presence.py::test::test_plan_is_deterministic_and_logs_unfetchables	missing	-	baseline
 tests/test_public_presence.py::test::test_rerun_same_inputs_adds_no_evidence	missing	-	baseline
-tests/test_registration_check.py::class::_In	missing	-	baseline
-tests/test_registration_check.py::function::_declaring_pack	missing	-	baseline
-tests/test_registration_check.py::function::_noop	missing	-	baseline
-tests/test_registration_check.py::function::rt	missing	-	baseline
-tests/test_registration_check.py::test::test_armed_boot_path_still_registers_declared_capabilities	missing	-	baseline
-tests/test_registration_check.py::test::test_declared_pair_registers	missing	-	baseline
-tests/test_registration_check.py::test::test_disabled_pack_surface_refused	missing	-	baseline
-tests/test_registration_check.py::test::test_mcp_origin_exempt	missing	-	baseline
-tests/test_registration_check.py::test::test_reload_after_disable_re_enables	missing	-	baseline
-tests/test_registration_check.py::test::test_risk_class_drift_refused	missing	-	baseline
-tests/test_registration_check.py::test::test_unarmed_registration_is_unchecked	missing	-	baseline
-tests/test_registration_check.py::test::test_undeclared_pair_refused	missing	-	baseline
+tests/test_registration_check.py::class::_In	ported	spec/chronicle_packs/registration_check_spec.cr	input hash shape inlined
+tests/test_registration_check.py::function::_declaring_pack	ported	spec/chronicle_packs/registration_check_spec.cr::declaring_pack	-
+tests/test_registration_check.py::function::_noop	ported	spec/chronicle_packs/registration_check_spec.cr	noop fn inlined
+tests/test_registration_check.py::function::rt	ported	spec/chronicle_packs/registration_check_spec.cr::with_registration_runtime	-
+tests/test_registration_check.py::test::test_armed_boot_path_still_registers_declared_capabilities	ported	spec/chronicle_packs/registration_check_spec.cr	tool_gateway declares web/catalog capabilities
+tests/test_registration_check.py::test::test_declared_pair_registers	ported	spec/chronicle_packs/registration_check_spec.cr	-
+tests/test_registration_check.py::test::test_disabled_pack_surface_refused	ported	spec/chronicle_packs/registration_check_spec.cr	-
+tests/test_registration_check.py::test::test_mcp_origin_exempt	ported	spec/chronicle_packs/registration_check_spec.cr	-
+tests/test_registration_check.py::test::test_reload_after_disable_re_enables	ported	spec/chronicle_packs/registration_check_spec.cr	-
+tests/test_registration_check.py::test::test_risk_class_drift_refused	ported	spec/chronicle_packs/registration_check_spec.cr	-
+tests/test_registration_check.py::test::test_unarmed_registration_is_unchecked	ported	spec/chronicle_packs/registration_check_spec.cr	-
+tests/test_registration_check.py::test::test_undeclared_pair_refused	ported	spec/chronicle_packs/registration_check_spec.cr	-
 tests/test_reply_gating.py::class::CountingProvider	missing	-	baseline
 tests/test_reply_gating.py::const::OWNER	missing	-	baseline
 tests/test_reply_gating.py::function::_build	missing	-	baseline
@@ -531,10 +531,10 @@ tests/test_reply_gating.py::test::test_known_policy_collaborator_passes	missing	
 tests/test_reply_gating.py::test::test_open_policy_is_default_and_unchanged	missing	-	baseline
 tests/test_reply_gating.py::test::test_owner_only_policy_owner_passes_stranger_deflected	missing	-	baseline
 tests/test_reply_gating.py::test::test_profile_audience_follows_sender_role	missing	-	baseline
-tests/test_schedule_pack.py::function::_ctx	missing	-	baseline
-tests/test_schedule_pack.py::function::rt	missing	-	baseline
-tests/test_schedule_pack.py::test::test_reminder_requires_a_time	missing	-	baseline
-tests/test_schedule_pack.py::test::test_reminder_via_gateway_proxy_then_tick_delivers	missing	-	baseline
+tests/test_schedule_pack.py::function::_ctx	ported	spec/chronicle_packs/schedule_pack_spec.cr	GatewayToolMetadata in ToolContext inlined
+tests/test_schedule_pack.py::function::rt	ported	spec/chronicle_packs/schedule_pack_spec.cr::with_reminder_runtime	-
+tests/test_schedule_pack.py::test::test_reminder_requires_a_time	ported	spec/chronicle_packs/schedule_pack_spec.cr	-
+tests/test_schedule_pack.py::test::test_reminder_via_gateway_proxy_then_tick_delivers	ported	spec/chronicle_packs/schedule_pack_spec.cr	-
 tests/test_semantic_extraction.py::const::SUMMARY	missing	-	baseline
 tests/test_semantic_extraction.py::function::_acquire	missing	-	baseline
 tests/test_semantic_extraction.py::function::_annotation_fingerprint	missing	-	baseline
@@ -599,41 +599,41 @@ tests/test_shared_extraction_migration.py::test::test_entity_pack_consumes_annot
 tests/test_shared_extraction_migration.py::test::test_entity_raw_source_extraction_is_disabled_by_default	missing	-	baseline
 tests/test_shared_extraction_migration.py::test::test_migration_boundary_reextraction_creates_no_new_candidates	missing	-	baseline
 tests/test_shared_extraction_migration.py::test::test_reingestion_after_migration_is_idempotent_byte_level	missing	-	baseline
-tests/test_skills.py::function::_author	missing	-	baseline
-tests/test_skills.py::function::_proof	missing	-	baseline
-tests/test_skills.py::function::_runtime	missing	-	baseline
-tests/test_skills.py::test::test_demotion_removes_eligibility_preserves_history_and_is_reversible	missing	-	baseline
-tests/test_skills.py::test::test_normalizer_skill_candidate_becomes_a_provenance_backed_proposal	missing	-	baseline
-tests/test_skills.py::test::test_promotion_requires_recorded_evidence_and_is_explainable	missing	-	baseline
-tests/test_skills.py::test::test_usage_id_executes_and_evaluates_at_most_once_under_retries	missing	-	baseline
-tests/test_skills.py::test::test_version_selection_is_exact_and_material_changes_require_new_version	missing	-	baseline
+tests/test_skills.py::function::_author	ported	spec/chronicle_packs/skills_contract_spec.cr::author	-
+tests/test_skills.py::function::_proof	ported	spec/chronicle_packs/skills_contract_spec.cr::proof	-
+tests/test_skills.py::function::_runtime	ported	spec/chronicle_packs/skills_contract_spec.cr::with_skills_contract_runtime	-
+tests/test_skills.py::test::test_demotion_removes_eligibility_preserves_history_and_is_reversible	ported	spec/chronicle_packs/skills_contract_spec.cr	-
+tests/test_skills.py::test::test_normalizer_skill_candidate_becomes_a_provenance_backed_proposal	ported	spec/chronicle_packs/skills_contract_spec.cr	-
+tests/test_skills.py::test::test_promotion_requires_recorded_evidence_and_is_explainable	ported	spec/chronicle_packs/skills_contract_spec.cr	-
+tests/test_skills.py::test::test_usage_id_executes_and_evaluates_at_most_once_under_retries	ported	spec/chronicle_packs/skills_contract_spec.cr	-
+tests/test_skills.py::test::test_version_selection_is_exact_and_material_changes_require_new_version	ported	spec/chronicle_packs/skills_contract_spec.cr	-
 tests/test_subject_profile.py::function::_candidate	missing	-	baseline
 tests/test_subject_profile.py::function::_evidence	missing	-	baseline
 tests/test_subject_profile.py::function::_runtime	missing	-	baseline
 tests/test_subject_profile.py::test::test_candidate_requires_explicit_verdict_and_preserves_evidence	missing	-	baseline
 tests/test_subject_profile.py::test::test_conflict_and_forget_are_append_only_lifecycles	missing	-	baseline
 tests/test_subject_profile.py::test::test_connector_content_cannot_become_owner_fact_without_owner_scope	missing	-	baseline
-tests/test_usage.py::function::_emit	missing	-	baseline
-tests/test_usage.py::function::_emit_evidence	missing	-	baseline
-tests/test_usage.py::function::_graph	missing	-	baseline
-tests/test_usage.py::function::_horizon	missing	-	baseline
-tests/test_usage.py::function::_replay	missing	-	baseline
-tests/test_usage.py::function::_runtime	missing	-	baseline
-tests/test_usage.py::function::_settled_events	missing	-	baseline
-tests/test_usage.py::test::test_connection_alone_never_settles_or_contributes	missing	-	baseline
-tests/test_usage.py::test::test_default_gate_passes_by_volume_or_provider_time_coverage	missing	-	baseline
-tests/test_usage.py::test::test_fixture_evidence_is_visible_but_excluded_from_gate_totals	missing	-	baseline
-tests/test_usage.py::test::test_pack_surface_contains_neutral_facts_and_no_game_vocabulary	missing	-	baseline
-tests/test_usage.py::test::test_reconnect_and_reimport_never_duplicate_settled_tuple	missing	-	baseline
-tests/test_usage.py::test::test_stale_and_revoked_are_horizon_deterministic_and_log_replayable	missing	-	baseline
-tests/test_usage.py::test::test_unknown_category_is_rejected_loudly	missing	-	baseline
-tests/test_web_fetch_capability.py::class::_FakeResponse	missing	-	baseline
-tests/test_web_fetch_capability.py::function::_fake_urlopen	missing	-	baseline
-tests/test_web_fetch_capability.py::function::mock_transport	missing	-	baseline
-tests/test_web_fetch_capability.py::method::_FakeResponse.__enter__	missing	-	baseline
-tests/test_web_fetch_capability.py::method::_FakeResponse.__exit__	missing	-	baseline
-tests/test_web_fetch_capability.py::method::_FakeResponse.__init__	missing	-	baseline
-tests/test_web_fetch_capability.py::method::_FakeResponse.getcode	missing	-	baseline
-tests/test_web_fetch_capability.py::method::_FakeResponse.geturl	missing	-	baseline
-tests/test_web_fetch_capability.py::test::test_runtime_web_fetch_still_fails_closed_without_a_context	missing	-	baseline
-tests/test_web_fetch_capability.py::test::test_web_fetch_capability_passes_a_live_tool_context	missing	-	baseline
+tests/test_usage.py::function::_emit	ported	spec/chronicle_packs/usage_contract_spec.cr	graph.ids.event inlined
+tests/test_usage.py::function::_emit_evidence	ported	spec/chronicle_packs/usage_contract_spec.cr::emit_evidence	-
+tests/test_usage.py::function::_graph	ported	spec/chronicle_packs/usage_contract_spec.cr::with_usage_runtime	-
+tests/test_usage.py::function::_horizon	ported	spec/chronicle_packs/usage_contract_spec.cr	graph.events.last.id inlined
+tests/test_usage.py::function::_replay	ported	spec/chronicle_packs/usage_contract_spec.cr::replay	graph.apply over events
+tests/test_usage.py::function::_runtime	ported	spec/chronicle_packs/usage_contract_spec.cr::with_usage_runtime	-
+tests/test_usage.py::function::_settled_events	ported	spec/chronicle_packs/usage_contract_spec.cr::settled_events	-
+tests/test_usage.py::test::test_connection_alone_never_settles_or_contributes	ported	spec/chronicle_packs/usage_contract_spec.cr	-
+tests/test_usage.py::test::test_default_gate_passes_by_volume_or_provider_time_coverage	ported	spec/chronicle_packs/usage_contract_spec.cr	passed_by volume + coverage, coverage_days
+tests/test_usage.py::test::test_fixture_evidence_is_visible_but_excluded_from_gate_totals	ported	spec/chronicle_packs/usage_contract_spec.cr	-
+tests/test_usage.py::test::test_pack_surface_contains_neutral_facts_and_no_game_vocabulary	ported	spec/chronicle_packs/usage_contract_spec.cr	-
+tests/test_usage.py::test::test_reconnect_and_reimport_never_duplicate_settled_tuple	ported	spec/chronicle_packs/usage_contract_spec.cr	-
+tests/test_usage.py::test::test_stale_and_revoked_are_horizon_deterministic_and_log_replayable	ported	spec/chronicle_packs/usage_contract_spec.cr	-
+tests/test_usage.py::test::test_unknown_category_is_rejected_loudly	ported	spec/chronicle_packs/usage_contract_spec.cr	-
+tests/test_web_fetch_capability.py::class::_FakeResponse	ported	spec/chronicle_packs/capabilities_spec.cr	mock transport inlined as web_fetch_fetcher seam
+tests/test_web_fetch_capability.py::function::_fake_urlopen	ported	spec/chronicle_packs/capabilities_spec.cr	transport mocked via web_fetch_fetcher seam
+tests/test_web_fetch_capability.py::function::mock_transport	ported	spec/chronicle_packs/capabilities_spec.cr	host fetcher seam
+tests/test_web_fetch_capability.py::method::_FakeResponse.__enter__	ported	spec/chronicle_packs/capabilities_spec.cr	transport mock shape inlined
+tests/test_web_fetch_capability.py::method::_FakeResponse.__exit__	ported	spec/chronicle_packs/capabilities_spec.cr	transport mock shape inlined
+tests/test_web_fetch_capability.py::method::_FakeResponse.__init__	ported	spec/chronicle_packs/capabilities_spec.cr	transport mock shape inlined
+tests/test_web_fetch_capability.py::method::_FakeResponse.getcode	ported	spec/chronicle_packs/capabilities_spec.cr	transport mock shape inlined
+tests/test_web_fetch_capability.py::method::_FakeResponse.geturl	ported	spec/chronicle_packs/capabilities_spec.cr	transport mock shape inlined
+tests/test_web_fetch_capability.py::test::test_runtime_web_fetch_still_fails_closed_without_a_context	ported	spec/chronicle_packs/capabilities_spec.cr	fails closed when fetcher seam unset
+tests/test_web_fetch_capability.py::test::test_web_fetch_capability_passes_a_live_tool_context	ported	spec/chronicle_packs/capabilities_spec.cr	executes through host fetcher seam

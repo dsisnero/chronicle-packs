@@ -18,7 +18,84 @@ Core (the universal substrate) lands before the infrastructure it requires,
 then communication, domain verticals, transport adapters, and the demo
 surface.
 
-**Progress: 741 / 2080 source API items ported, 51 skipped, 94 deferred.**
+The remaining work is tracked in the size-graded roadmap below (S / M / L),
+mirroring the `cross-language-crystal-parity` skill's feature-slicing rules:
+each entry is branch-sized and user-visible, `[x]` = green and committed,
+`[ ]` = pending, `[-]` = intentionally deferred (documented in the
+Intentional divergences section). The `## Features` sections below remain the
+per-pack detail record (surfaces, divergence notes, fixture drivers).
+
+**Progress: 1734 / 2080 source API items ported, 92 skipped, 111 deferred.**
+**Remaining: 142 missing items + 161/638 upstream tests ported (4 deferred).**
+
+## Remaining feature-size roadmap (S / M / L)
+
+### S — small (helpers, value objects, narrow surfaces)
+
+- [x] `packs/_template` — the pack authoring template (9/9)
+- [x] `packs/_preflight.py` — runtime preflight compatibility checks (6/6)
+- [x] `tests/conftest.py` — parity test helpers (4/4)
+- [x] `bundles.*` — bundle composition (`bundles/assistant.py` 6/7,
+      `messaging_assistant` 3/3, `email_assistant` 3/3, `research_bundle`
+      3/3, `bundles/examples` 3/3)
+- [x] `scripts/manifest_tools.py` — static capability extraction (6/6)
+- [x] Chronicle shard compatibility — update to `0b46f77` and preserve
+      registration enforcement by reading runtime lifecycle events from the
+      durable `EventStore` (S; 793-spec regression suite green)
+
+### M — medium (behavioral surfaces spanning one module)
+
+- [x] `scripts/generate_manifests.py` — manifest generation (14/14)
+- [x] Importers (packs/importers) — each a self-contained ingestion surface:
+    - [x] `local_files` — local directory snapshots, category local_knowledge
+          (26/26)
+    - [x] `assistant_self_summary` — pasted/MCP-pushed self-summaries,
+          injection-scanned (20/20)
+    - [x] `chatgpt_export` — official ChatGPT export ZIP, canonical paths +
+          abandoned edit branches (34/34)
+    - [x] `claude_export` — flat conversations.json, ZIP or bare (34/34)
+    - [x] `assistant_local_sessions` — Claude Code + Codex session logs,
+          bounded recent-N window (40/40)
+    - [x] `public_presence` — gateway-routed, budgeted R0 fetch of owner
+          public handles (40/40)
+- [x] `doctor` — noninteractive environment diagnostic (pass/fail, exit
+      0/1) (23/23)
+- [x] `packs/fixtures` — cross-pack integration scenarios (22/22):
+      `chat_memory_cross_session` (6), `l2_habit_integration` (5),
+      `run_all` (4), `comm_chat_email_integration` (3),
+      `identity_profile_entity_integration` (2), `cross_pack_integration` (2)
+
+### L — large (provider/platform edges, external backends)
+
+- [~] `evolution` — agent-authored packs under governance (65/207;
+      142 missing: the Python-AST static-gate pipeline — `analysis.py` 13 +
+      `gates.py` 4, the sandbox-trials surface — `trial.py` 4 + `soak.py`
+      32 + `boot.py` 5 + `adopt.py` 4 + `chassis.py` 3 +
+      `materialize.py` 2, the LLM author — `author.py` 9, and the fixture
+      scenarios — `fixtures/run_fixtures.py` 57 + `fixtures/candidates.py`
+      9). See the `evolution` divergence note for what is deferred vs. the
+      deterministic surface already ported.
+- [x] `demo_server` — HTTP API surface: /summary /graph /trace /packs
+      /frames /chat /sessions /approvals /channels /reset (72/86; 14
+      deferred: SQLite persist/resume, MCP outbound, managed OAuth,
+      schedule tick driver, demo capability registration helper)
+
+### Separate tracking
+
+- [~] Upstream test porting — `plans/inventory/python_test_parity.tsv`
+      tracks 638 upstream tests (86/638; test_approval_auth, test_preflight,
+      test_llm_provider, test_manifests, test_schedule_pack,
+      test_web_fetch_capability, test_capability_catalog,
+      test_registration_check, test_llm_tool_proxies,
+      test_attention_vectors, test_eval_outcome, test_skills,
+      test_usage, test_activity_normalizer, test_injection_posture
+      ported; stub-injection cases deferred)
+
+### Next up (concrete plan order)
+
+1. `[ ]` `evolution` remaining — lands with the Python-AST/importlib
+   materialization seams (see the divergence note).
+2. `[ ]` Upstream test porting (638 tests), tracked separately (161/638).
 
 ## Features
 
@@ -27,13 +104,13 @@ surface.
 - [x] Pack manifest format + loader — provided by the chronicle runtime
       (`Chronicle::Packs`), verified byte-exact against all 33 upstream
       manifests (`spec/chronicle_packs/vendor_manifests_spec.cr`)
-- [ ] Pack scaffolding convention (`settings`, `object_types`,
+- [x] Pack scaffolding convention (`settings`, `object_types`,
       `relation_types`, `behaviors`, `tools`, `fixtures/`) — incl.
-      `packs/_template` pack authoring template (0/9)
+      `packs/_template` pack authoring template (9/9)
 - [x] Core pack settings (`CoreSettings`) and deterministic fixture runner
       pattern (`fixtures/run_fixtures.py`) — `src/chronicle_packs/core/settings.cr`,
       `src/chronicle_packs/fixture_runner.cr`
-- [ ] `packs/_preflight.py` — runtime preflight compatibility checks (0/6)
+- [x] `packs/_preflight.py` — runtime preflight compatibility checks (6/6)
 
 ### Phase 1 — Core pack (packs/core)
 
@@ -132,79 +209,313 @@ surface.
 
 ### Phase 3 — Communication packs
 
-- [ ] `communication` — channel-neutral threads, messages, intents, response
-      candidates (0/55)
-- [ ] `chat` — sessions, memory, reply gating, agentic responses (0/56)
-- [ ] `email` — threading, dedup, draft formatting, approval-gated sends
-      (0/27)
-- [ ] `schedule` — graph-native scheduling, ticks, heartbeats (0/35)
+- [x] `communication` — channel-neutral threads, messages, intents, response
+      candidates (55/55)
+- [x] `chat` — sessions, memory, reply gating, agentic responses (56/56)
+- [x] `email` — threading, dedup, draft formatting, approval-gated sends
+      (27/27)
+- [x] `schedule` — graph-native scheduling, ticks, heartbeats (35/35)
 
 ### Phase 4 — Domain packs
 
-- [ ] `research` — papers, claims, hypotheses (0/35)
-- [ ] `codebase` — repos, issues, PRs, architecture decisions, dependency
-      auditing (0/37)
-- [ ] `team_ops` — assignments, milestones, workload estimation (0/33)
-- [ ] `meeting` — decision extraction, action items, summarization (0/35)
-- [ ] `subject_profile` — subject-centric profile tracking (0/14)
+- [x] `research` — papers, claims, hypotheses (35/35)
+- [x] `codebase` — repos, issues, PRs, architecture decisions, dependency
+      auditing (37/37)
+- [x] `team_ops` — assignments, milestones, workload estimation (33/33)
+- [x] `meeting` — decision extraction, action items, summarization (35/35)
+- [x] `subject_profile` — subject-centric profile tracking (14/14)
 
 ### Phase 5 — Transport adapters and bridges
 
-- [ ] `telegram` — inbound updates → chat_input; outbound policy-checked
-      gateway sends (0/27)
-- [ ] `whatsapp` — WhatsApp Cloud API transport (structural mirror of
-      telegram) (0/25)
-- [ ] `composio` — optional hosted Connect Links route pack (0/36)
-- [ ] `gmail` — connector-conformance: profiles, replayable backfill, history
-      polling, drafts, R3-forever sends (0/98)
-- [ ] `mcp` — bidirectional MCP: outbound governed tools, inbound server
-      (0/75)
-- [ ] `evolution` — agent-authored packs behind static gates, fork trials,
-      bundle-hash pins, verified owner approval (ships disabled) (0/207)
-- [ ] `bridges/diligence_core` — Diligence-Core bridge mapping domain outputs
-      to Core objects (0/15)
+- [x] `telegram` — inbound updates → chat_input; outbound policy-checked
+      gateway sends (27/27)
+- [x] `whatsapp` — WhatsApp Cloud API transport (structural mirror of
+      telegram) (25/25)
+- [x] `composio` — optional hosted Connect Links route pack (36/36)
+- [x] `gmail` — connector-conformance: profiles, replayable backfill, history
+      polling, drafts, R3-forever sends (96/98, 1 skipped + 1 deferred)
+      — `src/chronicle_packs/gmail/` (see the `gmail` divergence note)
+- [x] `mcp` — bidirectional MCP: outbound governed tools, inbound server
+      (74/75, 1 skipped) — `src/chronicle_packs/mcp/` (see the `mcp`
+      divergence note)
+- [~] `evolution` — agent-authored packs behind static gates, fork trials,
+      bundle-hash pins, verified owner approval (ships disabled) (65/207:
+      slices 1-2 port the deterministic graph-native surface — 8 object
+      types + 5 relation types, EvolutionSettings (ships disabled),
+      author_frame (charter pin + structured-field charset + taint
+      recompute), materialize's portable file/hash helpers, the
+      authoring/request tools (submit_proposal / open_reflection_gap /
+      request_adoption), the graph-native behaviors (gap_detector,
+      proposal_gatekeeper's taint-suspension path, promotion_recorder,
+      watch_monitor), the trial-driver render, adopt registration with its
+      two refusals, and the full review decision surface (build_review +
+      render_review_html + render_approvals_index_html, unified diff via
+      the `similar` shard). The remaining 142 items are tracked in the
+      size-graded roadmap, L: `evolution` — see the `evolution` divergence
+      note for what is deferred vs. ported)
+- [x] `bridges/diligence_core` — Diligence-Core bridge mapping domain outputs
+      to Core objects (15/15) — `src/chronicle_packs/bridges/` (see the
+      `bridges/diligence_core` divergence note)
 
 ### Phase 6 — Importers (packs/importers)
 
-- [ ] `local_files` — local directory snapshots (category local_knowledge)
-      (0/26)
-- [ ] `chatgpt_export` — official ChatGPT export ZIP, canonical paths +
-      abandoned edit branches (0/34)
-- [ ] `claude_export` — flat conversations.json (ZIP or bare) (0/34)
-- [ ] `assistant_self_summary` — pasted/MCP-pushed self-summaries,
-      injection-scanned (0/20)
-- [ ] `assistant_local_sessions` — Claude Code + Codex session logs, bounded
-      recent-N window (0/40)
-- [ ] `public_presence` — gateway-routed, budgeted R0 fetch of owner public
-      handles (0/40)
+All six importers are ported: `local_files` (26/26),
+`assistant_self_summary` (20/20), `chatgpt_export` (34/34),
+`claude_export` (34/34), `assistant_local_sessions` (40/40),
+`public_presence` (40/40).
 
 ### Phase 7 — Bundles and demo surface
 
-- [ ] `bundles.assistant` — core + tool_gateway + secrets + memory_gateway +
-      agent_profile + identity_auth + communication + schedule + chat (0/7)
-- [ ] `bundles.messaging_assistant` — assistant bundle + telegram + whatsapp
-      (0/3)
-- [ ] `bundles.email_assistant` — assistant bundle + email + entity (0/3)
-- [ ] `bundles.research_bundle` — core + tool_gateway + memory_gateway +
-      research (0/3)
-- [ ] `bundles.examples` — assistant/email/research usage examples (0/3)
-- [ ] `doctor` — noninteractive environment diagnostic (pass/fail, exit 0/1)
-      (0/23)
-- [ ] `demo_server` — HTTP API surface: /summary /graph /trace /packs /frames
-      /chat /sessions /approvals /channels /reset (0/86)
+- `bundles.*` (18/19; `_chat_pack_for` deferred) — `bundles.assistant`
+  (6/7), `messaging_assistant` (3/3), `email_assistant` (3/3),
+  `research_bundle` (3/3), `bundles.examples` (3/3) — ported into
+  `Chronicle::Packs::Bundles` (`src/chronicle_packs/bundles.cr`), driven
+  in-process by `spec/chronicle_packs/bundles_spec.cr`. Tracked in the
+  size-graded roadmap, S: `bundles.*`.
+- `doctor` — noninteractive environment diagnostic (pass/fail, exit 0/1)
+  (23/23) — ported into `Chronicle::Packs::Doctor`
+  (`src/chronicle_packs/doctor.cr`), driven by
+  `spec/chronicle_packs/doctor_spec.cr`. Tracked in the size-graded
+  roadmap, M: `doctor`.
+- `demo_server` — HTTP API surface: /summary /graph /trace /packs /frames
+  /chat /sessions /approvals /channels /reset (72/86) — ported into
+  `Chronicle::Packs::DemoServer` (`src/chronicle_packs/demo_server.cr`),
+  driven by `spec/chronicle_packs/demo_server_spec.cr`. Tracked in the
+  size-graded roadmap, L: `demo_server`.
 
 ### Phase 8 — Repo tooling and tests
 
-- [ ] `scripts/generate_manifests.py` + `manifest_tools.py` — manifest
-      generation and static capability extraction (0/20)
-- [ ] `packs/fixtures` — cross-pack integration scenarios (chat_memory_cross_
-      session, comm_chat_email_integration, l2_habit_integration, ...) (0/22)
-- [ ] `tests/conftest.py` — parity test helpers (0/4)
-- [ ] Upstream test porting — `plans/inventory/python_test_parity.tsv` tracks
-      638 upstream tests (0/638)
+- `scripts/generate_manifests.py` (14) + `manifest_tools.py` (6) — manifest
+  generation and static capability extraction (20/20) — ported into
+  `Chronicle::Packs::ManifestTools` + `Chronicle::Packs::ManifestGenerator`
+  (see the `scripts` divergence note).
+- `packs/fixtures` — cross-pack integration scenarios (chat_memory_cross_
+  session, comm_chat_email_integration, l2_habit_integration, ...) (22/22) —
+  ported into `Chronicle::Packs::Fixtures`
+  (`src/chronicle_packs/fixtures.cr`), driven in-process by
+  `spec/chronicle_packs/fixtures_spec.cr`. Tracked in the size-graded
+  roadmap, M: `packs/fixtures`.
+- `tests/conftest.py` — parity test helpers (4/4) — ported into
+  `Chronicle::Packs::Conftest` in `spec/spec_helper.cr` (see the
+  `_preflight`/`_template`/`conftest` divergence note).
+- Upstream test porting — `plans/inventory/python_test_parity.tsv` tracks
+  638 upstream tests (161/638, 4 deferred). Tracked separately in the
+  size-graded roadmap.
 
 ## Intentional divergences
 
+- Registration enforcement (`packs/tool_gateway/registration_check.py`) reads
+  `graph.events`, which upstream populates with runtime-emitted `pack.loaded`
+  / `pack.disabled` events. In Chronicle `0b46f77`, runtime lifecycle events
+  are owned by `Runtime#store`; `GraphProjection#events` contains only events
+  emitted through the projection. The port therefore arms enforcement with
+  the runtime's durable `EventStore` and scans `store.iter_events`, retaining
+  `graph.events` as the fallback for direct graph-emission fixtures. The ported
+  `tool_gateway` pack now declares `catalog.search` and `web.fetch_url` as
+  `CapabilityDecl`s (matching the vendor manifest's `[[surface.capabilities]]`
+  and the upstream `__init__.py`) so armed registration recognizes the
+  gateway's own boot registrations.
+- Upstream test porting (`plans/inventory/python_test_parity.tsv`) maps
+  upstream tests to in-process Crystal specs over the ported surface.
+  `test_approval_auth.py` is ported via
+  `spec/chronicle_packs/demo_server_spec.cr::check_approval_auth` — the
+  ported `check_approval_auth` takes the graph and audits refusals as
+  `approval_auth_denial` objects exactly like upstream. `test_preflight.py`
+  is ported via `spec/chronicle_packs/preflight_spec.cr`; the verbatim
+  too-old message and the version-embedding variants are pinned, and the
+  stub-module injection tests (`_stub_runtime`/`_OldCapabilityDecl`/
+  `_NewCapabilityDecl`) are deferred because the port's runtime feature
+  detection is compile-time (chronicle compiled in) — there is no Python
+  module to inject.
+- `demo_server` is ported into `Chronicle::Packs::DemoServer`
+  (`src/chronicle_packs/demo_server.cr`). The HTTP REST surface and the
+  Handler dispatch are kept; `main` binds a real `HTTP::Server` (port 7788
+  or `ACTIVEGRAPH_PORT`), while specs drive the `Handler` dispatch
+  in-process (the port's analog of upstream's `_RuntimeExecutor`). The
+  runtime is built with `Bundles.build_assistant` over a memory store with
+  `seed_profile: false` (upstream persists to a SQLite event-log file and
+  resumes via `Runtime.load`, and seeds no default profile) — the endpoint
+  surface is unchanged. Endpoints needing deferred seams return the same
+  shapes with a clear message: `/mcp` 503 (no MCP gateway), OAuth start/poll
+  501 (managed OAuth source), and the schedule tick driver, `_store_has_run`
+  /`_wipe_store`/`_db_path`/`_memory_db_path`/`_token_db_path`,
+  `_register_demo_capabilities` (partial gateway capability registration),
+  and `_ensure_provider_credential_refs` are deferred. `check_approval_auth`
+  uses `Crypto::Subtle.constant_time_compare`. GET /capabilities reads the
+  ToolGateway `LocalRegistry`; GET /packs enumerates `Registry.discover`.
+- `packs/fixtures` is ported into `Chronicle::Packs::Fixtures`
+  (`src/chronicle_packs/fixtures.cr`). Each scenario runs in-process against
+  a fresh store/graph/runtime with a deterministic mock completion model
+  (`FixtureModel`) — no LLM, no API key, no subprocess. The upstream
+  `main` CLIs are driven by `spec/chronicle_packs/fixtures_spec.cr`, and
+  `run_all.py`'s subprocess runner becomes `Fixtures.main`/`_run_fixture`
+  running every scenario in-process (exit 0/1; `io` seam for tests).
+  `chat_memory_cross_session` persists the event log to a SQLite event store
+  file and replays it into a fresh graph via `Runtime.load` for session 2
+  (the port's memory gateway is graph-backed; upstream uses a separate
+  SQLite memory backend file — recall still crosses the session boundary).
+  `cross_pack_integration` wires the ToolGateway `credential_resolver` seam
+  to the Secrets `resolve_and_audit_fn` so the credential audit trail
+  (use_count bump) matches upstream. `l2_habit_integration` mints the
+  skill_candidate via the activity_normalizer legacy direct-write path
+  (`legacy_extraction_enabled: true`) because the port's zero-key
+  `semantic.deterministic` extractor only covers `communication` facets (the
+  upstream annotation-first shared-extraction layer needs the LLM extractor);
+  the skill object and its lifecycle are unchanged.
+- `doctor` is ported into `Chronicle::Packs::Doctor`. The eight-check
+  contract (name/status/detail), the injectable-inputs discipline, the
+  exit code (0 = no failures, skips fine), and `--json` output are kept.
+  Adaptations: `check_python_version` is renamed `check_crystal_version`
+  (report name "crystal-version") and checks `Crystal::VERSION` against
+  `CRYSTAL_FLOOR` (shard.yml `crystal: '>= 1.21.0'`) instead of a Python
+  floor; `check_package_shadowing` live-probes nothing (the chronicle
+  runtime is linked into a compiled binary — no import path to shadow) so
+  the live default SKIPs while the injectable decision logic
+  (origin/namespace_locations/installed_roots) is ported and tested;
+  `check_entry_points` live-probes `Chronicle::Packs::Registry.discover`
+  (registered packs) instead of Python importlib entry points;
+  `check_manifest_hash` defaults repo_root to this checkout and live SKIPs
+  (no `packs/` tree with committed generated manifests); `check_llm_provider`
+  resolves through the ported `LLMProvider` and its `--live` ping is an
+  injectable `live_ping` proc because the pack owns no live provider client
+  (the default `_default_live_ping` raises a clear `PackError`).
+  `_installed_activegraph_roots`/`_site_dirs` are deferred (Python pip/site
+  introspection; no Crystal analog).
+- `bundles.*` is ported into `Chronicle::Packs::Bundles`
+  (`src/chronicle_packs/bundles.cr`). Bundles are composition helpers, not
+  manifest packs: upstream builds a list of `Pack` objects and registers
+  them on a Runtime; the port `load_pack`s each pack directly. The runtime
+  is `Chronicle::Runtime(BundleModel)` (a Crig completion mock); the
+  `load_*`/`seed_*` helpers are generic `forall M` so specs can drive them
+  over the shared `Runtime(PackModel)`. `build_assistant` clears the
+  in-process `principal_registry` on entry so it is a correct standalone
+  factory (upstream has no such registry). `build_email_assistant` returns
+  the same `{store, graph, rt}` triple as the other builders. The bundle
+  example scripts' `main` functions are driven in-process by
+  `spec/chronicle_packs/bundles_spec.cr` (no subprocess entrypoints).
+  `build_assistant`'s `_chat_pack_for` seam (rebuilding the chat pack with an
+  agentic responder when `llm_tools` are passed) is deferred: the ported
+  chat pack has no `build_chat_pack` re-construction seam, so
+  `build_assistant` registers the default (non-agentic) chat pack.
+- `packs/importers/public_presence` is ported. It is the first importer with
+  a governed-capability flow: `bootstrap_public_presence_fn` only PROPOSES
+  `capability_call` objects (status proposed, R0/low, carrying the
+  `public_presence` metadata); the Tool Gateway's policy_enforcer (R0
+  auto-approves) and call_executor own approval/execution, and the
+  `acquire_presence_result` behavior lands executed results as
+  injection-scanned, replay-retained evidence. The pack declares
+  `presence_bootstrap_run` (+ `bootstrap_call` relation) and the
+  `public_presence.fetch_page` capability (R0). The fetch handler routes
+  through the ToolGateway `web_fetch_fetcher` host seam (fails closed
+  without a fetcher); the deterministic specs register a stub. `html_to_text`
+  is a minimal stdlib tokenizer (upstream uses `html.parser`). Porting
+  surfaced a gateway bug: `execute_approved_call` built CapabilityResult
+  with `success: ... || true`, which turned explicit handler failures into
+  `success: true`; fixed to `!= false` so `fetch_failed` is recorded. Same
+  divergence family as the other importers: `PackError` for validation, the
+  host-bound `PublicPresence.bound_graph` tool seam.
+- `packs/importers/assistant_local_sessions` is ported. It imports both the
+  Claude Code `projects/` layout (ordered by file mtime with a
+  relative-filename tiebreak) and the Codex `sessions/` layout (ordered by
+  the `rollout-<timestamp>-<uuid>.jsonl` filename timestamp), keeping the
+  most recent `max_sessions` files in the returned window log. Parsers are
+  deliberately defensive: a JSONL line either yields one user/assistant
+  message unit (Claude text parts; Codex `input_text`/`output_text`/`text`
+  parts, nested `response_item`/`payload.message` + flat `message`
+  variants) or is skipped and counted. A non-UTF-8 file records a
+  recoverable `unreadable_file` failure (Crystal's `String.new(Bytes)`
+  substitutes invalid bytes, so `valid_encoding?` is checked explicitly);
+  malformed lines are counted, never fatal. `_provider_time` validates
+  ISO-8601. Same divergence family as the other importers: `PackError` for
+  unsupported provider/replay_mode/missing surface, host-bound
+  `AssistantLocalSessions.bound_graph` tool seam. The window is built fresh
+  in `_result` from the final `files_imported`/`files_failed` arrays.
+- `packs/importers/claude_export` is ported as the structural mirror of
+  `chatgpt_export` with a flat conversation list (no branch tree): every
+  `chat_messages` message becomes one acquired-item/content pair. The
+  export is accepted as the official ZIP or a bare conversations.json
+  snapshot, detected by extension and the `PK\x03\x04` magic bytes (read as
+  a little-endian UInt32). `_normalized_message` prefers typed content
+  blocks and omits non-text kinds (`[tool_use content omitted]`); sender
+  `human`/`assistant` map to `role` `user`/`assistant`. Same divergence
+  family as `chatgpt_export`: `ExportFormatError` is an `Exception`
+  subclass, unsupported modes/surface raise `PackError`, and the tool uses
+  the host-bound `ClaudeExport.bound_graph` seam.
+- `packs/importers/chatgpt_export` is ported. It reads the export ZIP with
+  the Crystal stdlib `Compress::Zip` reader (upstream `zipfile`) and parses
+  conversations.json as a tree: the path ending at the provider's
+  `current_node` is canonical, other message nodes are abandoned branches
+  (`correction_signal`, `nearest_canonical_ancestor_id`). `ExportFormatError`
+  is an `Exception` subclass (upstream `ValueError`); unsupported
+  replay_mode / missing source_surface_id raise `PackError`, and the tool
+  uses the host-bound `ChatGPTExport.bound_graph` seam. `_provider_time`
+  renders numeric epoch seconds with `%:z` (matching Python's isoformat
+  offset). Node identity/parent-chain validation is faithful (cycle
+  detection, declared-id mismatch, missing parent).
+- `packs/importers/assistant_self_summary` is ported. It follows the same
+  edge-adapter shape as `local_files`: `acquired_item` +
+  `acquired_content` handoffs to Activity Normalizer, empty object/
+  relation/behavior surfaces, and the `import_assistant_self_summary` tool
+  on the host-bound `AssistantSelfSummary.bound_graph` seam. Identity is
+  the canonical content hash (`self_summary:<sha256>` dedup key), so the
+  same summary pasted (`manual`) or pushed (`mcp`) lands on one evidence
+  identity with `connection_path` recording the transport. Injection
+  scan flags land in `normalized_metadata` (hostile text stays inert:
+  evidence → annotations → candidates, nothing that acts). Unsupported
+  transports raise `PackError` (upstream `ValueError`). The tool raises
+  `PackError` where upstream raises `ValueError` (empty/oversized summaries
+  instead return failure records, matching upstream's return-shape).
+- `packs/importers/local_files` is ported. The importer's `json_root_type`
+  normalized-metadata field records the JSON root's structural kind in the
+  JSON spec's language-neutral vocabulary (`object`/`array`/`string`/
+  `number`/`boolean`/`null`) instead of upstream's Python
+  `type(parsed).__name__` — the field is informational metadata only
+  (nothing consumes it, no upstream test/fixture asserts it, and it is not
+  part of the manifest surface), so it stays meaningful for any host
+  (Crystal, Ruby/mruby, ...). The `import_local_files` tool uses the
+  host-bound `LocalFiles.bound_graph` seam (chronicle's Tool model is
+  args-only) and raises `PackError` where upstream raises `ValueError`
+  (unsupported replay_mode, missing source_surface_id). File-read failures
+  are flagged recoverable on `IO::Error` (upstream `OSError`); malformed
+  JSON on a `.json` file records `invalid_json`.
+- `scripts/generate_manifests.py` + `scripts/manifest_tools.py` are ported
+  into `Chronicle::Packs::ManifestTools` (pure TOML quoting + the
+  `# requires=`/`integrates_with=` docstring reader) and
+  `Chronicle::Packs::ManifestGenerator` (`PACK_PATHS` name→dir mapping,
+  `generate` writing a manifest.toml whose content hash is
+  `compute_content_hash` over the pack's Crystal source directory). The
+  upstream `extract_capability_registrations`/`extract_consumed_capabilities`
+  parse Python AST for `register_local_capability`/`capability_call`
+  literals; in the Crystal port the DSL already collected the declared
+  surface and `[[surface.capabilities]]` at compile time, so the extraction
+  seam is the live `Chronicle::Packs::Pack` object (`Pack.capabilities` →
+  CapabilityDecl-shaped rows; `consumes` = declared capability keys). The
+  dependency convention is read from the Crystal `pack.cr` text (the port
+  analog of upstream's Python `__init__.py`); `_param_default`/`_resolve`/
+  `_literal`/`_iter_pack_sources` have no separate Crystal equivalent — the
+  live-Pack seam subsumes their job.
+- `packs/_template`, `packs/_preflight.py`, and `tests/conftest.py` are
+  ported as the S bucket. The template has no real upstream manifest (its
+  manifest.toml is a skeleton with a REGENERATE-ME hash), so its surface
+  is verified against the upstream `__init__`/`object_types`/`behaviors`/
+  `settings` declarations rather than a pinned manifest hash; the fixture
+  scripts are driven by `spec/chronicle_packs/template_spec.cr`. The
+  preflight's `RuntimePreflightError` is an `Exception` subclass (Crystal
+  has no `ImportError`), and `runtime_supports_contract` feature-detects
+  chronicle's `CapabilityDecl.action_class` at compile time (the "runtime"
+  is the compiled-in chronicle shard, so `found_runtime_version` reads
+  `Chronicle::VERSION`). The conftest helpers live as
+  `Chronicle::Packs::Conftest` in `spec/spec_helper.cr`: the hermetic
+  `hermetic_environment` deletes the ambient LLM keys and clears the
+  resolved LLM provider + composio transport, and `assert_fixture_passed`
+  raises `PackError` with stdout/stderr tails (fixtures run in-process via
+  specs rather than as subprocesses).
+- Chronicle is pinned to the latest `dsisnero/chronicle` main
+  (`0b46f77`), which provides `Runtime#fork`/`promote`/`disable_pack` and
+  `Runtime#errors` (BehaviorFailure projection); the older locked commit
+  lacked them and the working tree relied on a newer checkout that
+  `shards install` had clobbered. `similar` (dsisnero/similar.cr) is a
+  declared dependency for the review decision surface's unified diff.
 - The manifest loader/validator/hashing lives in the chronicle runtime
   shard (`Chronicle::Packs`), not in this repo — upstream owns it in
   `activegraph.packs.manifest`; chronicle ports it. This repo verifies it
@@ -293,10 +604,11 @@ surface.
   (author/invoke/evidence/promote/demote/disable) is deterministic and
   emits `skill.proposed`/`skill.used`/`skill.promoted`/`skill.demoted`
   events; tools use the host-bound graph seam with `_tool`-suffixed
-  wrappers. `verify_skill_replay_fn` is DEFERRED — chronicle lacks
-  `Runtime#fork` (the fork-trial re-run); the portable replay pieces
-  (  `SkillReplayIncompleteError`, `_recorded_usage`, `_lineage_gaps`) are
-  ported, and the fork-based step lands with chronicle's fork support.
+  wrappers. `verify_skill_replay_fn` is DEFERRED — the fork-trial re-run
+  is pending; chronicle now provides `Runtime#fork` (bumped to `0b46f77`),
+  so the fork-based replay step can land with it. The portable replay
+  pieces (`SkillReplayIncompleteError`, `_recorded_usage`, `_lineage_gaps`)
+  are ported.
 - `eval_outcome` models its nodes as `JSON::Serializable` structs:
   `OutcomeRecord`, `ArtifactReliability`, and the nested `ReliabilityTallies`.
   Outcome capture emits canonical `outcome.*` events that the
@@ -306,6 +618,468 @@ surface.
   (correction requires supersession); maintenance outcomes are idempotent
   by contribution key. The upstream fixture also loads memory_gateway; the
   behavior/tool specs run without it.
+- `communication` declares the full manifest surface (9 object types, 12
+  relation types, 7 behaviors, 3 tools, `CommunicationSettings`). Every
+  module-level string/array/hash/alias constant is nested
+  (`HygienePatterns`, `GateConstants`, `Intents`, `FamilyConstants`) because
+  the DSL pack macro assumes direct module constants are types. The legacy
+  comm_* behaviors and conversation-family projectors use typed structs with
+  `copy_with`; `_merge_patch`/`_patch` merge explicitly (chronicle's
+  `patch_object` replaces data, upstream merges). Relation processor
+  source/target types match how the ported behaviors write relations
+  (e.g. `intent_of` is `comm_intent → comm_message`; `fulfills_intent` is
+  `capability_call → comm_intent`). Tools use the host-bound graph seam and
+  `_tool` suffix as identity_auth. The upstream reply-gating bundle
+  (`test_reply_gating.py`) depends on the chat pack; the gate itself is
+  ported and covered directly via `decide_reply` + identity_auth
+  `register_principal_fn`. `_find` is replaced by `_index_objects`. Fixture
+  scripts are driven by `spec/chronicle_packs/communication_spec.cr`.
+- `chat` declares the full manifest surface (5 object types, 3 relation
+  types, 8 behaviors, 2 tools, `ChatSettings`). `chat_ingester` translates
+  `chat_input` → `CommMessage` (channel=chat) + `ChatSession` + `ChatTurn`;
+  conversation memory is graph-native — `chat_context_assembler`
+  reconstructs prior turns from persisted `chat_turn` objects (bounded by
+  `max_context_messages`), so context survives an API-server restart with no
+  in-process history (the per-session caches are convenience only, with
+  graph fallback). The provider classes in upstream `llm.py`
+  (`MockChatProvider`, `FallbackChatProvider`, `select_chat_provider`,
+  `resolve_chat_config`) live on the runtime LLM seam
+  (`src/chronicle_packs/llm_provider.cr`); the pack never instantiates a
+  provider — `chat_llm_responder` is an `@[LLMBehavior]` declared with
+  `max_tokens`/`temperature`, and the deterministic `ChatModel` in
+  `chat_spec.cr` drives the pipeline. `make_llm_responder`/`_chat_llm_respond`
+  fold into that annotation. LLM/lifecycle events are read from the runtime
+  store (`store.iter_events`), not `graph.events` (projection-only), and
+  candidate `status` flips to `"sent"` immediately via communication's
+  `response_dispatcher`. Duplicate `profile_context_view` is avoided by
+  registering the principal before the profile (upstream's two-phase
+  `run_until_idle`). Fixture scripts are driven by
+  `spec/chronicle_packs/chat_spec.cr`.
+- `email` declares the full manifest surface (3 object types, 4 relation
+  types, 3 behaviors, 2 tools, `EmailSettings`). `email_ingester` turns an
+  inbound `email_message` into `Source` (kind=email) + `CommMessage`
+  (channel=email, direction=inbound) + `EmailThread`, deduping by
+  `message_id` and continuing threads via `In-Reply-To`/`References`
+  (registry + `email_thread_contains`, auto-created threads when
+  `auto_create_threads`). `reply_drafter` formats `CommResponseCandidate`
+  (channel=email) → `EmailDraft` with `Re: ` + stripped subject, original
+  sender, and optional signature. `send_approver` gates sends: external
+  recipients (or empty `to_addrs`) while `require_approval_for_external?`
+  creates an `Action(kind=approval_request, risk_class=high,
+  proposed_by=send_approver)`; owner/trusted-domain recipients auto-send by
+  patching draft + candidate `status` to `"sent"` inline (`patch_object`
+  never re-triggers `object.created`, so the "approved" → response_dispatcher
+  chain is not used). `_is_internal` treats an address as internal when it is
+  an owner address or its domain suffix matches `trusted_domains`. Body
+  payloads are truncated to `max_body_length`. Fixture scripts are driven by
+  `spec/chronicle_packs/email_spec.cr`.
+- `schedule` declares the full manifest surface (3 object types, 2 relation
+  types, 2 behaviors, 4 tools, `ScheduleSettings`, plus the
+  `schedule.create_reminder` capability declaration — risk_class=low,
+  action_class=R3 per upstream ADR 0016). The reminder capability is
+  implemented in `Schedule::Capabilities.register_reminder_capability`
+  (upstream `schedule/capabilities.py`): the handler reads the graph bound
+  by the host via `Schedule::Capabilities.bound_graph` (the established
+  capability seam — the ported gateway passes input_data only, no
+  `execution_context` graph injection), creates a `once`/`interval`
+  schedule whose payload is a pre-approved `comm_response_candidate`
+  (`metadata.reminder=true`), and the gateway records the capability_call.
+  The clock lives at the edge:
+  `create_schedule_fn` / `emit_due_ticks_fn` take a synthetic `now` (ISO
+  8601), so every fixture is deterministic; the pack never reads the wall
+  clock. `emit_due_ticks_fn` is idempotent by `'{schedule_id}@{due_at}'`
+  dedup_key and emits `schedule_tick` → `tick_of` relation. `tick_router`
+  emits the schedule's payload with `metadata.schedule_id/tick_id/fired_at`
+  injected (heartbeats get `sequence` stamped) and records an
+  `emit_skipped` note on the tick when the payload type is unregistered;
+  it is declared with `priority: 1` so it runs before
+  `schedule_bookkeeper` — the Crystal runtime sorts same-event behaviors by
+  `(-priority, name)`, and upstream's declaration order (`tick_router`
+  first) must win so a `once` schedule emits before it auto-disables.
+  `schedule_bookkeeper` advances `next_due_at` from the tick's `fired_at`
+  (catch_up='skip': missed periods fire once, not replayed) and auto-disables
+  `once` schedules. `_iso` emits a `+00:00` offset to match Python's
+  `isoformat`. Fixture scripts are driven by
+  `spec/chronicle_packs/schedule_spec.cr`.
+- `research` declares the full manifest surface (9 object types, 9 relation
+  types, 5 behaviors, 3 tools, `ResearchSettings`). `paper_ingester` turns a
+  `source` (kind=research_paper) into `Paper` + `Author`(s) + `Venue`,
+  deduping by source id via `paper_registry`, reusing venues by normalized
+  name (`venue_registry`), classifying the venue kind as
+  `conference`/`journal` from the name, and wiring `derived_from_source` /
+  `published_in` / `authored_by`. `claim_extractor` and `idea_atom_extractor`
+  are deterministic mock stubs (no LLM) — the former splits abstract
+  sentences into `observation`(category=fact, confidence=0.75, metadata
+  marks `extracted_by`) with `grounds` relations, the latter builds
+  `IdeaAtom`s from keyword templates with ramp-up `novelty_score`/
+  `coherence_score` and `proposes_idea` relations. `hypothesis_generator`
+  creates a `research_direction` per qualifying (coherence ≥
+  `min_coherence_for_hypothesis`) atom, deduping/merging by sorted-tag key;
+  `research_direction_synthesizer` creates a higher-confidence synthesized
+  direction when the atom count crosses `min_ideas_for_direction`
+  (`synth:{tag}` key). Both are gated on `auto_synthesize_directions` and
+  both merge via explicit `_merge_patch` (chronicle's `patch_object`
+  replaces, upstream merges). Direction titles capitalize tags like Python's
+  `str.title()`; the shared `_DIRECTION_REGISTRY` and `_IDEA_ATOMS_BY_PAPER`
+  are cleared by `clear_research_registry` between fixtures. Tools use the
+  host-bound graph seam and `_tool` suffix as identity_auth; `abstract` is a
+  Crystal keyword, so the ported parameter is `abstract_text`. The upstream
+  `paper_ingestion_pipeline` and `direction_synthesis` fixtures are driven
+  by `spec/chronicle_packs/research_spec.cr`.
+- `codebase` declares the full manifest surface (9 object types, 8 relation
+  types, 5 behaviors, 4 tools, `CodebaseSettings`). `repo_ingester` turns
+  `source` (kind=github_webhook | repo_file | repo_manifest) into a `Repo`,
+  deduping by `full_name` (`repo_registry`) and wiring
+  `derived_from_source`. `issue_tracker` handles kind=issue or
+  github_webhook event=issues/issue sources, deduping by
+  `"full_name#number"` (`issue_registry`), auto-creating a Core `task`
+  (priority=high when a `bug` label, otherwise medium) only for open issues
+  when `auto_create_issues_as_tasks`, and wiring `issue_in_repo` +
+  `derived_from_source` (+ `action_creates_task`, undeclared so the
+  validator passes it through, matching upstream). `adr_extractor` parses
+  ADR-markdown `repo_file` sources whose path matches
+  `adr_path_patterns`, extracting the `# title`, an `adr_number` from the
+  filename, status from content keywords (deprecated/proposed/superseded,
+  else accepted), and the `## Context`/`## Decision`/`## Consequences`
+  sections; Crystal's `m` regex flag is MULTILINE+DOTALL, so the title
+  capture uses `[^\n]+` (Python's `re.MULTILINE`). `change_summarizer`
+  folds github_push/code_change or push/pull_request webhook sources into a
+  `CodeChange` (deduped files, commit_sha from `after`/first commit id,
+  author from pusher/sender, `N commit(s): ...` summary). `dependency_auditor`
+  reads the repo's source metadata `dependencies`, flags
+  `has_known_vulnerability` only when severity ≥
+  `vulnerability_severity_threshold`, and wires `repo_depends_on`. Closed
+  Literal sets (`DependencyKind`, `IssueState`, `PullRequestState`,
+  `AdrStatus`) are enums. Tools use the host-bound graph seam and `_tool`
+  suffix as identity_auth. The upstream `repo_and_issue_tracking` and
+  `code_change_tracking` fixtures are driven by
+  `spec/chronicle_packs/codebase_spec.cr`.
+- `team_ops` declares the full manifest surface (6 object types, 7 relation
+  types, 4 behaviors, 5 tools, `TeamOpsSettings`). `task_triager` promotes
+  observations whose `category` equals `task_candidate_hint`, whose metadata
+  has `task_candidate: true`, or whose category is `action_item` into Core
+  `task`s (title=text[:80], status=candidate), wiring `part_of_project` /
+  `part_of_milestone` when the metadata carries ids and creating an
+  `assignment` (via `_extract_owner_from_text` or metadata `owner_ref`) only
+  when `auto_assign_tasks`. `assignment_suggester` creates `assignment`s for
+  owner-ref'd tasks, skipping tasks `task_triager` already assigned
+  (`task_assignments` registry) and auto-creating a `review_request` for
+  critical-priority tasks when `require_review_for_critical_tasks` (the
+  registry short-circuit is why task_triager-promoted critical tasks don't
+  double-assign). `milestone_tracker` keeps the open-milestone registries
+  (used by triage linking). `completion_verifier` turns decision/fact
+  observations mentioning completed/done/finished/closed/resolved with a
+  metadata `task_id` into `completion_evidence` and patches the task's
+  status to `done`. `create_project_fn`/`create_milestone_fn`/`assign_task_fn`/
+  `mark_task_done_fn` are the ported tool behaviors (milestone wires
+  `part_of_project`, evidence wires `evidence_for` and patches task done).
+  Closed Literal sets (`ProjectStatus`, `MilestoneStatus`, `ReviewType`,
+  `ReviewStatus`) are enums. Tools use the host-bound graph seam and `_tool`
+  suffix as identity_auth. The upstream `task_triage_and_assignment` and
+  `completion_workflow` fixtures are driven by
+  `spec/chronicle_packs/team_ops_spec.cr`.
+- `meeting` declares the full manifest surface (5 object types, 7 relation
+  types, 4 behaviors, 4 tools, `MeetingSettings`). `transcript_ingester`
+  turns a `source` (kind=meeting_transcript) into a `Meeting` +
+  `TranscriptSegment`s, parsing the content in priority order (JSON
+  array/object → structured `Speaker: text` lines → sentence-split plain
+  text), flagging segments via the settings keyword lists, and wiring
+  `derived_from_source` + `segment_of`; it is idempotent per source id via
+  the `meeting_registry`. `decision_extractor`/`action_item_extractor`
+  fire on flagged `transcript_segment` objects — the decision extractor
+  creates `meeting_decision` (confidence 0.80, `decided_by`=speaker,
+  `decision_in` + `decision_from_segment`), the action-item extractor
+  creates a Core `task` (title `[Meeting] ...`, status=candidate,
+  priority=medium) and `meeting_action_item` (`action_item_in`,
+  `action_item_from_segment`, `action_creates_task`) but returns before
+  creating anything when `auto_create_tasks_from_action_items` is false
+  (the upstream gate precedes both objects). `meeting_summarizer` writes a
+  `meeting_note` (note_type=summary) on `meeting.created` when
+  `auto_summarize_meeting`. Closed Literal sets (`MeetingPlatform`,
+  `MeetingStatus`, `ActionItemStatus`, `NoteType`) are enums. Tools use the
+  host-bound graph seam and `_tool` suffix as identity_auth;
+  `add_action_item_fn` mirrors upstream by creating the Core task with
+  `owner_ref`/`due_at` and linking `action_creates_task`. The upstream
+  `transcript_ingestion_pipeline` and `manual_meeting_workflow` fixtures are
+  driven by `spec/chronicle_packs/meeting_spec.cr`. `_mock_summary` is
+  ported for surface parity (unused by the v0.1 behaviors, matching
+  upstream).
+- `subject_profile` declares the full manifest surface (3 object types, 5
+  relation types, 1 behavior, 2 tools, `SubjectProfileSettings`).
+  `apply_subject_fact_verdict` fires on a `subject_fact_verdict` created
+  with `status=proposed` (the where clause uses the flat chronicle payload
+  keys `{"type" => "subject_fact_verdict", "data.status" => "proposed"}` for
+  upstream's `object.type`/`object.data.status`), and fails closed through
+  explicit verdict `status` patches: a non-`profile_candidate` candidate, an
+  evidence whose `normalized_metadata.subject_scope` is not
+  `owner_profile` (the security boundary), or an empty resulting value all
+  mark the verdict `failed` (with `metadata.error`
+  `owner_subject_scope_required`/`empty_value`). A `reject` verdict
+  invalidates the candidate; `confirm`/`correct` promote a `subject_fact`
+  (deterministic `_stable_id` SHA-256 identity, `trust=confirmed_trust`,
+  exact evidence provenance) with `promoted_from_profile_candidate` +
+  `subject_fact_grounded_in`, patch the verdict `applied` (with
+  `result_fact_id`), and — for a corrected value that conflicts with a
+  prior promoted fact — mark the prior `contradicted` and open a
+  `subject_contradiction` (`contradiction_involves` ×2). All verdict/candidate/
+  fact `status` patches use an explicit top-level merge (chronicle's
+  `patch_object` replaces data, upstream merges). The upstream `view` is
+  served by `graph.objects` (chronicle behaviors have no view). The tools
+  use the host-bound graph seam and `_tool` suffix as identity_auth;
+  `forget_subject_fact_fn` raises `PackError` on a non-`subject_fact` target
+  (upstream `ValueError`), supersedes the original via an auditable
+  `subject_fact_forget_*` tombstone, and wires `subject_fact_supersedes`.
+  The pack has no upstream fixture script; behavior coverage lives in
+  `spec/chronicle_packs/subject_profile_spec.cr`, which drives the
+  activity_normalizer `profile_candidate`/`activity_evidence` inputs
+  directly (the graph validator passes unregistered types through).
+- `telegram` declares the full manifest surface (1 object type, 1 relation
+  type, 2 behaviors, 1 tool, `TelegramSettings`, plus the
+  `telegram.send_message` capability declaration — risk_class=low,
+  credential_ref=TELEGRAM_BOT_TOKEN, action_class=R3). It is a pure
+  transport adapter: `telegram_ingester` turns a `telegram_update` into a
+  `chat_input` (`user_ref='telegram:<user_id>'`, metadata.channel=telegram,
+  adapter routing data) and wires `ingested_as`, leaving everything
+  conversational to the Chat Pack; `telegram_dispatcher` turns an approved
+  `comm_response_candidate` (channel=telegram) into a `capability_call`
+  (telegram.send_message, risk from `outbound_risk_class`, `delivers`
+  relation, candidate metadata stamped with `delivery_call_id`), so outbound
+  sends are ordinary policy-checked gateway capability calls — the adapter
+  never touches the network or the credential. Porting the dispatcher
+  required fixing the communication `delivers` relation declaration to match
+  upstream (open source → `comm_response_candidate`, previously wrongly
+  constrained to `comm_response_candidate → comm_message`). `submit_telegram_update`
+  normalizes the Bot API wire shape (chat/user ids coerced via str(), raw
+  trimmed for audit; non-message updates return nil). The in-process
+  `_SEEN_UPDATE_IDS` at-least-once dedup guards twitchy pollers
+  (`clear_seen_updates` between fixtures). The capabilities module
+  (`SendMessageInput`, `_send_message`, `register_send_capability`) and the
+  long-polling driver (`poller.py`: `_get_updates`/`_post_to_server`/
+  `run_poller`) are ported with injectable `http_get`/`http_post` seams (and
+  a `token_provider` seam for the send handler, since the ported gateway
+  handler signature receives only input_data, not execution_context) so the
+  network edge is testable offline and fails closed without a token. The
+  four upstream fixtures — owner conversation, stranger deflection, update
+  dedup, and held outbound (risk=high → approval with live principal
+  verification → delivery) — are driven end-to-end through core +
+  tool_gateway + identity_auth + communication + chat by
+  `spec/chronicle_packs/telegram_spec.cr`.
+- `whatsapp` declares the full manifest surface (1 object type, 1 relation
+  type, 2 behaviors, 1 tool, `WhatsAppSettings`, plus the
+  `whatsapp.send_message` capability declaration — risk_class=low,
+  credential_ref=WHATSAPP_ACCESS_TOKEN, action_class=R3). It is the
+  structural mirror of the telegram adapter, differing only in wire shapes
+  and identity refs: `whatsapp_ingester` turns a `whatsapp_message` into a
+  `chat_input` (`user_ref='whatsapp:<phone>'`, metadata.channel=whatsapp,
+  `to_number`/`wamid` adapter routing) and wires `wa_ingested_as`;
+  `whatsapp_dispatcher` turns an approved `comm_response_candidate`
+  (channel=whatsapp) into a `capability_call` (whatsapp.send_message,
+  input `{"to", "text"}`, `delivers` relation, candidate metadata stamped
+  with `delivery_call_id`). `submit_whatsapp_webhook` unwraps Meta's Cloud
+  API envelope (`entry[].changes[].value.messages[]`) with a contacts
+  profile-name lookup and skips non-text messages entirely. The in-process
+  `_SEEN_MESSAGE_IDS` wamid dedup guards Meta's at-least-once webhook
+  delivery (`clear_seen_messages` between fixtures). The capabilities module
+  (`SendMessageInput`, `_send_message`, `register_send_capability`) posts to
+  `{api_base}/{phone_number_id}/messages` with a Bearer token and fails
+  closed without a token or a configured `phone_number_id`; the token is
+  pulled from an injectable `token_provider` seam (the ported gateway
+  handler signature receives only input_data, not execution_context). The
+  four upstream fixtures — owner conversation, stranger deflection, webhook
+  dedup, and non-text-message skipping — are driven end-to-end through core
+  + tool_gateway + identity_auth + communication + chat by
+  `spec/chronicle_packs/whatsapp_spec.cr`.
+- `composio` declares the full manifest surface (zero object/relation/
+  behavior types, 2 proposal tools, `ComposioSettings`, plus the
+  `composio.connections.link` (risk_class=high, action_class=R4) and
+  `composio.connections.status` (risk_class=low, action_class=R0)
+  capability declarations). It is an optional thin route, never a canonical
+  service identity: `request_composio_link_fn`/`request_composio_status_fn`
+  propose `capability_call`s through the Tool Gateway (governed, held for
+  R4/link), and the registered capabilities drive an injectable
+  `ComposioTransport` seam (`configure_composio_transport`/`composio_transport`).
+  The client layer is ported: `resolve_catalog_tool` hardens canonical
+  candidates into one concrete provider tool version (dedup'd candidates,
+  toolkit-scoped catalog rows, version selection with `latest` → current,
+  deprecation rejection, `shape_fingerprint` receipt), `store_redirect`/
+  `take_redirect` keep bearer-like Connect Links out of graph output and
+  event history (https-origin validation + `safe_sha256_fingerprint`, with
+  the fixture asserting the origin survives while the full `/link/...` path
+  never reaches `capability_result.output_data`), and `connection_summary`
+  returns only non-secret identity/status fields. `SDKComposioTransport` is
+  ported but fails closed with `ComposioUnavailable` — there is no Crystal
+  Composio SDK (upstream raises the same on an SDK import miss); hosts wire
+  a real transport via the seam. The upstream Connect Link fixture (core +
+  tool_gateway + composio, fixture transport, register capabilities, propose
+  → hold → approve → execute → stored redirect) is driven by
+  `spec/chronicle_packs/composio_spec.cr`.
+- `gmail` declares the full manifest surface (2 object types, 2 relation
+  types, 9 behaviors, 7 tools, `GmailSettings`, plus the 7 canonical
+  `gmail.*` capability declarations — drafts.create=R2, drafts.send=R3, the
+  five R0 reads). It is the first full connector-conformance case:
+  `request_gmail_exploration_fn` proposes two budgeted R0 probes
+  (`profile.get`/`labels.list`) through the gateway and
+  `gmail_exploration_projector` turns the recorded replay artifacts into an
+  active `integration_profile` (with `aggregator_profile` for the composio
+  route, capability inventory, claims, data topology, and the history
+  watermark), a `source_connection_request` (→ usage `connection_surface`),
+  and a `backfill_cursor`. `request_gmail_backfill_fn`/
+  `propose_gmail_page_fn` drive bounded multi-page sync; the
+  `gmail_sync_result_ingester` imports provider-neutral `acquired_item`/
+  `acquired_content` handoffs (replay artifacts, never mailbox bodies in the
+  graph), advances the cursor, and records provider failures via
+  activity_normalizer (`rate_limited`/`auth_expired`/`cursor_invalid`/
+  `unexpected_shape` classification, profile drift marking, and
+  `reanchor_required` for cursor invalidation). `request_gmail_poll_fn`
+  reads history from a provider watermark, spawns `messages.get` hydration
+  calls, records deletion tombstones (`evidence_invalidation_request` →
+  activity_normalizer revokes matching evidence and usage marks it
+  invalidated), and settles a missing history message as a concurrent
+  deletion. The draft lifecycle is local-first: `create_gmail_draft_candidate_fn`
+  is an R1 `gmail_draft_candidate` (no provider write); `request_gmail_draft_sync_fn`
+  proposes an R2 `drafts.create` that must be explicitly approved before
+  `gmail_draft_result_projector` flips the draft to `synced` with a provider
+  draft id; `request_gmail_draft_send_fn` proposes an R3 `drafts.send` that
+  is never auto-run (re-proposing is idempotent on the held call). The
+  conversation family mapping (`materialize_gmail_run_fn`) runs locally over
+  recorded evidence (`reprocess_gmail_evidence_fn` never contacts the
+  provider), reusing the communication family materializer and the
+  connector_control adapter (`adapt_gmail_run_fn` + maintenance handler)
+  so the neutral control plane stays authoritative. Route adapters are
+  injectable (`register_gmail_capabilities` accepts `execute_route`/
+  `resolve_route`/`route`, so a native route works with no Composio
+  dependency). The closed string sets (`SyncMode`, `SyncStatus`, `ErrorCode`,
+  `DraftStatus`) are enums. The upstream test surface
+  (`tests/test_gmail_connector.py` — explore/backfill/poll/revoke,
+  history-404 settlement, interrupted-restart, bound-hit partial, local
+  draft R1/send-holds, unexpected-shape drift, rate-limit retry + invalid
+  cursor reanchor, non-composio route) and the fixture cascade are driven by
+  `spec/chronicle_packs/gmail_spec.cr`; the fixture `main` CLI is skipped
+  (`fixtures/run_fixtures.py::main`) and the Pydantic `_StrictModel`
+  `extra=forbid` is not enforced.
+- `mcp` declares the full manifest surface (3 object types — `mcp_server`,
+  `mcp_exposure`, `mcp_access` — zero relations/behaviors/tools,
+  `MCPSettings`, plus the `mcp.set_exposure` capability declaration —
+  risk_class=high, action_class=R4). It is bidirectional. **Outbound**
+  (`client.cr` + `registry.cr`): `StdioTransport`/`HttpTransport` speak
+  JSON-RPC 2.0 (stdio framing over a subprocess; streamable HTTP with JSON
+  or SSE responses and `Mcp-Session-Id` echo — the HTTP POST is an
+  injectable seam so the deterministic specs never touch the network);
+  `MCPClient` is the protocol layer (handshake, `list_tools`, `call_tool`,
+  `call_tool_text`). `connect_and_register` discovers a server's tools and
+  registers each as a gateway capability (`mcp_<server>.<tool>`): high risk
+  by default (approval-required), action-classed R3 by default (ADR 0016,
+  never derived from the risk label), per-tool `tool_risk_overrides` /
+  `tool_action_class_overrides` as explicit operator statements, JSON-schema
+  input schemas from the tool's `inputSchema`, and an `mcp_server` audit
+  object (connected/unreachable; `register_configured_servers` isolates one
+  broken server). **Inbound** (`server.cr`): `MCPGateway.handle_jsonrpc`
+  takes a parsed JSON-RPC message + bearer token; `resolve_caller` maps a
+  configured token to a caller identifier whose role comes from Identity/Auth
+  (`identity_unverified` single-user mode when no principals are registered,
+  fail-closed on unknown identifiers); `exposure_allows` is fail-closed over
+  graph-native `mcp_exposure` rules (latest rule per surface wins; per-tool
+  `tool:<key>` overrides the generic `tools` gate); `set_exposure_fn` is the
+  agent-editable-config seam behind the governed `mcp.set_exposure`
+  capability (held for owner approval, then applied); `_call_capability`
+  routes exposed capabilities through the SAME gateway path as the
+  assistant's own tool use (record → policy → execute-or-hold), and every
+  inbound call — allowed or refused — is an `mcp_access` audit object. The
+  upstream test surface (`tests/test_mcp_client.py` — handshake/discovery,
+  schema mapping, governed registration, held-vs-executed, injection
+  posture, R3-default + ceiling ineligibility, per-tool action overrides —
+  and `tests/test_mcp_inbound.py` — caller matrix, exposure defaults and
+  per-tool overrides, chat/memory dispatch, governed capability call +
+  approval, audit trail, set_exposure held-then-applied) plus the four
+  fixture scenarios are driven by `spec/chronicle_packs/mcp_spec.cr`; the
+  fixture `run_all` CLI is skipped. Divergences: the MCP `MCPClient.initialize`
+  handshake method is `handshake` (Crystal reserves `initialize` for the
+  constructor); `register_set_exposure_capability` uses the pack's
+  `bound_graph` seam and `updated_by: "gateway"` because the ported gateway
+  handler receives only `input_data`, not an `execution_context` with a
+  graph/call id; `schema_model_from_json_schema` returns a plain JSON Schema
+  object instead of a dynamic Pydantic model (the MCP server revalidates on
+   its side); and the `mcp_exposure` enabled/`mcp_access` allowed booleans
+   use `getter?` predicates.
+- `bridges/diligence_core` declares the full manifest surface (zero
+  object/relation types, 4 behaviors, `DiligenceCoreBridgeSettings`, empty
+  in v0.1). `document_to_source`/`claim_to_observation`/`memo_to_artifact`/
+  `risk_to_evaluation` subscribe to `object.created` by type name
+  (document/claim/memo/risk), read the flat chronicle payload
+  (`payload["id"]`/`payload["data"]` for upstream's nested `object` read),
+  and emit Core equivalents — `source` (kind=document), `observation`
+  (category=fact), `artifact` (kind=memo, assembled markdown body,
+  status=draft), `evaluation` (judgment=severity,
+  evaluator=diligence_core_bridge) — each carrying a `derived_from` relation
+  to its Diligence origin (bridged observations additionally wire `grounds`
+  to any bridged source document). Python's falsy-on-empty `or` fallbacks
+  are ported via a `_or` helper (empty string → default); the upstream bare
+  `except: pass` guards around every `add_object`/`add_relation` are ported
+  as bare `rescue`s. The `_BRIDGE_SEEN` registry (`DiligenceCore.bridge_seen`)
+  dedupes per diligence object id, so replayed `object.created` events
+  bridge once (guarded by `has_key?`, not `in?` — Hash `in?` compares
+  key-value tuples). The upstream fixture's stub Diligence pack schemas are
+  replaced by direct object injection (`spec/chronicle_packs/
+  diligence_core_spec.cr` drives both fixture scenarios and the replay-dedup
+  case; the graph validator passes unregistered types through). Core's own
+  `observation_extractor` also fires on bridged `source` objects, matching
+  the upstream fixture (Core loads alongside the bridge).
+- `evolution` (slice 1 of N): the deterministic graph-native surface is
+  ported, and the Python-bound machinery is deferred. **Deferred**: the
+  stage-2 static-gate pipeline (`analysis.py` parses candidate PYTHON pack
+  source with Python's `ast` — no Crystal parser exists; `gates.py`
+  `run_static_gates` depends on it, so `proposal_gatekeeper` ports only
+  the taint-suspension path and leaves the gate-running seam deferred),
+  subprocess sandbox trials (`trial.py`/`soak.py` need a fresh-interpreter
+  child with RLIMIT/wall-clock nets — no chronicle primitive), dynamic
+  pack import (`materialize.import_pack` is `importlib`), adoption phase
+  two (`adopt.process_adoption_tickets` needs materialize_verified +
+  fork promotion), boot reload/retention (`boot.py`), the LLM author
+  (`author.py`, mock model — needs `analysis.extract_surface`), review
+  HTML (`review.py`, stdlib `difflib`), and the fixture scenarios
+  (`fixtures/run_fixtures.py`). **Ported**: 8 object types + 5 relation
+  types (`struct` + `@[ObjectType]`/`@[RelationType]`, `getter? enabled`
+  for the master switch); `EvolutionSettings` with the upstream defaults
+  (consts nested so the DSL pack macro treats them as data); `author_frame`
+  (charter text embedded byte-identical to the pinned vendor file and
+  `sha256:`-pinned by `charter_text_and_hash`; the closed
+  `ADMISSIBLE_FIELD_PATHS` set; `validate_structured_fields` charset
+  checks with Python-`!r`-style single-quoted messages;
+  `recompute_drafting_taint` ignores the record's stored flags and unions
+  flags read fresh from admitted object ids, plus an owner-content
+  injection tripwire); `materialize.proposal_files`/`write_files`/
+  `bundle_hash_of` (the pin rides chronicle's `compute_bundle_hash`);
+  the tools — `submit_proposal_fn` (bundle pin at submission,
+  drafting-record taint recompute + structured-field refusal),
+  `open_reflection_gap_fn` (deterministic taint union over the review's
+  full input set), `request_adoption_fn` (governed critical hold via
+  tool_gateway); the behaviors — `gap_detector` (threshold + one-open-gap-
+  per-capability + taint union, no-ops when disabled), `promotion_recorder`
+  (promote.applied marker → active + proposal promoted),
+  `watch_monitor` (scans the event log sorted by sequence for in-window
+  attributable behavior.failed, one reflection gap per adopted pack);
+  `render_trial_driver` (deterministic driver bytes with Python-style
+  single-quoted repr of replay types); and `register_adoption_capabilities`
+  (the two refusals — auto-approvable critical and no verified approver —
+  and the ticket-writing executors behind a host `bound_graph` seam).
+  Object reads use `graph.objects` and the log scan uses `graph.events`
+  sorted by sequence (chronicle's `ctx.view` is empty unless context-read
+  tracing is enabled). Slice 2 ports the review decision surface
+  (`review.py`): `build_review` is a pure read over the objects the
+  pipeline already wrote, `_manifest_view` parses the proposal's
+  manifest.toml with the `toml` shard (never trusted, only displayed),
+  and the per-file unified diff rides the `similar` shard
+  (dsisnero/similar.cr, now a declared dependency) configured with
+  `diff_slices(old.lines, new.lines)` + context radius 3, which matches
+  Python difflib's `unified_diff(..., lineterm="")` line output exactly.
+  `render_review_html`/`render_approvals_index_html` reproduce the
+  upstream page byte-for-byte in structure (CSS/JS constants verbatim),
+  and agent-authored text is HTML-escaped everywhere it appears. All
+  status patches in the behaviors (proposal_gatekeeper's taint-suspend,
+  promotion_recorder's active flip, request_adoption's pending_approval)
+  use an explicit `_merge_patch` because chronicle's `patch_object`
+  replaces the whole data hash while upstream merges — without it a
+  patch wipes sibling fields like `gap_id`.
 - `activity_normalizer`: all 13 object types and
   8 relation types are `JSON::Serializable` structs. The
   `normalize_acquired_item` behavior owns provider-neutral evidence identity
@@ -469,4 +1243,4 @@ surface.
 
 - `plans/inventory/python_port_inventory.tsv` — 2080 API items (tree-sitter backend)
 - `plans/inventory/python_source_parity.tsv` — 2080 source API items
-- `plans/inventory/python_test_parity.tsv` — 638 tests
+- `plans/inventory/python_test_parity.tsv` — 638 tests (161/638)
