@@ -108,6 +108,10 @@ describe Chronicle::Packs::Evolution do
       s.fixture_extra_allow.should eq(["sys", "pathlib", "activegraph"])
       s.reserved_namespaces.should eq(["tool_gateway", "evolution", "mcp"])
       s.reserved_paths.should eq(["author_charter.md"])
+      s.crystal_allowed_files.should contain("manifest.toml")
+      s.crystal_allowed_files.should contain("pack.cr")
+      s.crystal_require_allow.should contain("json")
+      s.crystal_require_allow.should contain("chronicle-packs")
       s.allowed_files.should contain("manifest.toml")
       s.allowed_files.should contain("fixtures/run_fixtures.py")
       s.allowed_files.should contain("fixtures/trial_scenario.py")
@@ -382,6 +386,56 @@ describe Chronicle::Packs::Evolution do
         data["status"].as_s.should eq("suspended")
         data["status_note"].as_s.should contain("tainted lineage")
         data["injection_flags"].as_a.map(&.as_s).should eq(["prompt_injection"])
+      end
+    end
+
+    it "proposal_gatekeeper rejects the first failed Crystal static gate and records it" do
+      with_evolution_runtime do |_store, graph, rt|
+        proposal = Chronicle::Packs::Evolution.submit_proposal_fn(
+          graph,
+          pack_name: "unsafe_pack",
+          files: {
+            "manifest.toml" => "[surface]\nbehaviors = []\ntools = []\nobject_types = []\nrelation_types = []\ncapabilities = []\n",
+            "pack.cr"       => "require \"net/http\"\n",
+          },
+        )
+
+        rt.run_until_idle
+
+        data = JSON.parse(graph.get_object(proposal.id).not_nil!.data)
+        data["status"].as_s.should eq("rejected")
+        data["status_note"].as_s.should eq("static:requires: pack.cr: require 'net/http' not in allow-list")
+        gates = graph.objects(type: "gate_result")
+        gates.size.should eq(1)
+        gate = JSON.parse(gates.first.data)
+        gate["proposal_id"].as_s.should eq(proposal.id)
+        gate["gate"].as_s.should eq("static:requires")
+        gate["verdict"].as_s.should eq("fail")
+        gate["details"].as_s.should eq("pack.cr: require 'net/http' not in allow-list")
+        graph.relations(source: proposal.id, type: "gated_by").map(&.to_id).should eq([gates.first.id])
+      end
+    end
+
+    it "proposal_gatekeeper marks a clean Crystal proposal gated with an audit result" do
+      with_evolution_runtime do |_store, graph, rt|
+        proposal = Chronicle::Packs::Evolution.submit_proposal_fn(
+          graph,
+          pack_name: "clean_pack",
+          files: {
+            "manifest.toml" => "[surface]\nbehaviors = []\ntools = []\nobject_types = []\nrelation_types = []\ncapabilities = []\n",
+            "pack.cr"       => "module CleanPack\nend\n",
+          },
+        )
+
+        rt.run_until_idle
+
+        JSON.parse(graph.get_object(proposal.id).not_nil!.data)["status"].as_s.should eq("gated")
+        gates = graph.objects(type: "gate_result")
+        gates.size.should eq(1)
+        gate = JSON.parse(gates.first.data)
+        gate["gate"].as_s.should eq("static:complete")
+        gate["verdict"].as_s.should eq("pass")
+        gate["details"].as_s.should be_empty
       end
     end
 

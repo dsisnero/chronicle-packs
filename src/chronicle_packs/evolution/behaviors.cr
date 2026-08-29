@@ -96,11 +96,6 @@ module Chronicle::Packs::Evolution
   # are non-empty is suspended before any gate runs, and stays suspended
   # until the owner explicitly clears it.
   #
-  # NOTE (deferred seam): the stage-2 static-gate pipeline (upstream
-  # gates.run_static_gates over analysis.py) parses candidate PYTHON source
-  # with `ast`. The Crystal port cannot run that parser; the gate-running
-  # path lands with the analysis/gates port. The taint-suspension path is
-  # complete and behavior-faithful.
   @[Chronicle::Packs::Annotations::Behavior(name: "proposal_gatekeeper", on: ["object.created"], where: {"type" => "mod_proposal"}, creates: ["gate_result"])]
   def proposal_gatekeeper(event : Chronicle::Event, graph : Chronicle::GraphProjection, _ctx : Chronicle::Packs::BehaviorContext, settings : EvolutionSettings) : Nil
     return unless settings.enabled?
@@ -126,8 +121,49 @@ module Chronicle::Packs::Evolution
       return
     end
 
-    # Deferred seam: run_static_gates(graph, proposal, settings) — the
-    # stage-2 static gate pipeline — lands with the analysis.py port.
+    _run_crystal_static_gatekeeper(graph, proposal_id, settings)
+  end
+
+  private def self._run_crystal_static_gatekeeper(graph : Chronicle::GraphProjection, proposal_id : String, settings : EvolutionSettings) : Nil
+    proposal = graph.get_object(proposal_id)
+    return if proposal.nil?
+    files = Materialize.proposal_files(graph, proposal)
+    config = Analysis::CrystalStaticGateConfig.new(
+      allowed_files: settings.crystal_allowed_files,
+      allowed_requires: settings.crystal_require_allow,
+      reserved_paths: settings.reserved_paths,
+      reserved_namespaces: settings.reserved_namespaces,
+      never_callable: ToolGateway::Untrusted::NEVER_LLM_CALLABLE.to_a,
+      max_total_source_bytes: settings.max_total_source_bytes,
+      max_file_source_bytes: settings.max_file_bytes,
+    )
+    if failure = Analysis.first_crystal_static_failure(files, config)
+      gate, violations = failure
+      details = violations.join("; ")
+      _record_static_gate(graph, proposal_id, gate, "fail", details)
+      _merge_patch(graph, proposal_id, {
+        "status"      => JSON::Any.new("rejected"),
+        "status_note" => JSON::Any.new("#{gate}: #{violations.first? || gate}"),
+      }, "evolution.proposal_gatekeeper")
+      return
+    end
+
+    _record_static_gate(graph, proposal_id, "static:complete", "pass", "")
+    _merge_patch(graph, proposal_id, {
+      "status"      => JSON::Any.new("gated"),
+      "status_note" => JSON::Any.new(""),
+    }, "evolution.proposal_gatekeeper")
+  end
+
+  private def self._record_static_gate(graph : Chronicle::GraphProjection, proposal_id : String, gate : String, verdict : String, details : String) : Nil
+    result = graph.add_object("gate_result", {
+      "proposal_id" => JSON::Any.new(proposal_id),
+      "gate"        => JSON::Any.new(gate),
+      "verdict"     => JSON::Any.new(verdict),
+      "details"     => JSON::Any.new(details),
+      "at"          => JSON::Any.new(_beh_now),
+    }.to_json, actor: "evolution.proposal_gatekeeper")
+    graph.add_relation(proposal_id, result.id, "gated_by", actor: "evolution.proposal_gatekeeper")
   end
 
   # Flip the loading mod_promotion to active on the marker event.

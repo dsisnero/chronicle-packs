@@ -22,6 +22,17 @@ module Chronicle::Packs::Evolution
     LIST = [AuthorFrame::AUTHOR_CHARTER_FILENAME]
   end
 
+  module DefaultCrystalAllowedFiles
+    LIST = [
+      "manifest.toml", "pack.cr", "object_types.cr", "relation_types.cr",
+      "behaviors.cr", "tools.cr", "settings.cr", "capabilities.cr",
+    ]
+  end
+
+  module DefaultCrystalRequireAllow
+    LIST = ["json", "time", "digest", "uuid", "uri", "chronicle-packs"]
+  end
+
   # Configuration for Evolution Pack v0.1.
   #
   # Shipped default is OFF: self-modification is opt-in, never ambient.
@@ -46,6 +57,8 @@ module Chronicle::Packs::Evolution
     getter fixture_extra_allow : Array(String) = DefaultFixtureExtraAllow::LIST
     getter reserved_namespaces : Array(String) = DefaultReservedNamespaces::LIST
     getter reserved_paths : Array(String) = DefaultReservedPaths::LIST
+    getter crystal_allowed_files : Array(String) = DefaultCrystalAllowedFiles::LIST
+    getter crystal_require_allow : Array(String) = DefaultCrystalRequireAllow::LIST
     getter allowed_files : Array(String) = [
       "manifest.toml", "__init__.py", "object_types.py", "behaviors.py",
       "tools.py", "settings.py", "fixtures/run_fixtures.py",
@@ -70,6 +83,8 @@ module Chronicle::Packs::Evolution
       @fixture_extra_allow : Array(String) = DefaultFixtureExtraAllow::LIST,
       @reserved_namespaces : Array(String) = DefaultReservedNamespaces::LIST,
       @reserved_paths : Array(String) = DefaultReservedPaths::LIST,
+      @crystal_allowed_files : Array(String) = DefaultCrystalAllowedFiles::LIST,
+      @crystal_require_allow : Array(String) = DefaultCrystalRequireAllow::LIST,
       @allowed_files : Array(String) = [
         "manifest.toml", "__init__.py", "object_types.py", "behaviors.py",
         "tools.py", "settings.py", "fixtures/run_fixtures.py",

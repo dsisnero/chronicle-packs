@@ -1051,7 +1051,8 @@ All six importers are ported: `local_files` (26/26),
   manifest-derived, two-way behavior/tool/type/capability surface; protected
   provider namespaces and never-LLM-callable names refused without executing
   candidate code; a typed, fail-fast Crystal static-validation pipeline
-  returns the first named governance violation in upstream gate order);
+  drives `proposal_gatekeeper` to an audit-linked `rejected` first failure or
+  `gated` static-completion transition in upstream gate order);
   `recompute_drafting_taint` ignores the record's stored flags and unions
   flags read fresh from admitted object ids, plus an owner-content
   injection tripwire); `materialize.proposal_files`/`write_files`/
