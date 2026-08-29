@@ -1052,7 +1052,8 @@ All six importers are ported: `local_files` (26/26),
   provider namespaces and never-LLM-callable names refused without executing
   candidate code; a typed, fail-fast Crystal static-validation pipeline
   drives `proposal_gatekeeper` to a per-gate, audit-linked `rejected` first
-  failure or `gated` static-completion transition in upstream gate order);
+  failure, source-injection `suspended` result, or `gated` static-completion
+  transition in upstream gate order);
   `recompute_drafting_taint` ignores the record's stored flags and unions
   flags read fresh from admitted object ids, plus an owner-content
   injection tripwire); `materialize.proposal_files`/`write_files`/

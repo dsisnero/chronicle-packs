@@ -152,6 +152,23 @@ module Chronicle::Packs::Evolution
       return
     end
 
+    injection_flags = Set(String).new
+    files.each_value do |source|
+      ToolGateway::Untrusted.scan_for_injection(source).each { |flag| injection_flags << flag }
+    end
+    flags = injection_flags.to_a.sort
+    unless flags.empty?
+      _record_static_gate(graph, proposal_id, "static:injection", "suspended", flags.join(", "))
+      _merge_patch(graph, proposal_id, {
+        "status"          => JSON::Any.new("suspended"),
+        "status_note"     => JSON::Any.new("injection patterns in source: #{flags.join(", ")}"),
+        "injection_flags" => JSON::Any.new(flags.map { |flag| JSON::Any.new(flag) }),
+      }, "evolution.proposal_gatekeeper")
+      return
+    end
+
+    _record_static_gate(graph, proposal_id, "static:injection", "pass", "")
+
     _merge_patch(graph, proposal_id, {
       "status"      => JSON::Any.new("gated"),
       "status_note" => JSON::Any.new(""),
