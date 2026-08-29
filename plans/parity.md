@@ -1047,8 +1047,9 @@ All six importers are ported: `local_files` (26/26),
   checks with Python-`!r`-style single-quoted messages; Crystal-native
   `Analysis` (compiler-parser syntax refusal, manifest + `pack.cr` file
   contract, allow-listed dependencies plus authored-only relative `require`
-  paths, and extraction of the declared behavior/tool/type/capability surface
-  without executing candidate code);
+  paths, process-spawn and compile-time-shell refusal, and extraction of the
+  declared behavior/tool/type/capability surface without executing candidate
+  code);
   `recompute_drafting_taint` ignores the record's stored flags and unions
   flags read fresh from admitted object ids, plus an owner-content
   injection tripwire); `materialize.proposal_files`/`write_files`/

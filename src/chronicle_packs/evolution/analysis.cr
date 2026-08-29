@@ -165,6 +165,27 @@ module Chronicle::Packs::Evolution
       violations
     end
 
+    # Crystal has no runtime eval/import primitive. Process spawning and
+    # compile-time shell macros are the equivalent ungoverned execution
+    # paths, so authored candidates may not use them.
+    def check_crystal_banned_constructs(files : Hash(String, String)) : Array(String)
+      violations = [] of String
+      files.each do |path, source|
+        next unless path.ends_with?(".cr")
+        source.each_line do |line|
+          {
+            "Process.run"   => /\bProcess\s*\.\s*run\s*\(/,
+            "Process.exec"  => /\bProcess\s*\.\s*exec\s*\(/,
+            "Process.spawn" => /\bProcess\s*\.\s*spawn\s*\(/,
+          }.each do |name, pattern|
+            violations << "#{path}: banned construct #{name}()" if line.matches?(pattern)
+          end
+          violations << "#{path}: banned macro run()" if line.matches?(/\{%\s*run\s*\(/)
+        end
+      end
+      violations
+    end
+
     # Crystal-native replacement for the Python AST surface extractor. The
     # pack DSL's type annotations are the authoritative declared type surface.
     def extract_crystal_surface(files : Hash(String, String)) : Hash(String, Array(String))

@@ -44,6 +44,18 @@ describe Chronicle::Packs::Evolution::Analysis do
     ])
   end
 
+  it "refuses Crystal process execution and compile-time shell macros" do
+    files = {
+      "pack.cr" => "Process.run(\"sh\", [\"-c\", \"echo unsafe\"])\nProcess.exec(\"sh\", [] of String)\n{% run(\"echo unsafe\") %}\n",
+    }
+
+    Chronicle::Packs::Evolution::Analysis.check_crystal_banned_constructs(files).should eq([
+      "pack.cr: banned construct Process.run()",
+      "pack.cr: banned construct Process.exec()",
+      "pack.cr: banned macro run()",
+    ])
+  end
+
   it "rejects reserved paths by exact path and basename" do
     files = {
       "nested/author_charter.md" => "tamper",
