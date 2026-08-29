@@ -48,11 +48,29 @@ module Chronicle::Packs::Evolution
       violations
     end
 
-    # Gate 2: the immutable proposal pin must still name the exact candidate
-    # bytes reconstructed from graph artifacts. This catches post-submission
-    # artifact mutation before a candidate can advance to semantic checks.
+    # Gate 2: verify both hash layers over reconstructed graph artifacts:
+    # the manifest's source-only content pin and the proposal's external
+    # bundle pin. This catches stale manifests and post-submission mutation
+    # before a candidate can advance to semantic checks.
     def check_crystal_bundle_hash(files : Hash(String, String), expected : String) : Array(String)
       return ["proposal bundle_hash missing"] if expected.empty?
+
+      manifest = files["manifest.toml"]?
+      return ["manifest.toml: missing"] unless manifest
+      root = begin
+        TOML.parse(manifest)
+      rescue ex
+        return ["manifest.toml: syntax error: #{ex.message}"]
+      end
+      pack = root["pack"]?.try(&.as_h) || {} of String => TOML::Any
+      integrity = pack["integrity"]?.try(&.as_h) || {} of String => TOML::Any
+      content_hash = integrity["content_hash"]?.try(&.as_s?)
+      return ["manifest content_hash missing"] if content_hash.nil? || content_hash.empty?
+
+      actual_content_hash = Materialize.content_hash_of(files)
+      if actual_content_hash != content_hash
+        return ["content hash mismatch: manifest pins #{content_hash}, source hashes to #{actual_content_hash}"]
+      end
 
       actual = Materialize.bundle_hash_of(files)
       return [] of String if actual == expected

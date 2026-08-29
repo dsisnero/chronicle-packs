@@ -56,5 +56,17 @@ module Chronicle::Packs::Evolution
       FileUtils.rm_rf(root)
       hash
     end
+
+    # The manifest's internal pin covers candidate source but excludes
+    # manifest.toml itself. This is the runtime-owned canonical algorithm;
+    # Evolution only materializes the graph artifacts and invokes it.
+    def self.content_hash_of(files : Hash(String, String)) : String
+      root = write_files(files)
+      begin
+        Chronicle::Packs.compute_content_hash(root.to_s)
+      ensure
+        FileUtils.rm_rf(root)
+      end
+    end
   end
 end
