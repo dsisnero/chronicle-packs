@@ -5,8 +5,9 @@ module Chronicle::Packs::Evolution
   module Analysis
     extend self
 
-    FIXTURE_FILE   = "fixtures/run_fixtures.py"
-    REQUIRED_FILES = ["manifest.toml", "__init__.py", FIXTURE_FILE]
+    FIXTURE_FILE           = "fixtures/run_fixtures.py"
+    REQUIRED_FILES         = ["manifest.toml", "__init__.py", FIXTURE_FILE]
+    CRYSTAL_REQUIRED_FILES = ["manifest.toml", "pack.cr"]
 
     # Gate 0: candidates may contain only the configured file set and must
     # provide the manifest, module entrypoint, and trial fixture.
@@ -16,6 +17,20 @@ module Chronicle::Packs::Evolution
         violations << "file not in the authored set: #{path}" unless allowed.includes?(path)
       end
       REQUIRED_FILES.each do |path|
+        violations << "missing required file: #{path}" unless files.has_key?(path)
+      end
+      violations
+    end
+
+    # Crystal-authored candidates have no Python package initializer or
+    # Python fixture entrypoint. Their manifest and `pack.cr` loader are the
+    # minimum reviewable runtime surface.
+    def check_crystal_file_set(files : Hash(String, String), allowed : Array(String)) : Array(String)
+      violations = [] of String
+      files.each_key do |path|
+        violations << "file not in the authored set: #{path}" unless allowed.includes?(path)
+      end
+      CRYSTAL_REQUIRED_FILES.each do |path|
         violations << "missing required file: #{path}" unless files.has_key?(path)
       end
       violations

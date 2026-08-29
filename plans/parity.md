@@ -1027,9 +1027,9 @@ All six importers are ported: `local_files` (26/26),
 - `evolution` (slice 1 of N): the deterministic graph-native surface is
   ported, and the Python-bound machinery is deferred. **Deferred**: the
   stage-2 static-gate pipeline (`analysis.py` parses candidate PYTHON pack
-  source with Python's `ast` — no Crystal parser exists; `gates.py`
-  `run_static_gates` depends on it, so `proposal_gatekeeper` ports only
-  the taint-suspension path and leaves the gate-running seam deferred),
+  source with Python's `ast`; Crystal candidates instead use compiler-parser
+  validation plus a Crystal file/surface contract, while `gates.py`
+  `run_static_gates` and its proposal-gatekeeper wiring remain deferred),
   subprocess sandbox trials (`trial.py`/`soak.py` need a fresh-interpreter
   child with RLIMIT/wall-clock nets — no chronicle primitive), dynamic
   pack import (`materialize.import_pack` is `importlib`), adoption phase
@@ -1044,7 +1044,10 @@ All six importers are ported: `local_files` (26/26),
   (charter text embedded byte-identical to the pinned vendor file and
   `sha256:`-pinned by `charter_text_and_hash`; the closed
   `ADMISSIBLE_FIELD_PATHS` set; `validate_structured_fields` charset
-  checks with Python-`!r`-style single-quoted messages;
+  checks with Python-`!r`-style single-quoted messages; Crystal-native
+  `Analysis` (compiler-parser syntax refusal, manifest + `pack.cr` file
+  contract, and extraction of the declared behavior/tool/type/capability
+  surface without executing candidate code);
   `recompute_drafting_taint` ignores the record's stored flags and unions
   flags read fresh from admitted object ids, plus an owner-content
   injection tripwire); `materialize.proposal_files`/`write_files`/

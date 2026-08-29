@@ -13,6 +13,25 @@ describe Chronicle::Packs::Evolution::Analysis do
     ])
   end
 
+  it "requires a Crystal manifest and pack entrypoint while refusing Python-only files" do
+    files = {
+      "manifest.toml" => "[pack]\nname = \"candidate\"\n",
+      "__init__.py"   => "",
+    }
+
+    Chronicle::Packs::Evolution::Analysis.check_crystal_file_set(
+      files, ["manifest.toml", "pack.cr", "behaviors.cr"]
+    ).should eq([
+      "file not in the authored set: __init__.py",
+      "missing required file: pack.cr",
+    ])
+
+    Chronicle::Packs::Evolution::Analysis.check_crystal_file_set(
+      {"manifest.toml" => "", "pack.cr" => "module Candidate\nend\n"},
+      ["manifest.toml", "pack.cr", "behaviors.cr"]
+    ).should be_empty
+  end
+
   it "rejects reserved paths by exact path and basename" do
     files = {
       "nested/author_charter.md" => "tamper",
