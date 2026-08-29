@@ -1,4 +1,5 @@
 require "compiler/crystal/syntax"
+require "toml"
 
 module Chronicle::Packs::Evolution
   # Pure, non-executing checks over a candidate pack's authored files.
@@ -309,6 +310,42 @@ module Chronicle::Packs::Evolution
         end
       end
       violations
+    end
+
+    # Gate 3 adapter: derive the manifest declaration directly from the
+    # authored TOML, then compare it with the parser-validated source.
+    def check_crystal_manifest_surface(files : Hash(String, String)) : Array(String)
+      manifest = files["manifest.toml"]?
+      return ["manifest.toml: missing"] unless manifest
+
+      root = begin
+        TOML.parse(manifest)
+      rescue ex
+        return ["manifest.toml: syntax error: #{ex.message}"]
+      end
+      surface = root["surface"]?.try(&.as_h) || {} of String => TOML::Any
+      declared = {
+        "behaviors"      => crystal_manifest_strings(surface, "behaviors"),
+        "tools"          => crystal_manifest_strings(surface, "tools"),
+        "object_types"   => crystal_manifest_strings(surface, "object_types"),
+        "relation_types" => crystal_manifest_strings(surface, "relation_types"),
+        "capabilities"   => crystal_manifest_capabilities(surface),
+      }
+      actual = extract_crystal_declared_surface(files)
+      check_declared_vs_crystal_surface(declared, actual)
+    rescue ex : ArgumentError
+      [ex.message || "Crystal source could not be analyzed"]
+    end
+
+    private def crystal_manifest_strings(surface : Hash(String, TOML::Any), key : String) : Array(String)
+      (surface[key]?.try(&.as_a) || [] of TOML::Any).map(&.as_s)
+    end
+
+    private def crystal_manifest_capabilities(surface : Hash(String, TOML::Any)) : Array(String)
+      (surface["capabilities"]?.try(&.as_a) || [] of TOML::Any).map do |capability|
+        declaration = capability.as_h
+        "#{declaration["provider"].as_s}.#{declaration["capability"].as_s}"
+      end
     end
 
     # Gate 6: candidate packs cannot claim protected provider namespaces or

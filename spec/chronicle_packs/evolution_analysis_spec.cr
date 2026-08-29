@@ -215,6 +215,41 @@ describe Chronicle::Packs::Evolution::Analysis do
     ])
   end
 
+  it "checks a Crystal manifest's declared surface against authored source" do
+    files = {
+      "manifest.toml" => <<-'TOML',
+        [surface]
+        behaviors = ["declared_only"]
+        tools = []
+        object_types = []
+        relation_types = []
+        capabilities = [{ provider = "notes", capability = "summarize" }]
+      TOML
+      "pack.cr" => <<-'CRYSTAL',
+        @[Chronicle::Packs::Annotations::Behavior(name: "source_only", on: ["object.created"])]
+        def source_only
+        end
+
+        Chronicle::Packs::CapabilityDecl.new(
+          provider: "notes",
+          capability: "summarize",
+          risk_class: "low",
+        )
+      CRYSTAL
+    }
+
+    Chronicle::Packs::Evolution::Analysis.check_crystal_manifest_surface(files).should eq([
+      "behaviors: declared 'declared_only' not found in source",
+      "behaviors: source defines 'source_only' undeclared",
+    ])
+  end
+
+  it "reports malformed Crystal candidate manifests as gate violations" do
+    Chronicle::Packs::Evolution::Analysis.check_crystal_manifest_surface(
+      {"manifest.toml" => "[surface\n", "pack.cr" => "module Candidate\nend\n"}
+    ).first.should start_with("manifest.toml: syntax error:")
+  end
+
   it "extracts the complete declared Crystal pack surface in one parser-validated pass" do
     files = {
       "pack.cr" => <<-'CRYSTAL',
