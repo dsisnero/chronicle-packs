@@ -409,6 +409,7 @@ describe Chronicle::Packs::Evolution do
         gates.map { |gate| JSON.parse(gate.data)["gate"].as_s }.should eq([
           "static:reserved_paths",
           "static:file_set",
+          "static:hash",
           "static:manifest_surface",
           "static:requires",
         ])
@@ -423,6 +424,38 @@ describe Chronicle::Packs::Evolution do
         failed_gate["verdict"].as_s.should eq("fail")
         failed_gate["details"].as_s.should eq("pack.cr: require 'net/http' not in allow-list")
         graph.relations(source: proposal.id, type: "gated_by").map(&.to_id).should eq(gates.map(&.id))
+      end
+    end
+
+    it "proposal_gatekeeper rejects a proposal whose materialized source no longer matches its bundle pin" do
+      with_evolution_runtime do |_store, graph, rt|
+        proposal = Chronicle::Packs::Evolution.submit_proposal_fn(
+          graph,
+          pack_name: "pinned_pack",
+          files: {
+            "manifest.toml" => "[surface]\nbehaviors = []\ntools = []\nobject_types = []\nrelation_types = []\ncapabilities = []\n",
+            "pack.cr"       => "module PinnedPack\nend\n",
+          },
+        )
+        artifact = graph.objects(type: "artifact").find do |object|
+          JSON.parse(object.data)["title"].as_s == "pack.cr"
+        end.not_nil!
+        changed = JSON.parse(artifact.data).as_h
+        changed["content"] = JSON::Any.new("module PinnedPack\n  VALUE = 2\nend\n")
+        graph.patch_object(artifact.id, changed.to_json)
+
+        rt.run_until_idle
+
+        data = JSON.parse(graph.get_object(proposal.id).not_nil!.data)
+        data["status"].as_s.should eq("rejected")
+        data["status_note"].as_s.should start_with("static:hash: bundle hash mismatch:")
+        gates = graph.objects(type: "gate_result")
+        gates.map { |gate| JSON.parse(gate.data)["gate"].as_s }.should eq([
+          "static:reserved_paths",
+          "static:file_set",
+          "static:hash",
+        ])
+        JSON.parse(gates.last.data)["verdict"].as_s.should eq("fail")
       end
     end
 
@@ -444,6 +477,7 @@ describe Chronicle::Packs::Evolution do
         gates.map { |gate| JSON.parse(gate.data)["gate"].as_s }.should eq([
           "static:reserved_paths",
           "static:file_set",
+          "static:hash",
           "static:manifest_surface",
           "static:requires",
           "static:banned_constructs",
@@ -482,6 +516,7 @@ describe Chronicle::Packs::Evolution do
         gates.map { |gate| JSON.parse(gate.data)["gate"].as_s }.should eq([
           "static:reserved_paths",
           "static:file_set",
+          "static:hash",
           "static:manifest_surface",
           "static:requires",
           "static:banned_constructs",

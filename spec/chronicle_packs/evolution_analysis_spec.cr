@@ -77,6 +77,8 @@ describe Chronicle::Packs::Evolution::Analysis do
   end
 
   it "runs Crystal static checks in governance order and stops at the first failure" do
+    manifest = "[surface]\nbehaviors = []\ntools = []\nobject_types = []\nrelation_types = []\ncapabilities = []\n"
+    files = {"manifest.toml" => manifest, "pack.cr" => "require \"net/http\"\n"}
     config = Chronicle::Packs::Evolution::Analysis::CrystalStaticGateConfig.new(
       allowed_files: ["manifest.toml", "pack.cr"],
       allowed_requires: ["json"],
@@ -85,11 +87,11 @@ describe Chronicle::Packs::Evolution::Analysis do
       never_callable: ["approve_capability"],
       max_total_source_bytes: 10_000,
       max_file_source_bytes: 10_000,
+      expected_bundle_hash: Chronicle::Packs::Evolution::Materialize.bundle_hash_of(files),
     )
-    manifest = "[surface]\nbehaviors = []\ntools = []\nobject_types = []\nrelation_types = []\ncapabilities = []\n"
 
     Chronicle::Packs::Evolution::Analysis.first_crystal_static_failure(
-      {"manifest.toml" => manifest, "pack.cr" => "require \"net/http\"\n"}, config
+      files, config
     ).should eq({"static:requires", ["pack.cr: require 'net/http' not in allow-list"]})
 
     Chronicle::Packs::Evolution::Analysis.first_crystal_static_failure(

@@ -128,6 +128,7 @@ module Chronicle::Packs::Evolution
     proposal = graph.get_object(proposal_id)
     return if proposal.nil?
     files = Materialize.proposal_files(graph, proposal)
+    proposal_data = JSON.parse(proposal.data)
     config = Analysis::CrystalStaticGateConfig.new(
       allowed_files: settings.crystal_allowed_files,
       allowed_requires: settings.crystal_require_allow,
@@ -136,6 +137,7 @@ module Chronicle::Packs::Evolution
       never_callable: ToolGateway::Untrusted::NEVER_LLM_CALLABLE.to_a,
       max_total_source_bytes: settings.max_total_source_bytes,
       max_file_source_bytes: settings.max_file_bytes,
+      expected_bundle_hash: proposal_data["bundle_hash"]?.try(&.as_s?) || "",
     )
     Analysis.crystal_static_gate_results(files, config).each do |gate, violations|
       if violations.empty?

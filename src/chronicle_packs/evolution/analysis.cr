@@ -17,7 +17,8 @@ module Chronicle::Packs::Evolution
       reserved_namespaces : Array(String),
       never_callable : Array(String),
       max_total_source_bytes : Int32,
-      max_file_source_bytes : Int32
+      max_file_source_bytes : Int32,
+      expected_bundle_hash : String
 
     # Gate 0: candidates may contain only the configured file set and must
     # provide the manifest, module entrypoint, and trial fixture.
@@ -44,6 +45,18 @@ module Chronicle::Packs::Evolution
         violations << "missing required file: #{path}" unless files.has_key?(path)
       end
       violations
+    end
+
+    # Gate 2: the immutable proposal pin must still name the exact candidate
+    # bytes reconstructed from graph artifacts. This catches post-submission
+    # artifact mutation before a candidate can advance to semantic checks.
+    def check_crystal_bundle_hash(files : Hash(String, String), expected : String) : Array(String)
+      return ["proposal bundle_hash missing"] if expected.empty?
+
+      actual = Materialize.bundle_hash_of(files)
+      return [] of String if actual == expected
+
+      ["bundle hash mismatch: expected #{expected}, got #{actual}"]
     end
 
     # Crystal candidates may require approved dependencies or other authored
@@ -396,6 +409,10 @@ module Chronicle::Packs::Evolution
 
       violations = check_crystal_file_set(files, config.allowed_files)
       results << {"static:file_set", violations}
+      return results unless violations.empty?
+
+      violations = check_crystal_bundle_hash(files, config.expected_bundle_hash)
+      results << {"static:hash", violations}
       return results unless violations.empty?
 
       violations = check_crystal_manifest_surface(files)
