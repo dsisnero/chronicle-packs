@@ -76,6 +76,30 @@ describe Chronicle::Packs::Evolution::Analysis do
     ])
   end
 
+  it "runs Crystal static checks in governance order and stops at the first failure" do
+    config = Chronicle::Packs::Evolution::Analysis::CrystalStaticGateConfig.new(
+      allowed_files: ["manifest.toml", "pack.cr"],
+      allowed_requires: ["json"],
+      reserved_paths: ["author_charter.md"],
+      reserved_namespaces: ["evolution"],
+      never_callable: ["approve_capability"],
+      max_total_source_bytes: 10_000,
+      max_file_source_bytes: 10_000,
+    )
+    manifest = "[surface]\nbehaviors = []\ntools = []\nobject_types = []\nrelation_types = []\ncapabilities = []\n"
+
+    Chronicle::Packs::Evolution::Analysis.first_crystal_static_failure(
+      {"manifest.toml" => manifest, "pack.cr" => "require \"net/http\"\n"}, config
+    ).should eq({"static:requires", ["pack.cr: require 'net/http' not in allow-list"]})
+
+    Chronicle::Packs::Evolution::Analysis.first_crystal_static_failure(
+      {"manifest.toml" => manifest, "pack.cr" => "require \"net/http\"\n", "author_charter.md" => "tamper"}, config
+    ).should eq({
+      "static:reserved_paths",
+      ["authored file 'author_charter.md' targets reserved path (charter and other human-PR-only files are never authorable)"],
+    })
+  end
+
   it "rejects reserved paths by exact path and basename" do
     files = {
       "nested/author_charter.md" => "tamper",
