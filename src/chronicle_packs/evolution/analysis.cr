@@ -310,5 +310,29 @@ module Chronicle::Packs::Evolution
       end
       violations
     end
+
+    # Gate 6: candidate packs cannot claim protected provider namespaces or
+    # approval-resolution names that the gateway never exposes to a model.
+    def check_crystal_reserved_namespaces(surface : Hash(String, Array(String)), reserved : Array(String), never_callable : Array(String)) : Array(String)
+      violations = [] of String
+      capabilities = (surface["capabilities"]? || [] of String).to_set.to_a.sort
+      capabilities.each do |key|
+        provider, _, capability = key.partition(".")
+        if reserved.includes?(provider)
+          violations << "capability '#{key}' registers into reserved namespace '#{provider}'"
+        end
+        if never_callable.includes?(capability)
+          violations << "capability '#{key}' uses a never-LLM-callable name ('#{capability}')"
+        end
+      end
+
+      names = [] of String
+      names.concat(surface["behaviors"]? || [] of String)
+      names.concat(surface["tools"]? || [] of String)
+      names.to_set.to_a.sort.each do |name|
+        violations << "'#{name}' collides with NEVER_LLM_CALLABLE" if never_callable.includes?(name)
+      end
+      violations
+    end
   end
 end

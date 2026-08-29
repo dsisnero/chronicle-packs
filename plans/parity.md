@@ -1048,7 +1048,8 @@ All six importers are ported: `local_files` (26/26),
   `Analysis` (compiler-parser syntax refusal, manifest + `pack.cr` file
   contract, allow-listed dependencies plus authored-only relative `require`
   paths, process-spawn and compile-time-shell refusal, and extraction of the
-  declared behavior/tool/type/capability surface without executing candidate
+  declared behavior/tool/type/capability surface; protected provider
+  namespaces and never-LLM-callable names refused without executing candidate
   code);
   `recompute_drafting_taint` ignores the record's stored flags and unions
   flags read fresh from admitted object ids, plus an owner-content

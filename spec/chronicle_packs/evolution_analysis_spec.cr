@@ -56,6 +56,26 @@ describe Chronicle::Packs::Evolution::Analysis do
     ])
   end
 
+  it "refuses protected capability providers and never-callable surface names" do
+    surface = {
+      "behaviors"      => ["approve_capability"],
+      "tools"          => ["deny_capability"],
+      "object_types"   => [] of String,
+      "relation_types" => [] of String,
+      "capabilities"   => ["mcp.server", "notes.approve_capability", "evolution.write"],
+    }
+
+    Chronicle::Packs::Evolution::Analysis.check_crystal_reserved_namespaces(
+      surface, ["evolution", "mcp"], ["approve_capability", "deny_capability"]
+    ).should eq([
+      "capability 'evolution.write' registers into reserved namespace 'evolution'",
+      "capability 'mcp.server' registers into reserved namespace 'mcp'",
+      "capability 'notes.approve_capability' uses a never-LLM-callable name ('approve_capability')",
+      "'approve_capability' collides with NEVER_LLM_CALLABLE",
+      "'deny_capability' collides with NEVER_LLM_CALLABLE",
+    ])
+  end
+
   it "rejects reserved paths by exact path and basename" do
     files = {
       "nested/author_charter.md" => "tamper",
