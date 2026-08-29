@@ -18,7 +18,8 @@ module Chronicle::Packs::Evolution
       never_callable : Array(String),
       max_total_source_bytes : Int32,
       max_file_source_bytes : Int32,
-      expected_bundle_hash : String
+      expected_bundle_hash : String,
+      expected_pack_name : String
 
     # Gate 0: candidates may contain only the configured file set and must
     # provide the manifest, module entrypoint, and trial fixture.
@@ -57,6 +58,25 @@ module Chronicle::Packs::Evolution
       return [] of String if actual == expected
 
       ["bundle hash mismatch: expected #{expected}, got #{actual}"]
+    end
+
+    # Gate 1: the reviewed manifest is the candidate identity. Its declared
+    # name cannot quietly diverge from the proposal that the owner reviews.
+    def check_crystal_manifest_identity(files : Hash(String, String), expected_pack_name : String) : Array(String)
+      manifest = files["manifest.toml"]?
+      return ["manifest.toml: missing"] unless manifest
+
+      root = begin
+        TOML.parse(manifest)
+      rescue ex
+        return ["manifest.toml: syntax error: #{ex.message}"]
+      end
+      pack = root["pack"]?.try(&.as_h) || {} of String => TOML::Any
+      name = pack["name"]?.try(&.as_s?)
+      return ["manifest name missing != proposal pack_name"] if name.nil? || name.empty?
+      return [] of String if name == expected_pack_name
+
+      ["manifest name '#{name}' != proposal pack_name"]
     end
 
     # Crystal candidates may require approved dependencies or other authored
@@ -409,6 +429,10 @@ module Chronicle::Packs::Evolution
 
       violations = check_crystal_file_set(files, config.allowed_files)
       results << {"static:file_set", violations}
+      return results unless violations.empty?
+
+      violations = check_crystal_manifest_identity(files, config.expected_pack_name)
+      results << {"static:manifest", violations}
       return results unless violations.empty?
 
       violations = check_crystal_bundle_hash(files, config.expected_bundle_hash)

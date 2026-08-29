@@ -77,7 +77,7 @@ describe Chronicle::Packs::Evolution::Analysis do
   end
 
   it "runs Crystal static checks in governance order and stops at the first failure" do
-    manifest = "[surface]\nbehaviors = []\ntools = []\nobject_types = []\nrelation_types = []\ncapabilities = []\n"
+    manifest = "[pack]\nname = \"candidate\"\n\n[surface]\nbehaviors = []\ntools = []\nobject_types = []\nrelation_types = []\ncapabilities = []\n"
     files = {"manifest.toml" => manifest, "pack.cr" => "require \"net/http\"\n"}
     config = Chronicle::Packs::Evolution::Analysis::CrystalStaticGateConfig.new(
       allowed_files: ["manifest.toml", "pack.cr"],
@@ -88,6 +88,7 @@ describe Chronicle::Packs::Evolution::Analysis do
       max_total_source_bytes: 10_000,
       max_file_source_bytes: 10_000,
       expected_bundle_hash: Chronicle::Packs::Evolution::Materialize.bundle_hash_of(files),
+      expected_pack_name: "candidate",
     )
 
     Chronicle::Packs::Evolution::Analysis.first_crystal_static_failure(
@@ -274,6 +275,17 @@ describe Chronicle::Packs::Evolution::Analysis do
     Chronicle::Packs::Evolution::Analysis.check_crystal_manifest_surface(
       {"manifest.toml" => "[surface\n", "pack.cr" => "module Candidate\nend\n"}
     ).first.should start_with("manifest.toml: syntax error:")
+  end
+
+  it "requires the Crystal manifest identity to match the proposal name" do
+    manifest = "[surface]\nbehaviors = []\n"
+    Chronicle::Packs::Evolution::Analysis.check_crystal_manifest_identity(
+      {"manifest.toml" => manifest}, "candidate"
+    ).should eq(["manifest name missing != proposal pack_name"])
+
+    Chronicle::Packs::Evolution::Analysis.check_crystal_manifest_identity(
+      {"manifest.toml" => "[pack]\nname = \"other\"\n"}, "candidate"
+    ).should eq(["manifest name 'other' != proposal pack_name"])
   end
 
   it "extracts the complete declared Crystal pack surface in one parser-validated pass" do
