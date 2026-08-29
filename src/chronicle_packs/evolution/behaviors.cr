@@ -137,8 +137,12 @@ module Chronicle::Packs::Evolution
       max_total_source_bytes: settings.max_total_source_bytes,
       max_file_source_bytes: settings.max_file_bytes,
     )
-    if failure = Analysis.first_crystal_static_failure(files, config)
-      gate, violations = failure
+    Analysis.crystal_static_gate_results(files, config).each do |gate, violations|
+      if violations.empty?
+        _record_static_gate(graph, proposal_id, gate, "pass", "")
+        next
+      end
+
       details = violations.join("; ")
       _record_static_gate(graph, proposal_id, gate, "fail", details)
       _merge_patch(graph, proposal_id, {
@@ -148,7 +152,6 @@ module Chronicle::Packs::Evolution
       return
     end
 
-    _record_static_gate(graph, proposal_id, "static:complete", "pass", "")
     _merge_patch(graph, proposal_id, {
       "status"      => JSON::Any.new("gated"),
       "status_note" => JSON::Any.new(""),

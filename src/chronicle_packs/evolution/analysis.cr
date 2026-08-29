@@ -382,36 +382,51 @@ module Chronicle::Packs::Evolution
     end
 
     # Run Crystal-native static checks in the same fail-fast order used by
-    # the upstream proposal gatekeeper. This remains pure: graph recording
-    # and proposal state transitions belong to the runtime adapter.
-    def first_crystal_static_failure(files : Hash(String, String), config : CrystalStaticGateConfig) : Tuple(String, Array(String))?
+    # the upstream proposal gatekeeper. Each reached gate is present in the
+    # result, including its empty passing violations; callers can therefore
+    # persist the complete audit trail without re-running checks. This
+    # remains pure: graph recording and proposal state transitions belong to
+    # the runtime adapter.
+    def crystal_static_gate_results(files : Hash(String, String), config : CrystalStaticGateConfig) : Array(Tuple(String, Array(String)))
+      results = [] of Tuple(String, Array(String))
+
       violations = check_reserved_paths(files, config.reserved_paths)
-      return {"static:reserved_paths", violations} unless violations.empty?
+      results << {"static:reserved_paths", violations}
+      return results unless violations.empty?
 
       violations = check_crystal_file_set(files, config.allowed_files)
-      return {"static:file_set", violations} unless violations.empty?
+      results << {"static:file_set", violations}
+      return results unless violations.empty?
 
       violations = check_crystal_manifest_surface(files)
-      return {"static:manifest_surface", violations} unless violations.empty?
+      results << {"static:manifest_surface", violations}
+      return results unless violations.empty?
 
       violations = check_crystal_requires(files, config.allowed_requires)
-      return {"static:requires", violations} unless violations.empty?
+      results << {"static:requires", violations}
+      return results unless violations.empty?
 
       violations = check_crystal_banned_constructs(files)
-      return {"static:banned_constructs", violations} unless violations.empty?
+      results << {"static:banned_constructs", violations}
+      return results unless violations.empty?
 
       surface = extract_crystal_declared_surface(files)
       violations = check_crystal_reserved_namespaces(surface, config.reserved_namespaces, config.never_callable)
-      return {"static:reserved", violations} unless violations.empty?
+      results << {"static:reserved", violations}
+      return results unless violations.empty?
 
       violations = check_size_caps(
         files,
         max_total: config.max_total_source_bytes,
         max_file: config.max_file_source_bytes
       )
-      return {"static:size", violations} unless violations.empty?
+      results << {"static:size", violations}
+      results
+    end
 
-      nil
+    # Compatibility adapter for callers that need only the terminal failure.
+    def first_crystal_static_failure(files : Hash(String, String), config : CrystalStaticGateConfig) : Tuple(String, Array(String))?
+      crystal_static_gate_results(files, config).find { |result| !result[1].empty? }
     end
   end
 end
