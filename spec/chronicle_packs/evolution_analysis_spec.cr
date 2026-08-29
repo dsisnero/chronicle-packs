@@ -32,6 +32,18 @@ describe Chronicle::Packs::Evolution::Analysis do
     ).should be_empty
   end
 
+  it "allows approved and authored Crystal requires but refuses escaping or unapproved loads" do
+    files = {
+      "pack.cr"      => "require \"json\"\nrequire \"./behaviors\"\nrequire \"../host_secret\"\nrequire \"net/http\"\n",
+      "behaviors.cr" => "module Candidate\nend\n",
+    }
+
+    Chronicle::Packs::Evolution::Analysis.check_crystal_requires(files, ["json"]).should eq([
+      "pack.cr: require '../host_secret' escapes the authored pack",
+      "pack.cr: require 'net/http' not in allow-list",
+    ])
+  end
+
   it "rejects reserved paths by exact path and basename" do
     files = {
       "nested/author_charter.md" => "tamper",

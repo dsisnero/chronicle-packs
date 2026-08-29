@@ -36,6 +36,51 @@ module Chronicle::Packs::Evolution
       violations
     end
 
+    # Crystal candidates may require approved dependencies or other authored
+    # source files. Relative paths are normalized against the requiring file
+    # and must stay inside the candidate tree.
+    def check_crystal_requires(files : Hash(String, String), allow : Array(String)) : Array(String)
+      violations = [] of String
+      files.each do |path, source|
+        next unless path.ends_with?(".cr")
+        source.each_line do |line|
+          match = line.match(/^\s*require\s+"([^"]+)"/)
+          next unless match
+          name = match[1]
+          if name.starts_with?("/")
+            violations << "#{path}: require '#{name}' escapes the authored pack"
+          elsif name.starts_with?(".")
+            if target = crystal_relative_require_target(path, name)
+              violations << "#{path}: require '#{name}' not found in authored files" unless files.has_key?(target)
+            else
+              violations << "#{path}: require '#{name}' escapes the authored pack"
+            end
+          elsif !allow.any? { |entry| name == entry || name.starts_with?("#{entry}/") }
+            violations << "#{path}: require '#{name}' not in allow-list"
+          end
+        end
+      end
+      violations
+    end
+
+    private def crystal_relative_require_target(path : String, name : String) : String?
+      parts = path.split('/')
+      parts.pop
+      name.split('/').each do |part|
+        case part
+        when ".", ""
+        when ".."
+          return nil if parts.empty?
+          parts.pop
+        else
+          parts << part
+        end
+      end
+      target = parts.join("/")
+      target += ".cr" unless target.ends_with?(".cr")
+      target
+    end
+
     # Gate -1: the author may not overwrite charter or other human-only
     # files, including by hiding a reserved basename in a subdirectory.
     def check_reserved_paths(files : Hash(String, String), reserved_paths : Array(String)) : Array(String)
