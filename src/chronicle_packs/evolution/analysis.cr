@@ -92,9 +92,11 @@ module Chronicle::Packs::Evolution
       pack = root["pack"]?.try(&.as_h) || {} of String => TOML::Any
       name = pack["name"]?.try(&.as_s?)
       return ["manifest name missing != proposal pack_name"] if name.nil? || name.empty?
-      return [] of String if name == expected_pack_name
+      return ["manifest name '#{name}' != proposal pack_name"] unless name == expected_pack_name
+      version = pack["version"]?.try(&.as_s?)
+      return ["manifest version missing"] if version.nil? || version.empty?
 
-      ["manifest name '#{name}' != proposal pack_name"]
+      [] of String
     end
 
     # Crystal candidates may require approved dependencies or other authored

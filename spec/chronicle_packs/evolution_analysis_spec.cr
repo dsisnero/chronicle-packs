@@ -79,7 +79,7 @@ describe Chronicle::Packs::Evolution::Analysis do
   it "runs Crystal static checks in governance order and stops at the first failure" do
     source = "require \"net/http\"\n"
     content_hash = Chronicle::Packs::Evolution::Materialize.content_hash_of({"pack.cr" => source})
-    manifest = "[pack]\nname = \"candidate\"\n\n[pack.integrity]\ncontent_hash = \"#{content_hash}\"\n\n[surface]\nbehaviors = []\ntools = []\nobject_types = []\nrelation_types = []\ncapabilities = []\n"
+    manifest = "[pack]\nname = \"candidate\"\nversion = \"0.1.0\"\n\n[pack.integrity]\ncontent_hash = \"#{content_hash}\"\n\n[surface]\nbehaviors = []\ntools = []\nobject_types = []\nrelation_types = []\ncapabilities = []\n"
     files = {"manifest.toml" => manifest, "pack.cr" => source}
     config = Chronicle::Packs::Evolution::Analysis::CrystalStaticGateConfig.new(
       allowed_files: ["manifest.toml", "pack.cr"],

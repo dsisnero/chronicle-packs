@@ -34,7 +34,7 @@ module EvolutionSpecSupport
 
   def crystal_candidate_files(pack_name : String, pack_source : String) : Hash(String, String)
     content_hash = Chronicle::Packs::Evolution::Materialize.content_hash_of({"pack.cr" => pack_source})
-    manifest = "[pack]\nname = \"#{pack_name}\"\n\n[pack.integrity]\ncontent_hash = \"#{content_hash}\"\n\n[surface]\nbehaviors = []\ntools = []\nobject_types = []\nrelation_types = []\ncapabilities = []\n"
+    manifest = "[pack]\nname = \"#{pack_name}\"\nversion = \"0.1.0\"\n\n[pack.integrity]\ncontent_hash = \"#{content_hash}\"\n\n[surface]\nbehaviors = []\ntools = []\nobject_types = []\nrelation_types = []\ncapabilities = []\n"
     {"manifest.toml" => manifest, "pack.cr" => pack_source}
   end
 
@@ -494,7 +494,7 @@ describe Chronicle::Packs::Evolution do
           graph,
           pack_name: "unpinned_content_pack",
           files: {
-            "manifest.toml" => "[pack]\nname = \"unpinned_content_pack\"\n\n[surface]\nbehaviors = []\ntools = []\nobject_types = []\nrelation_types = []\ncapabilities = []\n",
+            "manifest.toml" => "[pack]\nname = \"unpinned_content_pack\"\nversion = \"0.1.0\"\n\n[surface]\nbehaviors = []\ntools = []\nobject_types = []\nrelation_types = []\ncapabilities = []\n",
             "pack.cr"       => "module UnpinnedContentPack\nend\n",
           },
         )
@@ -512,6 +512,33 @@ describe Chronicle::Packs::Evolution do
           "static:hash",
         ])
         JSON.parse(gates.last.data)["verdict"].as_s.should eq("fail")
+      end
+    end
+
+    it "proposal_gatekeeper rejects a Crystal manifest without a pack version" do
+      with_evolution_runtime do |_store, graph, rt|
+        source = "module VersionlessPack\nend\n"
+        content_hash = Chronicle::Packs::Evolution::Materialize.content_hash_of({"pack.cr" => source})
+        proposal = Chronicle::Packs::Evolution.submit_proposal_fn(
+          graph,
+          pack_name: "versionless_pack",
+          files: {
+            "manifest.toml" => "[pack]\nname = \"versionless_pack\"\n\n[pack.integrity]\ncontent_hash = \"#{content_hash}\"\n\n[surface]\nbehaviors = []\ntools = []\nobject_types = []\nrelation_types = []\ncapabilities = []\n",
+            "pack.cr"       => source,
+          },
+        )
+
+        rt.run_until_idle
+
+        data = JSON.parse(graph.get_object(proposal.id).not_nil!.data)
+        data["status"].as_s.should eq("rejected")
+        data["status_note"].as_s.should eq("static:manifest: manifest version missing")
+        gates = graph.objects(type: "gate_result")
+        gates.map { |gate| JSON.parse(gate.data)["gate"].as_s }.should eq([
+          "static:reserved_paths",
+          "static:file_set",
+          "static:manifest",
+        ])
       end
     end
 
