@@ -542,6 +542,25 @@ describe Chronicle::Packs::Evolution do
       end
     end
 
+    it "proposal_gatekeeper rejects a malformed Crystal manifest content pin before hashing source" do
+      with_evolution_runtime do |_store, graph, rt|
+        proposal = Chronicle::Packs::Evolution.submit_proposal_fn(
+          graph,
+          pack_name: "malformed_content_pin_pack",
+          files: {
+            "manifest.toml" => "[pack]\nname = \"malformed_content_pin_pack\"\nversion = \"0.1.0\"\n\n[pack.integrity]\ncontent_hash = \"sha256:UPPERCASE\"\n\n[surface]\nbehaviors = []\ntools = []\nobject_types = []\nrelation_types = []\ncapabilities = []\n",
+            "pack.cr"       => "module MalformedContentPinPack\nend\n",
+          },
+        )
+
+        rt.run_until_idle
+
+        data = JSON.parse(graph.get_object(proposal.id).not_nil!.data)
+        data["status"].as_s.should eq("rejected")
+        data["status_note"].as_s.should eq("static:hash: manifest content_hash must be 'sha256:' + 64 lowercase hex chars")
+      end
+    end
+
     it "proposal_gatekeeper records every passed Crystal static gate before gating" do
       with_evolution_runtime do |_store, graph, rt|
         proposal = Chronicle::Packs::Evolution.submit_proposal_fn(

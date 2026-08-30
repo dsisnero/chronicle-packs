@@ -9,6 +9,7 @@ module Chronicle::Packs::Evolution
     FIXTURE_FILE           = "fixtures/run_fixtures.py"
     REQUIRED_FILES         = ["manifest.toml", "__init__.py", FIXTURE_FILE]
     CRYSTAL_REQUIRED_FILES = ["manifest.toml", "pack.cr"]
+    SHA256_PIN_RE          = /^sha256:[0-9a-f]{64}$/
 
     record CrystalStaticGateConfig,
       allowed_files : Array(String),
@@ -66,6 +67,9 @@ module Chronicle::Packs::Evolution
       integrity = pack["integrity"]?.try(&.as_h) || {} of String => TOML::Any
       content_hash = integrity["content_hash"]?.try(&.as_s?)
       return ["manifest content_hash missing"] if content_hash.nil? || content_hash.empty?
+      unless content_hash.matches?(SHA256_PIN_RE)
+        return ["manifest content_hash must be 'sha256:' + 64 lowercase hex chars"]
+      end
 
       actual_content_hash = Materialize.content_hash_of(files)
       if actual_content_hash != content_hash
