@@ -288,6 +288,10 @@ describe Chronicle::Packs::Evolution::Analysis do
     Chronicle::Packs::Evolution::Analysis.check_crystal_manifest_identity(
       {"manifest.toml" => "[pack]\nname = \"other\"\n"}, "candidate"
     ).should eq(["manifest name 'other' != proposal pack_name"])
+
+    Chronicle::Packs::Evolution::Analysis.check_crystal_manifest_identity(
+      {"manifest.toml" => "[pack]\nname = \"Invalid-Pack\"\nversion = \"0.1.0\"\n"}, "Invalid-Pack"
+    ).should eq(["pack.name \"Invalid-Pack\" must match ^[a-z][a-z0-9_]{1,63}$"])
   end
 
   it "extracts the complete declared Crystal pack surface in one parser-validated pass" do

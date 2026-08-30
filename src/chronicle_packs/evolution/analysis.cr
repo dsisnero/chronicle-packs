@@ -101,6 +101,9 @@ module Chronicle::Packs::Evolution
       name = pack["name"]?.try(&.as_s?)
       return ["manifest name missing != proposal pack_name"] if name.nil? || name.empty?
       return ["manifest name '#{name}' != proposal pack_name"] unless name == expected_pack_name
+      unless name.matches?(Chronicle::Packs::MANIFEST_NAME_RE)
+        return ["pack.name #{name.inspect} must match ^[a-z][a-z0-9_]{1,63}$"]
+      end
       version = pack["version"]?.try(&.as_s?)
       return ["manifest version missing"] if version.nil? || version.empty?
 
