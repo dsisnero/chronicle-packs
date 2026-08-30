@@ -1052,9 +1052,10 @@ All six importers are ported: `local_files` (26/26),
   provider namespaces and never-LLM-callable names refused without executing
   candidate code; a typed, fail-fast Crystal static-validation pipeline
   validates the manifest's name and required version against the proposal,
-  then validates canonical `sha256:` content- and external bundle-pin formats
-  and revalidates both its source-only content pin and artifact-reconstructed
-  bundle pin before semantic source checks; it drives `proposal_gatekeeper` to
+  then rejects nonempty reserved manifest signatures until a verification
+  algorithm exists, validates canonical `sha256:` content- and external
+  bundle-pin formats, and revalidates both its source-only content pin and
+  artifact-reconstructed bundle pin before semantic source checks; it drives `proposal_gatekeeper` to
   a per-gate, audit-linked `rejected` first failure, source-injection
   `suspended` result, or `gated` static-completion transition in upstream gate
   order);

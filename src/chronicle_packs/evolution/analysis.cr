@@ -68,6 +68,8 @@ module Chronicle::Packs::Evolution
       unless content_hash.matches?(SHA256_PIN_RE)
         return ["manifest content_hash must be 'sha256:' + 64 lowercase hex chars"]
       end
+      signature_violations = check_crystal_manifest_signature(integrity)
+      return signature_violations unless signature_violations.empty?
 
       actual_content_hash = Materialize.content_hash_of(files)
       if actual_content_hash != content_hash
@@ -148,6 +150,13 @@ module Chronicle::Packs::Evolution
       target = parts.join("/")
       target += ".cr" unless target.ends_with?(".cr")
       target
+    end
+
+    private def check_crystal_manifest_signature(integrity : Hash(String, TOML::Any)) : Array(String)
+      signature = integrity["signature"]?.try(&.as_s?) || ""
+      return [] of String if signature.empty?
+
+      ["manifest signature is reserved; no algorithm is implemented"]
     end
 
     # Gate -1: the author may not overwrite charter or other human-only

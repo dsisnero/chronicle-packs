@@ -561,6 +561,35 @@ describe Chronicle::Packs::Evolution do
       end
     end
 
+    it "proposal_gatekeeper rejects a nonempty reserved Crystal manifest signature" do
+      with_evolution_runtime do |_store, graph, rt|
+        source = "module SignedCandidatePack\nend\n"
+        content_hash = Chronicle::Packs::Evolution::Materialize.content_hash_of({"pack.cr" => source})
+        proposal = Chronicle::Packs::Evolution.submit_proposal_fn(
+          graph,
+          pack_name: "signed_candidate_pack",
+          files: {
+            "manifest.toml" => "[pack]\nname = \"signed_candidate_pack\"\nversion = \"0.1.0\"\n\n[pack.integrity]\ncontent_hash = \"#{content_hash}\"\nsignature = \"pretend-signed\"\n\n[surface]\nbehaviors = []\ntools = []\nobject_types = []\nrelation_types = []\ncapabilities = []\n",
+            "pack.cr"       => source,
+          },
+        )
+
+        rt.run_until_idle
+
+        data = JSON.parse(graph.get_object(proposal.id).not_nil!.data)
+        data["status"].as_s.should eq("rejected")
+        data["status_note"].as_s.should eq("static:hash: manifest signature is reserved; no algorithm is implemented")
+        gates = graph.objects(type: "gate_result")
+        gates.map { |gate| JSON.parse(gate.data)["gate"].as_s }.should eq([
+          "static:reserved_paths",
+          "static:file_set",
+          "static:manifest",
+          "static:hash",
+        ])
+        JSON.parse(gates.last.data)["verdict"].as_s.should eq("fail")
+      end
+    end
+
     it "proposal_gatekeeper rejects a malformed proposal bundle pin before comparing bytes" do
       with_evolution_runtime do |_store, graph, rt|
         proposal = Chronicle::Packs::Evolution.submit_proposal_fn(
