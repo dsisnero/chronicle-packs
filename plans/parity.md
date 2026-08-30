@@ -1052,11 +1052,12 @@ All six importers are ported: `local_files` (26/26),
   provider namespaces and never-LLM-callable names refused without executing
   candidate code; a typed, fail-fast Crystal static-validation pipeline
   validates the manifest's name and required version against the proposal,
-  then validates canonical `sha256:` content-pin format and revalidates both
-  its source-only content pin and artifact-reconstructed bundle pin before
-  semantic source checks; it drives `proposal_gatekeeper` to a per-gate,
-  audit-linked `rejected` first failure, source-injection `suspended` result,
-  or `gated` static-completion transition in upstream gate order);
+  then validates canonical `sha256:` content- and external bundle-pin formats
+  and revalidates both its source-only content pin and artifact-reconstructed
+  bundle pin before semantic source checks; it drives `proposal_gatekeeper` to
+  a per-gate, audit-linked `rejected` first failure, source-injection
+  `suspended` result, or `gated` static-completion transition in upstream gate
+  order);
   `recompute_drafting_taint` ignores the record's stored flags and unions
   flags read fresh from admitted object ids, plus an owner-content
   injection tripwire); `materialize.proposal_files`/`write_files`/

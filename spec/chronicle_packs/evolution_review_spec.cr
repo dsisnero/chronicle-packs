@@ -31,15 +31,20 @@ module EvolutionReviewSpecSupport
   # A gate-compliant candidate (like upstream's author_pack with the
   # content hash computed over the exact files).
   def candidate_files
+    source = <<-CRYSTAL
+      module GreeterPack
+        @[Chronicle::Packs::Annotations::ObjectType(name: "greeting_log", description: "A greeting record.")]
+        struct GreetingLog
+        end
+
+        @[Chronicle::Packs::Annotations::Behavior(name: "greeter", on: ["object.created"])]
+        def self.greeter
+        end
+      end
+      CRYSTAL
     files = {
-      "manifest.toml"              => %([pack]\nname = "greeter_pack"\nversion = "0.1.0"\n\n[pack.provenance]\nauthored_by = "agent"\n\n[surface]\nbehaviors = ["greeter"]\nobject_types = ["greeting_log"]\ntools = []\nsettings_schema = "GreeterSettings"\n),
-      "behaviors.py"               => %(@behavior(name="greeter")\ndef greeter(event, graph, ctx, *, settings):\n    graph.add_object("greeting_log", {"note": "hi"})\n),
-      "object_types.py"            => "class GreetingLog:\n    pass\n",
-      "settings.py"                => "class GreeterSettings:\n    prefix: str = 'hello'\n",
-      "tools.py"                   => "TOOLS = []\n",
-      "__init__.py"                => "from .behaviors import BEHAVIORS\n",
-      "fixtures/run_fixtures.py"   => "def main(rt):\n    pass\n",
-      "fixtures/trial_scenario.py" => Chronicle::Packs::Evolution.render_trial_driver,
+      "manifest.toml" => %([pack]\nname = "greeter_pack"\nversion = "0.1.0"\n\n[pack.provenance]\nauthored_by = "agent"\n\n[surface]\nbehaviors = ["greeter"]\nobject_types = ["greeting_log"]\ntools = []\nsettings_schema = "GreeterSettings"\n),
+      "pack.cr"       => source,
     }
     # content_hash over the files (sans manifest) via chronicle's hash
     root = Chronicle::Packs::Evolution::Materialize.write_files(files, pack_name: "greeter_pack_review")
@@ -184,13 +189,20 @@ describe Chronicle::Packs::Evolution do
         review["proposal"]["pack_name"].should eq("greeter_pack")
         review["proposal"]["authored_by"].should eq("agent")
         review["gap"].raw.should be_nil
-        review["gates"].as_a.size.should eq(2)
+        gates = review["gates"].as_a
+        gates.map { |gate| gate.as_h["gate"].as_s }.should eq([
+          "static:reserved_paths", "static:file_set", "static:manifest",
+          "static:hash", "static:manifest_surface", "static:requires",
+          "static:banned_constructs", "static:reserved", "static:size",
+          "static:injection", "static:injection", "static:size",
+        ])
         review["diff"].as_a.size.should eq(candidate_files.size)
         review["diff"].as_a.all? { |e| e["status"].as_s == "added" }.should be_true
         review["manifest"]["behaviors"].should eq(["greeter"])
         review["trial"].raw.should be_nil
         review["promotions"].as_a.should be_empty
         review["injection_flags"].as_a.should be_empty
+        review["proposal"].as_h["status"].as_s.should eq("gated")
         review["decidable"].should be_true
 
         expect_raises(KeyError, /no mod_proposal/) do
@@ -231,7 +243,7 @@ describe Chronicle::Packs::Evolution do
         page.should contain("manifest.toml")
         page.should contain("Full source diff")
         # The agent-authored source diff is on the page (escaped, not raw).
-        page.should contain("<span class='diff-add'>+@behavior(")
+        page.should contain("<span class='diff-add'>+  @[Chronicle::Packs::Annotations::Behavior(")
         page.should contain("No held approval call yet")
         # Deterministic.
         Chronicle::Packs::Evolution::Review.render_review_html(review).should eq(page)

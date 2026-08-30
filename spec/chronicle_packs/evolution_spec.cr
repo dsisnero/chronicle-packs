@@ -561,6 +561,25 @@ describe Chronicle::Packs::Evolution do
       end
     end
 
+    it "proposal_gatekeeper rejects a malformed proposal bundle pin before comparing bytes" do
+      with_evolution_runtime do |_store, graph, rt|
+        proposal = Chronicle::Packs::Evolution.submit_proposal_fn(
+          graph,
+          pack_name: "malformed_bundle_pin_pack",
+          files: crystal_candidate_files("malformed_bundle_pin_pack", "module MalformedBundlePinPack\nend\n"),
+        )
+        changed = JSON.parse(proposal.data).as_h
+        changed["bundle_hash"] = JSON::Any.new("sha256:NOT-LOWERCASE")
+        graph.patch_object(proposal.id, changed.to_json)
+
+        rt.run_until_idle
+
+        data = JSON.parse(graph.get_object(proposal.id).not_nil!.data)
+        data["status"].as_s.should eq("rejected")
+        data["status_note"].as_s.should eq("static:hash: proposal bundle_hash must be 'sha256:' + 64 lowercase hex chars")
+      end
+    end
+
     it "proposal_gatekeeper records every passed Crystal static gate before gating" do
       with_evolution_runtime do |_store, graph, rt|
         proposal = Chronicle::Packs::Evolution.submit_proposal_fn(

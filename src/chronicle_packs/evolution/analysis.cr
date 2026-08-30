@@ -54,8 +54,6 @@ module Chronicle::Packs::Evolution
     # bundle pin. This catches stale manifests and post-submission mutation
     # before a candidate can advance to semantic checks.
     def check_crystal_bundle_hash(files : Hash(String, String), expected : String) : Array(String)
-      return ["proposal bundle_hash missing"] if expected.empty?
-
       manifest = files["manifest.toml"]?
       return ["manifest.toml: missing"] unless manifest
       root = begin
@@ -74,6 +72,10 @@ module Chronicle::Packs::Evolution
       actual_content_hash = Materialize.content_hash_of(files)
       if actual_content_hash != content_hash
         return ["content hash mismatch: manifest pins #{content_hash}, source hashes to #{actual_content_hash}"]
+      end
+
+      unless expected.matches?(SHA256_PIN_RE)
+        return ["proposal bundle_hash must be 'sha256:' + 64 lowercase hex chars"]
       end
 
       actual = Materialize.bundle_hash_of(files)
