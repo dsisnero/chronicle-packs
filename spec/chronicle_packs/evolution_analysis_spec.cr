@@ -292,6 +292,10 @@ describe Chronicle::Packs::Evolution::Analysis do
     Chronicle::Packs::Evolution::Analysis.check_crystal_manifest_identity(
       {"manifest.toml" => "[pack]\nname = \"Invalid-Pack\"\nversion = \"0.1.0\"\n"}, "Invalid-Pack"
     ).should eq(["pack.name \"Invalid-Pack\" must match ^[a-z][a-z0-9_]{1,63}$"])
+
+    Chronicle::Packs::Evolution::Analysis.check_crystal_manifest_identity(
+      {"manifest.toml" => "[pack]\nname = \"candidate\"\nversion = \"release-one\"\n"}, "candidate"
+    ).should eq(["pack.version \"release-one\" is not PEP 440"])
   end
 
   it "extracts the complete declared Crystal pack surface in one parser-validated pass" do

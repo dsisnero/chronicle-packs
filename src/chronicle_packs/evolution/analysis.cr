@@ -106,6 +106,9 @@ module Chronicle::Packs::Evolution
       end
       version = pack["version"]?.try(&.as_s?)
       return ["manifest version missing"] if version.nil? || version.empty?
+      unless version.matches?(Chronicle::Packs::VERSION_RE)
+        return ["pack.version #{version.inspect} is not PEP 440"]
+      end
 
       [] of String
     end
