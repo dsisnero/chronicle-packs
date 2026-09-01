@@ -66,13 +66,14 @@ describe Chronicle::Packs::Evolution::Analysis do
     }
 
     Chronicle::Packs::Evolution::Analysis.check_crystal_reserved_namespaces(
-      surface, ["evolution", "mcp"], ["approve_capability", "deny_capability"]
+      surface, ["evolution", "mcp"], ["approve_capability", "deny_capability"], "evolution"
     ).should eq([
       "capability 'evolution.write' registers into reserved namespace 'evolution'",
       "capability 'mcp.server' registers into reserved namespace 'mcp'",
       "capability 'notes.approve_capability' uses a never-LLM-callable name ('approve_capability')",
       "'approve_capability' collides with NEVER_LLM_CALLABLE",
       "'deny_capability' collides with NEVER_LLM_CALLABLE",
+      "pack name 'evolution' is reserved",
     ])
   end
 

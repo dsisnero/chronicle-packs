@@ -511,6 +511,34 @@ describe Chronicle::Packs::Evolution do
       end
     end
 
+    it "proposal_gatekeeper rejects a Crystal pack name in a reserved namespace" do
+      with_evolution_runtime do |_store, graph, rt|
+        proposal = Chronicle::Packs::Evolution.submit_proposal_fn(
+          graph,
+          pack_name: "evolution",
+          files: crystal_candidate_files("evolution", "module CandidateEvolution\nend\n"),
+        )
+
+        rt.run_until_idle
+
+        data = JSON.parse(graph.get_object(proposal.id).not_nil!.data)
+        data["status"].as_s.should eq("rejected")
+        data["status_note"].as_s.should eq("static:reserved: pack name 'evolution' is reserved")
+        gates = graph.objects(type: "gate_result")
+        gates.map { |gate| JSON.parse(gate.data)["gate"].as_s }.should eq([
+          "static:reserved_paths",
+          "static:file_set",
+          "static:manifest",
+          "static:hash",
+          "static:manifest_surface",
+          "static:requires",
+          "static:banned_constructs",
+          "static:reserved",
+        ])
+        JSON.parse(gates.last.data)["verdict"].as_s.should eq("fail")
+      end
+    end
+
     it "proposal_gatekeeper rejects a Crystal manifest without its source content pin" do
       with_evolution_runtime do |_store, graph, rt|
         proposal = Chronicle::Packs::Evolution.submit_proposal_fn(
