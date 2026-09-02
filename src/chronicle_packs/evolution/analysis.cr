@@ -454,6 +454,16 @@ module Chronicle::Packs::Evolution
           violations << "surface.capabilities[#{index}] provider and capability must be strings"
           next
         end
+        risk_class = declaration["risk_class"]?.try(&.as_s?) || ""
+        unless Chronicle::Packs::RISK_CLASSES.includes?(risk_class)
+          violations << "surface.capabilities[#{index}].risk_class #{risk_class.inspect} must be one of low|medium|high|critical"
+          next
+        end
+        action_class = declaration["action_class"]?.try(&.as_s?) || ""
+        unless action_class.empty? || Chronicle::Packs::ACTION_CLASSES.includes?(action_class)
+          violations << "surface.capabilities[#{index}].action_class #{action_class.inspect} must be one of R0|R1|R2|R3|R4 (or absent)"
+          next
+        end
         capabilities << "#{provider}.#{name}"
       end
       capabilities

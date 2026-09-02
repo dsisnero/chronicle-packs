@@ -253,7 +253,7 @@ describe Chronicle::Packs::Evolution::Analysis do
         tools = []
         object_types = []
         relation_types = []
-        capabilities = [{ provider = "notes", capability = "summarize" }]
+        capabilities = [{ provider = "notes", capability = "summarize", risk_class = "low" }]
       TOML
       "pack.cr" => <<-'CRYSTAL',
         @[Chronicle::Packs::Annotations::Behavior(name: "source_only", on: ["object.created"])]
@@ -282,6 +282,13 @@ describe Chronicle::Packs::Evolution::Analysis do
     Chronicle::Packs::Evolution::Analysis.check_crystal_manifest_surface(
       {"manifest.toml" => "[surface]\nbehaviors = [1]\n", "pack.cr" => "module Candidate\nend\n"}
     ).should eq(["surface.behaviors must be a list of strings"])
+
+    Chronicle::Packs::Evolution::Analysis.check_crystal_manifest_surface(
+      {
+        "manifest.toml" => "[surface]\nbehaviors = []\ntools = []\nobject_types = []\nrelation_types = []\ncapabilities = [{ provider = \"notes\", capability = \"summarize\", risk_class = \"low\", action_class = \"R9\" }]\n",
+        "pack.cr"       => "Chronicle::Packs::CapabilityDecl.new(provider: \"notes\", capability: \"summarize\", risk_class: \"low\")\n",
+      }
+    ).should eq(["surface.capabilities[0].action_class \"R9\" must be one of R0|R1|R2|R3|R4 (or absent)"])
   end
 
   it "requires the Crystal manifest identity to match the proposal name" do
