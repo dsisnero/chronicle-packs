@@ -297,60 +297,60 @@ packs/codebase/tools.py::function::ingest_github_webhook_fn	function	ported	src/
 packs/codebase/tools.py::function::ingest_repo_file	function	ported	src/chronicle_packs/codebase/tools.cr::ingest_repo_file_tool	@[Tool] wrapper over bound graph
 packs/codebase/tools.py::function::ingest_repo_file_fn	function	ported	src/chronicle_packs/codebase/tools.cr::ingest_repo_file_fn	-
 packs/communication/behaviors.py::const::BEHAVIORS	const	ported	src/chronicle_packs/communication/pack.cr	collected by DSL pack macro
-packs/communication/behaviors.py::function::_classify_intent	function	ported	src/chronicle_packs/communication/behaviors.cr
-packs/communication/behaviors.py::function::_now_iso	function	ported	src/chronicle_packs/communication/behaviors.cr
-packs/communication/behaviors.py::function::_thread_key	function	ported	src/chronicle_packs/communication/behaviors.cr
-packs/communication/behaviors.py::function::clear_thread_registry	function	ported	src/chronicle_packs/communication/behaviors.cr
-packs/communication/behaviors.py::function::intent_detector	function	ported	src/chronicle_packs/communication/behaviors.cr
-packs/communication/behaviors.py::function::intent_router	function	ported	src/chronicle_packs/communication/behaviors.cr
-packs/communication/behaviors.py::function::response_dispatcher	function	ported	src/chronicle_packs/communication/behaviors.cr
-packs/communication/behaviors.py::function::thread_tracker	function	ported	src/chronicle_packs/communication/behaviors.cr
+packs/communication/behaviors.py::function::_classify_intent	function	ported	src/chronicle_packs/communication/behaviors.cr	-
+packs/communication/behaviors.py::function::_now_iso	function	ported	src/chronicle_packs/communication/behaviors.cr	-
+packs/communication/behaviors.py::function::_thread_key	function	ported	src/chronicle_packs/communication/behaviors.cr	-
+packs/communication/behaviors.py::function::clear_thread_registry	function	ported	src/chronicle_packs/communication/behaviors.cr	-
+packs/communication/behaviors.py::function::intent_detector	function	ported	src/chronicle_packs/communication/behaviors.cr	-
+packs/communication/behaviors.py::function::intent_router	function	ported	src/chronicle_packs/communication/behaviors.cr	-
+packs/communication/behaviors.py::function::response_dispatcher	function	ported	src/chronicle_packs/communication/behaviors.cr	-
+packs/communication/behaviors.py::function::thread_tracker	function	ported	src/chronicle_packs/communication/behaviors.cr	-
 packs/communication/conversation.py::const::BEHAVIORS	const	ported	src/chronicle_packs/communication/pack.cr	collected by DSL pack macro
 packs/communication/conversation.py::const::FAMILY_PROJECTOR_VERSION	const	ported	src/chronicle_packs/communication/conversation.cr	nested FamilyConstants::PROJECTOR_VERSION
 packs/communication/conversation.py::const::LLM_FACETS	const	ported	src/chronicle_packs/communication/conversation.cr	nested FamilyConstants::LLM_FACETS
-packs/communication/conversation.py::function::_active_profile	function	ported	src/chronicle_packs/communication/conversation.cr
-packs/communication/conversation.py::function::_emit_event	function	ported	src/chronicle_packs/communication/conversation.cr
+packs/communication/conversation.py::function::_active_profile	function	ported	src/chronicle_packs/communication/conversation.cr	-
+packs/communication/conversation.py::function::_emit_event	function	ported	src/chronicle_packs/communication/conversation.cr	-
 packs/communication/conversation.py::function::_find	function	ported	src/chronicle_packs/communication/conversation.cr	replaced by _index_objects
-packs/communication/conversation.py::function::_patch	function	ported	src/chronicle_packs/communication/conversation.cr
-packs/communication/conversation.py::function::conversation_outbound_attention_signal	function	ported	src/chronicle_packs/communication/conversation.cr
-packs/communication/conversation.py::function::materialize_conversation_message_fn	function	ported	src/chronicle_packs/communication/conversation.cr
-packs/communication/conversation.py::function::project_conversation_followup_candidate	function	ported	src/chronicle_packs/communication/conversation.cr
-packs/communication/conversation.py::function::project_conversation_native_fn	function	ported	src/chronicle_packs/communication/conversation.cr
-packs/communication/conversation.py::function::settle_conversation_interpretation	function	ported	src/chronicle_packs/communication/conversation.cr
-packs/communication/conversation.py::function::stable_id	function	ported	src/chronicle_packs/communication/conversation.cr
+packs/communication/conversation.py::function::_patch	function	ported	src/chronicle_packs/communication/conversation.cr	-
+packs/communication/conversation.py::function::conversation_outbound_attention_signal	function	ported	src/chronicle_packs/communication/conversation.cr	-
+packs/communication/conversation.py::function::materialize_conversation_message_fn	function	ported	src/chronicle_packs/communication/conversation.cr	-
+packs/communication/conversation.py::function::project_conversation_followup_candidate	function	ported	src/chronicle_packs/communication/conversation.cr	-
+packs/communication/conversation.py::function::project_conversation_native_fn	function	ported	src/chronicle_packs/communication/conversation.cr	-
+packs/communication/conversation.py::function::settle_conversation_interpretation	function	ported	src/chronicle_packs/communication/conversation.cr	-
+packs/communication/conversation.py::function::stable_id	function	ported	src/chronicle_packs/communication/conversation.cr	-
 packs/communication/fixtures/run_fixtures.py::function::run_all	function	skipped	-	fixture scripts; lifecycle driven by specs (spec/chronicle_packs/communication_spec.cr)
 packs/communication/fixtures/run_fixtures.py::function::run_intent_detection_fixture	function	skipped	-	fixture scripts; lifecycle driven by specs (spec/chronicle_packs/communication_spec.cr)
 packs/communication/fixtures/run_fixtures.py::function::run_intent_router_fixture	function	skipped	-	fixture scripts; lifecycle driven by specs (spec/chronicle_packs/communication_spec.cr)
 packs/communication/fixtures/run_fixtures.py::function::run_response_dispatcher_fixture	function	skipped	-	fixture scripts; lifecycle driven by specs (spec/chronicle_packs/communication_spec.cr)
 packs/communication/fixtures/run_fixtures.py::function::run_thread_tracker_fixture	function	skipped	-	fixture scripts; lifecycle driven by specs (spec/chronicle_packs/communication_spec.cr)
 packs/communication/gating.py::const::REPLY_POLICIES	const	ported	src/chronicle_packs/communication/gating.cr	nested GateConstants
-packs/communication/gating.py::function::decide_reply	function	ported	src/chronicle_packs/communication/gating.cr
-packs/communication/hygiene.py::class::HygieneResult	class	ported	src/chronicle_packs/communication/hygiene.cr
+packs/communication/gating.py::function::decide_reply	function	ported	src/chronicle_packs/communication/gating.cr	-
+packs/communication/hygiene.py::class::HygieneResult	class	ported	src/chronicle_packs/communication/hygiene.cr	-
 packs/communication/hygiene.py::const::FILTER_VERSION	const	ported	src/chronicle_packs/communication/hygiene.cr	nested HygienePatterns
-packs/communication/hygiene.py::function::_sha	function	ported	src/chronicle_packs/communication/hygiene.cr
-packs/communication/hygiene.py::function::select_conversation_content	function	ported	src/chronicle_packs/communication/hygiene.cr
-packs/communication/object_types.py::class::CommIntent	class	ported	src/chronicle_packs/communication/object_types.cr
-packs/communication/object_types.py::class::CommMessage	class	ported	src/chronicle_packs/communication/object_types.cr
-packs/communication/object_types.py::class::CommParticipant	class	ported	src/chronicle_packs/communication/object_types.cr
-packs/communication/object_types.py::class::CommResponseCandidate	class	ported	src/chronicle_packs/communication/object_types.cr
-packs/communication/object_types.py::class::CommThread	class	ported	src/chronicle_packs/communication/object_types.cr
-packs/communication/object_types.py::class::ConversationInterpretationRun	class	ported	src/chronicle_packs/communication/object_types.cr
-packs/communication/object_types.py::class::ConversationMessage	class	ported	src/chronicle_packs/communication/object_types.cr
-packs/communication/object_types.py::class::ConversationParticipant	class	ported	src/chronicle_packs/communication/object_types.cr
-packs/communication/object_types.py::class::ConversationSelection	class	ported	src/chronicle_packs/communication/object_types.cr
-packs/communication/object_types.py::class::ConversationThread	class	ported	src/chronicle_packs/communication/object_types.cr
+packs/communication/hygiene.py::function::_sha	function	ported	src/chronicle_packs/communication/hygiene.cr	-
+packs/communication/hygiene.py::function::select_conversation_content	function	ported	src/chronicle_packs/communication/hygiene.cr	-
+packs/communication/object_types.py::class::CommIntent	class	ported	src/chronicle_packs/communication/object_types.cr	-
+packs/communication/object_types.py::class::CommMessage	class	ported	src/chronicle_packs/communication/object_types.cr	-
+packs/communication/object_types.py::class::CommParticipant	class	ported	src/chronicle_packs/communication/object_types.cr	-
+packs/communication/object_types.py::class::CommResponseCandidate	class	ported	src/chronicle_packs/communication/object_types.cr	-
+packs/communication/object_types.py::class::CommThread	class	ported	src/chronicle_packs/communication/object_types.cr	-
+packs/communication/object_types.py::class::ConversationInterpretationRun	class	ported	src/chronicle_packs/communication/object_types.cr	-
+packs/communication/object_types.py::class::ConversationMessage	class	ported	src/chronicle_packs/communication/object_types.cr	-
+packs/communication/object_types.py::class::ConversationParticipant	class	ported	src/chronicle_packs/communication/object_types.cr	-
+packs/communication/object_types.py::class::ConversationSelection	class	ported	src/chronicle_packs/communication/object_types.cr	-
+packs/communication/object_types.py::class::ConversationThread	class	ported	src/chronicle_packs/communication/object_types.cr	-
 packs/communication/object_types.py::class::_StrictModel	class	skipped	-	pydantic extra=forbid not enforced; unknown keys tolerated
 packs/communication/object_types.py::const::OBJECT_TYPES	const	ported	src/chronicle_packs/communication/pack.cr	collected by DSL pack macro
 packs/communication/object_types.py::const::RELATION_TYPES	const	ported	src/chronicle_packs/communication/relation_types.cr	collected by DSL pack macro
-packs/communication/settings.py::class::CommunicationSettings	class	ported	src/chronicle_packs/communication/settings.cr
+packs/communication/settings.py::class::CommunicationSettings	class	ported	src/chronicle_packs/communication/settings.cr	-
 packs/communication/tools.py::const::TOOLS	const	ported	src/chronicle_packs/communication/pack.cr	collected by DSL @[Tool] annotations
-packs/communication/tools.py::function::_now_iso	function	ported	src/chronicle_packs/communication/tools.cr
+packs/communication/tools.py::function::_now_iso	function	ported	src/chronicle_packs/communication/tools.cr	-
 packs/communication/tools.py::function::approve_response	function	ported	src/chronicle_packs/communication/tools.cr	declared tool wrapper
-packs/communication/tools.py::function::approve_response_fn	function	ported	src/chronicle_packs/communication/tools.cr
+packs/communication/tools.py::function::approve_response_fn	function	ported	src/chronicle_packs/communication/tools.cr	-
 packs/communication/tools.py::function::create_comm_message	function	ported	src/chronicle_packs/communication/tools.cr	declared tool wrapper
-packs/communication/tools.py::function::create_comm_message_fn	function	ported	src/chronicle_packs/communication/tools.cr
+packs/communication/tools.py::function::create_comm_message_fn	function	ported	src/chronicle_packs/communication/tools.cr	-
 packs/communication/tools.py::function::create_response_candidate	function	ported	src/chronicle_packs/communication/tools.cr	declared tool wrapper
-packs/communication/tools.py::function::create_response_candidate_fn	function	ported	src/chronicle_packs/communication/tools.cr
+packs/communication/tools.py::function::create_response_candidate_fn	function	ported	src/chronicle_packs/communication/tools.cr	-
 packs/composio/capabilities.py::class::ConnectionStatusInput	class	ported	src/chronicle_packs/composio/capabilities.cr::ConnectionStatusInput	-
 packs/composio/capabilities.py::class::LinkServiceInput	class	ported	src/chronicle_packs/composio/capabilities.cr::LinkServiceInput	-
 packs/composio/capabilities.py::function::_connection_status	function	ported	src/chronicle_packs/composio/capabilities.cr::_connection_status	-
@@ -684,19 +684,19 @@ packs/evolution/adopt.py::function::_supersede_prior_actives	function	missing	-	
 packs/evolution/adopt.py::function::_verified_approver_exists	function	ported	src/chronicle_packs/evolution/adopt.cr::_verified_approver_exists	-
 packs/evolution/adopt.py::function::process_adoption_tickets	function	missing	-	auto-generated
 packs/evolution/adopt.py::function::register_adoption_capabilities	function	ported	src/chronicle_packs/evolution/adopt.cr::register_adoption_capabilities	registration + refusals; processing deferred
-packs/evolution/analysis.py::const::FIXTURE_FILE	const	missing	-	auto-generated
-packs/evolution/analysis.py::const::RUNTIME_FILES	const	missing	-	auto-generated
-packs/evolution/analysis.py::function::_decorator_names	function	missing	-	auto-generated
-packs/evolution/analysis.py::function::_parse	function	missing	-	auto-generated
-packs/evolution/analysis.py::function::check_banned_constructs	function	missing	-	auto-generated
-packs/evolution/analysis.py::function::check_declared_vs_actual	function	missing	-	auto-generated
-packs/evolution/analysis.py::function::check_file_set	function	missing	-	auto-generated
-packs/evolution/analysis.py::function::check_fixture_entrypoint	function	missing	-	auto-generated
-packs/evolution/analysis.py::function::check_imports	function	missing	-	auto-generated
-packs/evolution/analysis.py::function::check_reserved_namespaces	function	missing	-	auto-generated
-packs/evolution/analysis.py::function::check_reserved_paths	function	missing	-	auto-generated
-packs/evolution/analysis.py::function::check_size_caps	function	missing	-	auto-generated
-packs/evolution/analysis.py::function::extract_surface	function	missing	-	auto-generated
+packs/evolution/analysis.py::const::FIXTURE_FILE	const	partial	src/chronicle_packs/evolution/analysis.cr::CRYSTAL_REQUIRED_FILES	Crystal candidate entrypoint contract; Python fixture contract remains missing
+packs/evolution/analysis.py::const::RUNTIME_FILES	const	partial	src/chronicle_packs/evolution/analysis.cr::CRYSTAL_REQUIRED_FILES	Crystal candidate runtime file set; Python runtime file set remains missing
+packs/evolution/analysis.py::function::_decorator_names	function	partial	src/chronicle_packs/evolution/analysis.cr::extract_crystal_declared_surface	Crystal annotations replace Python decorator inspection; Python AST semantics remain missing
+packs/evolution/analysis.py::function::_parse	function	partial	src/chronicle_packs/evolution/analysis.cr::check_crystal_syntax	Crystal compiler parser replaces Python ast.parse; Python parser semantics remain missing
+packs/evolution/analysis.py::function::check_banned_constructs	function	partial	src/chronicle_packs/evolution/analysis.cr::check_crystal_banned_constructs	Crystal process and compile-time shell refusal; Python construct coverage remains missing
+packs/evolution/analysis.py::function::check_declared_vs_actual	function	partial	src/chronicle_packs/evolution/analysis.cr::check_declared_vs_crystal_surface	Crystal manifest/source two-way surface check; Python extraction remains missing
+packs/evolution/analysis.py::function::check_file_set	function	partial	src/chronicle_packs/evolution/analysis.cr::check_crystal_file_set	Crystal manifest plus pack.cr contract; Python fixture file contract remains missing
+packs/evolution/analysis.py::function::check_fixture_entrypoint	function	partial	src/chronicle_packs/evolution/analysis.cr::check_crystal_file_set	Crystal candidates have no Python fixture entrypoint; upstream Python fixture check remains missing
+packs/evolution/analysis.py::function::check_imports	function	partial	src/chronicle_packs/evolution/analysis.cr::check_crystal_requires	Crystal require allow-list and authored-relative resolution; Python import semantics remain missing
+packs/evolution/analysis.py::function::check_reserved_namespaces	function	partial	src/chronicle_packs/evolution/analysis.cr::check_crystal_reserved_namespaces	Crystal declared capabilities, pack names, and never-callable checks; Python AST surface remains missing
+packs/evolution/analysis.py::function::check_reserved_paths	function	partial	src/chronicle_packs/evolution/analysis.cr::check_reserved_paths	Shared reserved-path behavior used by Crystal candidate pipeline
+packs/evolution/analysis.py::function::check_size_caps	function	partial	src/chronicle_packs/evolution/analysis.cr::check_size_caps	Shared UTF-8 byte-cap behavior used by Crystal candidate pipeline
+packs/evolution/analysis.py::function::extract_surface	function	partial	src/chronicle_packs/evolution/analysis.cr::extract_crystal_declared_surface	Crystal annotation/capability extraction; Python AST extraction remains missing
 packs/evolution/author.py::class::AuthorRefusal	class	missing	-	auto-generated
 packs/evolution/author.py::class::AuthoredSource	class	missing	-	auto-generated
 packs/evolution/author.py::function::_assemble_files	function	missing	-	auto-generated
@@ -721,7 +721,7 @@ packs/evolution/behaviors.py::function::_evt_ord	function	ported	src/chronicle_p
 packs/evolution/behaviors.py::function::_now	function	ported	src/chronicle_packs/evolution/behaviors.cr::_beh_now	-
 packs/evolution/behaviors.py::function::gap_detector	function	ported	src/chronicle_packs/evolution/behaviors.cr::gap_detector	-
 packs/evolution/behaviors.py::function::promotion_recorder	function	ported	src/chronicle_packs/evolution/behaviors.cr::promotion_recorder	-
-packs/evolution/behaviors.py::function::proposal_gatekeeper	function	ported	src/chronicle_packs/evolution/behaviors.cr::proposal_gatekeeper	taint-suspension path; static-gate run deferred
+packs/evolution/behaviors.py::function::proposal_gatekeeper	function	ported	src/chronicle_packs/evolution/behaviors.cr::proposal_gatekeeper	taint suspension plus Crystal-native static gatekeeper; Python candidate parity remains partial
 packs/evolution/behaviors.py::function::watch_monitor	function	ported	src/chronicle_packs/evolution/behaviors.cr::watch_monitor	-
 packs/evolution/boot.py::function::_boot_gap	function	missing	-	auto-generated
 packs/evolution/boot.py::function::_promoted_fork_runs	function	missing	-	auto-generated
@@ -800,7 +800,7 @@ packs/evolution/fixtures/run_fixtures.py::function::top_ord	function	missing	-	a
 packs/evolution/gates.py::function::_now	function	missing	-	auto-generated
 packs/evolution/gates.py::function::_record	function	missing	-	auto-generated
 packs/evolution/gates.py::function::fail	function	missing	-	auto-generated
-packs/evolution/gates.py::function::run_static_gates	function	missing	-	auto-generated
+packs/evolution/gates.py::function::run_static_gates	function	partial	src/chronicle_packs/evolution/analysis.cr::crystal_static_gate_results	Crystal-native fail-fast gate sequence and audit results; Python candidate pipeline remains missing
 packs/evolution/materialize.py::function::bundle_hash_of	function	ported	src/chronicle_packs/evolution/materialize.cr::bundle_hash_of	-
 packs/evolution/materialize.py::function::import_pack	function	missing	-	auto-generated
 packs/evolution/materialize.py::function::materialize_verified	function	missing	-	auto-generated

@@ -25,8 +25,8 @@ each entry is branch-sized and user-visible, `[x]` = green and committed,
 Intentional divergences section). The `## Features` sections below remain the
 per-pack detail record (surfaces, divergence notes, fixture drivers).
 
-**Progress: 1734 / 2080 source API items ported, 92 skipped, 111 deferred.**
-**Remaining: 142 missing items + 161/638 upstream tests ported (4 deferred).**
+**Progress: 1734 / 2080 source API items ported, 14 partial, 92 skipped, 111 deferred.**
+**Remaining: 128 missing items + 161/638 upstream tests ported (4 deferred).**
 
 ## Remaining feature-size roadmap (S / M / L)
 
@@ -67,14 +67,22 @@ per-pack detail record (surfaces, divergence notes, fixture drivers).
 
 ### L — large (provider/platform edges, external backends)
 
-- [~] `evolution` — agent-authored packs under governance (65/207;
-      142 missing: the Python-AST static-gate pipeline — `analysis.py` 13 +
-      `gates.py` 4, the sandbox-trials surface — `trial.py` 4 + `soak.py`
-      32 + `boot.py` 5 + `adopt.py` 4 + `chassis.py` 3 +
-      `materialize.py` 2, the LLM author — `author.py` 9, and the fixture
-      scenarios — `fixtures/run_fixtures.py` 57 + `fixtures/candidates.py`
-      9). See the `evolution` divergence note for what is deferred vs. the
-      deterministic surface already ported.
+- [~] `evolution` — agent-authored packs under governance (65 ported, 14
+      partial, 128 missing / 207):
+    - [~] Crystal candidate static gatekeeper — parser-validated `pack.cr`,
+          manifest identity/integrity, declared-surface, require, banned-
+          construct, reserved-name, size, and injection gates are present;
+          the corresponding Python AST/import contract remains partial.
+    - [ ] Python candidate static-gate parity — Python `analysis.py` /
+          `gates.py` semantics, including Python fixtures and AST extraction.
+    - [ ] Fork trial, soak, and boot lifecycle — `trial.py`, `soak.py`,
+          `boot.py`, and chassis recovery/retention.
+    - [ ] Adoption materialization and activation — phase-two adoption,
+          verified materialization/import, and supersession processing.
+    - [ ] LLM author and deterministic vendor scenarios — `author.py` plus
+          `fixtures/candidates.py` and `fixtures/run_fixtures.py`.
+      See the `evolution` divergence note for the exact boundary between the
+      Crystal candidate path and missing Python-specific behavior.
 - [x] `demo_server` — HTTP API surface: /summary /graph /trace /packs
       /frames /chat /sessions /approvals /channels /reset (72/86; 14
       deferred: SQLite persist/resume, MCP outbound, managed OAuth,
@@ -93,9 +101,12 @@ per-pack detail record (surfaces, divergence notes, fixture drivers).
 
 ### Next up (concrete plan order)
 
-1. `[ ]` `evolution` remaining — lands with the Python-AST/importlib
-   materialization seams (see the divergence note).
-2. `[ ]` Upstream test porting (638 tests), tracked separately (161/638).
+1. `[ ]` `evolution` Python candidate static-gate parity — Python AST,
+   imports, and fixtures (the Crystal candidate path remains separate).
+2. `[ ]` `evolution` fork trial, soak, and boot lifecycle.
+3. `[ ]` `evolution` adoption materialization, activation, and supersession.
+4. `[ ]` `evolution` LLM author and deterministic vendor scenarios.
+5. `[ ]` Upstream test porting (638 tests), tracked separately (161/638).
 
 ## Features
 
@@ -239,14 +250,16 @@ per-pack detail record (surfaces, divergence notes, fixture drivers).
       (74/75, 1 skipped) — `src/chronicle_packs/mcp/` (see the `mcp`
       divergence note)
 - [~] `evolution` — agent-authored packs behind static gates, fork trials,
-      bundle-hash pins, verified owner approval (ships disabled) (65/207:
-      slices 1-2 port the deterministic graph-native surface — 8 object
+      bundle-hash pins, verified owner approval (ships disabled) (65 ported,
+      14 partial, 128 missing / 207:
+      slices 1-3 port the deterministic graph-native surface — 8 object
       types + 5 relation types, EvolutionSettings (ships disabled),
       author_frame (charter pin + structured-field charset + taint
       recompute), materialize's portable file/hash helpers, the
       authoring/request tools (submit_proposal / open_reflection_gap /
       request_adoption), the graph-native behaviors (gap_detector,
-      proposal_gatekeeper's taint-suspension path, promotion_recorder,
+      proposal_gatekeeper's taint-suspension and Crystal static-gate paths,
+      promotion_recorder,
       watch_monitor), the trial-driver render, adopt registration with its
       two refusals, and the full review decision surface (build_review +
       render_review_html + render_approvals_index_html, unified diff via
@@ -1024,12 +1037,14 @@ All six importers are ported: `local_files` (26/26),
   case; the graph validator passes unregistered types through). Core's own
   `observation_extractor` also fires on bridged `source` objects, matching
   the upstream fixture (Core loads alongside the bridge).
-- `evolution` (slice 1 of N): the deterministic graph-native surface is
-  ported, and the Python-bound machinery is deferred. **Deferred**: the
-  stage-2 static-gate pipeline (`analysis.py` parses candidate PYTHON pack
-  source with Python's `ast`; Crystal candidates instead use compiler-parser
-  validation plus a Crystal file/surface contract, while `gates.py`
-  `run_static_gates` and its proposal-gatekeeper wiring remain deferred),
+- `evolution` (slices 1–3): the deterministic graph-native surface is
+  ported; the Crystal candidate static-gate path is partial; Python-bound
+  machinery is deferred. **Partial**: the Crystal candidate pipeline parses
+  `pack.cr` with the Crystal compiler parser, checks its own manifest/file/
+  surface/require/construct/reserved/size/injection boundaries, and records
+  the fail-fast audit trail through `proposal_gatekeeper`. It is not a port of
+  Python `ast` or import semantics. **Deferred**: Python-candidate static-gate
+  parity (`analysis.py`/`gates.py`),
   subprocess sandbox trials (`trial.py`/`soak.py` need a fresh-interpreter
   child with RLIMIT/wall-clock nets — no chronicle primitive), dynamic
   pack import (`materialize.import_pack` is `importlib`), adoption phase
