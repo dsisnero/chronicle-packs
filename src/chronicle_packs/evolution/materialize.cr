@@ -68,5 +68,22 @@ module Chronicle::Packs::Evolution
         FileUtils.rm_rf(root)
       end
     end
+
+    # The sanctioned non-executing graph-to-files seam for Crystal
+    # candidates. The caller receives the verified artifact map and root,
+    # then owns cleanup; a bundle-pin failure removes the fresh directory
+    # before it can be observed as a candidate tree.
+    def self.materialize_verified(graph : Chronicle::GraphProjection, proposal : Chronicle::GraphObject) : Tuple(Hash(String, String), Path)
+      data = JSON.parse(proposal.data)
+      files = proposal_files(graph, proposal)
+      root = write_files(files, pack_name: data["pack_name"].as_s)
+      begin
+        Chronicle::Packs.verify_bundle_hash(data["bundle_hash"].as_s, root.to_s)
+      rescue ex
+        FileUtils.rm_rf(root.parent)
+        raise ex
+      end
+      {files, root}
+    end
   end
 end

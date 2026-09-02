@@ -248,6 +248,43 @@ describe Chronicle::Packs::Evolution do
       pin = Chronicle::Packs::Evolution::Materialize.bundle_hash_of(files)
       pin.should match(/^sha256:[0-9a-f]{64}$/)
     end
+
+    it "materialize_verified writes a proposal's bundle-pinned Crystal candidate without loading it" do
+      with_evolution_runtime do |_store, graph, _rt|
+        files = crystal_candidate_files("verified_materialization_pack", "module VerifiedMaterializationPack\nend\n")
+        proposal = Chronicle::Packs::Evolution.submit_proposal_fn(
+          graph,
+          pack_name: "verified_materialization_pack",
+          files: files,
+        )
+
+        materialized_files, root = Chronicle::Packs::Evolution::Materialize.materialize_verified(graph, proposal)
+        materialized_files.should eq(files)
+        root.basename.should eq("verified_materialization_pack")
+        File.read((root / "manifest.toml").to_s).should eq(files["manifest.toml"])
+        FileUtils.rm_rf(root.parent)
+      end
+    end
+
+    it "materialize_verified refuses a proposal whose artifacts no longer match its bundle pin" do
+      with_evolution_runtime do |_store, graph, _rt|
+        proposal = Chronicle::Packs::Evolution.submit_proposal_fn(
+          graph,
+          pack_name: "tampered_materialization_pack",
+          files: crystal_candidate_files("tampered_materialization_pack", "module TamperedMaterializationPack\nend\n"),
+        )
+        artifact = graph.objects(type: "artifact").find do |object|
+          JSON.parse(object.data)["title"].as_s == "pack.cr"
+        end.not_nil!
+        changed = JSON.parse(artifact.data).as_h
+        changed["content"] = JSON::Any.new("module TamperedMaterializationPack\n  TAMPERED = true\nend\n")
+        graph.patch_object(artifact.id, changed.to_json)
+
+        expect_raises(Chronicle::Packs::PackManifestError, /bundle hash mismatch/) do
+          Chronicle::Packs::Evolution::Materialize.materialize_verified(graph, proposal)
+        end
+      end
+    end
   end
 
   describe "tools" do

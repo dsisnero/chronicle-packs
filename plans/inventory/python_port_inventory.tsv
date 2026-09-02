@@ -803,7 +803,7 @@ packs/evolution/gates.py::function::fail	function	missing	-	auto-generated
 packs/evolution/gates.py::function::run_static_gates	function	partial	src/chronicle_packs/evolution/analysis.cr::crystal_static_gate_results	Crystal-native fail-fast gate sequence and audit results; Python candidate pipeline remains missing
 packs/evolution/materialize.py::function::bundle_hash_of	function	ported	src/chronicle_packs/evolution/materialize.cr::bundle_hash_of	-
 packs/evolution/materialize.py::function::import_pack	function	missing	-	auto-generated
-packs/evolution/materialize.py::function::materialize_verified	function	missing	-	auto-generated
+packs/evolution/materialize.py::function::materialize_verified	function	partial	src/chronicle_packs/evolution/materialize.cr::materialize_verified	Reassembles and bundle-verifies Crystal candidate artifacts; Python import_pack return remains missing
 packs/evolution/materialize.py::function::proposal_files	function	ported	src/chronicle_packs/evolution/materialize.cr::proposal_files	-
 packs/evolution/materialize.py::function::write_files	function	ported	src/chronicle_packs/evolution/materialize.cr::write_files	-
 packs/evolution/object_types.py::class::AdoptionTicket	class	ported	src/chronicle_packs/evolution/object_types.cr::AdoptionTicket	-
