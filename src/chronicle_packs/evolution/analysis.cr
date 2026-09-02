@@ -407,28 +407,56 @@ module Chronicle::Packs::Evolution
         return ["manifest.toml: syntax error: #{ex.message}"]
       end
       surface = root["surface"]?.try(&.as_h) || {} of String => TOML::Any
+      violations = [] of String
       declared = {
-        "behaviors"      => crystal_manifest_strings(surface, "behaviors"),
-        "tools"          => crystal_manifest_strings(surface, "tools"),
-        "object_types"   => crystal_manifest_strings(surface, "object_types"),
-        "relation_types" => crystal_manifest_strings(surface, "relation_types"),
-        "capabilities"   => crystal_manifest_capabilities(surface),
+        "behaviors"      => crystal_manifest_strings(surface, "behaviors", violations),
+        "tools"          => crystal_manifest_strings(surface, "tools", violations),
+        "object_types"   => crystal_manifest_strings(surface, "object_types", violations),
+        "relation_types" => crystal_manifest_strings(surface, "relation_types", violations),
+        "capabilities"   => crystal_manifest_capabilities(surface, violations),
       }
+      return violations unless violations.empty?
       actual = extract_crystal_declared_surface(files)
       check_declared_vs_crystal_surface(declared, actual)
     rescue ex : ArgumentError
       [ex.message || "Crystal source could not be analyzed"]
     end
 
-    private def crystal_manifest_strings(surface : Hash(String, TOML::Any), key : String) : Array(String)
-      (surface[key]?.try(&.as_a) || [] of TOML::Any).map(&.as_s)
+    private def crystal_manifest_strings(surface : Hash(String, TOML::Any), key : String, violations : Array(String)) : Array(String)
+      value = surface[key]?
+      return [] of String if value.nil?
+      raw = value.raw
+      unless raw.is_a?(Array(TOML::Any)) && raw.all? { |item| item.raw.is_a?(String) }
+        violations << "surface.#{key} must be a list of strings"
+        return [] of String
+      end
+      raw.map { |item| item.raw.as(String) }
     end
 
-    private def crystal_manifest_capabilities(surface : Hash(String, TOML::Any)) : Array(String)
-      (surface["capabilities"]?.try(&.as_a) || [] of TOML::Any).map do |capability|
-        declaration = capability.as_h
-        "#{declaration["provider"].as_s}.#{declaration["capability"].as_s}"
+    private def crystal_manifest_capabilities(surface : Hash(String, TOML::Any), violations : Array(String)) : Array(String)
+      value = surface["capabilities"]?
+      return [] of String if value.nil?
+      raw = value.raw
+      unless raw.is_a?(Array(TOML::Any))
+        violations << "surface.capabilities must be a list of tables"
+        return [] of String
       end
+      capabilities = [] of String
+      raw.each_with_index do |capability, index|
+        unless capability.raw.is_a?(Hash(String, TOML::Any))
+          violations << "surface.capabilities[#{index}] must be a table"
+          next
+        end
+        declaration = capability.raw.as(Hash(String, TOML::Any))
+        provider = declaration["provider"]?.try(&.as_s?)
+        name = declaration["capability"]?.try(&.as_s?)
+        unless provider && name
+          violations << "surface.capabilities[#{index}] provider and capability must be strings"
+          next
+        end
+        capabilities << "#{provider}.#{name}"
+      end
+      capabilities
     end
 
     # Gate 6: candidate packs cannot claim protected provider namespaces or

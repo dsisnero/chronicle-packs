@@ -539,6 +539,36 @@ describe Chronicle::Packs::Evolution do
       end
     end
 
+    it "proposal_gatekeeper rejects a Crystal manifest surface list with non-string entries" do
+      with_evolution_runtime do |_store, graph, rt|
+        source = "module SurfaceTypePack\nend\n"
+        content_hash = Chronicle::Packs::Evolution::Materialize.content_hash_of({"pack.cr" => source})
+        proposal = Chronicle::Packs::Evolution.submit_proposal_fn(
+          graph,
+          pack_name: "surface_type_pack",
+          files: {
+            "manifest.toml" => "[pack]\nname = \"surface_type_pack\"\nversion = \"0.1.0\"\n\n[pack.integrity]\ncontent_hash = \"#{content_hash}\"\n\n[surface]\nbehaviors = [1]\ntools = []\nobject_types = []\nrelation_types = []\ncapabilities = []\n",
+            "pack.cr"       => source,
+          },
+        )
+
+        rt.run_until_idle
+
+        data = JSON.parse(graph.get_object(proposal.id).not_nil!.data)
+        data["status"].as_s.should eq("rejected")
+        data["status_note"].as_s.should eq("static:manifest_surface: surface.behaviors must be a list of strings")
+        gates = graph.objects(type: "gate_result")
+        gates.map { |gate| JSON.parse(gate.data)["gate"].as_s }.should eq([
+          "static:reserved_paths",
+          "static:file_set",
+          "static:manifest",
+          "static:hash",
+          "static:manifest_surface",
+        ])
+        JSON.parse(gates.last.data)["verdict"].as_s.should eq("fail")
+      end
+    end
+
     it "proposal_gatekeeper rejects a Crystal manifest without its source content pin" do
       with_evolution_runtime do |_store, graph, rt|
         proposal = Chronicle::Packs::Evolution.submit_proposal_fn(

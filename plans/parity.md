@@ -1048,8 +1048,8 @@ All six importers are ported: `local_files` (26/26),
   `Analysis` (compiler-parser syntax refusal, manifest + `pack.cr` file
   contract, allow-listed dependencies plus authored-only relative `require`
   paths, process-spawn and compile-time-shell refusal, and extraction of the
-  manifest-derived, two-way behavior/tool/type/capability surface; protected
-  provider namespaces, pack names, and never-LLM-callable names refused
+  manifest-derived, type-validated two-way behavior/tool/type/capability
+  surface; protected provider namespaces, pack names, and never-LLM-callable names refused
   without executing candidate code; a typed, fail-fast Crystal static-validation pipeline
   validates the manifest's runtime-grammar name and PEP 440 version against
   the proposal,

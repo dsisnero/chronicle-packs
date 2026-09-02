@@ -278,6 +278,10 @@ describe Chronicle::Packs::Evolution::Analysis do
     Chronicle::Packs::Evolution::Analysis.check_crystal_manifest_surface(
       {"manifest.toml" => "[surface\n", "pack.cr" => "module Candidate\nend\n"}
     ).first.should start_with("manifest.toml: syntax error:")
+
+    Chronicle::Packs::Evolution::Analysis.check_crystal_manifest_surface(
+      {"manifest.toml" => "[surface]\nbehaviors = [1]\n", "pack.cr" => "module Candidate\nend\n"}
+    ).should eq(["surface.behaviors must be a list of strings"])
   end
 
   it "requires the Crystal manifest identity to match the proposal name" do
