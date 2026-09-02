@@ -22,6 +22,8 @@ module Chronicle::Packs::Evolution
       expected_bundle_hash : String,
       expected_pack_name : String
 
+    record CrystalCapabilityClass, risk_class : String, action_class : String
+
     # Gate 0: candidates may contain only the configured file set and must
     # provide the manifest, module entrypoint, and trial fixture.
     def check_file_set(files : Hash(String, String), allowed : Array(String)) : Array(String)
@@ -408,16 +410,20 @@ module Chronicle::Packs::Evolution
       end
       surface = root["surface"]?.try(&.as_h) || {} of String => TOML::Any
       violations = [] of String
+      capability_classes = crystal_manifest_capabilities(surface, violations)
       declared = {
         "behaviors"      => crystal_manifest_strings(surface, "behaviors", violations),
         "tools"          => crystal_manifest_strings(surface, "tools", violations),
         "object_types"   => crystal_manifest_strings(surface, "object_types", violations),
         "relation_types" => crystal_manifest_strings(surface, "relation_types", violations),
-        "capabilities"   => crystal_manifest_capabilities(surface, violations),
+        "capabilities"   => capability_classes.keys,
       }
       return violations unless violations.empty?
       actual = extract_crystal_declared_surface(files)
-      check_declared_vs_crystal_surface(declared, actual)
+      violations = check_declared_vs_crystal_surface(declared, actual)
+      return violations unless violations.empty?
+
+      check_crystal_capability_class_parity(capability_classes, extract_crystal_capability_classes(files))
     rescue ex : ArgumentError
       [ex.message || "Crystal source could not be analyzed"]
     end
@@ -433,15 +439,15 @@ module Chronicle::Packs::Evolution
       raw.map { |item| item.raw.as(String) }
     end
 
-    private def crystal_manifest_capabilities(surface : Hash(String, TOML::Any), violations : Array(String)) : Array(String)
+    private def crystal_manifest_capabilities(surface : Hash(String, TOML::Any), violations : Array(String)) : Hash(String, CrystalCapabilityClass)
       value = surface["capabilities"]?
-      return [] of String if value.nil?
+      return {} of String => CrystalCapabilityClass if value.nil?
       raw = value.raw
       unless raw.is_a?(Array(TOML::Any))
         violations << "surface.capabilities must be a list of tables"
-        return [] of String
+        return {} of String => CrystalCapabilityClass
       end
-      capabilities = [] of String
+      capabilities = {} of String => CrystalCapabilityClass
       raw.each_with_index do |capability, index|
         unless capability.raw.is_a?(Hash(String, TOML::Any))
           violations << "surface.capabilities[#{index}] must be a table"
@@ -464,9 +470,47 @@ module Chronicle::Packs::Evolution
           violations << "surface.capabilities[#{index}].action_class #{action_class.inspect} must be one of R0|R1|R2|R3|R4 (or absent)"
           next
         end
-        capabilities << "#{provider}.#{name}"
+        capabilities["#{provider}.#{name}"] = CrystalCapabilityClass.new(
+          risk_class: risk_class,
+          action_class: action_class,
+        )
       end
       capabilities
+    end
+
+    private def extract_crystal_capability_classes(files : Hash(String, String)) : Hash(String, CrystalCapabilityClass)
+      capabilities = {} of String => CrystalCapabilityClass
+      files.each do |path, source|
+        next unless path.ends_with?(".cr")
+        source.scan(/CapabilityDecl\.new\((.*?)\)/m) do |match|
+          arguments = match[1]
+          provider = arguments.match(/(?:^|,)\s*provider:\s*"([^"]+)"/).try(&.[1])
+          name = arguments.match(/(?:^|,)\s*capability:\s*"([^"]+)"/).try(&.[1])
+          next unless provider && name
+          risk_class = arguments.match(/(?:^|,)\s*risk_class:\s*"([^"]+)"/).try(&.[1]) || ""
+          action_class = arguments.match(/(?:^|,)\s*action_class:\s*"([^"]+)"/).try(&.[1]) || ""
+          capabilities["#{provider}.#{name}"] = CrystalCapabilityClass.new(
+            risk_class: risk_class,
+            action_class: action_class,
+          )
+        end
+      end
+      capabilities
+    end
+
+    private def check_crystal_capability_class_parity(manifest : Hash(String, CrystalCapabilityClass), source : Hash(String, CrystalCapabilityClass)) : Array(String)
+      violations = [] of String
+      (manifest.keys.to_set & source.keys.to_set).to_a.sort.each do |key|
+        declared = manifest[key]
+        actual = source[key]
+        if declared.risk_class != actual.risk_class
+          violations << "capabilities: #{key} risk_class mismatch — manifest #{declared.risk_class.inspect}, Pack #{actual.risk_class.inspect}"
+        end
+        if declared.action_class != actual.action_class
+          violations << "capabilities: #{key} action_class mismatch — manifest #{declared.action_class.inspect}, Pack #{actual.action_class.inspect}"
+        end
+      end
+      violations
     end
 
     # Gate 6: candidate packs cannot claim protected provider namespaces or

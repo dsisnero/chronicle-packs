@@ -69,11 +69,11 @@ per-pack detail record (surfaces, divergence notes, fixture drivers).
 
 - [~] `evolution` — agent-authored packs under governance (65 ported, 14
       partial, 128 missing / 207):
-    - [~] Crystal candidate static gatekeeper — parser-validated `pack.cr`,
+    - [x] Crystal candidate static gatekeeper — parser-validated `pack.cr`,
           manifest identity/integrity, typed declared capability surface,
-          require, banned-construct, reserved-name, size, and injection gates
-          are present;
-          the corresponding Python AST/import contract remains partial.
+          two-way capability policy classes, require, banned-construct,
+          reserved-name, size, and injection gates. The corresponding Python
+          AST/import contract remains a separate pending phase.
     - [ ] Python candidate static-gate parity — Python `analysis.py` /
           `gates.py` semantics, including Python fixtures and AST extraction.
     - [ ] Fork trial, soak, and boot lifecycle — `trial.py`, `soak.py`,
@@ -1065,7 +1065,7 @@ All six importers are ported: `local_files` (26/26),
   contract, allow-listed dependencies plus authored-only relative `require`
   paths, process-spawn and compile-time-shell refusal, and extraction of the
   manifest-derived, type-validated two-way behavior/tool/type/capability
-  surface (including capability risk/action classes); protected provider
+  surface (including two-way capability risk/action classes); protected provider
   namespaces, pack names, and never-LLM-callable names refused
   without executing candidate code; a typed, fail-fast Crystal static-validation pipeline
   validates the manifest's runtime-grammar name and PEP 440 version against

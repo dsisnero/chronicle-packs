@@ -599,6 +599,48 @@ describe Chronicle::Packs::Evolution do
       end
     end
 
+    it "proposal_gatekeeper rejects a Crystal capability risk class that differs from source" do
+      with_evolution_runtime do |_store, graph, rt|
+        source = "Chronicle::Packs::CapabilityDecl.new(provider: \"notes\", capability: \"summarize\", risk_class: \"high\", action_class: \"R3\")\n"
+        content_hash = Chronicle::Packs::Evolution::Materialize.content_hash_of({"pack.cr" => source})
+        proposal = Chronicle::Packs::Evolution.submit_proposal_fn(
+          graph,
+          pack_name: "mismatched_capability_risk_pack",
+          files: {
+            "manifest.toml" => "[pack]\nname = \"mismatched_capability_risk_pack\"\nversion = \"0.1.0\"\n\n[pack.integrity]\ncontent_hash = \"#{content_hash}\"\n\n[surface]\nbehaviors = []\ntools = []\nobject_types = []\nrelation_types = []\ncapabilities = [{ provider = \"notes\", capability = \"summarize\", risk_class = \"low\", action_class = \"R3\" }]\n",
+            "pack.cr"       => source,
+          },
+        )
+
+        rt.run_until_idle
+
+        data = JSON.parse(graph.get_object(proposal.id).not_nil!.data)
+        data["status"].as_s.should eq("rejected")
+        data["status_note"].as_s.should eq("static:manifest_surface: capabilities: notes.summarize risk_class mismatch — manifest \"low\", Pack \"high\"")
+      end
+    end
+
+    it "proposal_gatekeeper rejects a Crystal capability action class that differs from source" do
+      with_evolution_runtime do |_store, graph, rt|
+        source = "Chronicle::Packs::CapabilityDecl.new(provider: \"notes\", capability: \"summarize\", risk_class: \"low\", action_class: \"R4\")\n"
+        content_hash = Chronicle::Packs::Evolution::Materialize.content_hash_of({"pack.cr" => source})
+        proposal = Chronicle::Packs::Evolution.submit_proposal_fn(
+          graph,
+          pack_name: "mismatched_capability_action_pack",
+          files: {
+            "manifest.toml" => "[pack]\nname = \"mismatched_capability_action_pack\"\nversion = \"0.1.0\"\n\n[pack.integrity]\ncontent_hash = \"#{content_hash}\"\n\n[surface]\nbehaviors = []\ntools = []\nobject_types = []\nrelation_types = []\ncapabilities = [{ provider = \"notes\", capability = \"summarize\", risk_class = \"low\", action_class = \"R3\" }]\n",
+            "pack.cr"       => source,
+          },
+        )
+
+        rt.run_until_idle
+
+        data = JSON.parse(graph.get_object(proposal.id).not_nil!.data)
+        data["status"].as_s.should eq("rejected")
+        data["status_note"].as_s.should eq("static:manifest_surface: capabilities: notes.summarize action_class mismatch — manifest \"R3\", Pack \"R4\"")
+      end
+    end
+
     it "proposal_gatekeeper rejects a Crystal manifest without its source content pin" do
       with_evolution_runtime do |_store, graph, rt|
         proposal = Chronicle::Packs::Evolution.submit_proposal_fn(
