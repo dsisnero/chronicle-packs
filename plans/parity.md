@@ -25,8 +25,8 @@ each entry is branch-sized and user-visible, `[x]` = green and committed,
 Intentional divergences section). The `## Features` sections below remain the
 per-pack detail record (surfaces, divergence notes, fixture drivers).
 
-**Progress: 1734 / 2080 source API items ported, 15 partial, 92 skipped, 111 deferred.**
-**Remaining: 127 missing items + 161/638 upstream tests ported (4 deferred).**
+**Progress: 1737 / 2080 source API items ported, 15 partial, 92 skipped, 111 deferred.**
+**Remaining: 124 missing items + 161/638 upstream tests ported (4 deferred).**
 
 ## Remaining feature-size roadmap (S / M / L)
 
@@ -67,8 +67,8 @@ per-pack detail record (surfaces, divergence notes, fixture drivers).
 
 ### L — large (provider/platform edges, external backends)
 
-- [~] `evolution` — agent-authored packs under governance (65 ported, 15
-      partial, 127 missing / 207):
+- [~] `evolution` — agent-authored packs under governance (68 ported, 15
+      partial, 124 missing / 207):
     - [x] Crystal candidate static gatekeeper — parser-validated `pack.cr`,
           manifest identity/integrity, typed declared capability surface,
           two-way capability policy classes, require, banned-construct,
@@ -81,8 +81,11 @@ per-pack detail record (surfaces, divergence notes, fixture drivers).
     - [x] Verified Crystal candidate materialization — reassemble proposal
           artifacts, write a fresh candidate tree, and verify its external
           bundle pin without loading or executing it.
-    - [ ] Candidate activation and supersession — phase-two adoption,
-          Crystal loading, and supersession processing.
+    - [x] Promotion rollback and supersession reconciliation — process
+          governed disable tickets idempotently, record durable rollbacks,
+          and preserve one active promotion per pack name.
+    - [ ] Candidate activation — phase-two adoption with Crystal loading and
+          persisted fork promotion.
     - [ ] LLM author and deterministic vendor scenarios — `author.py` plus
           `fixtures/candidates.py` and `fixtures/run_fixtures.py`.
       See the `evolution` divergence note for the exact boundary between the
@@ -108,7 +111,7 @@ per-pack detail record (surfaces, divergence notes, fixture drivers).
 1. `[ ]` `evolution` Python candidate static-gate parity — Python AST,
    imports, and fixtures (the Crystal candidate path remains separate).
 2. `[ ]` `evolution` fork trial, soak, and boot lifecycle.
-3. `[ ]` `evolution` candidate activation and supersession.
+3. `[ ]` `evolution` candidate activation.
 4. `[ ]` `evolution` LLM author and deterministic vendor scenarios.
 5. `[ ]` Upstream test porting (638 tests), tracked separately (161/638).
 
@@ -254,8 +257,8 @@ per-pack detail record (surfaces, divergence notes, fixture drivers).
       (74/75, 1 skipped) — `src/chronicle_packs/mcp/` (see the `mcp`
       divergence note)
 - [~] `evolution` — agent-authored packs behind static gates, fork trials,
-      bundle-hash pins, verified owner approval (ships disabled) (65 ported,
-      15 partial, 127 missing / 207:
+      bundle-hash pins, verified owner approval (ships disabled) (68 ported,
+      15 partial, 124 missing / 207:
       slices 1-3 port the deterministic graph-native surface — 8 object
       types + 5 relation types, EvolutionSettings (ships disabled),
       author_frame (charter pin + structured-field charset + taint
@@ -267,7 +270,7 @@ per-pack detail record (surfaces, divergence notes, fixture drivers).
       watch_monitor), the trial-driver render, adopt registration with its
       two refusals, and the full review decision surface (build_review +
       render_review_html + render_approvals_index_html, unified diff via
-      the `similar` shard). The remaining 142 items are tracked in the
+      the `similar` shard). The remaining 139 items are tracked in the
       size-graded roadmap, L: `evolution` — see the `evolution` divergence
       note for what is deferred vs. ported)
 - [x] `bridges/diligence_core` — Diligence-Core bridge mapping domain outputs
@@ -1085,7 +1088,10 @@ All six importers are ported: `local_files` (26/26),
   injection tripwire); `materialize.proposal_files`/`write_files`/
   `bundle_hash_of` (the pin rides chronicle's `compute_bundle_hash`), and
   `materialize_verified` (proposal artifacts → fresh Crystal candidate tree
-  → external bundle-pin verification, without candidate loading);
+  → external bundle-pin verification, without candidate loading), and
+  `adopt`'s durable disable-ticket processor (including vanished-promotion
+  abort, idempotent rollback records, and same-pack active-promotion
+  supersession);
   the tools — `submit_proposal_fn` (bundle pin at submission,
   drafting-record taint recompute + structured-field refusal),
   `open_reflection_gap_fn` (deterministic taint union over the review's

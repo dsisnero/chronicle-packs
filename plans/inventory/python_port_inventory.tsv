@@ -675,12 +675,12 @@ packs/evolution/adopt.py::const::ADOPT_ACTION_CLASS	const	ported	src/chronicle_p
 packs/evolution/adopt.py::const::ADOPT_RISK	const	ported	src/chronicle_packs/evolution/adopt.cr::AdoptConstants	-
 packs/evolution/adopt.py::const::DISABLE_ACTION_CLASS	const	ported	src/chronicle_packs/evolution/adopt.cr::AdoptConstants	-
 packs/evolution/adopt.py::const::DISABLE_RISK	const	ported	src/chronicle_packs/evolution/adopt.cr::AdoptConstants	-
-packs/evolution/adopt.py::function::_abort	function	missing	-	auto-generated
+packs/evolution/adopt.py::function::_abort	function	ported	src/chronicle_packs/evolution/adopt.cr::abort_ticket	Aborts vanished disable tickets and preserves the upstream ticket/proposal status-note contract
 packs/evolution/adopt.py::function::_adopt_executor	function	ported	src/chronicle_packs/evolution/adopt.cr	gateway executor writes adoption_ticket
 packs/evolution/adopt.py::function::_disable_executor	function	ported	src/chronicle_packs/evolution/adopt.cr	gateway executor writes adoption_ticket
 packs/evolution/adopt.py::function::_now	function	ported	src/chronicle_packs/evolution/tools.cr::_now	shared _now
-packs/evolution/adopt.py::function::_process_disable	function	missing	-	auto-generated
-packs/evolution/adopt.py::function::_supersede_prior_actives	function	missing	-	auto-generated
+packs/evolution/adopt.py::function::_process_disable	function	ported	src/chronicle_packs/evolution/adopt.cr::process_disable_ticket	Processes governed disable tickets, emits one durable rollback, and is replay-idempotent
+packs/evolution/adopt.py::function::_supersede_prior_actives	function	ported	src/chronicle_packs/evolution/adopt.cr::supersede_prior_actives	Disables only prior same-pack active promotion records and records superseded_by
 packs/evolution/adopt.py::function::_verified_approver_exists	function	ported	src/chronicle_packs/evolution/adopt.cr::_verified_approver_exists	-
 packs/evolution/adopt.py::function::process_adoption_tickets	function	missing	-	auto-generated
 packs/evolution/adopt.py::function::register_adoption_capabilities	function	ported	src/chronicle_packs/evolution/adopt.cr::register_adoption_capabilities	registration + refusals; processing deferred

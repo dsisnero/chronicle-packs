@@ -1004,4 +1004,93 @@ describe Chronicle::Packs::Evolution do
       store.is_a?(Chronicle::MemoryEventStore)
     end
   end
+
+  describe "adoption reconciliation" do
+    it "aborts a disable ticket whose promotion has vanished" do
+      with_evolution_runtime do |_store, graph, rt|
+        ticket = graph.add_object("adoption_ticket", {
+          "kind" => JSON::Any.new("disable"), "promotion_id" => JSON::Any.new("missing_promotion"),
+          "status" => JSON::Any.new("open"),
+        }.to_json)
+
+        outcomes = Chronicle::Packs::Evolution.process_disable_tickets(rt)
+
+        outcomes.size.should eq(1)
+        outcomes.first["outcome"].as_s.should eq("error")
+        data = JSON.parse(graph.get_object(ticket.id).not_nil!.data)
+        data["status"].as_s.should eq("aborted")
+        data["status_note"].as_s.should eq("promotion vanished")
+      end
+    end
+
+    it "processes a disable ticket once, records its rollback, and closes a replayed ticket idempotently" do
+      with_evolution_runtime do |_store, graph, rt|
+        proposal = graph.add_object("mod_proposal", {
+          "pack_name" => JSON::Any.new("evolution"), "status" => JSON::Any.new("promoted"),
+        }.to_json)
+        promotion = graph.add_object("mod_promotion", {
+          "proposal_id" => JSON::Any.new(proposal.id), "pack_name" => JSON::Any.new("evolution"),
+          "status" => JSON::Any.new("active"),
+        }.to_json)
+        ticket = graph.add_object("adoption_ticket", {
+          "kind" => JSON::Any.new("disable"), "promotion_id" => JSON::Any.new(promotion.id),
+          "reason" => JSON::Any.new("owner revoked approval"), "status" => JSON::Any.new("open"),
+        }.to_json)
+
+        outcomes = Chronicle::Packs::Evolution.process_disable_tickets(rt)
+        outcomes.size.should eq(1)
+        outcomes.first["outcome"].as_s.should eq("disabled")
+        outcomes.first["deregistered"].raw.should be_true
+        JSON.parse(graph.get_object(promotion.id).not_nil!.data)["status"].as_s.should eq("disabled")
+        JSON.parse(graph.get_object(proposal.id).not_nil!.data)["status"].as_s.should eq("disabled")
+        JSON.parse(graph.get_object(ticket.id).not_nil!.data)["status"].as_s.should eq("done")
+        rollbacks = graph.objects(type: "mod_rollback")
+        rollbacks.size.should eq(1)
+        rollback_data = JSON.parse(rollbacks.first.data)
+        rollback_data["promotion_id"].as_s.should eq(promotion.id)
+        rollback_data["method"].as_s.should eq("disable_pack")
+        rollback_data["reason"].as_s.should eq("owner revoked approval")
+        graph.relations(source: promotion.id, type: "rolled_back_by").map(&.to_id).should eq([rollbacks.first.id])
+
+        replayed_ticket = graph.add_object("adoption_ticket", {
+          "kind" => JSON::Any.new("disable"), "promotion_id" => JSON::Any.new(promotion.id),
+          "status" => JSON::Any.new("open"),
+        }.to_json)
+        replayed = Chronicle::Packs::Evolution.process_disable_tickets(rt)
+        replayed.size.should eq(1)
+        replayed.first["note"].as_s.should eq("already disabled")
+        JSON.parse(graph.get_object(replayed_ticket.id).not_nil!.data)["status"].as_s.should eq("done")
+        graph.objects(type: "mod_rollback").size.should eq(1)
+      end
+    end
+
+    it "supersedes only prior active records for the same pack and preserves their audit metadata" do
+      with_evolution_runtime do |_store, graph, _rt|
+        old = graph.add_object("mod_promotion", {
+          "proposal_id" => JSON::Any.new("proposal_old"), "pack_name" => JSON::Any.new("versioned_pack"),
+          "status" => JSON::Any.new("active"),
+          "metadata" => JSON::Any.new({"kept" => JSON::Any.new("audit")}),
+        }.to_json)
+        other = graph.add_object("mod_promotion", {
+          "proposal_id" => JSON::Any.new("proposal_other"), "pack_name" => JSON::Any.new("other_pack"),
+          "status" => JSON::Any.new("active"),
+        }.to_json)
+        newest = graph.add_object("mod_promotion", {
+          "proposal_id" => JSON::Any.new("proposal_new"), "pack_name" => JSON::Any.new("versioned_pack"),
+          "status" => JSON::Any.new("active"),
+        }.to_json)
+
+        superseded = Chronicle::Packs::Evolution.supersede_prior_actives(graph, "versioned_pack", newest.id)
+
+        superseded.should eq([old.id])
+        old_data = JSON.parse(graph.get_object(old.id).not_nil!.data)
+        old_data["status"].as_s.should eq("disabled")
+        old_data["status_note"].as_s.should eq("superseded by #{newest.id}")
+        old_data["metadata"].as_h["kept"].as_s.should eq("audit")
+        old_data["metadata"].as_h["superseded_by"].as_s.should eq(newest.id)
+        JSON.parse(graph.get_object(newest.id).not_nil!.data)["status"].as_s.should eq("active")
+        JSON.parse(graph.get_object(other.id).not_nil!.data)["status"].as_s.should eq("active")
+      end
+    end
+  end
 end

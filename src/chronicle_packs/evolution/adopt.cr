@@ -13,9 +13,10 @@ module Chronicle::Packs::Evolution
   # with no verified approver. Their executors run only after an approved
   # capability call, and all they do is write an adoption_ticket.
   #
-  # Phase two (chassis, process_adoption_tickets) is DEFERRED: it needs the
-  # Python-materialization pipeline (materialize_verified / import_pack) and
-  # runtime fork promotion.
+  # Candidate activation remains deferred: it needs a Crystal runtime source
+  # loader and persisted fork promotion. The independent disable and
+  # supersession reconciliation path is safe to run now because it operates
+  # only on already-recorded promotion state.
   module AdoptConstants
     AdoptConstants::ADOPT_RISK = "critical"
     AdoptConstants::DISABLE_RISK = "high"
@@ -120,5 +121,108 @@ module Chronicle::Packs::Evolution
       risk_class: AdoptConstants::DISABLE_RISK,
       action_class: AdoptConstants::DISABLE_ACTION_CLASS,
     )
+  end
+
+  # Process the phase-two disable subset between frames. It deliberately does
+  # not inspect adopt tickets: candidate activation requires the still-missing
+  # Crystal loading and trial-fork seams.
+  def self.process_disable_tickets(rt : Chronicle::Runtime(M)) : Array(Hash(String, JSON::Any)) forall M
+    graph = rt.graph || raise PackError.new("evolution disable processing requires an attached graph")
+    graph.objects(type: "adoption_ticket")
+      .select { |ticket| ticket_data(ticket)["status"]?.try(&.as_s?) == "open" }
+      .select { |ticket| ticket_data(ticket)["kind"]?.try(&.as_s?) == "disable" }
+      .map { |ticket| process_disable_ticket(rt, graph, ticket) }
+  end
+
+  # Disable every other active promotion for a pack after a new promotion has
+  # reached active state. This is bookkeeping only: the runtime already holds
+  # the newly loaded code, so disabling the old record must not deregister it.
+  def self.supersede_prior_actives(graph : Chronicle::GraphProjection, pack_name : String, new_id : String) : Array(String)
+    superseded = [] of String
+    graph.objects(type: "mod_promotion").each do |promotion|
+      next if promotion.id == new_id
+      data = ticket_data(promotion)
+      next unless data["pack_name"]?.try(&.as_s?) == pack_name
+      next unless data["status"]?.try(&.as_s?) == "active"
+
+      metadata = data["metadata"]?.try(&.as_h) || {} of String => JSON::Any
+      metadata["superseded_by"] = JSON::Any.new(new_id)
+      graph.patch_object(promotion.id, {
+        "status"      => JSON::Any.new("disabled"),
+        "status_note" => JSON::Any.new("superseded by #{new_id}"),
+        "metadata"    => JSON::Any.new(metadata),
+      }.to_json, actor: "evolution.adopt")
+      superseded << promotion.id
+    end
+    superseded
+  end
+
+  # ameba:disable Metrics/CyclomaticComplexity -- faithful idempotent disable transaction
+  private def self.process_disable_ticket(rt : Chronicle::Runtime(M), graph : Chronicle::GraphProjection, ticket : Chronicle::GraphObject) : Hash(String, JSON::Any) forall M
+    ticket_data = ticket_data(ticket)
+    promotion_id = ticket_data["promotion_id"]?.try(&.as_s?) || ""
+    promotion = graph.get_object(promotion_id)
+    if promotion.nil?
+      abort_ticket(graph, ticket.id, nil, "promotion vanished")
+      return disable_outcome(ticket.id, "error")
+    end
+
+    promotion_data = ticket_data(promotion)
+    if promotion_data["status"]?.try(&.as_s?) == "disabled" && graph.objects(type: "mod_rollback").any? { |rollback| ticket_data(rollback)["promotion_id"]?.try(&.as_s?) == promotion_id }
+      graph.patch_object(ticket.id, {"status" => JSON::Any.new("done")}.to_json, actor: "evolution.adopt")
+      return disable_outcome(ticket.id, "disabled", false, "already disabled")
+    end
+
+    pack_name = promotion_data["pack_name"]?.try(&.as_s?) || ""
+    deregistered = false
+    begin
+      deregistered = rt.disable_pack(pack_name)
+    rescue
+      # A loading-state promotion may not be registered in this runtime. Its
+      # durable disabled record is still the canonical boot exclusion.
+    end
+    graph.patch_object(promotion_id, {"status" => JSON::Any.new("disabled")}.to_json, actor: "evolution.adopt")
+    rollback = graph.add_object("mod_rollback", {
+      "promotion_id" => JSON::Any.new(promotion_id),
+      "method"       => JSON::Any.new(deregistered ? "disable_pack" : "boot_exclusion"),
+      "reason"       => JSON::Any.new(ticket_data["reason"]?.try(&.as_s?) || ""),
+      "at"           => JSON::Any.new(_now),
+    }.to_json, actor: "evolution.adopt")
+    begin
+      graph.add_relation(promotion_id, rollback.id, "rolled_back_by", actor: "evolution.adopt")
+    rescue
+      # Preserve the rollback object if a legacy graph lacks this relation.
+    end
+    proposal_id = promotion_data["proposal_id"]?.try(&.as_s?) || ""
+    graph.patch_object(proposal_id, {"status" => JSON::Any.new("disabled")}.to_json, actor: "evolution.adopt") unless proposal_id.empty? || graph.get_object(proposal_id).nil?
+    graph.patch_object(ticket.id, {"status" => JSON::Any.new("done")}.to_json, actor: "evolution.adopt")
+    disable_outcome(ticket.id, "disabled", deregistered)
+  end
+
+  private def self.abort_ticket(graph : Chronicle::GraphProjection, ticket_id : String, proposal_id : String?, note : String, proposal_status : String = "suspended") : Nil
+    graph.patch_object(ticket_id, {
+      "status"      => JSON::Any.new("aborted"),
+      "status_note" => JSON::Any.new(note[0, Math.min(note.size, 500)]),
+    }.to_json, actor: "evolution.adopt")
+    unless proposal_id.nil? || proposal_id.empty? || graph.get_object(proposal_id).nil?
+      graph.patch_object(proposal_id, {
+        "status"      => JSON::Any.new(proposal_status),
+        "status_note" => JSON::Any.new(note[0, Math.min(note.size, 300)]),
+      }.to_json, actor: "evolution.adopt")
+    end
+  end
+
+  private def self.disable_outcome(ticket_id : String, outcome : String, deregistered : Bool = false, note : String? = nil) : Hash(String, JSON::Any)
+    result = {
+      "ticket"       => JSON::Any.new(ticket_id),
+      "outcome"      => JSON::Any.new(outcome),
+      "deregistered" => JSON::Any.new(deregistered),
+    }
+    result["note"] = JSON::Any.new(note) unless note.nil?
+    result
+  end
+
+  private def self.ticket_data(object : Chronicle::GraphObject) : Hash(String, JSON::Any)
+    JSON.parse(object.data).as_h
   end
 end
