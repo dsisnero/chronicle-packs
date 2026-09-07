@@ -207,14 +207,12 @@ module Chronicle::Packs::Research
     # ── Authors ────────────────────────────────────────────────────────────
     if !author_str.empty?
       _parse_authors(author_str).each do |aname|
-        begin
-          author_obj = graph.add_object("author", {
-            "name"      => JSON::Any.new(aname),
-            "paper_ids" => JSON::Any.new([JSON::Any.new(paper_id)]),
-          }.to_json, actor: "research.paper_ingester")
-          graph.add_relation(paper_id, author_obj.id, "authored_by", actor: "research.paper_ingester")
-        rescue
-        end
+        author_obj = graph.add_object("author", {
+          "name"      => JSON::Any.new(aname),
+          "paper_ids" => JSON::Any.new([JSON::Any.new(paper_id)]),
+        }.to_json, actor: "research.paper_ingester")
+        graph.add_relation(paper_id, author_obj.id, "authored_by", actor: "research.paper_ingester")
+      rescue
       end
     end
   end
@@ -233,25 +231,23 @@ module Chronicle::Packs::Research
 
     claims = _mock_claims(title, abstract_text, settings.max_claims_per_paper)
     claims.each do |claim_text|
-      begin
-        obs = graph.add_object("observation", {
-          "text"       => JSON::Any.new(claim_text),
-          "confidence" => JSON::Any.new(0.75),
-          "source_ids" => JSON::Any.new((source_id ? [source_id] : [] of String).map { |id| JSON::Any.new(id) }),
-          "category"   => JSON::Any.new("fact"),
-          "metadata"   => JSON::Any.new({
-            "paper_id"     => JSON::Any.new(paper_id),
-            "extracted_by" => JSON::Any.new("claim_extractor"),
-          }),
-        }.to_json, actor: "research.claim_extractor")
-        if source_id
-          begin
-            graph.add_relation(source_id, obs.id, "grounds", actor: "research.claim_extractor")
-          rescue
-          end
+      obs = graph.add_object("observation", {
+        "text"       => JSON::Any.new(claim_text),
+        "confidence" => JSON::Any.new(0.75),
+        "source_ids" => JSON::Any.new((source_id ? [source_id] : [] of String).map { |id| JSON::Any.new(id) }),
+        "category"   => JSON::Any.new("fact"),
+        "metadata"   => JSON::Any.new({
+          "paper_id"     => JSON::Any.new(paper_id),
+          "extracted_by" => JSON::Any.new("claim_extractor"),
+        }),
+      }.to_json, actor: "research.claim_extractor")
+      if source_id
+        begin
+          graph.add_relation(source_id, obs.id, "grounds", actor: "research.claim_extractor")
+        rescue
         end
-      rescue
       end
+    rescue
     end
   end
 

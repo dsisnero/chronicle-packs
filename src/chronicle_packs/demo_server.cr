@@ -88,14 +88,14 @@ module Chronicle::Packs::DemoServer
     end
     pack_name = nil
     behavior_name = nil
-    object_type = nil
     object_id = nil
     actor = event.actor
     if actor.is_a?(Hash)
       pack_name = actor["pack"]?.try(&.as_s?)
       behavior_name = actor["behavior"]?.try(&.as_s?)
     end
-    if object_type = payload["object_type"]?.try(&.as_s?) || payload["type"]?.try(&.as_s?)
+    object_type = payload["object_type"]?.try(&.as_s?) || payload["type"]?.try(&.as_s?)
+    if object_type
       object_id = payload["object_id"]?.try(&.as_s?) || payload["id"]?.try(&.as_s?)
     end
     {
@@ -1130,10 +1130,8 @@ module Chronicle::Packs::DemoServer
     end
 
     private def _refresh_chat_provider : Nil
-      config = {} of String => JSON::Any
       mode = "mock"
       provider = nil
-      model = nil
       PROVIDER_KEY_ENVS.each_key do |pid|
         env = PROVIDER_KEY_ENVS[pid]
         if !ENV[env]?.nil? && !ENV[env].empty?
@@ -1142,17 +1140,17 @@ module Chronicle::Packs::DemoServer
           break
         end
       end
-      if provider
-        model = ENV["CHAT_LLM_MODEL"]?
-        config = {
-          "mode"        => JSON::Any.new(mode),
-          "provider"    => JSON::Any.new(provider),
-          "model"       => model ? JSON::Any.new(model) : JSON::Any.new(nil),
-          "key_present" => JSON::Any.new(true),
-        }
-      else
-        config = {"mode" => JSON::Any.new(mode), "provider" => JSON::Any.new(nil), "model" => JSON::Any.new(nil), "key_present" => JSON::Any.new(false)}
-      end
+      config = if provider
+                 model = ENV["CHAT_LLM_MODEL"]?
+                 {
+                   "mode"        => JSON::Any.new(mode),
+                   "provider"    => JSON::Any.new(provider),
+                   "model"       => model ? JSON::Any.new(model) : JSON::Any.new(nil),
+                   "key_present" => JSON::Any.new(true),
+                 }
+               else
+                 {"mode" => JSON::Any.new(mode), "provider" => JSON::Any.new(nil), "model" => JSON::Any.new(nil), "key_present" => JSON::Any.new(false)}
+               end
       DemoServer._chat_config = config
       nil
     end

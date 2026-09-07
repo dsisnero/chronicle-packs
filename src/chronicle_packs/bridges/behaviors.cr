@@ -161,10 +161,8 @@ module Chronicle::Packs::Bridges
       rescue
       end
       source_ids.each do |sid|
-        begin
-          graph.add_relation(sid, obs.id, "grounds", actor: "bridges.claim_to_observation")
-        rescue
-        end
+        graph.add_relation(sid, obs.id, "grounds", actor: "bridges.claim_to_observation")
+      rescue
       end
     rescue
     end

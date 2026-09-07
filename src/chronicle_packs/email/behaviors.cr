@@ -150,8 +150,7 @@ module Chronicle::Packs::Email
     end
 
     # ── 2. Create Core Source ───────────────────────────────────────────────
-    source_id : String? = nil
-    begin
+    source_id = begin
       source = graph.add_object("source", {
         "kind"       => JSON::Any.new("email"),
         "content"    => JSON::Any.new(body_text),
@@ -166,7 +165,7 @@ module Chronicle::Packs::Email
           "received_at" => JSON::Any.new(received_at),
         }),
       }.to_json, actor: "email_ingester")
-      source_id = source.id
+      source.id
     rescue
       return
     end

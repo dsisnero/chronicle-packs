@@ -565,11 +565,10 @@ module Chronicle::Packs::Evolution
                 "<table><tr><th>call</th><th>capability</th><th>risk</th><th>proposed by</th><th>at</th><th></th></tr>" + rows.join + "</table>"
               end
 
-      needs_owner = [] of Chronicle::GraphObject
-      begin
-        needs_owner = graph.objects(type: "mod_proposal").select { |mod_prop| JSON.parse(mod_prop.data)["status"]?.try(&.as_s?) == "needs_owner" }
+      needs_owner = begin
+        graph.objects(type: "mod_proposal").select { |mod_prop| JSON.parse(mod_prop.data)["status"]?.try(&.as_s?) == "needs_owner" }
       rescue ex
-        needs_owner = [] of Chronicle::GraphObject
+        [] of Chronicle::GraphObject
       end
       stuck = ""
       if !needs_owner.empty?

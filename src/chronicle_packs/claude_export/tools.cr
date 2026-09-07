@@ -314,7 +314,7 @@ module Chronicle::Packs::ClaudeExport
     is_zip = source.extension.downcase == ".zip" || magic == ImportConstants::ZIP_MAGIC_LE
 
     raw : String? = nil
-    kind = "json"
+    kind = is_zip ? "zip" : "json"
     if is_zip
       begin
         Compress::Zip::File.open(source) do |zip|
@@ -339,13 +339,11 @@ module Chronicle::Packs::ClaudeExport
       rescue ex : Compress::Zip::Error
         raise ExportFormatError.new("archive is not a valid ZIP file")
       end
-      kind = "zip"
     else
       if size > max_json_bytes
         raise ExportFormatError.new("conversations.json is #{size} bytes; limit is #{max_json_bytes}")
       end
       raw = File.open(source, "rb", &.gets_to_end)
-      kind = "json"
     end
     if raw.nil?
       raise ExportFormatError.new("conversations.json is empty or unreadable")

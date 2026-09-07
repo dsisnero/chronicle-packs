@@ -129,30 +129,30 @@ module Chronicle::Packs::LocalFiles
 
   # Return bounded reasoning content, validating JSON before any emit.
   def self._normalize_content(text : String, *, suffix : String, max_chars : Int32) : {String, Hash(String, JSON::Any)}
-    normalized = text.gsub("\r\n", "\n").gsub("\r", "\n")
+    source_text = text.gsub("\r\n", "\n").gsub("\r", "\n")
     json_metadata = {} of String => JSON::Any
-    if suffix == ".json"
-      parsed = JSON.parse(normalized)
-      normalized = JSON.build do |json|
-        json.raw(parsed.to_json) # compact: JSON.build with raw preserves order
-      end
-      # Compact (no whitespace) sorted-keys canonical form.
-      if parsed.raw.is_a?(Hash(String, JSON::Any))
-        sorted = parsed.raw.as(Hash(String, JSON::Any)).to_a.sort_by(&.[0])
-        normalized = JSON.build do |json|
-          json.object do
-            sorted.each { |k, v| json.field k, v }
-          end
-        end
-      else
-        normalized = parsed.to_json
-      end
-      json_metadata["json_root_type"] = JSON::Any.new(_json_root_type(parsed))
-      if parsed.raw.is_a?(Hash(String, JSON::Any))
-        keys = parsed.raw.as(Hash(String, JSON::Any)).keys.map(&.to_s).sort!
-        json_metadata["json_top_level_keys"] = JSON::Any.new(keys.first(100).map { |k| JSON::Any.new(k) })
-      end
-    end
+    normalized = if suffix == ".json"
+                   parsed = JSON.parse(source_text)
+                   # Compact (no whitespace) sorted-keys canonical form.
+                   canonical = if parsed.raw.is_a?(Hash(String, JSON::Any))
+                                 sorted = parsed.raw.as(Hash(String, JSON::Any)).to_a.sort_by(&.[0])
+                                 JSON.build do |json|
+                                   json.object do
+                                     sorted.each { |k, v| json.field k, v }
+                                   end
+                                 end
+                               else
+                                 parsed.to_json
+                               end
+                   json_metadata["json_root_type"] = JSON::Any.new(_json_root_type(parsed))
+                   if parsed.raw.is_a?(Hash(String, JSON::Any))
+                     keys = parsed.raw.as(Hash(String, JSON::Any)).keys.map(&.to_s).sort!
+                     json_metadata["json_top_level_keys"] = JSON::Any.new(keys.first(100).map { |k| JSON::Any.new(k) })
+                   end
+                   canonical
+                 else
+                   source_text
+                 end
 
     original_chars = normalized.size
     truncated = original_chars > max_chars

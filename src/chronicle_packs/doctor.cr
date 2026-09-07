@@ -343,11 +343,9 @@ module Chronicle::Packs::Doctor
     end
     failures = [] of String
     eps.each do |entry_point|
-      begin
-        entry_point.load
-      rescue ex
-        failures << "#{entry_point.name} = #{entry_point.value}: #{ex.class}: #{ex.message}"
-      end
+      entry_point.load
+    rescue ex
+      failures << "#{entry_point.name} = #{entry_point.value}: #{ex.class}: #{ex.message}"
     end
     unless failures.empty?
       joined = failures.join("\n  ")
