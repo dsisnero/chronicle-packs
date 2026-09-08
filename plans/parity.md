@@ -72,12 +72,15 @@ per-pack detail record (surfaces, divergence notes, fixture drivers).
     - [x] Crystal candidate static gatekeeper — parser-validated `pack.cr`,
           manifest identity/integrity, typed declared capability surface,
           two-way capability policy classes, require, banned-construct,
-          reserved-name, size, and injection gates. The corresponding Python
-          AST/import contract remains a separate pending phase.
-    - [ ] Python candidate static-gate parity — Python `analysis.py` /
-          `gates.py` semantics, including Python fixtures and AST extraction.
-    - [ ] Fork trial, soak, and boot lifecycle — `trial.py`, `soak.py`,
-          `boot.py`, and chassis recovery/retention.
+          reserved-name, size, and injection gates. Python AST/import behavior
+          is an intentional language-boundary divergence, not pending work.
+    - [-] Python candidate static-gate parity — intentionally not ported:
+          Evolution accepts Crystal candidates only. Python `ast` extraction,
+          Python imports, and Python candidate fixtures are not a contract for
+          this port; see the language-boundary resolution below.
+    - [ ] Crystal candidate trial, soak, and boot lifecycle — reproduce the
+          vendor trial/retention guarantees for compiled Crystal candidates,
+          without importing candidate source into the parent runtime.
     - [x] Verified Crystal candidate materialization — reassemble proposal
           artifacts, write a fresh candidate tree, and verify its external
           bundle pin without loading or executing it.
@@ -86,8 +89,9 @@ per-pack detail record (surfaces, divergence notes, fixture drivers).
           and preserve one active promotion per pack name.
     - [ ] Candidate activation — phase-two adoption with Crystal loading and
           persisted fork promotion.
-    - [ ] LLM author and deterministic vendor scenarios — `author.py` plus
-          `fixtures/candidates.py` and `fixtures/run_fixtures.py`.
+    - [ ] Crystal author and deterministic scenarios — a keyless Crig-backed
+          drafting seam plus Crystal candidate fixtures; Python author source
+          and fixture modules are references, not runtime dependencies.
       See the `evolution` divergence note for the exact boundary between the
       Crystal candidate path and missing Python-specific behavior.
 - [x] `demo_server` — HTTP API surface: /summary /graph /trace /packs
@@ -108,12 +112,42 @@ per-pack detail record (surfaces, divergence notes, fixture drivers).
 
 ### Next up (concrete plan order)
 
-1. `[ ]` `evolution` Python candidate static-gate parity — Python AST,
-   imports, and fixtures (the Crystal candidate path remains separate).
-2. `[ ]` `evolution` fork trial, soak, and boot lifecycle.
-3. `[ ]` `evolution` candidate activation.
-4. `[ ]` `evolution` LLM author and deterministic vendor scenarios.
-5. `[ ]` Upstream test porting (638 tests), tracked separately (161/638).
+1. `[ ]` `evolution` Crystal candidate trial, soak, and boot lifecycle.
+2. `[ ]` `evolution` candidate activation.
+3. `[ ]` `evolution` Crystal author and deterministic scenarios.
+4. `[ ]` Upstream test porting (638 tests), tracked separately (161/638).
+
+### Evolution candidate-language resolution
+
+Evolution is a **Crystal-candidate-only** feature in this port. The pinned
+Python implementation is normative for governance outcomes and failure
+posture, but it does not require this project to accept, import, execute, or
+generate Python candidate packs.
+
+- **Static gates:** the Crystal compiler parser and manifest-derived surface
+  extraction replace Python `ast` inspection. A successful Crystal compile is
+  useful evidence that a candidate is buildable in a pinned environment, but
+  it is not sufficient for admission: it does not prove the reviewed bundle
+  pin, manifest/source surface agreement, allow-listed dependencies, reserved
+  namespace policy, injection posture, fixture behavior, or runtime safety.
+  Static gates remain required before any candidate compilation.
+- **Execution and activation:** Crystal does not safely `require` an
+  agent-authored source tree at runtime. The pending Crystal trial/activation
+  design must compile a verified, pinned candidate in an isolated child and
+  run its fixtures/replay there with an allow-listed environment, resource and
+  wall-clock limits, and a persisted fork. The parent runtime reads only the
+  durable verdict/delta, then promotes it after approval. A host-process
+  `crystal build`, a parser pass, or a dynamic source load does not satisfy
+  this boundary.
+- **Python-specific mechanics:** `ast`, `importlib`, Python module decorators,
+  and `fixtures/run_fixtures.py` are intentionally not ported as runtime
+  dependencies. Their vendor tests define the behavior that equivalent Crystal
+  parsing, manifests, annotations, child scenarios, and audit records must
+  demonstrate.
+- **Authoring:** any future author returns constrained Crystal source bodies
+  through the existing governed/recorded seams; pack identity, manifest,
+  hashes, provenance, and fixtures remain deterministic code-owned output.
+  A Python author or a Python interpreter is neither needed nor accepted.
 
 ## Features
 
@@ -1050,16 +1084,17 @@ All six importers are ported: `local_files` (26/26),
   `pack.cr` with the Crystal compiler parser, checks its own manifest/file/
   surface/require/construct/reserved/size/injection boundaries, and records
   the fail-fast audit trail through `proposal_gatekeeper`. It is not a port of
-  Python `ast` or import semantics. **Deferred**: Python-candidate static-gate
-  parity (`analysis.py`/`gates.py`),
-  subprocess sandbox trials (`trial.py`/`soak.py` need a fresh-interpreter
-  child with RLIMIT/wall-clock nets — no chronicle primitive), dynamic
-  pack import (`materialize.import_pack` is `importlib`), adoption phase
-  two (`adopt.process_adoption_tickets` needs Crystal loading + fork
-  promotion), boot reload/retention (`boot.py`), the LLM author
-  (`author.py`, mock model — needs `analysis.extract_surface`), review
-  HTML (`review.py`, stdlib `difflib`), and the fixture scenarios
-  (`fixtures/run_fixtures.py`). **Ported**: 8 object types + 5 relation
+  Python `ast` or import semantics. **Intentional language boundary**:
+  Python-candidate static-gate parity (`analysis.py`/`gates.py`), dynamic
+  pack import (`materialize.import_pack` is `importlib`), the Python LLM
+  author, and Python fixture modules are not ported because candidates are
+  Crystal only. **Pending Crystal-native work**: isolated compiled-candidate
+  trials/soak (`trial.py`/`soak.py` define the required child-process,
+  wall-clock, resource-limit, and persisted-fork outcomes), activation
+  (`adopt.process_adoption_tickets` needs Crystal loading + fork promotion),
+  boot reload/retention (`boot.py`), and a keyless Crystal author with
+  deterministic Crystal scenarios. `review.py` is ported; its unified diff
+  uses the `similar` shard. **Ported**: 8 object types + 5 relation
   types (`struct` + `@[ObjectType]`/`@[RelationType]`, `getter? enabled`
   for the master switch); `EvolutionSettings` with the upstream defaults
   (consts nested so the DSL pack macro treats them as data); `author_frame`
