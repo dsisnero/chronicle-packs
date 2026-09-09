@@ -389,6 +389,33 @@ describe Chronicle::Packs::Evolution do
   end
 
   describe "Crystal candidate trials" do
+    it "keeps adoptable trial forks and archives disposable labeled forks" do
+      path = ""
+      path = File.tempname("evolution_retention", ".sqlite")
+      store = Chronicle::SQLiteEventStore.new(path, run_id: "evolution_parent")
+      graph = Chronicle::GraphProjection.empty.attach_store(store)
+      agent = Crig::Agent(PackModel).new(model: PackModel.new, preamble: "")
+      runtime = Chronicle::Runtime(PackModel).new(
+        store: store,
+        log_agent: Chronicle::LogAgent(PackModel).new(agent, store: store),
+        graph: graph,
+        run_id: "evolution_parent",
+      )
+      graph.add_object("source", {"kind" => JSON::Any.new("note"), "content" => JSON::Any.new("fork me")}.to_json)
+      retained = runtime.fork(graph.events.last.id, label: "evolution-trial:retain")
+      proposal = graph.add_object("mod_proposal", {"pack_name" => JSON::Any.new("retained_pack"), "status" => JSON::Any.new("trialed")}.to_json)
+      graph.add_object("mod_trial", {"proposal_id" => JSON::Any.new(proposal.id), "fork_run_id" => JSON::Any.new(retained.run_id)}.to_json)
+      disposable = runtime.fork(graph.events.last.id, label: "evolution-fixturegate:discard")
+
+      outcomes = Chronicle::Packs::Evolution::Boot.retire_unpinned_trial_forks(path)
+
+      outcomes[retained.run_id].should eq("in-flight (kept)")
+      outcomes[disposable.run_id].should start_with("retired (")
+      Chronicle::SQLiteEventStore.new(path, run_id: disposable.run_id).iter_events.should be_empty
+    ensure
+      path.try { |file| File.delete(file) if File.exists?(file) }
+    end
+
     it "reloads a persisted trial fork without carrying parent pack registrations" do
       path = ""
       path = File.tempname("evolution_trial_fork", ".sqlite")

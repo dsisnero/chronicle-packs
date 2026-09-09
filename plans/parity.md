@@ -25,8 +25,8 @@ each entry is branch-sized and user-visible, `[x]` = green and committed,
 Intentional divergences section). The `## Features` sections below remain the
 per-pack detail record (surfaces, divergence notes, fixture drivers).
 
-**Progress: 1738 / 2080 source API items ported, 16 partial, 92 skipped, 111 deferred.**
-**Remaining: 122 missing items + 161/638 upstream tests ported (4 deferred).**
+**Progress: 1739 / 2080 source API items ported, 16 partial, 92 skipped, 111 deferred.**
+**Remaining: 121 missing items + 161/638 upstream tests ported (4 deferred).**
 
 ## Remaining feature-size roadmap (S / M / L)
 
@@ -67,8 +67,8 @@ per-pack detail record (surfaces, divergence notes, fixture drivers).
 
 ### L — large (provider/platform edges, external backends)
 
-- [~] `evolution` — agent-authored packs under governance (69 ported, 16
-      partial, 122 missing / 207):
+- [~] `evolution` — agent-authored packs under governance (70 ported, 16
+      partial, 121 missing / 207):
     - [x] Crystal candidate static gatekeeper — parser-validated `pack.cr`,
           manifest identity/integrity, typed declared capability surface,
           two-way capability policy classes, require, banned-construct,
@@ -92,6 +92,9 @@ per-pack detail record (surfaces, divergence notes, fixture drivers).
           its recorded run id for review/promotion evidence only. Reloaded
           forks deliberately carry no parent pack registrations; absent,
           retired, empty, or unreadable runs fail closed as unavailable.
+        - [x] Trial-fork retention housekeeping — retain forks for adoptable
+          proposals, archive only labeled disposable trial/fixture-gate forks,
+          and honor Chronicle's unconditional provenance and lineage pins.
     - [x] Verified Crystal candidate materialization — reassemble proposal
           artifacts, write a fresh candidate tree, and verify its external
           bundle pin without loading or executing it.
