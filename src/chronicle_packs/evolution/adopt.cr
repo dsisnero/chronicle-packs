@@ -25,6 +25,29 @@ module Chronicle::Packs::Evolution
     AdoptConstants::DISABLE_ACTION_CLASS = "R4"
   end
 
+  # The parent never turns an authored source directory into executable code.
+  # A host binds this service only after it has matched the reviewed bundle to
+  # a sealed, compiled Crystal pack implementation under its own policy.
+  record ActivationRequest,
+    proposal_id : String,
+    pack_name : String,
+    candidate_root : Path,
+    bundle_hash : String
+
+  abstract class ActivationService
+    abstract def pack_for(request : ActivationRequest) : Chronicle::Packs::Pack
+  end
+
+  class_property activation_services : Hash(Chronicle::GraphProjection, ActivationService) = {} of Chronicle::GraphProjection => ActivationService
+
+  def self.set_activation_service(graph : Chronicle::GraphProjection, service : ActivationService) : Nil
+    self.activation_services[graph] = service
+  end
+
+  def self.clear_activation_services : Nil
+    self.activation_services.clear
+  end
+
   # The graph the governed capability executors operate on. chronicle's
   # gateway handler receives only input_data (no execution_context with a
   # graph); hosts bind one here when the pack is wired into a runtime (see
@@ -263,7 +286,40 @@ module Chronicle::Packs::Evolution
       abort_ticket(graph, ticket.id, proposal.id, "promote conflicts: #{plan.conflicts.first(5)}", "conflict")
       return adoption_outcome(ticket.id, "conflict")
     end
-    adoption_outcome(ticket.id, "activation_pending")
+    service = activation_services[graph]?
+    return adoption_outcome(ticket.id, "activation_pending") if service.nil?
+
+    pack = sealed_candidate_pack(graph, proposal, service)
+    expected_name = ticket_data(proposal)["pack_name"]?.try(&.as_s?) || ""
+    if pack.name != expected_name
+      abort_ticket(graph, ticket.id, proposal.id, "host activation returned #{pack.name.inspect}, expected #{expected_name.inspect}")
+      return adoption_outcome(ticket.id, "activation_failed")
+    end
+
+    rt.load_pack(pack)
+    promotion = graph.add_object("mod_promotion", {
+      "proposal_id" => JSON::Any.new(proposal.id),
+      "trial_id"    => JSON::Any.new(passing.last?.try(&.id) || ""),
+      "pack_name"   => JSON::Any.new(expected_name),
+      "fork_run_id" => JSON::Any.new(fork.run_id),
+      "bundle_hash" => JSON::Any.new(ticket_data(proposal)["bundle_hash"]?.try(&.as_s?) || ""),
+      "status"      => JSON::Any.new("loading"),
+      "at"          => JSON::Any.new(_now),
+      "metadata"    => JSON::Any.new({"behaviors" => JSON::Any.new(pack.behaviors.map { |behavior| JSON::Any.new("#{pack.name}.#{behavior.name}") })}),
+    }.to_json, actor: "evolution.adopt")
+    graph.add_relation(proposal.id, promotion.id, "promoted_as", actor: "evolution.adopt")
+
+    begin
+      result = rt.promote(fork).as(Chronicle::PromoteResult)
+    rescue ex
+      graph.patch_object(ticket.id, {"status" => JSON::Any.new("aborted"), "status_note" => JSON::Any.new("promote aborted: #{ex.class.name}: #{ex}"[0, 500])}.to_json, actor: "evolution.adopt")
+      graph.patch_object(proposal.id, {"status" => JSON::Any.new("conflict"), "status_note" => JSON::Any.new("parent advanced between dry run and apply; re-fork and re-trial")}.to_json, actor: "evolution.adopt")
+      return adoption_outcome(ticket.id, "conflict_late", promotion.id)
+    end
+    graph.patch_object(ticket.id, {"status" => JSON::Any.new("done")}.to_json, actor: "evolution.adopt")
+    rt.run_until_idle
+    supersede_prior_actives(graph, expected_name, promotion.id)
+    adoption_outcome(ticket.id, "promoted", promotion.id, result.marker_event_id)
   rescue ex : Chronicle::IncompatibleRuntimeState | Chronicle::PromoteLineageError
     abort_ticket(graph, ticket.id, proposal_id, "trial fork not available in the store (#{ex.message || ex.class.name}); re-trial required", "gated")
     adoption_outcome(ticket.id, "retrial_required")
@@ -300,8 +356,24 @@ module Chronicle::Packs::Evolution
     graph.add_relation(proposal_id, result.id, "gated_by", actor: "evolution.adopt")
   end
 
-  private def self.adoption_outcome(ticket_id : String, outcome : String) : Hash(String, JSON::Any)
-    {"ticket" => JSON::Any.new(ticket_id), "outcome" => JSON::Any.new(outcome)}
+  private def self.sealed_candidate_pack(graph : Chronicle::GraphProjection, proposal : Chronicle::GraphObject, service : ActivationService) : Chronicle::Packs::Pack
+    _, root = Materialize.materialize_verified(graph, proposal)
+    begin
+      data = ticket_data(proposal)
+      service.pack_for(ActivationRequest.new(
+        proposal.id, data["pack_name"]?.try(&.as_s?) || "", root,
+        data["bundle_hash"]?.try(&.as_s?) || "",
+      ))
+    ensure
+      FileUtils.rm_rf(root.parent)
+    end
+  end
+
+  private def self.adoption_outcome(ticket_id : String, outcome : String, promotion_id : String? = nil, marker_event_id : String? = nil) : Hash(String, JSON::Any)
+    result = {"ticket" => JSON::Any.new(ticket_id), "outcome" => JSON::Any.new(outcome)}
+    result["promotion"] = JSON::Any.new(promotion_id) unless promotion_id.nil?
+    result["marker_event_id"] = JSON::Any.new(marker_event_id) unless marker_event_id.nil?
+    result
   end
 
   private def self.abort_ticket(graph : Chronicle::GraphProjection, ticket_id : String, proposal_id : String?, note : String, proposal_status : String = "suspended") : Nil

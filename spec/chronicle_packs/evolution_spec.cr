@@ -74,6 +74,20 @@ module EvolutionSpecSupport
       @replay_report
     end
   end
+
+  class RecordingActivationService < Chronicle::Packs::Evolution::ActivationService
+    getter requests = [] of Chronicle::Packs::Evolution::ActivationRequest
+    getter candidate_files_observed = [] of Bool
+
+    def initialize(@pack : Chronicle::Packs::Pack)
+    end
+
+    def pack_for(request : Chronicle::Packs::Evolution::ActivationRequest) : Chronicle::Packs::Pack
+      @requests << request
+      @candidate_files_observed << File.exists?(request.candidate_root / "pack.cr")
+      @pack
+    end
+  end
 end
 
 include EvolutionSpecSupport
@@ -389,6 +403,54 @@ describe Chronicle::Packs::Evolution do
   end
 
   describe "Crystal candidate trials" do
+    it "activates only through a host-bound sealed Crystal pack service" do
+      path = ""
+      store = nil
+      path = File.tempname("evolution_activation", ".sqlite")
+      store = Chronicle::SQLiteEventStore.new(path, run_id: "activation_parent")
+      graph = Chronicle::GraphProjection.empty.attach_store(store)
+      agent = Crig::Agent(PackModel).new(model: PackModel.new, preamble: "")
+      runtime = Chronicle::Runtime(PackModel).new(
+        store: store,
+        log_agent: Chronicle::LogAgent(PackModel).new(agent, store: store),
+        graph: graph,
+        run_id: "activation_parent",
+      )
+      settings = Chronicle::Packs::Evolution::EvolutionSettings.new(enabled: true)
+      runtime.load_pack(Chronicle::Packs::Core.pack).should be_true
+      runtime.load_pack(Chronicle::Packs::Evolution.pack, JSON.parse(settings.to_json).as_h).should be_true
+      graph.add_object("source", {"kind" => JSON::Any.new("note"), "content" => JSON::Any.new("fork me")}.to_json)
+      fork = runtime.fork(graph.events.last.id, label: "evolution-trial:activation")
+      proposal = Chronicle::Packs::Evolution.submit_proposal_fn(
+        graph, pack_name: "sealed_activation_pack",
+        files: crystal_candidate_files("sealed_activation_pack", "module SealedActivationPack\nend\n"),
+      )
+      graph.patch_object(proposal.id, {"status" => JSON::Any.new("adopting")}.to_json)
+      graph.add_object("mod_trial", {
+        "proposal_id" => JSON::Any.new(proposal.id), "fork_run_id" => JSON::Any.new(fork.run_id),
+        "verdict" => JSON::Any.new("pass"),
+      }.to_json)
+      ticket = graph.add_object("adoption_ticket", {
+        "kind" => JSON::Any.new("adopt"), "proposal_id" => JSON::Any.new(proposal.id),
+        "status" => JSON::Any.new("open"),
+      }.to_json)
+      service = RecordingActivationService.new(Chronicle::Packs::Pack.new(name: "sealed_activation_pack", version: "0.1.0"))
+      Chronicle::Packs::Evolution.set_activation_service(graph, service)
+
+      outcomes = Chronicle::Packs::Evolution.process_adoption_tickets(runtime, settings)
+
+      outcomes.first["outcome"].as_s.should eq("promoted")
+      service.requests.size.should eq(1)
+      service.candidate_files_observed.should eq([true])
+      JSON.parse(graph.get_object(ticket.id).not_nil!.data)["status"].as_s.should eq("done")
+      promotion = graph.objects(type: "mod_promotion").last
+      JSON.parse(promotion.data)["status"].as_s.should eq("active")
+    ensure
+      Chronicle::Packs::Evolution.clear_activation_services
+      store.close if store
+      File.delete(path.not_nil!) if File.exists?(path.not_nil!)
+    end
+
     it "preflights adoption tickets and requires a passing durable trial fork" do
       with_evolution_runtime do |_store, graph, rt|
         proposal = Chronicle::Packs::Evolution.submit_proposal_fn(

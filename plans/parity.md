@@ -108,12 +108,17 @@ per-pack detail record (surfaces, divergence notes, fixture drivers).
     - [x] Promotion rollback and supersession reconciliation — process
           governed disable tickets idempotently, record durable rollbacks,
           and preserve one active promotion per pack name.
-    - [ ] Candidate activation — phase-two adoption with Crystal loading and
+    - [~] Candidate activation — phase-two adoption with Crystal loading and
           persisted fork promotion.
         - [x] Adoption preflight — between-frame ticket processing re-verifies
           the reviewed bundle, re-runs static/injection gates, requires the
           latest durable passing fork, and rejects promotion conflicts before
           any host-bound candidate activation.
+        - [x] Host-bound activation and promotion — a per-graph host service
+          maps a re-verified tree to a sealed compiled pack; the parent then
+          records loading, promotes the persisted fork, settles active, and
+          supersedes older active records. Host service provisioning and boot
+          reload activation remain separate integration work.
     - [ ] Crystal author and deterministic scenarios — a keyless Crig-backed
           drafting seam plus Crystal candidate fixtures; Python author source
           and fixture modules are references, not runtime dependencies.
