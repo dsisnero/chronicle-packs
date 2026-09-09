@@ -95,6 +95,10 @@ per-pack detail record (surfaces, divergence notes, fixture drivers).
         - [x] Trial-fork retention housekeeping — retain forks for adoptable
           proposals, archive only labeled disposable trial/fixture-gate forks,
           and honor Chronicle's unconditional provenance and lineage pins.
+        - [x] Boot promotion-record reconciliation — marker-proven loading
+          records heal and close their open ticket; ambiguous records park;
+          duplicate active records resolve by recency with durable boot-heal
+          gaps. Candidate activation itself remains host-bound.
     - [x] Verified Crystal candidate materialization — reassemble proposal
           artifacts, write a fresh candidate tree, and verify its external
           bundle pin without loading or executing it.

@@ -389,6 +389,21 @@ describe Chronicle::Packs::Evolution do
   end
 
   describe "Crystal candidate trials" do
+    it "supersedes older active promotions of the same pack at boot" do
+      with_evolution_runtime do |_store, graph, _rt|
+        older = graph.add_object("mod_promotion", {"proposal_id" => JSON::Any.new("p_old"), "pack_name" => JSON::Any.new("duplicate_pack"), "status" => JSON::Any.new("active")}.to_json)
+        newer = graph.add_object("mod_promotion", {"proposal_id" => JSON::Any.new("p_new"), "pack_name" => JSON::Any.new("duplicate_pack"), "status" => JSON::Any.new("active")}.to_json)
+
+        outcomes = Chronicle::Packs::Evolution::Boot.reconcile_promotions(graph)
+
+        outcomes["duplicate_pack"].should eq("active (healed; activation pending)")
+        old_data = JSON.parse(graph.get_object(older.id).not_nil!.data)
+        old_data["status"].as_s.should eq("disabled")
+        old_data["metadata"].as_h["superseded_by"].as_s.should eq(newer.id)
+        JSON.parse(graph.get_object(newer.id).not_nil!.data)["status"].as_s.should eq("active")
+      end
+    end
+
     it "heals marker-proven loading promotions and parks ambiguous ones at boot" do
       with_evolution_runtime do |_store, graph, _rt|
         healed = graph.add_object("mod_promotion", {"proposal_id" => JSON::Any.new("p1"), "pack_name" => JSON::Any.new("healed_pack"), "fork_run_id" => JSON::Any.new("fork_ok"), "status" => JSON::Any.new("loading")}.to_json)

@@ -34,8 +34,26 @@ module Chronicle::Packs::Evolution
             outcomes[name] = "disabled (parked incomplete adoption)"
           end
         end
+        reconcile_duplicate_actives(graph, name, promotions, outcomes)
       end
       outcomes
+    end
+
+    private def self.reconcile_duplicate_actives(graph : Chronicle::GraphProjection, pack_name : String, promotions : Array(Chronicle::GraphObject), outcomes : Hash(String, String)) : Nil
+      active = promotions.select do |promotion|
+        graph.get_object(promotion.id).try { |current| JSON.parse(current.data)["status"]?.try(&.as_s?) == "active" } || false
+      end
+      return unless active.size >= 2
+
+      survivor = active.last
+      active[0...-1].each do |loser|
+        data = JSON.parse(loser.data)
+        metadata = data["metadata"]?.try(&.as_h) || {} of String => JSON::Any
+        metadata["superseded_by"] = JSON::Any.new(survivor.id)
+        graph.patch_object(loser.id, {"status" => JSON::Any.new("disabled"), "status_note" => JSON::Any.new("superseded by #{survivor.id} (boot heal)"), "metadata" => JSON::Any.new(metadata)}.to_json, actor: "evolution.boot")
+      end
+      boot_gap(graph, pack_name, survivor.id, "two_active")
+      outcomes[pack_name] = "active (healed; activation pending)"
     end
 
     private def self.close_open_adoption_tickets(graph : Chronicle::GraphProjection, proposal_id : String) : Nil
