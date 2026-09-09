@@ -1,5 +1,6 @@
 require "json"
 require "time"
+require "file_utils"
 
 module Chronicle::Packs::Evolution
   # Stage-4/5 adoption: governed decision, two-phase execution. Ported from
@@ -123,9 +124,21 @@ module Chronicle::Packs::Evolution
     )
   end
 
-  # Process the phase-two disable subset between frames. It deliberately does
-  # not inspect adopt tickets: candidate activation requires the still-missing
-  # Crystal loading and trial-fork seams.
+  # Process open adoption tickets between frames. Adoption performs every
+  # durable precondition in the parent—pin, static gates, passing fork, and
+  # conflict dry-run—but deliberately stops before host-owned activation.
+  # There is no fallback that loads candidate source in this process.
+  def self.process_adoption_tickets(rt : Chronicle::Runtime(M), settings : EvolutionSettings) : Array(Hash(String, JSON::Any)) forall M
+    graph = rt.graph || raise PackError.new("evolution disable processing requires an attached graph")
+    graph.objects(type: "adoption_ticket")
+      .select { |ticket| ticket_data(ticket)["status"]?.try(&.as_s?) == "open" }
+      .map do |ticket|
+        ticket_data(ticket)["kind"]?.try(&.as_s?) == "disable" ? process_disable_ticket(rt, graph, ticket) : process_adopt_preflight(rt, graph, ticket, settings)
+      end
+  end
+
+  # Compatibility entry point for callers that only want the already-complete
+  # disable path.
   def self.process_disable_tickets(rt : Chronicle::Runtime(M)) : Array(Hash(String, JSON::Any)) forall M
     graph = rt.graph || raise PackError.new("evolution disable processing requires an attached graph")
     graph.objects(type: "adoption_ticket")
@@ -197,6 +210,98 @@ module Chronicle::Packs::Evolution
     graph.patch_object(proposal_id, {"status" => JSON::Any.new("disabled")}.to_json, actor: "evolution.adopt") unless proposal_id.empty? || graph.get_object(proposal_id).nil?
     graph.patch_object(ticket.id, {"status" => JSON::Any.new("done")}.to_json, actor: "evolution.adopt")
     disable_outcome(ticket.id, "disabled", deregistered)
+  end
+
+  # Stages 1–3 of the vendor adoption order. The full activation stage needs
+  # a host service which can map a verified compiled artifact to a sealed
+  # pack implementation; this phase must never approximate that with require.
+  # ameba:disable Metrics/CyclomaticComplexity -- canonical preflight must preserve each fail-closed vendor outcome
+  private def self.process_adopt_preflight(rt : Chronicle::Runtime(M), graph : Chronicle::GraphProjection, ticket : Chronicle::GraphObject, settings : EvolutionSettings) : Hash(String, JSON::Any) forall M
+    proposal_id = ticket_data(ticket)["proposal_id"]?.try(&.as_s?) || ""
+    proposal = graph.get_object(proposal_id)
+    if proposal.nil? || proposal.type != "mod_proposal"
+      abort_ticket(graph, ticket.id, nil, "proposal vanished")
+      return adoption_outcome(ticket.id, "error")
+    end
+    if ticket_data(proposal)["status"]?.try(&.as_s?) == "needs_owner"
+      abort_ticket(graph, ticket.id, nil, "proposal is needs_owner (terminal); owner action required")
+      return adoption_outcome(ticket.id, "needs_owner")
+    end
+
+    begin
+      files, root = Materialize.materialize_verified(graph, proposal)
+      begin
+        unless rerun_static_gates(graph, proposal, files, settings)
+          abort_ticket(graph, ticket.id, proposal.id, "gates failed on re-run", "gated")
+          return adoption_outcome(ticket.id, "gates_failed")
+        end
+      ensure
+        FileUtils.rm_rf(root.parent)
+      end
+    rescue ex : Chronicle::Packs::PackManifestError
+      abort_ticket(graph, ticket.id, proposal.id, "bundle-hash pin failed: #{ex}")
+      return adoption_outcome(ticket.id, "hash_mismatch")
+    rescue ex
+      abort_ticket(graph, ticket.id, proposal.id, "materialization failed: #{ex}")
+      return adoption_outcome(ticket.id, "error")
+    end
+
+    graph.patch_object(proposal.id, {"status" => JSON::Any.new("adopting")}.to_json, actor: "evolution.adopt")
+    passing = graph.objects(type: "mod_trial").select do |trial|
+      data = ticket_data(trial)
+      data["proposal_id"]?.try(&.as_s?) == proposal.id && data["verdict"]?.try(&.as_s?) == "pass"
+    end
+    fork_run_id = passing.last?.try { |trial| ticket_data(trial)["fork_run_id"]?.try(&.as_s?) } || ""
+    fork = Trial.load_trial_fork(rt, fork_run_id)
+    if fork.nil?
+      abort_ticket(graph, ticket.id, proposal.id, "trial fork not available in the store (never trialed, or its run was retired); re-trial required", "gated")
+      return adoption_outcome(ticket.id, "retrial_required")
+    end
+
+    plan = rt.promote(fork, dry_run: true).as(Chronicle::PromotePlan)
+    unless plan.is_promotable
+      abort_ticket(graph, ticket.id, proposal.id, "promote conflicts: #{plan.conflicts.first(5)}", "conflict")
+      return adoption_outcome(ticket.id, "conflict")
+    end
+    adoption_outcome(ticket.id, "activation_pending")
+  rescue ex : Chronicle::IncompatibleRuntimeState | Chronicle::PromoteLineageError
+    abort_ticket(graph, ticket.id, proposal_id, "trial fork not available in the store (#{ex.message || ex.class.name}); re-trial required", "gated")
+    adoption_outcome(ticket.id, "retrial_required")
+  end
+
+  private def self.rerun_static_gates(graph : Chronicle::GraphProjection, proposal : Chronicle::GraphObject, files : Hash(String, String), settings : EvolutionSettings) : Bool
+    data = ticket_data(proposal)
+    config = Analysis::CrystalStaticGateConfig.new(
+      allowed_files: settings.crystal_allowed_files,
+      allowed_requires: settings.crystal_require_allow,
+      reserved_paths: settings.reserved_paths,
+      reserved_namespaces: settings.reserved_namespaces,
+      never_callable: ToolGateway::Untrusted::NEVER_LLM_CALLABLE.to_a,
+      max_total_source_bytes: settings.max_total_source_bytes,
+      max_file_source_bytes: settings.max_file_bytes,
+      expected_bundle_hash: data["bundle_hash"]?.try(&.as_s?) || "",
+      expected_pack_name: data["pack_name"]?.try(&.as_s?) || "",
+    )
+    Analysis.crystal_static_gate_results(files, config).each do |gate, violations|
+      record_adopt_gate(graph, proposal.id, gate, violations.empty? ? "pass" : "fail", violations.join("; "))
+      return false unless violations.empty?
+    end
+    flags = files.each_value.flat_map { |source| ToolGateway::Untrusted.scan_for_injection(source) }.to_a.uniq.sort!
+    record_adopt_gate(graph, proposal.id, "static:injection", flags.empty? ? "pass" : "suspended", flags.join(", "))
+    flags.empty?
+  end
+
+  private def self.record_adopt_gate(graph : Chronicle::GraphProjection, proposal_id : String, gate : String, verdict : String, details : String) : Nil
+    result = graph.add_object("gate_result", {
+      "proposal_id" => JSON::Any.new(proposal_id), "gate" => JSON::Any.new(gate),
+      "verdict" => JSON::Any.new(verdict), "details" => JSON::Any.new(details),
+      "at" => JSON::Any.new(_now),
+    }.to_json, actor: "evolution.adopt")
+    graph.add_relation(proposal_id, result.id, "gated_by", actor: "evolution.adopt")
+  end
+
+  private def self.adoption_outcome(ticket_id : String, outcome : String) : Hash(String, JSON::Any)
+    {"ticket" => JSON::Any.new(ticket_id), "outcome" => JSON::Any.new(outcome)}
   end
 
   private def self.abort_ticket(graph : Chronicle::GraphProjection, ticket_id : String, proposal_id : String?, note : String, proposal_status : String = "suspended") : Nil

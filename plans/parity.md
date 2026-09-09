@@ -110,6 +110,10 @@ per-pack detail record (surfaces, divergence notes, fixture drivers).
           and preserve one active promotion per pack name.
     - [ ] Candidate activation — phase-two adoption with Crystal loading and
           persisted fork promotion.
+        - [x] Adoption preflight — between-frame ticket processing re-verifies
+          the reviewed bundle, re-runs static/injection gates, requires the
+          latest durable passing fork, and rejects promotion conflicts before
+          any host-bound candidate activation.
     - [ ] Crystal author and deterministic scenarios — a keyless Crig-backed
           drafting seam plus Crystal candidate fixtures; Python author source
           and fixture modules are references, not runtime dependencies.

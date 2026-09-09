@@ -389,6 +389,55 @@ describe Chronicle::Packs::Evolution do
   end
 
   describe "Crystal candidate trials" do
+    it "preflights adoption tickets and requires a passing durable trial fork" do
+      with_evolution_runtime do |_store, graph, rt|
+        proposal = Chronicle::Packs::Evolution.submit_proposal_fn(
+          graph, pack_name: "adoption_preflight_pack",
+          files: crystal_candidate_files("adoption_preflight_pack", "module AdoptionPreflightPack\nend\n"),
+        )
+        graph.patch_object(proposal.id, {"status" => JSON::Any.new("adopting")}.to_json)
+        ticket = graph.add_object("adoption_ticket", {
+          "kind" => JSON::Any.new("adopt"), "proposal_id" => JSON::Any.new(proposal.id),
+          "status" => JSON::Any.new("open"),
+        }.to_json)
+
+        outcomes = Chronicle::Packs::Evolution.process_adoption_tickets(
+          rt, Chronicle::Packs::Evolution::EvolutionSettings.new(enabled: true))
+
+        outcomes.size.should eq(1)
+        outcomes.first["outcome"].as_s.should eq("retrial_required")
+        JSON.parse(graph.get_object(ticket.id).not_nil!.data)["status"].as_s.should eq("aborted")
+        JSON.parse(graph.get_object(proposal.id).not_nil!.data)["status"].as_s.should eq("gated")
+      end
+    end
+
+    it "aborts an adoption ticket when its reviewed bundle pin no longer matches" do
+      with_evolution_runtime do |_store, graph, rt|
+        proposal = Chronicle::Packs::Evolution.submit_proposal_fn(
+          graph, pack_name: "tampered_adoption_pack",
+          files: crystal_candidate_files("tampered_adoption_pack", "module TamperedAdoptionPack\nend\n"),
+        )
+        artifact = graph.objects(type: "artifact").find do |object|
+          JSON.parse(object.data)["title"].as_s == "pack.cr"
+        end.not_nil!
+        artifact_data = JSON.parse(artifact.data).as_h
+        artifact_data["content"] = JSON::Any.new("module TamperedAdoptionPack\n  TAMPERED = true\nend\n")
+        graph.patch_object(artifact.id, artifact_data.to_json)
+        graph.patch_object(proposal.id, {"status" => JSON::Any.new("adopting")}.to_json)
+        ticket = graph.add_object("adoption_ticket", {
+          "kind" => JSON::Any.new("adopt"), "proposal_id" => JSON::Any.new(proposal.id),
+          "status" => JSON::Any.new("open"),
+        }.to_json)
+
+        outcomes = Chronicle::Packs::Evolution.process_adoption_tickets(
+          rt, Chronicle::Packs::Evolution::EvolutionSettings.new(enabled: true))
+
+        outcomes.first["outcome"].as_s.should eq("hash_mismatch")
+        JSON.parse(graph.get_object(ticket.id).not_nil!.data)["status"].as_s.should eq("aborted")
+        JSON.parse(graph.get_object(proposal.id).not_nil!.data)["status"].as_s.should eq("suspended")
+      end
+    end
+
     it "keeps a pack down when a newer promotion disables an older active record" do
       with_evolution_runtime do |_store, graph, _rt|
         active = graph.add_object("mod_promotion", {"proposal_id" => JSON::Any.new("p_active"), "pack_name" => JSON::Any.new("recency_pack"), "status" => JSON::Any.new("active")}.to_json)
