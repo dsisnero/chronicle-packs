@@ -25,8 +25,8 @@ each entry is branch-sized and user-visible, `[x]` = green and committed,
 Intentional divergences section). The `## Features` sections below remain the
 per-pack detail record (surfaces, divergence notes, fixture drivers).
 
-**Progress: 1739 / 2080 source API items ported, 16 partial, 92 skipped, 111 deferred.**
-**Remaining: 121 missing items + 161/638 upstream tests ported (4 deferred).**
+**Progress: 1739 / 2080 source API items ported, 17 partial, 92 skipped, 111 deferred.**
+**Remaining: 120 missing items + 161/638 upstream tests ported (4 deferred).**
 
 ## Remaining feature-size roadmap (S / M / L)
 
@@ -67,8 +67,8 @@ per-pack detail record (surfaces, divergence notes, fixture drivers).
 
 ### L — large (provider/platform edges, external backends)
 
-- [~] `evolution` — agent-authored packs under governance (70 ported, 16
-      partial, 121 missing / 207):
+- [~] `evolution` — agent-authored packs under governance (70 ported, 17
+      partial, 120 missing / 207):
     - [x] Crystal candidate static gatekeeper — parser-validated `pack.cr`,
           manifest identity/integrity, typed declared capability surface,
           two-way capability policy classes, require, banned-construct,

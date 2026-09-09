@@ -389,6 +389,24 @@ describe Chronicle::Packs::Evolution do
   end
 
   describe "Crystal candidate trials" do
+    it "heals marker-proven loading promotions and parks ambiguous ones at boot" do
+      with_evolution_runtime do |_store, graph, _rt|
+        healed = graph.add_object("mod_promotion", {"proposal_id" => JSON::Any.new("p1"), "pack_name" => JSON::Any.new("healed_pack"), "fork_run_id" => JSON::Any.new("fork_ok"), "status" => JSON::Any.new("loading")}.to_json)
+        ticket = graph.add_object("adoption_ticket", {"proposal_id" => JSON::Any.new("p1"), "kind" => JSON::Any.new("adopt"), "status" => JSON::Any.new("open")}.to_json)
+        parked = graph.add_object("mod_promotion", {"proposal_id" => JSON::Any.new("p2"), "pack_name" => JSON::Any.new("parked_pack"), "fork_run_id" => JSON::Any.new("fork_missing"), "status" => JSON::Any.new("loading")}.to_json)
+        graph.emit(Chronicle::Event.new(schema_version: 1_u16, sequence: 99_u64, id: "promote_marker", type: "promote.applied", actor: "spec", caused_by: nil, payload: %({"from_run":"fork_ok"})))
+
+        outcomes = Chronicle::Packs::Evolution::Boot.reconcile_promotions(graph)
+
+        outcomes["healed_pack"].should eq("active (healed; activation pending)")
+        outcomes["parked_pack"].should eq("disabled (parked incomplete adoption)")
+        JSON.parse(graph.get_object(healed.id).not_nil!.data)["status"].as_s.should eq("active")
+        JSON.parse(graph.get_object(ticket.id).not_nil!.data)["status"].as_s.should eq("done")
+        JSON.parse(graph.get_object(parked.id).not_nil!.data)["status"].as_s.should eq("disabled")
+        graph.objects(type: "capability_gap").count { |gap| JSON.parse(gap.data)["metadata"].as_h["source"].as_s == "boot_heal" }.should eq(2)
+      end
+    end
+
     it "keeps adoptable trial forks and archives disposable labeled forks" do
       path = ""
       path = File.tempname("evolution_retention", ".sqlite")

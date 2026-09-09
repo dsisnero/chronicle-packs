@@ -726,7 +726,7 @@ packs/evolution/behaviors.py::function::watch_monitor	function	ported	src/chroni
 packs/evolution/boot.py::function::_boot_gap	function	missing	-	auto-generated
 packs/evolution/boot.py::function::_promoted_fork_runs	function	missing	-	auto-generated
 packs/evolution/boot.py::function::_reload_one	function	missing	-	auto-generated
-packs/evolution/boot.py::function::reload_adopted_packs	function	missing	-	auto-generated
+packs/evolution/boot.py::function::reload_adopted_packs	function	partial	src/chronicle_packs/evolution/boot.cr::Boot.reconcile_promotions	Ports marker-proven loading healing and ambiguous-loading parking before host-bound Crystal activation; duplicate-active and reload execution remain pending.
 packs/evolution/boot.py::function::retire_unpinned_trial_forks	function	ported	src/chronicle_packs/evolution/boot.cr::Boot.retire_unpinned_trial_forks	Archives only labeled disposable trial forks; preserves adoptable forks and defers provenance/lineage decisions to Chronicle retention pins.
 packs/evolution/chassis.py::const::RETRYABLE_OUTCOMES	const	missing	-	auto-generated
 packs/evolution/chassis.py::function::_now	function	missing	-	auto-generated
