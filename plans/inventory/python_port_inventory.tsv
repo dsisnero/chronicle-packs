@@ -872,7 +872,7 @@ packs/evolution/tools.py::function::request_adoption_fn	function	ported	src/chro
 packs/evolution/tools.py::function::submit_proposal_fn	function	ported	src/chronicle_packs/evolution/tools.cr::submit_proposal_fn	-
 packs/evolution/trial.py::function::_now	function	missing	-	auto-generated
 packs/evolution/trial.py::function::_store_path	function	missing	-	auto-generated
-packs/evolution/trial.py::function::load_trial_fork	function	missing	-	auto-generated
+packs/evolution/trial.py::function::load_trial_fork	function	ported	src/chronicle_packs/evolution/trial.cr::Trial.load_trial_fork	Reloads an existing SQLite fork as evidence only; no pack registrations are copied and absent, retired, empty, or unreadable forks return nil.
 packs/evolution/trial.py::function::run_trial	function	partial	src/chronicle_packs/evolution/trial.cr::Trial.run_trial	Crystal parent orchestration is ported; host-bound TrialService still supplies isolated compiled child, persisted fork, and replay evidence.
 packs/evolution/trial_driver.py::const::TRIAL_DRIVER_PATH	const	ported	src/chronicle_packs/evolution/trial_driver.cr::TrialDriverConstants::TRIAL_DRIVER_PATH	-
 packs/evolution/trial_driver.py::function::render_trial_driver	function	ported	src/chronicle_packs/evolution/trial_driver.cr::render_trial_driver	-

@@ -389,6 +389,33 @@ describe Chronicle::Packs::Evolution do
   end
 
   describe "Crystal candidate trials" do
+    it "reloads a persisted trial fork without carrying parent pack registrations" do
+      path = ""
+      path = File.tempname("evolution_trial_fork", ".sqlite")
+      store = Chronicle::SQLiteEventStore.new(path, run_id: "evolution_parent")
+      graph = Chronicle::GraphProjection.empty.attach_store(store)
+      agent = Crig::Agent(PackModel).new(model: PackModel.new, preamble: "")
+      runtime = Chronicle::Runtime(PackModel).new(
+        store: store,
+        log_agent: Chronicle::LogAgent(PackModel).new(agent, store: store),
+        graph: graph,
+        run_id: "evolution_parent",
+      )
+      graph.add_object("source", {"kind" => JSON::Any.new("note"), "content" => JSON::Any.new("fork me")}.to_json)
+      fork = runtime.fork(graph.events.last.id, label: "evolution trial")
+
+      reloaded = Chronicle::Packs::Evolution::Trial.load_trial_fork(runtime, fork.run_id)
+
+      reloaded.should_not be_nil
+      reloaded.not_nil!.run_id.should eq(fork.run_id)
+      reloaded.not_nil!.graph.not_nil!.events.map(&.id).should eq(fork.graph.not_nil!.events.map(&.id))
+      reloaded.not_nil!.loaded_packs.should be_empty
+      Chronicle::Packs::Evolution::Trial.load_trial_fork(runtime, "").should be_nil
+      Chronicle::Packs::Evolution::Trial.load_trial_fork(runtime, "gone").should be_nil
+    ensure
+      path.try { |file| File.delete(file) if File.exists?(file) }
+    end
+
     it "delegates verified candidates to the isolated service and records a passing trial" do
       fixture = Chronicle::Packs::Evolution::TrialReport.new(outcome: "completed")
       replay = Chronicle::Packs::Evolution::TrialReport.new(

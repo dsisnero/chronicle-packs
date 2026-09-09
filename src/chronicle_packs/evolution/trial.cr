@@ -65,6 +65,28 @@ module Chronicle::Packs::Evolution
       self.services.clear
     end
 
+    # Reload the durable replay fork strictly as evidence: no parent pack
+    # registrations or behaviors are copied onto the reopened runtime. A
+    # retired, unknown, empty, or otherwise unreadable run is not usable for
+    # trial review or later promotion.
+    def self.load_trial_fork(parent : Chronicle::Runtime(M), fork_run_id : String) : Chronicle::Runtime(M)? forall M
+      return nil if fork_run_id.empty?
+
+      store = parent.store
+      unless store.is_a?(Chronicle::SQLiteEventStore)
+        raise PackError.new("trial forks require a SQLite-backed runtime")
+      end
+
+      begin
+        fork = Chronicle::Runtime(M).load(store.db_path, fork_run_id, parent.log_agent.agent)
+        graph = fork.graph
+        return nil if graph.nil? || graph.events.empty?
+        fork
+      rescue
+        nil
+      end
+    end
+
     # Materialize and re-verify before handing a tree to an isolated host
     # service. Fixture failure is terminal; replay evidence is recorded as
     # the proposal's trial and determines trialed vs rejected.
