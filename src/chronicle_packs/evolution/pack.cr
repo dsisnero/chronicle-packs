@@ -7,6 +7,7 @@ require "./author_frame"
 require "./materialize"
 require "./analysis"
 require "./trial_driver"
+require "./trial"
 require "./tools"
 require "./behaviors"
 require "./adopt"
@@ -26,9 +27,11 @@ require "./review"
 #
 # Ported from upstream `packs/evolution` (revision
 # 6639a5385518ad49f74813373c85cf96eff9adc0). Slice 1: the deterministic
-# graph-native surface + behaviors + authoring tools; the Python-AST static
-# gate pipeline, subprocess sandbox trials, and importlib materialization
-# are deferred (see plans/parity.md).
+# graph-native surface + behaviors + authoring tools; Crystal static gates
+# and the parent half of isolated trial orchestration are ported. The host
+# compiled-child service, boot retention, activation, and authoring remain
+# tracked in plans/parity.md. Python AST/import execution is intentionally
+# outside this Crystal-candidate-only boundary.
 module Chronicle::Packs::Evolution
   include Chronicle::Packs::DSL
 

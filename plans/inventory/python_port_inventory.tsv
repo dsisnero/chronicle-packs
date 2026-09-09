@@ -873,7 +873,7 @@ packs/evolution/tools.py::function::submit_proposal_fn	function	ported	src/chron
 packs/evolution/trial.py::function::_now	function	missing	-	auto-generated
 packs/evolution/trial.py::function::_store_path	function	missing	-	auto-generated
 packs/evolution/trial.py::function::load_trial_fork	function	missing	-	auto-generated
-packs/evolution/trial.py::function::run_trial	function	missing	-	auto-generated
+packs/evolution/trial.py::function::run_trial	function	partial	src/chronicle_packs/evolution/trial.cr::Trial.run_trial	Crystal parent orchestration is ported; host-bound TrialService still supplies isolated compiled child, persisted fork, and replay evidence.
 packs/evolution/trial_driver.py::const::TRIAL_DRIVER_PATH	const	ported	src/chronicle_packs/evolution/trial_driver.cr::TrialDriverConstants::TRIAL_DRIVER_PATH	-
 packs/evolution/trial_driver.py::function::render_trial_driver	function	ported	src/chronicle_packs/evolution/trial_driver.cr::render_trial_driver	-
 packs/fixtures/chat_memory_cross_session.py::const::RETURNING_QUERY	const	ported	src/chronicle_packs/fixtures.cr::RETURNING_QUERY	-

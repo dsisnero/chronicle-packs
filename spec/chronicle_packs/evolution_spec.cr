@@ -8,16 +8,11 @@ require "../spec_helper"
 # Translated from upstream packs/evolution/* (revision
 # 6639a5385518ad49f74813373c85cf96eff9adc0).
 #
-# Slice 1 ports the deterministic, graph-native surface and the drafting/
-# gating/recording behavior that needs no Python interpreter: the 8 object
-# types + 5 relation types, EvolutionSettings, author_frame's charter pin +
-# structured-field charset + taint recompute, materialize's portable
-# file/hash helpers, the tools (submit_proposal / open_reflection_gap /
-# request_adoption), the graph-native behaviors (gap_detector,
-# proposal_gatekeeper's taint-suspend path, promotion_recorder,
-# watch_monitor), the trial-driver render, and adopt registration (with its
-# two refusals). The Python-AST static-gate pipeline (analysis.py/gates.py),
-# subprocess sandbox trials, and importlib materialization are deferred.
+# The Crystal path includes static gates, pin-first materialization, and
+# parent-side trial orchestration through a host-bound isolated TrialService.
+# The host's compiled-child sandbox, boot lifecycle, and activation remain
+# pending. Python AST/import execution is intentionally not a runtime
+# dependency of this Crystal-candidate-only port.
 
 module EvolutionSpecSupport
   extend self
@@ -56,6 +51,28 @@ module EvolutionSpecSupport
       "success"         => JSON::Any.new(success),
       "injection_flags" => JSON::Any.new(injection_flags.map { |f| JSON::Any.new(f) }),
     }.to_json, actor: "spec")
+  end
+
+  class RecordingTrialService < Chronicle::Packs::Evolution::TrialService
+    getter requests = [] of Chronicle::Packs::Evolution::TrialRequest
+    getter candidate_files_observed = [] of Bool
+    getter fixture_report : Chronicle::Packs::Evolution::TrialReport
+    getter replay_report : Chronicle::Packs::Evolution::TrialReport
+
+    def initialize(@fixture_report : Chronicle::Packs::Evolution::TrialReport, @replay_report : Chronicle::Packs::Evolution::TrialReport)
+    end
+
+    def run_fixture(request : Chronicle::Packs::Evolution::TrialRequest) : Chronicle::Packs::Evolution::TrialReport
+      @requests << request
+      @candidate_files_observed << File.exists?(request.candidate_root / "pack.cr")
+      @fixture_report
+    end
+
+    def run_replay(request : Chronicle::Packs::Evolution::TrialRequest) : Chronicle::Packs::Evolution::TrialReport
+      @requests << request
+      @candidate_files_observed << File.exists?(request.candidate_root / "pack.cr")
+      @replay_report
+    end
   end
 end
 
@@ -368,6 +385,74 @@ describe Chronicle::Packs::Evolution do
       driver.should contain("trial_stage_result")
       # Deterministic across settings-free calls.
       Chronicle::Packs::Evolution.render_trial_driver.should eq(driver)
+    end
+  end
+
+  describe "Crystal candidate trials" do
+    it "delegates verified candidates to the isolated service and records a passing trial" do
+      fixture = Chronicle::Packs::Evolution::TrialReport.new(outcome: "completed")
+      replay = Chronicle::Packs::Evolution::TrialReport.new(
+        outcome: "completed", fork_run_id: "fork_123", events_appended: 7,
+        in_sample_inputs: 3, held_out_inputs: 2,
+      )
+      service = EvolutionSpecSupport::RecordingTrialService.new(fixture, replay)
+
+      with_evolution_runtime do |_store, graph, _rt|
+        files = crystal_candidate_files("trial_candidate", "require \"chronicle-packs\"\n")
+        proposal = graph.add_object("mod_proposal", {
+          "pack_name"           => JSON::Any.new("trial_candidate"),
+          "source_artifact_ids" => JSON::Any.new(files.map do |path, content|
+            graph.add_object("artifact", {"kind" => JSON::Any.new("source"), "title" => JSON::Any.new(path), "content" => JSON::Any.new(content)}.to_json).id
+          end.map { |id| JSON::Any.new(id) }),
+          "bundle_hash" => JSON::Any.new(Chronicle::Packs::Evolution::Materialize.bundle_hash_of(files)),
+          "status"      => JSON::Any.new("gated"),
+        }.to_json)
+        Chronicle::Packs::Evolution::Trial.set_service(graph, service)
+
+        result = Chronicle::Packs::Evolution::Trial.run_trial(graph, proposal, Chronicle::Packs::Evolution::EvolutionSettings.new(enabled: true))
+
+        result.verdict.should eq("pass")
+        service.requests.size.should eq(2)
+        service.requests.each do |request|
+          request.bundle_hash.should eq(JSON.parse(proposal.data)["bundle_hash"].as_s)
+        end
+        service.candidate_files_observed.should eq([true, true])
+        JSON.parse(graph.get_object(proposal.id).not_nil!.data)["status"].as_s.should eq("trialed")
+        graph.objects(type: "gate_result").select { |gate| JSON.parse(gate.data)["proposal_id"].as_s == proposal.id }.map { |gate| JSON.parse(gate.data)["gate"].as_s }.should contain("fixtures")
+        graph.objects(type: "mod_trial").size.should eq(1)
+      end
+    ensure
+      Chronicle::Packs::Evolution::Trial.clear_services
+    end
+
+    it "rejects after a failed fixture without invoking replay" do
+      fixture = Chronicle::Packs::Evolution::TrialReport.new(outcome: "limits_exceeded", detail: "wall clock")
+      replay = Chronicle::Packs::Evolution::TrialReport.new(outcome: "completed")
+      service = EvolutionSpecSupport::RecordingTrialService.new(fixture, replay)
+
+      with_evolution_runtime do |_store, graph, _rt|
+        files = crystal_candidate_files("fixture_failure", "require \"chronicle-packs\"\n")
+        artifact_ids = files.map do |path, content|
+          graph.add_object("artifact", {"kind" => JSON::Any.new("source"), "title" => JSON::Any.new(path), "content" => JSON::Any.new(content)}.to_json).id
+        end
+        proposal = graph.add_object("mod_proposal", {
+          "pack_name"           => JSON::Any.new("fixture_failure"),
+          "source_artifact_ids" => JSON::Any.new(artifact_ids.map { |id| JSON::Any.new(id) }),
+          "bundle_hash"         => JSON::Any.new(Chronicle::Packs::Evolution::Materialize.bundle_hash_of(files)),
+          "status"              => JSON::Any.new("gated"),
+        }.to_json)
+        Chronicle::Packs::Evolution::Trial.set_service(graph, service)
+
+        result = Chronicle::Packs::Evolution::Trial.run_trial(graph, proposal, Chronicle::Packs::Evolution::EvolutionSettings.new(enabled: true))
+
+        result.verdict.should eq("fail")
+        result.gate.should eq("fixtures")
+        service.requests.size.should eq(1)
+        JSON.parse(graph.get_object(proposal.id).not_nil!.data)["status"].as_s.should eq("rejected")
+        graph.objects(type: "mod_trial").should be_empty
+      end
+    ensure
+      Chronicle::Packs::Evolution::Trial.clear_services
     end
   end
 

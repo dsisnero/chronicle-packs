@@ -25,8 +25,8 @@ each entry is branch-sized and user-visible, `[x]` = green and committed,
 Intentional divergences section). The `## Features` sections below remain the
 per-pack detail record (surfaces, divergence notes, fixture drivers).
 
-**Progress: 1737 / 2080 source API items ported, 15 partial, 92 skipped, 111 deferred.**
-**Remaining: 124 missing items + 161/638 upstream tests ported (4 deferred).**
+**Progress: 1737 / 2080 source API items ported, 16 partial, 92 skipped, 111 deferred.**
+**Remaining: 123 missing items + 161/638 upstream tests ported (4 deferred).**
 
 ## Remaining feature-size roadmap (S / M / L)
 
@@ -67,8 +67,8 @@ per-pack detail record (surfaces, divergence notes, fixture drivers).
 
 ### L — large (provider/platform edges, external backends)
 
-- [~] `evolution` — agent-authored packs under governance (68 ported, 15
-      partial, 124 missing / 207):
+- [~] `evolution` — agent-authored packs under governance (68 ported, 16
+      partial, 123 missing / 207):
     - [x] Crystal candidate static gatekeeper — parser-validated `pack.cr`,
           manifest identity/integrity, typed declared capability surface,
           two-way capability policy classes, require, banned-construct,
@@ -81,6 +81,13 @@ per-pack detail record (surfaces, divergence notes, fixture drivers).
     - [ ] Crystal candidate trial, soak, and boot lifecycle — reproduce the
           vendor trial/retention guarantees for compiled Crystal candidates,
           without importing candidate source into the parent runtime.
+        - [x] Trial parent orchestration — materialize and re-verify the
+          gated bundle; delegate fixture then replay stages to a per-graph
+          host `TrialService`; persist fixture/stage verdicts and `mod_trial`
+          before transitioning to `trialed` or `rejected`. The bound service
+          remains responsible for the isolated compiled child, allow-listed
+          environment, resource limits, persisted fork, and durable replay
+          evidence; there is deliberately no in-process Crystal fallback.
     - [x] Verified Crystal candidate materialization — reassemble proposal
           artifacts, write a fresh candidate tree, and verify its external
           bundle pin without loading or executing it.
