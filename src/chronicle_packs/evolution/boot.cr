@@ -35,6 +35,7 @@ module Chronicle::Packs::Evolution
           end
         end
         reconcile_duplicate_actives(graph, name, promotions, outcomes)
+        reconcile_recency_without_activation(graph, name, promotions, outcomes)
       end
       outcomes
     end
@@ -54,6 +55,31 @@ module Chronicle::Packs::Evolution
       end
       boot_gap(graph, pack_name, survivor.id, "two_active")
       outcomes[pack_name] = "active (healed; activation pending)"
+    end
+
+    # The parent process must not activate an agent-authored candidate, but it
+    # can still faithfully resolve the durable state. In particular, a newer
+    # disable wins over an older active record, preventing a restart from
+    # resurrecting a pack the graph says is down.
+    private def self.reconcile_recency_without_activation(graph : Chronicle::GraphProjection, pack_name : String, promotions : Array(Chronicle::GraphObject), outcomes : Hash(String, String)) : Nil
+      return if outcomes.has_key?(pack_name)
+
+      active = promotions.select do |promotion|
+        graph.get_object(promotion.id).try { |current| JSON.parse(current.data)["status"]?.try(&.as_s?) == "active" } || false
+      end
+      if active.size == 1
+        outcomes[pack_name] = if active.first.id == promotions.last.id
+                                "active (activation pending)"
+                              else
+                                "disabled (stays down, superseded by recency)"
+                              end
+        return
+      end
+
+      status = graph.get_object(promotions.last.id).try do |promotion|
+        JSON.parse(promotion.data)["status"]?.try(&.as_s?)
+      end
+      outcomes[pack_name] = status == "disabled" ? "disabled (stays down)" : "skipped (status=#{status})"
     end
 
     private def self.close_open_adoption_tickets(graph : Chronicle::GraphProjection, proposal_id : String) : Nil

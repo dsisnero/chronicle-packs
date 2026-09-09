@@ -99,6 +99,9 @@ per-pack detail record (surfaces, divergence notes, fixture drivers).
           records heal and close their open ticket; ambiguous records park;
           duplicate active records resolve by recency with durable boot-heal
           gaps. Candidate activation itself remains host-bound.
+        - [x] Boot recency parking — a newer disabled promotion keeps an
+          older active record down, while a newest disabled record stays down;
+          the parent records the durable outcome without executing candidates.
     - [x] Verified Crystal candidate materialization — reassemble proposal
           artifacts, write a fresh candidate tree, and verify its external
           bundle pin without loading or executing it.

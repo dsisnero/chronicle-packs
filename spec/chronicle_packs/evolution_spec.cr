@@ -389,6 +389,29 @@ describe Chronicle::Packs::Evolution do
   end
 
   describe "Crystal candidate trials" do
+    it "keeps a pack down when a newer promotion disables an older active record" do
+      with_evolution_runtime do |_store, graph, _rt|
+        active = graph.add_object("mod_promotion", {"proposal_id" => JSON::Any.new("p_active"), "pack_name" => JSON::Any.new("recency_pack"), "status" => JSON::Any.new("active")}.to_json)
+        disabled = graph.add_object("mod_promotion", {"proposal_id" => JSON::Any.new("p_disabled"), "pack_name" => JSON::Any.new("recency_pack"), "status" => JSON::Any.new("disabled")}.to_json)
+
+        outcomes = Chronicle::Packs::Evolution::Boot.reconcile_promotions(graph)
+
+        outcomes["recency_pack"].should eq("disabled (stays down, superseded by recency)")
+        JSON.parse(graph.get_object(active.id).not_nil!.data)["status"].as_s.should eq("active")
+        JSON.parse(graph.get_object(disabled.id).not_nil!.data)["status"].as_s.should eq("disabled")
+      end
+    end
+
+    it "reports a disabled newest promotion as staying down" do
+      with_evolution_runtime do |_store, graph, _rt|
+        graph.add_object("mod_promotion", {"proposal_id" => JSON::Any.new("p_disabled"), "pack_name" => JSON::Any.new("disabled_pack"), "status" => JSON::Any.new("disabled")}.to_json)
+
+        outcomes = Chronicle::Packs::Evolution::Boot.reconcile_promotions(graph)
+
+        outcomes["disabled_pack"].should eq("disabled (stays down)")
+      end
+    end
+
     it "supersedes older active promotions of the same pack at boot" do
       with_evolution_runtime do |_store, graph, _rt|
         older = graph.add_object("mod_promotion", {"proposal_id" => JSON::Any.new("p_old"), "pack_name" => JSON::Any.new("duplicate_pack"), "status" => JSON::Any.new("active")}.to_json)
