@@ -609,6 +609,38 @@ describe Chronicle::Packs::Evolution do
       Chronicle::Packs::Evolution::Analysis.check_crystal_manifest_surface(files).should be_empty
     end
 
+    it "submits one sealed host-authored Crystal candidate through the ordinary proposal path" do
+      with_evolution_runtime do |_store, graph, _rt|
+        evidence = add_capability_result(graph, "web", "fetch_url", false)
+        gap = graph.add_object("capability_gap", {
+          "kind"          => JSON::Any.new("tool_failure"),
+          "evidence_refs" => JSON::Any.new([JSON::Any.new(evidence.id)]),
+        }.to_json)
+        source = Chronicle::Packs::Evolution::AuthoredSource.new(
+          "@[Chronicle::Packs::Annotations::ObjectType(name: \"author_note\")]\nstruct AuthorNote\nend\n",
+          "", "", "",
+        )
+        service = ContextObservingAuthorService.new(graph, source)
+        Chronicle::Packs::Evolution::Author.set_service(graph, service)
+
+        proposal = Chronicle::Packs::Evolution::Author.draft_proposal(
+          graph, gap.id, base_name: "notetaker", model: "fixture:author",
+          day: "2026-09-09", at: "2026-09-09T12:00:00Z")
+
+        data = JSON.parse(proposal.data)
+        data["pack_name"].as_s.should eq("agent_notetaker")
+        data["authored_by"].as_s.should eq("llm")
+        data["gap_id"].as_s.should eq(gap.id)
+        data["drafting_context_id"].as_s.should_not be_empty
+        data["status"].as_s.should eq("drafted")
+        service.drafting_context_counts.should eq([1])
+        graph.objects(type: "artifact").map { |artifact| JSON.parse(artifact.data)["title"].as_s }.sort.should eq(
+          ["behaviors.cr", "manifest.toml", "object_types.cr", "pack.cr", "settings.cr", "tools.cr"])
+      ensure
+        Chronicle::Packs::Evolution::Author.clear_services
+      end
+    end
+
     it "reloads an active promotion through the host-bound sealed pack service" do
       with_evolution_runtime do |_store, graph, rt|
         proposal = Chronicle::Packs::Evolution.submit_proposal_fn(

@@ -102,6 +102,34 @@ module Chronicle::Packs::Evolution
       DraftResult.new(context.id, draft(graph, assembly.frame))
     end
 
+    # The complete author path preserves the normal proposal boundary: it
+    # first seals and obtains the four bodies, then pack-owned code stamps a
+    # candidate identity and submits those exact bytes for ordinary gating.
+    # The author cannot select its name, manifest, provenance, or submission
+    # metadata.
+    def self.draft_proposal(
+      graph : Chronicle::GraphProjection,
+      gap_id : String,
+      *,
+      base_name : String = "pack",
+      model : String = "host:keyless",
+      settings : EvolutionSettings = EvolutionSettings.new,
+      day : String,
+      at : String,
+      approver_roles : Array(String) = ["owner", "admin"],
+    ) : Chronicle::GraphObject
+      result = draft_for_gap(
+        graph, gap_id, model: model, settings: settings, day: day, at: at,
+        approver_roles: approver_roles,
+      )
+      pack_name = "agent_#{base_name}"
+      files = wrap_source(result.source, pack_name)
+      Chronicle::Packs::Evolution.submit_proposal_fn(
+        graph, pack_name: pack_name, files: files, gap_id: gap_id,
+        authored_by: "llm", drafting_context_id: result.drafting_context_id,
+      )
+    end
+
     private def self._proposal_in_flight_for_gap?(graph : Chronicle::GraphProjection, gap_id : String) : Bool
       graph.objects(type: "mod_proposal").any? do |proposal|
         data = JSON.parse(proposal.data)

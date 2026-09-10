@@ -150,6 +150,11 @@ per-pack detail record (surfaces, divergence notes, fixture drivers).
           source bodies into a fixed six-file candidate, deriving its manifest
           surface and content pin while retaining pack identity, provenance,
           entrypoint, and manifest ownership outside the author.
+        - [x] One-shot Crystal proposal submission — seal and dispatch one
+          keyless author call, then stamp the `agent_` identity and submit the
+          fixed candidate through the ordinary artifact, bundle-pin, taint,
+          and proposal-gate path; deterministic scenario execution remains a
+          separate host-trial concern.
       See the `evolution` divergence note for the exact boundary between the
       Crystal candidate path and missing Python-specific behavior.
 - [x] `demo_server` — HTTP API surface: /summary /graph /trace /packs
