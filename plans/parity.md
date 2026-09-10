@@ -133,6 +133,11 @@ per-pack detail record (surfaces, divergence notes, fixture drivers).
           frames only to its explicitly host-bound author service and refuses
           when none is configured; dispatch still cannot create proposals or
           load candidate code.
+        - [x] Deterministic author-frame assembly — construct the pure
+          four-section frame from the charter, charset-validated gap evidence,
+          `pack.loaded` surface, and envelope-wrapped verified-owner text;
+          retain only admitted ids and recomputed injection flags for later
+          sealing and submission.
       See the `evolution` divergence note for the exact boundary between the
       Crystal candidate path and missing Python-specific behavior.
 - [x] `demo_server` — HTTP API surface: /summary /graph /trace /packs

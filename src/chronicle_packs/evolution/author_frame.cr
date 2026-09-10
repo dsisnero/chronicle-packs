@@ -33,6 +33,35 @@ module Chronicle::Packs::Evolution
 
     RISK_CLASSES = Set{"low", "medium", "high", "critical"}
 
+    # The closed, pure-data frame the host may hand to an AuthorService. The
+    # graph ids which crossed the boundary are retained separately for the
+    # sealed drafting_context record; no graph handle or capability can enter
+    # the author boundary.
+    record Assembly,
+      charter : String,
+      charter_hash : String,
+      gap_id : String,
+      gap_fields : Hash(String, JSON::Any),
+      surface_packs : Array(String),
+      surface_object_types : Array(String),
+      owner_text : Array(String),
+      structured_fields : Array(String),
+      surface_sources : Array(String),
+      owner_input_ids : Array(String),
+      injection_flags : Array(String) do
+      def frame : Hash(String, JSON::Any)
+        {
+          "charter"    => JSON::Any.new(charter),
+          "gap_fields" => JSON::Any.new(gap_fields),
+          "surface"    => JSON::Any.new({
+            "packs"        => JSON::Any.new(surface_packs.map { |name| JSON::Any.new(name) }),
+            "object_types" => JSON::Any.new(surface_object_types.map { |name| JSON::Any.new(name) }),
+          }),
+          "owner_text" => JSON::Any.new(owner_text.map { |text| JSON::Any.new(text) }),
+        }
+      end
+    end
+
     def self._is_name(value : JSON::Any?) : Bool
       str = value.try(&.as_s?)
       !str.nil? && str.matches?(MANIFEST_NAME_RE)
@@ -70,6 +99,91 @@ module Chronicle::Packs::Evolution
     # The charter's text and its `sha256:` pin (§3a).
     def self.charter_text_and_hash : {String, String}
       {CHARTER_TEXT, "sha256:" + Digest::SHA256.hexdigest(CHARTER_TEXT)}
+    end
+
+    # Assemble the four-section author frame exactly from the allowed
+    # origins: charter, identifier-shaped gap evidence, pack.loaded surface,
+    # and content from verified owners. Everything else in the graph is
+    # deliberately unreadable from this path.
+    def self.assemble(graph : Chronicle::GraphProjection, gap_id : String, approver_roles : Array(String) = ["owner", "admin"]) : Assembly
+      gap = graph.get_object(gap_id)
+      if gap.nil? || gap.type != "capability_gap"
+        raise AuthorRefusal.new("no capability_gap #{_repr(gap_id)}")
+      end
+
+      charter, charter_hash = charter_text_and_hash
+      gap_data = JSON.parse(gap.data)
+      gap_fields, structured_fields = _structured_evidence(graph, gap_data["evidence_refs"]?.try(&.as_a) || [] of JSON::Any)
+      surface_packs, surface_object_types, surface_sources = _loaded_surface(graph)
+      owner_text, owner_input_ids, flags = _verified_owner_inputs(graph, approver_roles)
+
+      Assembly.new(
+        charter, charter_hash, gap.id, gap_fields, surface_packs,
+        surface_object_types, owner_text, structured_fields, surface_sources,
+        owner_input_ids, flags,
+      )
+    end
+
+    private def self._structured_evidence(graph : Chronicle::GraphProjection, evidence_ids : Array(JSON::Any)) : {Hash(String, JSON::Any), Array(String)}
+      gap_fields = {} of String => JSON::Any
+      structured_fields = [] of String
+      evidence_ids.each do |evidence_id|
+        object_id = evidence_id.as_s
+        evidence = graph.get_object(object_id)
+        next if evidence.nil?
+
+        evidence_data = JSON.parse(evidence.data).as_h
+        ADMISSIBLE_FIELD_PATHS.to_a.sort.each do |field_path|
+          next unless evidence_data.has_key?(field_path)
+          entry = "#{object_id}:#{field_path}"
+          next unless validate_structured_fields(graph, [entry]).empty?
+          structured_fields << entry
+          gap_fields[entry] = evidence_data[field_path]
+        end
+      end
+      {gap_fields, structured_fields}
+    end
+
+    private def self._loaded_surface(graph : Chronicle::GraphProjection) : {Array(String), Array(String), Array(String)}
+      surface_packs = [] of String
+      surface_object_types = [] of String
+      surface_sources = [] of String
+      graph.events.each do |event|
+        next unless event.type == "pack.loaded"
+        payload = JSON.parse(event.payload)
+        name = payload["name"]?.try(&.as_s?)
+        if name && !surface_packs.includes?(name)
+          surface_packs << name
+          surface_sources << "pack:#{name}"
+        end
+        (payload["object_types"]?.try(&.as_a) || [] of JSON::Any).each do |object_type|
+          name = object_type.as_s?
+          surface_object_types << name if name && !surface_object_types.includes?(name)
+        end
+      end
+      {surface_packs, surface_object_types, surface_sources}
+    end
+
+    private def self._verified_owner_inputs(graph : Chronicle::GraphProjection, approver_roles : Array(String)) : {Array(String), Array(String), Array(String)}
+      owner_text = [] of String
+      owner_input_ids = [] of String
+      flags = Set(String).new
+      graph.objects(type: "chat_input").each do |input|
+        input_data = JSON.parse(input.data)
+        sender = input_data["user_ref"]?.try(&.as_s?) || ""
+        next if sender.empty?
+        principal = IdentityAuth.lookup_principal_fn(graph, sender)
+        role = principal.try(&.["role"]?.try(&.as_s?))
+        next unless role && approver_roles.includes?(role)
+
+        content = input_data["content"]?.try(&.as_s?) || ""
+        hits = ToolGateway::Untrusted.scan_for_injection(content)
+        flags.concat(hits)
+        (input_data["injection_flags"]?.try(&.as_a) || [] of JSON::Any).each { |flag| flags << flag.as_s }
+        owner_input_ids << input.id
+        owner_text << ToolGateway::Untrusted.wrap_untrusted(content, hits)
+      end
+      {owner_text, owner_input_ids, flags.to_a.sort}
     end
 
     # Charset-check every admitted structured field (§3b/§6).

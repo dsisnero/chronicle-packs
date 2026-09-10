@@ -704,7 +704,7 @@ packs/evolution/author.py::function::_drafts_today	function	missing	-	auto-gener
 packs/evolution/author.py::function::_now	function	missing	-	auto-generated
 packs/evolution/author.py::function::_proposal_in_flight_for_gap	function	missing	-	auto-generated
 packs/evolution/author.py::function::_verified_owner_inputs	function	missing	-	auto-generated
-packs/evolution/author.py::function::assemble_frame	function	missing	-	auto-generated
+packs/evolution/author.py::function::assemble_frame	function	partial	src/chronicle_packs/evolution/author_frame.cr::AuthorFrame.assemble	Crystal equivalent returns the pure four-section frame plus admitted identifiers; drafting-record sealing and submission remain pending.
 packs/evolution/author.py::function::draft_proposal	function	missing	-	auto-generated
 packs/evolution/author_frame.py::const::ADMISSIBLE_FIELD_PATHS	const	ported	src/chronicle_packs/evolution/author_frame.cr::ADMISSIBLE_FIELD_PATHS	-
 packs/evolution/author_frame.py::const::AUTHOR_CHARTER_FILENAME	const	ported	src/chronicle_packs/evolution/author_frame.cr::AUTHOR_CHARTER_FILENAME	-
