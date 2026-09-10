@@ -102,6 +102,9 @@ per-pack detail record (surfaces, divergence notes, fixture drivers).
         - [x] Boot recency parking — a newer disabled promotion keeps an
           older active record down, while a newest disabled record stays down;
           the parent records the durable outcome without executing candidates.
+        - [x] Boot sealed-pack reload — active promotion records re-verify
+          their bundle and reload only through the bound host service; missing
+          services, proposals, or mismatched sealed packs fail closed.
     - [x] Verified Crystal candidate materialization — reassemble proposal
           artifacts, write a fresh candidate tree, and verify its external
           bundle pin without loading or executing it.

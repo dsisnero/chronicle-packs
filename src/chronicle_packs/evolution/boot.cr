@@ -1,4 +1,5 @@
 require "json"
+require "file_utils"
 
 module Chronicle::Packs::Evolution
   # Durable Evolution housekeeping. Candidate activation/reload remains a
@@ -38,6 +39,53 @@ module Chronicle::Packs::Evolution
         reconcile_recency_without_activation(graph, name, promotions, outcomes)
       end
       outcomes
+    end
+
+    # Rehydrate only the durable active registry at boot. The host-owned
+    # ActivationService is the sole bridge from a re-verified source tree to
+    # compiled code; this process never requires candidate source.
+    def self.reload_adopted_packs(rt : Chronicle::Runtime(M)) : Hash(String, String) forall M
+      graph = rt.graph || raise PackError.new("Evolution boot reload requires an attached graph")
+      outcomes = reconcile_promotions(graph)
+      graph.objects(type: "mod_promotion").group_by { |promotion| JSON.parse(promotion.data)["pack_name"]?.try(&.as_s?) || "?" }.each do |name, promotions|
+        active = promotions.select do |promotion|
+          graph.get_object(promotion.id).try { |current| JSON.parse(current.data)["status"]?.try(&.as_s?) == "active" } || false
+        end
+        next unless active.size == 1 && active.first.id == promotions.last.id
+
+        outcomes[name] = reload_one(rt, graph, active.first, name)
+      end
+      outcomes
+    end
+
+    private def self.reload_one(rt : Chronicle::Runtime(M), graph : Chronicle::GraphProjection, promotion : Chronicle::GraphObject, pack_name : String) : String forall M
+      proposal_id = JSON.parse(promotion.data)["proposal_id"]?.try(&.as_s?) || ""
+      proposal = graph.get_object(proposal_id)
+      return "skipped (proposal missing)" if proposal.nil?
+      service = Evolution.activation_services[graph]?
+      return "active (activation pending)" if service.nil?
+
+      begin
+        _, root = Materialize.materialize_verified(graph, proposal)
+        begin
+          data = JSON.parse(proposal.data)
+          pack = service.pack_for(ActivationRequest.new(
+            proposal.id, data["pack_name"]?.try(&.as_s?) || "", root,
+            data["bundle_hash"]?.try(&.as_s?) || "",
+          ))
+          return "disabled (host pack mismatch)" if pack.name != pack_name
+          rt.load_pack(pack)
+          "loaded"
+        ensure
+          FileUtils.rm_rf(root.parent)
+        end
+      rescue ex : Chronicle::Packs::PackManifestError
+        graph.patch_object(promotion.id, {"status" => JSON::Any.new("disabled")}.to_json, actor: "evolution.boot")
+        boot_gap(graph, pack_name, promotion.id, "hash_mismatch")
+        "disabled (hash mismatch)"
+      rescue ex
+        "error: #{ex.message || ex.class.name}"
+      end
     end
 
     private def self.reconcile_duplicate_actives(graph : Chronicle::GraphProjection, pack_name : String, promotions : Array(Chronicle::GraphObject), outcomes : Hash(String, String)) : Nil

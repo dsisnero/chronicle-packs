@@ -725,8 +725,8 @@ packs/evolution/behaviors.py::function::proposal_gatekeeper	function	ported	src/
 packs/evolution/behaviors.py::function::watch_monitor	function	ported	src/chronicle_packs/evolution/behaviors.cr::watch_monitor	-
 packs/evolution/boot.py::function::_boot_gap	function	missing	-	auto-generated
 packs/evolution/boot.py::function::_promoted_fork_runs	function	missing	-	auto-generated
-packs/evolution/boot.py::function::_reload_one	function	missing	-	auto-generated
-packs/evolution/boot.py::function::reload_adopted_packs	function	partial	src/chronicle_packs/evolution/boot.cr::Boot.reconcile_promotions	Ports marker-proven loading healing, ambiguous-loading parking, duplicate-active recovery, and disabled-recency parking before host-bound Crystal activation; reload execution remains pending.
+packs/evolution/boot.py::function::_reload_one	function	partial	src/chronicle_packs/evolution/boot.cr::Boot.reload_adopted_packs	Re-verifies active promotion bundles and reloads only via the host-bound sealed Crystal pack service; Python import loading is intentionally absent.
+packs/evolution/boot.py::function::reload_adopted_packs	function	partial	src/chronicle_packs/evolution/boot.cr::Boot.reload_adopted_packs	Ports promotion reconciliation and active sealed-pack reload. Host service provisioning remains application integration work; Python imports are intentionally absent.
 packs/evolution/boot.py::function::retire_unpinned_trial_forks	function	ported	src/chronicle_packs/evolution/boot.cr::Boot.retire_unpinned_trial_forks	Archives only labeled disposable trial forks; preserves adoptable forks and defers provenance/lineage decisions to Chronicle retention pins.
 packs/evolution/chassis.py::const::RETRYABLE_OUTCOMES	const	missing	-	auto-generated
 packs/evolution/chassis.py::function::_now	function	missing	-	auto-generated

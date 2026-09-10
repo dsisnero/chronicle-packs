@@ -403,6 +403,28 @@ describe Chronicle::Packs::Evolution do
   end
 
   describe "Crystal candidate trials" do
+    it "reloads an active promotion through the host-bound sealed pack service" do
+      with_evolution_runtime do |_store, graph, rt|
+        proposal = Chronicle::Packs::Evolution.submit_proposal_fn(
+          graph, pack_name: "sealed_boot_pack",
+          files: crystal_candidate_files("sealed_boot_pack", "module SealedBootPack\nend\n"),
+        )
+        graph.add_object("mod_promotion", {
+          "proposal_id" => JSON::Any.new(proposal.id), "pack_name" => JSON::Any.new("sealed_boot_pack"),
+          "status" => JSON::Any.new("active"),
+        }.to_json)
+        service = RecordingActivationService.new(Chronicle::Packs::Pack.new(name: "sealed_boot_pack", version: "0.1.0"))
+        Chronicle::Packs::Evolution.set_activation_service(graph, service)
+
+        outcomes = Chronicle::Packs::Evolution::Boot.reload_adopted_packs(rt)
+
+        outcomes["sealed_boot_pack"].should eq("loaded")
+        service.candidate_files_observed.should eq([true])
+      ensure
+        Chronicle::Packs::Evolution.clear_activation_services
+      end
+    end
+
     it "activates only through a host-bound sealed Crystal pack service" do
       path = ""
       store = nil
