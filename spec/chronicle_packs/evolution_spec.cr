@@ -680,6 +680,35 @@ describe Chronicle::Packs::Evolution do
       end
     end
 
+    it "takes a host-authored Crystal candidate from sealed draft through static gates and trial evidence" do
+      fixture = Chronicle::Packs::Evolution::TrialReport.new(outcome: "completed")
+      replay = Chronicle::Packs::Evolution::TrialReport.new(outcome: "completed", fork_run_id: "author_scenario_fork")
+      service = RecordingTrialService.new(fixture, replay)
+      with_evolution_runtime do |_store, graph, runtime|
+        evidence = add_capability_result(graph, "web", "fetch_url", false)
+        gap = graph.add_object("capability_gap", {
+          "kind" => JSON::Any.new("tool_failure"), "evidence_refs" => JSON::Any.new([JSON::Any.new(evidence.id)]),
+        }.to_json)
+        source = Chronicle::Packs::Evolution::AuthoredSource.new(
+          "@[Chronicle::Packs::Annotations::ObjectType(name: \"scenario_note\")]\nstruct ScenarioNote\nend\n", "", "", "",
+        )
+        Chronicle::Packs::Evolution::Author.set_service(graph, RecordingAuthorService.new(source))
+        proposal = Chronicle::Packs::Evolution::Author.draft_proposal(
+          graph, gap.id, base_name: "scenario", day: "2026-09-10", at: "2026-09-10T12:00:00Z")
+        runtime.run_until_idle
+        JSON.parse(graph.get_object(proposal.id).not_nil!.data)["status"].as_s.should eq("gated")
+        Chronicle::Packs::Evolution::Trial.set_service(graph, service)
+
+        result = Chronicle::Packs::Evolution::Trial.run_trial(graph, graph.get_object(proposal.id).not_nil!, Chronicle::Packs::Evolution::EvolutionSettings.new(enabled: true))
+
+        result.verdict.should eq("pass")
+        JSON.parse(graph.get_object(proposal.id).not_nil!.data)["status"].as_s.should eq("trialed")
+      ensure
+        Chronicle::Packs::Evolution::Author.clear_services
+        Chronicle::Packs::Evolution::Trial.clear_services
+      end
+    end
+
     it "reloads an active promotion through the host-bound sealed pack service" do
       with_evolution_runtime do |_store, graph, rt|
         proposal = Chronicle::Packs::Evolution.submit_proposal_fn(

@@ -141,7 +141,7 @@ per-pack detail record (surfaces, divergence notes, fixture drivers).
         - [x] Crystal soak duration target — require the configured minimum
           elapsed days as well as every scenario's success target before a
           durable soak reports completion.
-    - [ ] Crystal author and deterministic scenarios — a keyless Crig-backed
+    - [x] Crystal author and deterministic scenarios — a keyless Crig-backed
           drafting seam plus Crystal candidate fixtures; Python author source
           and fixture modules are references, not runtime dependencies.
         - [x] Keyless author source contract — a host author receives pure
@@ -174,6 +174,9 @@ per-pack detail record (surfaces, divergence notes, fixture drivers).
           fixed candidate through the ordinary artifact, bundle-pin, taint,
           and proposal-gate path; deterministic scenario execution remains a
           separate host-trial concern.
+        - [x] Deterministic Crystal author scenario — prove one sealed
+          keyless draft reaches ordinary static gating and a host-isolated
+          passing trial without loading candidate source in the parent.
       See the `evolution` divergence note for the exact boundary between the
       Crystal candidate path and missing Python-specific behavior.
 - [x] `demo_server` — HTTP API surface: /summary /graph /trace /packs
