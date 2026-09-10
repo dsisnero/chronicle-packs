@@ -40,6 +40,20 @@ module Chronicle::Packs::Evolution
         @paths.each_value.all? { |count| count.ok >= min_per_path }
       end
 
+      # The portable review artifact: no host runtime, provider, or Python
+      # process is needed to inspect whether every scenario has met its bar.
+      def to_markdown(min_per_path : Int32) : String
+        lines = ["# Evolution soak digest", "", "Rotations: #{@rotations}", "", "| Scenario | OK | Anomalies | Target |", "| --- | ---: | ---: | --- |"]
+        @paths.keys.sort!.each do |path|
+          count = @paths[path]
+          status = count.ok >= min_per_path ? "met" : "pending"
+          lines << "| #{path} | #{count.ok} | #{count.anomalies} | #{status} |"
+        end
+        lines << ""
+        lines << "Overall: #{target_met?(min_per_path: min_per_path) ? "met" : "pending"}"
+        lines.join("\n") + "\n"
+      end
+
       def save(path : String) : Nil
         File.write(path, to_json)
       end

@@ -195,6 +195,11 @@ describe Chronicle::Packs::Evolution do
       restored.target_met?(min_per_path: 1).should be_false
       restored.record("tainted", true)
       restored.target_met?(min_per_path: 1).should be_true
+      digest = restored.to_markdown(min_per_path: 2)
+      digest.should contain("# Evolution soak digest")
+      digest.should contain("| happy | 1 | 0 | pending |")
+      digest.should contain("| tainted | 1 | 1 | pending |")
+      digest.should contain("Overall: pending")
     ensure
       File.delete(path.not_nil!) if File.exists?(path.not_nil!)
     end

@@ -130,6 +130,9 @@ per-pack detail record (surfaces, divergence notes, fixture drivers).
           and anomaly counts and require every configured path to meet its
           completion target; runtime boot and isolated child execution remain
           host-owned integration responsibilities.
+        - [x] Portable Crystal soak digest — render the persisted scenario
+          ledger as deterministic Markdown, including each target state and
+          the overall completion result without requiring a running host.
     - [ ] Crystal author and deterministic scenarios — a keyless Crig-backed
           drafting seam plus Crystal candidate fixtures; Python author source
           and fixture modules are references, not runtime dependencies.

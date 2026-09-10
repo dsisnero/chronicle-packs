@@ -864,7 +864,7 @@ packs/evolution/soak.py::method::SoakHarness.scenario_happy	method	missing	-	aut
 packs/evolution/soak.py::method::SoakHarness.scenario_tainted	method	missing	-	auto-generated
 packs/evolution/soak.py::method::SoakHarness.target_met	method	ported	src/chronicle_packs/evolution/soak.cr::Soak::State.target_met?	Requires every configured scenario path to reach the requested success minimum.
 packs/evolution/soak.py::method::SoakHarness.teardown	method	missing	-	auto-generated
-packs/evolution/soak.py::method::SoakHarness.write_digest	method	missing	-	auto-generated
+packs/evolution/soak.py::method::SoakHarness.write_digest	method	ported	src/chronicle_packs/evolution/soak.cr::Soak::State.to_markdown	Renders the persisted Crystal scenario ledger as a deterministic Markdown review digest.
 packs/evolution/tools.py::const::TOOLS	const	ported	src/chronicle_packs/evolution/pack.cr	tools live on the DSL pack surface
 packs/evolution/tools.py::function::_now	function	ported	src/chronicle_packs/evolution/tools.cr::_now	-
 packs/evolution/tools.py::function::open_reflection_gap_fn	function	ported	src/chronicle_packs/evolution/tools.cr::open_reflection_gap_fn	-
