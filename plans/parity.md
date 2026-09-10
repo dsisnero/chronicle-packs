@@ -129,6 +129,10 @@ per-pack detail record (surfaces, divergence notes, fixture drivers).
           data and may return only the four Crystal source bodies; pack-owned
           identity, manifests, provenance, fixtures, and activation remain
           outside the model boundary.
+        - [x] Keyless author service binding — each graph dispatches pure
+          frames only to its explicitly host-bound author service and refuses
+          when none is configured; dispatch still cannot create proposals or
+          load candidate code.
       See the `evolution` divergence note for the exact boundary between the
       Crystal candidate path and missing Python-specific behavior.
 - [x] `demo_server` — HTTP API surface: /summary /graph /trace /packs

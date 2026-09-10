@@ -697,8 +697,8 @@ packs/evolution/analysis.py::function::check_reserved_namespaces	function	partia
 packs/evolution/analysis.py::function::check_reserved_paths	function	partial	src/chronicle_packs/evolution/analysis.cr::check_reserved_paths	Shared reserved-path behavior used by Crystal candidate pipeline
 packs/evolution/analysis.py::function::check_size_caps	function	partial	src/chronicle_packs/evolution/analysis.cr::check_size_caps	Shared UTF-8 byte-cap behavior used by Crystal candidate pipeline
 packs/evolution/analysis.py::function::extract_surface	function	partial	src/chronicle_packs/evolution/analysis.cr::extract_crystal_declared_surface	Crystal annotation/capability extraction; Python AST extraction remains missing
-packs/evolution/author.py::class::AuthorRefusal	class	partial	src/chronicle_packs/evolution/author.cr::AuthorRefusal	Keyless Crystal author refusal type; drafting pipeline remains pending.
-packs/evolution/author.py::class::AuthoredSource	class	partial	src/chronicle_packs/evolution/author.cr::AuthoredSource	Typed keyless contract for the four Crystal source bodies; pack-owned wrapping remains pending.
+packs/evolution/author.py::class::AuthorRefusal	class	partial	src/chronicle_packs/evolution/author.cr::AuthorRefusal	Keyless Crystal author refusal type; graph-bound host dispatch fails closed while the drafting pipeline remains pending.
+packs/evolution/author.py::class::AuthoredSource	class	partial	src/chronicle_packs/evolution/author.cr::AuthoredSource	Typed keyless contract for the four Crystal source bodies, dispatched only through a per-graph host service; pack-owned wrapping remains pending.
 packs/evolution/author.py::function::_assemble_files	function	missing	-	auto-generated
 packs/evolution/author.py::function::_drafts_today	function	missing	-	auto-generated
 packs/evolution/author.py::function::_now	function	missing	-	auto-generated

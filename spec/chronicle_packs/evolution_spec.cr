@@ -424,6 +424,25 @@ describe Chronicle::Packs::Evolution do
       service.frames.should eq([frame])
     end
 
+    it "dispatches a pure author frame only through a graph-bound service" do
+      with_evolution_runtime do |_store, graph, _rt|
+        source = Chronicle::Packs::Evolution::AuthoredSource.new("objects", "behaviors", "settings", "tools")
+        frame = {"charter_hash" => JSON::Any.new("sha256:trusted")} of String => JSON::Any
+
+        expect_raises(Chronicle::Packs::Evolution::AuthorRefusal, /host-bound keyless AuthorService/) do
+          Chronicle::Packs::Evolution::Author.draft(graph, frame)
+        end
+
+        service = RecordingAuthorService.new(source)
+        Chronicle::Packs::Evolution::Author.set_service(graph, service)
+
+        Chronicle::Packs::Evolution::Author.draft(graph, frame).should eq(source)
+        service.frames.should eq([frame])
+      ensure
+        Chronicle::Packs::Evolution::Author.clear_services
+      end
+    end
+
     it "reloads an active promotion through the host-bound sealed pack service" do
       with_evolution_runtime do |_store, graph, rt|
         proposal = Chronicle::Packs::Evolution.submit_proposal_fn(
