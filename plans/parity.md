@@ -122,6 +122,10 @@ per-pack detail record (surfaces, divergence notes, fixture drivers).
           records loading, promotes the persisted fork, settles active, and
           supersedes older active records. Host service provisioning and boot
           reload activation remain separate integration work.
+        - [x] Bounded between-frame retry sweep — process adoption outcomes,
+          re-trial only retryable conflicts under the unchanged bundle pin,
+          and park proposals at the configured cap as terminal
+          `needs_owner` state.
     - [ ] Crystal author and deterministic scenarios — a keyless Crig-backed
           drafting seam plus Crystal candidate fixtures; Python author source
           and fixture modules are references, not runtime dependencies.

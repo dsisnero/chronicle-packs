@@ -728,9 +728,9 @@ packs/evolution/boot.py::function::_promoted_fork_runs	function	missing	-	auto-g
 packs/evolution/boot.py::function::_reload_one	function	partial	src/chronicle_packs/evolution/boot.cr::Boot.reload_adopted_packs	Re-verifies active promotion bundles and reloads only via the host-bound sealed Crystal pack service; Python import loading is intentionally absent.
 packs/evolution/boot.py::function::reload_adopted_packs	function	partial	src/chronicle_packs/evolution/boot.cr::Boot.reload_adopted_packs	Ports promotion reconciliation and active sealed-pack reload. Host service provisioning remains application integration work; Python imports are intentionally absent.
 packs/evolution/boot.py::function::retire_unpinned_trial_forks	function	ported	src/chronicle_packs/evolution/boot.cr::Boot.retire_unpinned_trial_forks	Archives only labeled disposable trial forks; preserves adoptable forks and defers provenance/lineage decisions to Chronicle retention pins.
-packs/evolution/chassis.py::const::RETRYABLE_OUTCOMES	const	missing	-	auto-generated
-packs/evolution/chassis.py::function::_now	function	missing	-	auto-generated
-packs/evolution/chassis.py::function::sweep_evolution	function	missing	-	auto-generated
+packs/evolution/chassis.py::const::RETRYABLE_OUTCOMES	const	ported	src/chronicle_packs/evolution/chassis.cr::Chassis::RETRYABLE_OUTCOMES	Exact retryable adoption outcomes: conflict, conflict_late, and retrial_required.
+packs/evolution/chassis.py::function::_now	function	ported	src/chronicle_packs/evolution/chassis.cr::Chassis.sweep_evolution	Uses Crystal UTC RFC3339 timestamps when requeuing an audited ticket.
+packs/evolution/chassis.py::function::sweep_evolution	function	ported	src/chronicle_packs/evolution/chassis.cr::Chassis.sweep_evolution	Processes tickets between frames, caps automatic re-trials, preserves the approved bundle pin, requeues passing trials, and parks terminal needs_owner proposals.
 packs/evolution/fixtures/candidates.py::const::BEHAVIOR_TEMPLATE	const	missing	-	auto-generated
 packs/evolution/fixtures/candidates.py::const::FIXTURES_TEMPLATE	const	missing	-	auto-generated
 packs/evolution/fixtures/candidates.py::const::INIT_TEMPLATE	const	missing	-	auto-generated

@@ -711,6 +711,61 @@ describe Chronicle::Packs::Evolution do
       File.delete(path.not_nil!) if File.exists?(path.not_nil!)
     end
 
+    it "parks a retrial-required adoption at the configured automatic retry cap" do
+      with_evolution_runtime do |_store, graph, runtime|
+        settings = Chronicle::Packs::Evolution::EvolutionSettings.new(enabled: true, max_conflict_retries: 0)
+        proposal = Chronicle::Packs::Evolution.submit_proposal_fn(
+          graph, pack_name: "chassis_retry_pack",
+          files: crystal_candidate_files("chassis_retry_pack", "module ChassisRetryPack\nend\n"),
+        )
+        graph.patch_object(proposal.id, {"status" => JSON::Any.new("adopting")}.to_json)
+        graph.add_object("adoption_ticket", {
+          "kind" => JSON::Any.new("adopt"), "proposal_id" => JSON::Any.new(proposal.id),
+          "status" => JSON::Any.new("open"),
+        }.to_json)
+
+        outcomes = Chronicle::Packs::Evolution::Chassis.sweep_evolution(runtime, settings)
+
+        outcomes.first["outcome"].as_s.should eq("retrial_required")
+        outcomes.first["retry"].as_s.should eq("needs_owner")
+        parked = JSON.parse(graph.get_object(proposal.id).not_nil!.data)
+        parked["status"].as_s.should eq("needs_owner")
+        parked["status_note"].as_s.should contain("parked after 0")
+      end
+    end
+
+    it "retries a retrial-required adoption once and requeues the same approved call" do
+      fixture = Chronicle::Packs::Evolution::TrialReport.new(outcome: "completed")
+      replay = Chronicle::Packs::Evolution::TrialReport.new(outcome: "completed", fork_run_id: "retry_fork")
+      service = RecordingTrialService.new(fixture, replay)
+      with_evolution_runtime do |_store, graph, runtime|
+        settings = Chronicle::Packs::Evolution::EvolutionSettings.new(enabled: true, max_conflict_retries: 1)
+        proposal = Chronicle::Packs::Evolution.submit_proposal_fn(
+          graph, pack_name: "chassis_requeue_pack",
+          files: crystal_candidate_files("chassis_requeue_pack", "module ChassisRequeuePack\nend\n"),
+        )
+        graph.patch_object(proposal.id, {"status" => JSON::Any.new("adopting")}.to_json)
+        ticket = graph.add_object("adoption_ticket", {
+          "kind" => JSON::Any.new("adopt"), "proposal_id" => JSON::Any.new(proposal.id),
+          "call_id" => JSON::Any.new("approved_call"), "status" => JSON::Any.new("open"),
+        }.to_json)
+        Chronicle::Packs::Evolution::Trial.set_service(graph, service)
+
+        outcomes = Chronicle::Packs::Evolution::Chassis.sweep_evolution(runtime, settings)
+
+        outcomes.first["outcome"].as_s.should eq("retrial_required")
+        outcomes.first["retry"].as_s.should eq("requeued (1/1)")
+        JSON.parse(graph.get_object(proposal.id).not_nil!.data)["status"].as_s.should eq("trialed")
+        requeued = graph.objects(type: "adoption_ticket").find { |item| item.id != ticket.id }.not_nil!
+        data = JSON.parse(requeued.data)
+        data["call_id"].as_s.should eq("approved_call")
+        data["metadata"]["retry_of"].as_s.should eq(ticket.id)
+        data["metadata"]["auto_retry"].as_i.should eq(1)
+      ensure
+        Chronicle::Packs::Evolution::Trial.clear_services
+      end
+    end
+
     it "preflights adoption tickets and requires a passing durable trial fork" do
       with_evolution_runtime do |_store, graph, rt|
         proposal = Chronicle::Packs::Evolution.submit_proposal_fn(

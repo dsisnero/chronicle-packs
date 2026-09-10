@@ -13,6 +13,7 @@ require "./boot"
 require "./tools"
 require "./behaviors"
 require "./adopt"
+require "./chassis"
 require "./review"
 
 # Evolution Pack v0.1 — self-modification with provenance: the assistant
