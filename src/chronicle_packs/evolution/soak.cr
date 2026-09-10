@@ -51,6 +51,10 @@ module Chronicle::Packs::Evolution
         @paths.each_value.all? { |count| count.ok >= min_per_path }
       end
 
+      def completion_met?(elapsed_days : Int32, min_per_path : Int32 = DEFAULT_MIN_PER_PATH) : Bool
+        elapsed_days >= DEFAULT_MIN_DAYS && target_met?(min_per_path: min_per_path)
+      end
+
       # The portable review artifact: no host runtime, provider, or Python
       # process is needed to inspect whether every scenario has met its bar.
       def to_markdown(min_per_path : Int32) : String

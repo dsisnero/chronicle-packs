@@ -138,6 +138,9 @@ per-pack detail record (surfaces, divergence notes, fixture drivers).
           portable digest for unattended review.
         - [x] Crystal soak scenario contract — expose the canonical scenario
           paths and default per-path completion threshold for host drivers.
+        - [x] Crystal soak duration target — require the configured minimum
+          elapsed days as well as every scenario's success target before a
+          durable soak reports completion.
     - [ ] Crystal author and deterministic scenarios — a keyless Crig-backed
           drafting seam plus Crystal candidate fixtures; Python author source
           and fixture modules are references, not runtime dependencies.

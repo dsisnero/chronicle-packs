@@ -185,6 +185,7 @@ describe Chronicle::Packs::Evolution do
         "happy", "conflict_park", "disable_restart", "budget_events",
         "budget_wallclock", "budget_memory", "tainted",
       ])
+      Chronicle::Packs::Evolution::Soak::DEFAULT_MIN_DAYS.should eq(3)
       Chronicle::Packs::Evolution::Soak::DEFAULT_MIN_PER_PATH.should eq(20)
     end
 
@@ -204,6 +205,8 @@ describe Chronicle::Packs::Evolution do
       restored.target_met?(min_per_path: 1).should be_false
       restored.record("tainted", true)
       restored.target_met?(min_per_path: 1).should be_true
+      restored.completion_met?(min_per_path: 1, elapsed_days: 2).should be_false
+      restored.completion_met?(min_per_path: 1, elapsed_days: 3).should be_true
       digest = restored.to_markdown(min_per_path: 2)
       digest.should contain("# Evolution soak digest")
       digest.should contain("| happy | 1 | 0 | pending |")
