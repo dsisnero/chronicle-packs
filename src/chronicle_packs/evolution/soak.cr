@@ -22,9 +22,11 @@ module Chronicle::Packs::Evolution
       property started_at : String
       property rotations : Int32
       property paths : Hash(String, PathCount)
+      property anomaly_log : Array(String)
 
       def initialize(scenario_paths : Array(String), @started_at : String = Time.utc.to_rfc3339, @rotations : Int32 = 0)
         @paths = scenario_paths.to_h { |path| {path, PathCount.new} }
+        @anomaly_log = [] of String
       end
 
       def advance_rotation : Nil
@@ -33,7 +35,12 @@ module Chronicle::Packs::Evolution
 
       def record(path : String, passed : Bool) : Nil
         count = @paths[path]? || raise PackError.new("unknown Evolution soak scenario #{path.inspect}")
-        passed ? count.ok += 1 : count.anomalies += 1
+        if passed
+          count.ok += 1
+        else
+          count.anomalies += 1
+          @anomaly_log << "#{path}: failed"
+        end
       end
 
       def target_met?(min_per_path : Int32) : Bool
@@ -51,6 +58,12 @@ module Chronicle::Packs::Evolution
         end
         lines << ""
         lines << "Overall: #{target_met?(min_per_path: min_per_path) ? "met" : "pending"}"
+        unless @anomaly_log.empty?
+          lines << ""
+          lines << "## Recent anomalies"
+          lines << ""
+          @anomaly_log.last(20).each { |entry| lines << "- #{entry}" }
+        end
         lines.join("\n") + "\n"
       end
 

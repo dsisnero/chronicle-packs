@@ -843,7 +843,7 @@ packs/evolution/soak.py::function::main	function	missing	-	auto-generated
 packs/evolution/soak.py::method::SoakHarness.__init__	method	missing	-	auto-generated
 packs/evolution/soak.py::method::SoakHarness._approve_adoption	method	missing	-	auto-generated
 packs/evolution/soak.py::method::SoakHarness._author_and_gate	method	missing	-	auto-generated
-packs/evolution/soak.py::method::SoakHarness._check_invariants	method	missing	-	auto-generated
+packs/evolution/soak.py::method::SoakHarness._check_invariants	method	partial	src/chronicle_packs/evolution/soak.cr::Soak::State.record, Soak::State.target_met?	Crystal ledger records failed scenarios durably and computes the all-path completion invariant; runtime graph invariants remain host integration work.
 packs/evolution/soak.py::method::SoakHarness._enforce_invariants	method	missing	-	auto-generated
 packs/evolution/soak.py::method::SoakHarness._failure_object_ids	method	missing	-	auto-generated
 packs/evolution/soak.py::method::SoakHarness._governed_disable	method	missing	-	auto-generated

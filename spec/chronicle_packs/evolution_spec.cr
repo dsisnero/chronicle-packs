@@ -192,6 +192,7 @@ describe Chronicle::Packs::Evolution do
       restored.rotations.should eq(1)
       restored.paths["happy"].ok.should eq(1)
       restored.paths["tainted"].anomalies.should eq(1)
+      restored.anomaly_log.should eq(["tainted: failed"])
       restored.target_met?(min_per_path: 1).should be_false
       restored.record("tainted", true)
       restored.target_met?(min_per_path: 1).should be_true
@@ -200,6 +201,7 @@ describe Chronicle::Packs::Evolution do
       digest.should contain("| happy | 1 | 0 | pending |")
       digest.should contain("| tainted | 1 | 1 | pending |")
       digest.should contain("Overall: pending")
+      digest.should contain("## Recent anomalies\n\n- tainted: failed")
     ensure
       File.delete(path.not_nil!) if File.exists?(path.not_nil!)
     end

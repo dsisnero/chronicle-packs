@@ -133,6 +133,9 @@ per-pack detail record (surfaces, divergence notes, fixture drivers).
         - [x] Portable Crystal soak digest — render the persisted scenario
           ledger as deterministic Markdown, including each target state and
           the overall completion result without requiring a running host.
+        - [x] Crystal soak anomaly evidence — retain bounded chronological
+          failed-scenario entries in the durable ledger and expose them in the
+          portable digest for unattended review.
     - [ ] Crystal author and deterministic scenarios — a keyless Crig-backed
           drafting seam plus Crystal candidate fixtures; Python author source
           and fixture modules are references, not runtime dependencies.
