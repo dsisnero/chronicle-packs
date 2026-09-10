@@ -543,6 +543,50 @@ describe Chronicle::Packs::Evolution do
       end
     end
 
+    it "refuses author calls that exceed the in-flight or daily draft caps" do
+      with_evolution_runtime do |_store, graph, _rt|
+        first_evidence = add_capability_result(graph, "web", "fetch_url", false, call_id: "cap_one")
+        first_gap = graph.add_object("capability_gap", {
+          "kind"          => JSON::Any.new("tool_failure"),
+          "evidence_refs" => JSON::Any.new([JSON::Any.new(first_evidence.id)]),
+        }.to_json)
+        graph.add_object("mod_proposal", {
+          "pack_name" => JSON::Any.new("existing_author_draft"), "gap_id" => JSON::Any.new(first_gap.id),
+          "status" => JSON::Any.new("gated"),
+        }.to_json)
+
+        expect_raises(Chronicle::Packs::Evolution::AuthorRefusal, /already in flight/) do
+          Chronicle::Packs::Evolution::Author.draft_for_gap(
+            graph, first_gap.id, day: "2026-09-09", at: "2026-09-09T12:00:00Z")
+        end
+        graph.objects(type: "drafting_context").should be_empty
+
+        source = Chronicle::Packs::Evolution::AuthoredSource.new("objects", "behaviors", "settings", "tools")
+        Chronicle::Packs::Evolution::Author.set_service(graph, RecordingAuthorService.new(source))
+        second_evidence = add_capability_result(graph, "web", "open_url", false, call_id: "cap_two")
+        second_gap = graph.add_object("capability_gap", {
+          "kind"          => JSON::Any.new("tool_failure"),
+          "evidence_refs" => JSON::Any.new([JSON::Any.new(second_evidence.id)]),
+        }.to_json)
+        settings = Chronicle::Packs::Evolution::EvolutionSettings.new(max_drafts_per_day: 1)
+        Chronicle::Packs::Evolution::Author.draft_for_gap(
+          graph, second_gap.id, settings: settings, day: "2026-09-09", at: "2026-09-09T12:00:00Z")
+        third_evidence = add_capability_result(graph, "web", "list_urls", false, call_id: "cap_three")
+        third_gap = graph.add_object("capability_gap", {
+          "kind"          => JSON::Any.new("tool_failure"),
+          "evidence_refs" => JSON::Any.new([JSON::Any.new(third_evidence.id)]),
+        }.to_json)
+
+        expect_raises(Chronicle::Packs::Evolution::AuthorRefusal, /daily draft cap reached \(1\)/) do
+          Chronicle::Packs::Evolution::Author.draft_for_gap(
+            graph, third_gap.id, settings: settings, day: "2026-09-09", at: "2026-09-09T12:00:00Z")
+        end
+        graph.objects(type: "drafting_context").size.should eq(1)
+      ensure
+        Chronicle::Packs::Evolution::Author.clear_services
+      end
+    end
+
     it "reloads an active promotion through the host-bound sealed pack service" do
       with_evolution_runtime do |_store, graph, rt|
         proposal = Chronicle::Packs::Evolution.submit_proposal_fn(

@@ -22,6 +22,8 @@ module Chronicle::Packs::Evolution
   # source bodies back; it neither configures a provider nor creates a
   # proposal from this boundary.
   module Author
+    IN_FLIGHT_STATES = Set{"drafted", "gated", "trialed", "pending_approval", "adopting", "conflict", "suspended"}
+
     record DraftResult,
       drafting_context_id : String,
       source : AuthoredSource
@@ -50,10 +52,17 @@ module Chronicle::Packs::Evolution
       gap_id : String,
       *,
       model : String = "host:keyless",
+      settings : EvolutionSettings = EvolutionSettings.new,
       day : String,
       at : String,
       approver_roles : Array(String) = ["owner", "admin"],
     ) : DraftResult
+      if _proposal_in_flight_for_gap?(graph, gap_id)
+        raise AuthorRefusal.new("a proposal for gap #{gap_id.inspect} is already in flight; one draft per gap at a time")
+      end
+      if _drafts_today(graph, day) >= settings.max_drafts_per_day
+        raise AuthorRefusal.new("daily draft cap reached (#{settings.max_drafts_per_day}); no more drafts today")
+      end
       assembly = AuthorFrame.assemble(graph, gap_id, approver_roles)
       context = graph.add_object("drafting_context", {
         "charter_hash"      => JSON::Any.new(assembly.charter_hash),
@@ -67,6 +76,19 @@ module Chronicle::Packs::Evolution
         "at"                => JSON::Any.new(at),
       }.to_json, actor: "evolution.author")
       DraftResult.new(context.id, draft(graph, assembly.frame))
+    end
+
+    private def self._proposal_in_flight_for_gap?(graph : Chronicle::GraphProjection, gap_id : String) : Bool
+      graph.objects(type: "mod_proposal").any? do |proposal|
+        data = JSON.parse(proposal.data)
+        data["gap_id"]?.try(&.as_s?) == gap_id && IN_FLIGHT_STATES.includes?(data["status"]?.try(&.as_s?) || "")
+      end
+    end
+
+    private def self._drafts_today(graph : Chronicle::GraphProjection, day : String) : Int32
+      graph.objects(type: "drafting_context").count do |record|
+        JSON.parse(record.data)["day"]?.try(&.as_s?) == day
+      end
     end
   end
 end

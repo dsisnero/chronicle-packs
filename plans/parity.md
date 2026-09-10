@@ -142,6 +142,10 @@ per-pack detail record (surfaces, divergence notes, fixture drivers).
           provenance before one keyless host-author call, returning only the
           sealed record id and four source bodies; caps, pack wrapping, and
           proposal submission remain separate work.
+        - [x] Deterministic drafting caps — refuse before frame assembly when
+          the gap already has a non-terminal proposal or the configured daily
+          drafting-context limit has been reached; rejected proposals do not
+          become author input.
       See the `evolution` divergence note for the exact boundary between the
       Crystal candidate path and missing Python-specific behavior.
 - [x] `demo_server` — HTTP API surface: /summary /graph /trace /packs
