@@ -100,6 +100,18 @@ module EvolutionSpecSupport
       @source
     end
   end
+
+  class ContextObservingAuthorService < Chronicle::Packs::Evolution::AuthorService
+    getter drafting_context_counts = [] of Int32
+
+    def initialize(@graph : Chronicle::GraphProjection, @source : Chronicle::Packs::Evolution::AuthoredSource)
+    end
+
+    def draft(frame : Hash(String, JSON::Any)) : Chronicle::Packs::Evolution::AuthoredSource
+      @drafting_context_counts << @graph.objects(type: "drafting_context").size
+      @source
+    end
+  end
 end
 
 include EvolutionSpecSupport
@@ -498,6 +510,34 @@ describe Chronicle::Packs::Evolution do
 
         Chronicle::Packs::Evolution::Author.draft(graph, frame).should eq(source)
         service.frames.should eq([frame])
+      ensure
+        Chronicle::Packs::Evolution::Author.clear_services
+      end
+    end
+
+    it "seals a drafting context before dispatching a gap frame to the host author" do
+      with_evolution_runtime do |_store, graph, _rt|
+        evidence = add_capability_result(graph, "web", "fetch_url", false)
+        gap = graph.add_object("capability_gap", {
+          "kind"          => JSON::Any.new("tool_failure"),
+          "evidence_refs" => JSON::Any.new([JSON::Any.new(evidence.id)]),
+        }.to_json)
+        source = Chronicle::Packs::Evolution::AuthoredSource.new("objects", "behaviors", "settings", "tools")
+        service = ContextObservingAuthorService.new(graph, source)
+        Chronicle::Packs::Evolution::Author.set_service(graph, service)
+
+        result = Chronicle::Packs::Evolution::Author.draft_for_gap(
+          graph, gap.id, model: "fixture:author", day: "2026-09-09", at: "2026-09-09T12:00:00Z")
+
+        result.source.should eq(source)
+        service.drafting_context_counts.should eq([1])
+        record = graph.get_object(result.drafting_context_id).not_nil!
+        data = JSON.parse(record.data)
+        data["gap_id"].as_s.should eq(gap.id)
+        data["model"].as_s.should eq("fixture:author")
+        data["day"].as_s.should eq("2026-09-09")
+        data["at"].as_s.should eq("2026-09-09T12:00:00Z")
+        data["structured_fields"].as_a.map(&.as_s).should eq(["#{evidence.id}:capability_name", "#{evidence.id}:provider_name"])
       ensure
         Chronicle::Packs::Evolution::Author.clear_services
       end

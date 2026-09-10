@@ -138,6 +138,10 @@ per-pack detail record (surfaces, divergence notes, fixture drivers).
           `pack.loaded` surface, and envelope-wrapped verified-owner text;
           retain only admitted ids and recomputed injection flags for later
           sealing and submission.
+        - [x] Pre-call drafting-context seal — persist the exact admitted
+          provenance before one keyless host-author call, returning only the
+          sealed record id and four source bodies; caps, pack wrapping, and
+          proposal submission remain separate work.
       See the `evolution` divergence note for the exact boundary between the
       Crystal candidate path and missing Python-specific behavior.
 - [x] `demo_server` — HTTP API surface: /summary /graph /trace /packs
