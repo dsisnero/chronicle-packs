@@ -136,6 +136,8 @@ per-pack detail record (surfaces, divergence notes, fixture drivers).
         - [x] Crystal soak anomaly evidence — retain bounded chronological
           failed-scenario entries in the durable ledger and expose them in the
           portable digest for unattended review.
+        - [x] Crystal soak scenario contract — expose the canonical scenario
+          paths and default per-path completion threshold for host drivers.
     - [ ] Crystal author and deterministic scenarios — a keyless Crig-backed
           drafting seam plus Crystal candidate fixtures; Python author source
           and fixture modules are references, not runtime dependencies.

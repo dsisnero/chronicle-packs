@@ -835,9 +835,9 @@ packs/evolution/settings.py::const::DEFAULT_RESERVED_NAMESPACES	const	ported	src
 packs/evolution/settings.py::const::DEFAULT_RESERVED_PATHS	const	ported	src/chronicle_packs/evolution/settings.cr::DefaultReservedPaths	-
 packs/evolution/soak.py::class::SoakHarness	class	partial	src/chronicle_packs/evolution/soak.cr::Soak::State	Crystal provider-free durable scenario ledger; host runtime boot, isolated execution, and scheduled rotation remain separate integration work.
 packs/evolution/soak.py::const::DEFAULT_MIN_DAYS	const	missing	-	auto-generated
-packs/evolution/soak.py::const::DEFAULT_MIN_PER_PATH	const	missing	-	auto-generated
+packs/evolution/soak.py::const::DEFAULT_MIN_PER_PATH	const	ported	src/chronicle_packs/evolution/soak.cr::Soak::DEFAULT_MIN_PER_PATH	Canonical default of 20 passing rotations per scenario.
 packs/evolution/soak.py::const::OWNER	const	missing	-	auto-generated
-packs/evolution/soak.py::const::SCENARIO_PATHS	const	missing	-	auto-generated
+packs/evolution/soak.py::const::SCENARIO_PATHS	const	ported	src/chronicle_packs/evolution/soak.cr::Soak::SCENARIO_PATHS	Canonical seven deterministic Evolution soak scenario identifiers.
 packs/evolution/soak.py::function::_now	function	missing	-	auto-generated
 packs/evolution/soak.py::function::main	function	missing	-	auto-generated
 packs/evolution/soak.py::method::SoakHarness.__init__	method	missing	-	auto-generated

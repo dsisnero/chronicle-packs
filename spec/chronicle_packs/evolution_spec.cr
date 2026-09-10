@@ -180,6 +180,14 @@ describe Chronicle::Packs::Evolution do
   end
 
   describe "Crystal soak accounting" do
+    it "declares the upstream scenario paths and default completion threshold" do
+      Chronicle::Packs::Evolution::Soak::SCENARIO_PATHS.should eq([
+        "happy", "conflict_park", "disable_restart", "budget_events",
+        "budget_wallclock", "budget_memory", "tainted",
+      ])
+      Chronicle::Packs::Evolution::Soak::DEFAULT_MIN_PER_PATH.should eq(20)
+    end
+
     it "persists per-path outcomes and requires every path to meet the target" do
       path = File.tempname("evolution_soak_state", ".json")
       state = Chronicle::Packs::Evolution::Soak::State.new(["happy", "tainted"])

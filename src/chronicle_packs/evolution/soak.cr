@@ -6,6 +6,10 @@ module Chronicle::Packs::Evolution
   # driver. The host owns runtime construction and isolated candidate
   # execution; this state is deliberately just the reproducible audit ledger.
   module Soak
+    DEFAULT_MIN_DAYS     =  3
+    DEFAULT_MIN_PER_PATH = 20
+    SCENARIO_PATHS       = ["happy", "conflict_park", "disable_restart", "budget_events", "budget_wallclock", "budget_memory", "tainted"]
+
     class PathCount
       include JSON::Serializable
 
