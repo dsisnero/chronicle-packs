@@ -14,6 +14,7 @@ require "./tools"
 require "./behaviors"
 require "./adopt"
 require "./chassis"
+require "./soak"
 require "./review"
 
 # Evolution Pack v0.1 — self-modification with provenance: the assistant

@@ -833,7 +833,7 @@ packs/evolution/settings.py::const::DEFAULT_FIXTURE_EXTRA_ALLOW	const	ported	src
 packs/evolution/settings.py::const::DEFAULT_IMPORT_ALLOW	const	ported	src/chronicle_packs/evolution/settings.cr::DefaultImportAllow	-
 packs/evolution/settings.py::const::DEFAULT_RESERVED_NAMESPACES	const	ported	src/chronicle_packs/evolution/settings.cr::DefaultReservedNamespaces	-
 packs/evolution/settings.py::const::DEFAULT_RESERVED_PATHS	const	ported	src/chronicle_packs/evolution/settings.cr::DefaultReservedPaths	-
-packs/evolution/soak.py::class::SoakHarness	class	missing	-	auto-generated
+packs/evolution/soak.py::class::SoakHarness	class	partial	src/chronicle_packs/evolution/soak.cr::Soak::State	Crystal provider-free durable scenario ledger; host runtime boot, isolated execution, and scheduled rotation remain separate integration work.
 packs/evolution/soak.py::const::DEFAULT_MIN_DAYS	const	missing	-	auto-generated
 packs/evolution/soak.py::const::DEFAULT_MIN_PER_PATH	const	missing	-	auto-generated
 packs/evolution/soak.py::const::OWNER	const	missing	-	auto-generated
@@ -849,9 +849,9 @@ packs/evolution/soak.py::method::SoakHarness._failure_object_ids	method	missing	
 packs/evolution/soak.py::method::SoakHarness._governed_disable	method	missing	-	auto-generated
 packs/evolution/soak.py::method::SoakHarness._graph_counts	method	missing	-	auto-generated
 packs/evolution/soak.py::method::SoakHarness._latest_child_failure_detail	method	missing	-	auto-generated
-packs/evolution/soak.py::method::SoakHarness._load_state	method	missing	-	auto-generated
+packs/evolution/soak.py::method::SoakHarness._load_state	method	ported	src/chronicle_packs/evolution/soak.cr::Soak::State.load	Loads durable Crystal scenario accounting and initializes missing configured paths.
 packs/evolution/soak.py::method::SoakHarness._memory_net_available	method	missing	-	auto-generated
-packs/evolution/soak.py::method::SoakHarness._save_state	method	missing	-	auto-generated
+packs/evolution/soak.py::method::SoakHarness._save_state	method	ported	src/chronicle_packs/evolution/soak.cr::Soak::State.save	Writes the JSON-serializable Crystal scenario ledger.
 packs/evolution/soak.py::method::SoakHarness._scenario_budget	method	missing	-	auto-generated
 packs/evolution/soak.py::method::SoakHarness._sweep	method	missing	-	auto-generated
 packs/evolution/soak.py::method::SoakHarness.boot	method	missing	-	auto-generated
@@ -862,7 +862,7 @@ packs/evolution/soak.py::method::SoakHarness.scenario_conflict_park	method	missi
 packs/evolution/soak.py::method::SoakHarness.scenario_disable_restart	method	missing	-	auto-generated
 packs/evolution/soak.py::method::SoakHarness.scenario_happy	method	missing	-	auto-generated
 packs/evolution/soak.py::method::SoakHarness.scenario_tainted	method	missing	-	auto-generated
-packs/evolution/soak.py::method::SoakHarness.target_met	method	missing	-	auto-generated
+packs/evolution/soak.py::method::SoakHarness.target_met	method	ported	src/chronicle_packs/evolution/soak.cr::Soak::State.target_met?	Requires every configured scenario path to reach the requested success minimum.
 packs/evolution/soak.py::method::SoakHarness.teardown	method	missing	-	auto-generated
 packs/evolution/soak.py::method::SoakHarness.write_digest	method	missing	-	auto-generated
 packs/evolution/tools.py::const::TOOLS	const	ported	src/chronicle_packs/evolution/pack.cr	tools live on the DSL pack surface

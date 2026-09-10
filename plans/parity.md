@@ -126,6 +126,10 @@ per-pack detail record (surfaces, divergence notes, fixture drivers).
           re-trial only retryable conflicts under the unchanged bundle pin,
           and park proposals at the configured cap as terminal
           `needs_owner` state.
+        - [x] Durable Crystal soak accounting — persist per-scenario success
+          and anomaly counts and require every configured path to meet its
+          completion target; runtime boot and isolated child execution remain
+          host-owned integration responsibilities.
     - [ ] Crystal author and deterministic scenarios — a keyless Crig-backed
           drafting seam plus Crystal candidate fixtures; Python author source
           and fixture modules are references, not runtime dependencies.

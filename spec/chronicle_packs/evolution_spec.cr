@@ -179,6 +179,27 @@ describe Chronicle::Packs::Evolution do
     end
   end
 
+  describe "Crystal soak accounting" do
+    it "persists per-path outcomes and requires every path to meet the target" do
+      path = File.tempname("evolution_soak_state", ".json")
+      state = Chronicle::Packs::Evolution::Soak::State.new(["happy", "tainted"])
+      state.advance_rotation
+      state.record("happy", true)
+      state.record("tainted", false)
+      state.save(path)
+
+      restored = Chronicle::Packs::Evolution::Soak::State.load(path, ["happy", "tainted"])
+      restored.rotations.should eq(1)
+      restored.paths["happy"].ok.should eq(1)
+      restored.paths["tainted"].anomalies.should eq(1)
+      restored.target_met?(min_per_path: 1).should be_false
+      restored.record("tainted", true)
+      restored.target_met?(min_per_path: 1).should be_true
+    ensure
+      File.delete(path.not_nil!) if File.exists?(path.not_nil!)
+    end
+  end
+
   describe "author_frame" do
     it "pins the charter with a sha256: hash" do
       text, hash = Chronicle::Packs::Evolution::AuthorFrame.charter_text_and_hash
