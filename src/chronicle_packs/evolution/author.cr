@@ -44,6 +44,30 @@ module Chronicle::Packs::Evolution
       service.draft(frame)
     end
 
+    # Pack-owned wrapping turns the only four authorable bodies into the
+    # complete Crystal candidate surface. Identity, provenance, entrypoint,
+    # and the manifest are never accepted from the author.
+    def self.wrap_source(source : AuthoredSource, pack_name : String) : Hash(String, String)
+      unless pack_name.matches?(Chronicle::Packs::MANIFEST_NAME_RE)
+        raise AuthorRefusal.new("candidate pack name #{pack_name.inspect} is not a valid manifest identifier")
+      end
+
+      files = {
+        "object_types.cr" => source.object_types_src,
+        "behaviors.cr"    => source.behaviors_src,
+        "settings.cr"     => source.settings_src,
+        "tools.cr"        => source.tools_src,
+        "pack.cr"         => _pack_entrypoint(pack_name),
+      }
+      surface = begin
+        Analysis.extract_crystal_declared_surface(files)
+      rescue ex : ArgumentError
+        raise AuthorRefusal.new(ex.message || "authored Crystal source could not be analyzed")
+      end
+      files["manifest.toml"] = _manifest(pack_name, surface, Materialize.content_hash_of(files))
+      files
+    end
+
     # Seal the graph-owned record before the host author sees its pure frame.
     # This deliberately stops after drafting: deterministic pack wrapping and
     # proposal submission remain separate governance phases.
@@ -89,6 +113,57 @@ module Chronicle::Packs::Evolution
       graph.objects(type: "drafting_context").count do |record|
         JSON.parse(record.data)["day"]?.try(&.as_s?) == day
       end
+    end
+
+    private def self._pack_entrypoint(pack_name : String) : String
+      module_name = pack_name.split('_').map(&.capitalize).join
+      <<-CR
+      require "chronicle-packs"
+      require "./object_types"
+      require "./behaviors"
+      require "./settings"
+      require "./tools"
+
+      module #{module_name}
+        include Chronicle::Packs::DSL
+
+        pack(
+          name: "#{pack_name}",
+          version: "0.1.0",
+          description: "Agent-authored Crystal candidate pack.",
+        )
+      end
+      CR
+    end
+
+    private def self._manifest(pack_name : String, surface : Hash(String, Array(String)), content_hash : String) : String
+      <<-TOML
+      [pack]
+      name = #{pack_name.to_json}
+      version = "0.1.0"
+      description = "Agent-authored Crystal candidate pack."
+      license = "Apache-2.0"
+
+      [pack.provenance]
+      authors = ["keyless Crystal author"]
+      authored_by = "agent"
+      generator = "chronicle_packs/evolution/author.cr"
+      source_url = ""
+
+      [pack.integrity]
+      content_hash = #{content_hash.to_json}
+
+      [surface]
+      object_types = #{_toml_array(surface["object_types"])}
+      relation_types = #{_toml_array(surface["relation_types"])}
+      behaviors = #{_toml_array(surface["behaviors"])}
+      tools = #{_toml_array(surface["tools"])}
+      capabilities = []
+      TOML
+    end
+
+    private def self._toml_array(values : Array(String)) : String
+      "[" + values.map(&.to_json).join(", ") + "]"
     end
   end
 end

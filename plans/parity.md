@@ -146,6 +146,10 @@ per-pack detail record (surfaces, divergence notes, fixture drivers).
           the gap already has a non-terminal proposal or the configured daily
           drafting-context limit has been reached; rejected proposals do not
           become author input.
+        - [x] Pack-owned Crystal candidate wrapping — turn the four authored
+          source bodies into a fixed six-file candidate, deriving its manifest
+          surface and content pin while retaining pack identity, provenance,
+          entrypoint, and manifest ownership outside the author.
       See the `evolution` divergence note for the exact boundary between the
       Crystal candidate path and missing Python-specific behavior.
 - [x] `demo_server` — HTTP API surface: /summary /graph /trace /packs

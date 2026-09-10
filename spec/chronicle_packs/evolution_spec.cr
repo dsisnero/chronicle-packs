@@ -587,6 +587,28 @@ describe Chronicle::Packs::Evolution do
       end
     end
 
+    it "wraps four authored Crystal bodies in pack-owned identity and manifest bytes" do
+      object_types = <<-CR
+      @[Chronicle::Packs::Annotations::ObjectType(name: "author_note")]
+      struct AuthorNote
+      end
+      CR
+      source = Chronicle::Packs::Evolution::AuthoredSource.new(
+        object_types, "", "", "",
+      )
+
+      files = Chronicle::Packs::Evolution::Author.wrap_source(source, "agent_author_note")
+
+      files.keys.sort.should eq(["behaviors.cr", "manifest.toml", "object_types.cr", "pack.cr", "settings.cr", "tools.cr"])
+      files["object_types.cr"].should eq(source.object_types_src)
+      files["pack.cr"].should contain("name: \"agent_author_note\"")
+      files["manifest.toml"].should contain("name = \"agent_author_note\"")
+      files["manifest.toml"].should contain("authors = [\"keyless Crystal author\"]")
+      files["manifest.toml"].should contain("object_types = [\"author_note\"]")
+      files["manifest.toml"].should contain("content_hash = \"#{Chronicle::Packs::Evolution::Materialize.content_hash_of(files)}\"")
+      Chronicle::Packs::Evolution::Analysis.check_crystal_manifest_surface(files).should be_empty
+    end
+
     it "reloads an active promotion through the host-bound sealed pack service" do
       with_evolution_runtime do |_store, graph, rt|
         proposal = Chronicle::Packs::Evolution.submit_proposal_fn(
