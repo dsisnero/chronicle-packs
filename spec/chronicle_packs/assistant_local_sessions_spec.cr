@@ -262,6 +262,105 @@ describe Chronicle::Packs::AssistantLocalSessions do
       end
     end
 
+    it "keeps evidence stable on reimport and adds only an appended message" do
+      with_temp_dir do |base|
+        root = base / "claude-reimport"
+        build_claude_tree(root)
+        store = base / "replay-reimport"
+        with_sessions_runtime(artifact_store_dir: store.to_s) do |_store, graph, runtime|
+          import_once = -> {
+            result = Chronicle::Packs::AssistantLocalSessions.import_assistant_local_sessions_fn(
+              graph, root.to_s, "surface_reimport", provider: "claude_code",
+              artifact_store_dir: store.to_s, is_fixture: true,
+            )
+            runtime.run_until_idle
+            result
+          }
+
+          import_once.call["imported"].as_i.should eq(9)
+          graph.objects(type: "activity_evidence").size.should eq(9)
+          import_once.call["imported"].as_i.should eq(9)
+          evidence = graph.objects(type: "activity_evidence")
+          evidence.size.should eq(9)
+          evidence.each { |item| JSON.parse(item.data)["revision_number"].as_i.should eq(1) }
+
+          appended = claude_line("assistant", JSON::Any.new("A brand new appended reply."), "sess-new-a9", "sess-new", "2026-07-04T10:00:00.000Z")
+          target = root / "-Users-casey-code-demo" / "sess-new.jsonl"
+          File.open(target, "a") { |file| file.puts(appended.to_json) }
+          File.utime(Time.unix(4_000), Time.unix(4_000), target)
+
+          import_once.call["imported"].as_i.should eq(10)
+          evidence = graph.objects(type: "activity_evidence")
+          evidence.size.should eq(10)
+          appended_evidence = evidence.select { |item| JSON.parse(item.data)["dedup_key"].as_s == "sess-new:sess-new-a9" }
+          appended_evidence.size.should eq(1)
+          JSON.parse(appended_evidence.first.data)["normalized_content"].as_s.should eq("A brand new appended reply.")
+        end
+      end
+    end
+
+    it "retains a canonical replay artifact for each imported message" do
+      with_temp_dir do |base|
+        root = base / "claude-replay"
+        line = claude_line("user", JSON::Any.new("Verify replay please."), "u-replay", "sess-replay", "2026-07-03T10:00:00Z")
+        write_jsonl(root / "-Users-casey-code-demo" / "sess-replay.jsonl", [line])
+        store = base / "replay-artifacts"
+        with_sessions_runtime(artifact_store_dir: store.to_s) do |_store, graph, _runtime|
+          result = Chronicle::Packs::AssistantLocalSessions.import_assistant_local_sessions_fn(
+            graph, root.to_s, "surface_replay", provider: "claude_code", artifact_store_dir: store.to_s)
+          result["imported"].as_i.should eq(1)
+
+          item = JSON.parse(graph.objects(type: "acquired_item").first.data)
+          digest = item["replay_payload_hash"].as_s
+          item["replay_mode"].as_s.should eq("artifact")
+          item["replay_payload_ref"].as_s.should eq("artifact://sha256/#{digest[0, 2]}/#{digest}")
+          artifact = store / "sha256" / digest[0, 2] / digest
+          File.file?(artifact).should be_true
+          payload = File.read(artifact)
+          Digest::SHA256.hexdigest(payload).should eq(digest)
+          unit = JSON.parse(payload)
+          unit["provider"].as_s.should eq("claude_code")
+          unit["session_id"].as_s.should eq("sess-replay")
+          unit["message_uuid"].as_s.should eq("u-replay")
+          unit["role"].as_s.should eq("user")
+          unit["line_number"].as_i.should eq(1)
+          unit["normalized_content"].as_s.should eq("Verify replay please.")
+          Chronicle::Packs::AssistantLocalSessions._canonical_json(unit).should eq(payload)
+        end
+      end
+    end
+
+    it "propagates the fixture flag and honors explicit session-window extension" do
+      with_temp_dir do |base|
+        root = base / "claude-window"
+        build_claude_tree(root)
+        store = base / "replay-window"
+        with_sessions_runtime(artifact_store_dir: store.to_s) do |_store, graph, runtime|
+          narrow = Chronicle::Packs::AssistantLocalSessions.import_assistant_local_sessions_fn(
+            graph, root.to_s, "surface_window", provider: "claude_code", artifact_store_dir: store.to_s,
+            max_sessions: 1, is_fixture: true,
+          )
+          narrow["imported"].as_i.should eq(3)
+          narrow["window"].as_h["files_skipped_by_window"].as_i.should eq(2)
+          runtime.run_until_idle
+          JSON.parse(graph.objects(type: "acquired_content").first.data)["is_fixture"].as_bool.should be_true
+          JSON.parse(graph.objects(type: "activity_evidence").first.data)["is_fixture"].as_bool.should be_true
+
+          _wide_store, wide_graph, wide_runtime = PackSpecRuntime.runtime
+          wide_runtime.load_pack(Chronicle::Packs::Core.pack).should be_true
+          normalizer = Chronicle::Packs::ActivityNormalizer::ActivityNormalizerSettings.new(artifact_store_dir: store.to_s)
+          wide_runtime.load_pack(Chronicle::Packs::ActivityNormalizer.pack, JSON.parse(normalizer.to_json).as_h).should be_true
+          wide_runtime.load_pack(Chronicle::Packs::AssistantLocalSessions.pack).should be_true
+          wide = Chronicle::Packs::AssistantLocalSessions.import_assistant_local_sessions_fn(
+            wide_graph, root.to_s, "surface_window_wide", provider: "claude_code", artifact_store_dir: store.to_s,
+            max_sessions: 10,
+          )
+          wide["imported"].as_i.should eq(9)
+          wide["window"].as_h["files_skipped_by_window"].as_i.should eq(0)
+        end
+      end
+    end
+
     it "fails closed on an invalid root" do
       with_sessions_runtime do |_store, graph, rt|
         result = Chronicle::Packs::AssistantLocalSessions.import_assistant_local_sessions_fn(

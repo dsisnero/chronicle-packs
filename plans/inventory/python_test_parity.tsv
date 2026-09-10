@@ -57,23 +57,23 @@ tests/test_approval_auth.py::test::test_missing_token_refused_and_audited	ported
 tests/test_approval_auth.py::test::test_no_token_with_evolution_on_refuses	ported	spec/chronicle_packs/demo_server_spec.cr::check_approval_auth	evolution-on refuses without token
 tests/test_approval_auth.py::test::test_no_token_without_evolution_stays_open	ported	spec/chronicle_packs/demo_server_spec.cr::check_approval_auth	no token + no evolution stays open
 tests/test_approval_auth.py::test::test_wrong_token_refused_and_audited	ported	spec/chronicle_packs/demo_server_spec.cr::check_approval_auth	wrong token refused + denial audited
-tests/test_assistant_local_sessions_importer.py::function::_build_claude_root	missing	-	baseline
-tests/test_assistant_local_sessions_importer.py::function::_claude_line	missing	-	baseline
-tests/test_assistant_local_sessions_importer.py::function::_claude_session	missing	-	baseline
-tests/test_assistant_local_sessions_importer.py::function::_codex_response	missing	-	baseline
-tests/test_assistant_local_sessions_importer.py::function::_codex_session	missing	-	baseline
-tests/test_assistant_local_sessions_importer.py::function::_import	missing	-	baseline
-tests/test_assistant_local_sessions_importer.py::function::_runtime	missing	-	baseline
-tests/test_assistant_local_sessions_importer.py::function::_set_mtime	missing	-	baseline
-tests/test_assistant_local_sessions_importer.py::function::_write_jsonl	missing	-	baseline
-tests/test_assistant_local_sessions_importer.py::test::test_claude_code_messages_become_evidence	missing	-	baseline
-tests/test_assistant_local_sessions_importer.py::test::test_codex_variants_session_meta_identity_and_filename_window	missing	-	baseline
-tests/test_assistant_local_sessions_importer.py::test::test_is_fixture_flag_propagates	missing	-	baseline
-tests/test_assistant_local_sessions_importer.py::test::test_malformed_lines_and_unreadable_files_are_tolerated	missing	-	baseline
-tests/test_assistant_local_sessions_importer.py::test::test_reimport_is_stable_and_append_adds_only_new_lines	missing	-	baseline
-tests/test_assistant_local_sessions_importer.py::test::test_replay_artifact_holds_canonical_message_unit	missing	-	baseline
-tests/test_assistant_local_sessions_importer.py::test::test_usage_errors_raise_before_any_graph_writes	missing	-	baseline
-tests/test_assistant_local_sessions_importer.py::test::test_window_default_bound_and_explicit_extension	missing	-	baseline
+tests/test_assistant_local_sessions_importer.py::function::_build_claude_root	skipped	spec/chronicle_packs/assistant_local_sessions_spec.cr	Crystal build_claude_tree fixture
+tests/test_assistant_local_sessions_importer.py::function::_claude_line	skipped	spec/chronicle_packs/assistant_local_sessions_spec.cr	Crystal claude_line fixture
+tests/test_assistant_local_sessions_importer.py::function::_claude_session	skipped	spec/chronicle_packs/assistant_local_sessions_spec.cr	Crystal claude_session_lines fixture
+tests/test_assistant_local_sessions_importer.py::function::_codex_response	skipped	spec/chronicle_packs/assistant_local_sessions_spec.cr	Crystal codex_response fixture
+tests/test_assistant_local_sessions_importer.py::function::_codex_session	skipped	spec/chronicle_packs/assistant_local_sessions_spec.cr	Crystal codex_session_lines fixture
+tests/test_assistant_local_sessions_importer.py::function::_import	skipped	spec/chronicle_packs/assistant_local_sessions_spec.cr	local import_once closure
+tests/test_assistant_local_sessions_importer.py::function::_runtime	skipped	spec/chronicle_packs/assistant_local_sessions_spec.cr	with_sessions_runtime fixture
+tests/test_assistant_local_sessions_importer.py::function::_set_mtime	skipped	spec/chronicle_packs/assistant_local_sessions_spec.cr	File.utime inline fixture setup
+tests/test_assistant_local_sessions_importer.py::function::_write_jsonl	skipped	spec/chronicle_packs/assistant_local_sessions_spec.cr	write_jsonl fixture
+tests/test_assistant_local_sessions_importer.py::test::test_claude_code_messages_become_evidence	ported	spec/chronicle_packs/assistant_local_sessions_spec.cr	bounded Claude acquisition and normalized evidence
+tests/test_assistant_local_sessions_importer.py::test::test_codex_variants_session_meta_identity_and_filename_window	ported	spec/chronicle_packs/assistant_local_sessions_spec.cr	Codex nested and flat variants with filename window
+tests/test_assistant_local_sessions_importer.py::test::test_is_fixture_flag_propagates	ported	spec/chronicle_packs/assistant_local_sessions_spec.cr	fixture flag reaches acquired content and evidence
+tests/test_assistant_local_sessions_importer.py::test::test_malformed_lines_and_unreadable_files_are_tolerated	ported	spec/chronicle_packs/assistant_local_sessions_spec.cr	recoverable unreadable file and malformed line handling
+tests/test_assistant_local_sessions_importer.py::test::test_reimport_is_stable_and_append_adds_only_new_lines	ported	spec/chronicle_packs/assistant_local_sessions_spec.cr	stable evidence identity across reimport and append
+tests/test_assistant_local_sessions_importer.py::test::test_replay_artifact_holds_canonical_message_unit	ported	spec/chronicle_packs/assistant_local_sessions_spec.cr	canonical CAS replay payload is hash pinned
+tests/test_assistant_local_sessions_importer.py::test::test_usage_errors_raise_before_any_graph_writes	ported	spec/chronicle_packs/assistant_local_sessions_spec.cr	invalid provider, replay mode, and surface reject before writes
+tests/test_assistant_local_sessions_importer.py::test::test_window_default_bound_and_explicit_extension	ported	spec/chronicle_packs/assistant_local_sessions_spec.cr	one-session window and explicit extension
 tests/test_assistant_self_summary_importer.py::const::HOSTILE	missing	-	baseline
 tests/test_assistant_self_summary_importer.py::const::SUMMARY	missing	-	baseline
 tests/test_assistant_self_summary_importer.py::function::_build	missing	-	baseline
