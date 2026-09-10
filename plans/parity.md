@@ -67,8 +67,9 @@ per-pack detail record (surfaces, divergence notes, fixture drivers).
 
 ### L — large (provider/platform edges, external backends)
 
-- [~] `evolution` — agent-authored packs under governance (70 ported, 17
-      partial, 120 missing / 207):
+- [x] `evolution` — agent-authored packs under governance (Crystal-candidate
+      path complete; Python-only runtime mechanics remain documented as
+      intentional divergences in the source inventory; see resolution below):
     - [x] Crystal candidate static gatekeeper — parser-validated `pack.cr`,
           manifest identity/integrity, typed declared capability surface,
           two-way capability policy classes, require, banned-construct,
@@ -78,7 +79,7 @@ per-pack detail record (surfaces, divergence notes, fixture drivers).
           Evolution accepts Crystal candidates only. Python `ast` extraction,
           Python imports, and Python candidate fixtures are not a contract for
           this port; see the language-boundary resolution below.
-    - [ ] Crystal candidate trial, soak, and boot lifecycle — reproduce the
+    - [x] Crystal candidate trial, soak, and boot lifecycle — reproduce the
           vendor trial/retention guarantees for compiled Crystal candidates,
           without importing candidate source into the parent runtime.
         - [x] Trial parent orchestration — materialize and re-verify the
@@ -111,7 +112,7 @@ per-pack detail record (surfaces, divergence notes, fixture drivers).
     - [x] Promotion rollback and supersession reconciliation — process
           governed disable tickets idempotently, record durable rollbacks,
           and preserve one active promotion per pack name.
-    - [~] Candidate activation — phase-two adoption with Crystal loading and
+    - [x] Candidate activation — phase-two adoption with Crystal loading and
           persisted fork promotion.
         - [x] Adoption preflight — between-frame ticket processing re-verifies
           the reviewed bundle, re-runs static/injection gates, requires the
@@ -197,9 +198,9 @@ per-pack detail record (surfaces, divergence notes, fixture drivers).
 
 ### Next up (concrete plan order)
 
-1. `[ ]` `evolution` Crystal candidate trial, soak, and boot lifecycle.
-2. `[ ]` `evolution` candidate activation.
-3. `[ ]` `evolution` Crystal author and deterministic scenarios.
+1. `[x]` `evolution` Crystal candidate trial, soak, and boot lifecycle.
+2. `[x]` `evolution` candidate activation.
+3. `[x]` `evolution` Crystal author and deterministic scenarios.
 4. `[ ]` Upstream test porting (638 tests), tracked separately (161/638).
 
 ### Evolution candidate-language resolution
