@@ -88,6 +88,18 @@ module EvolutionSpecSupport
       @pack
     end
   end
+
+  class RecordingAuthorService < Chronicle::Packs::Evolution::AuthorService
+    getter frames = [] of Hash(String, JSON::Any)
+
+    def initialize(@source : Chronicle::Packs::Evolution::AuthoredSource)
+    end
+
+    def draft(frame : Hash(String, JSON::Any)) : Chronicle::Packs::Evolution::AuthoredSource
+      @frames << frame
+      @source
+    end
+  end
 end
 
 include EvolutionSpecSupport
@@ -403,6 +415,15 @@ describe Chronicle::Packs::Evolution do
   end
 
   describe "Crystal candidate trials" do
+    it "keeps keyless author output to the four Crystal source bodies" do
+      source = Chronicle::Packs::Evolution::AuthoredSource.new("objects", "behaviors", "settings", "tools")
+      service = RecordingAuthorService.new(source)
+      frame = {"charter_hash" => JSON::Any.new("sha256:trusted")} of String => JSON::Any
+
+      service.draft(frame).should eq(source)
+      service.frames.should eq([frame])
+    end
+
     it "reloads an active promotion through the host-bound sealed pack service" do
       with_evolution_runtime do |_store, graph, rt|
         proposal = Chronicle::Packs::Evolution.submit_proposal_fn(

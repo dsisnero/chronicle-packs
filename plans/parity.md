@@ -125,6 +125,10 @@ per-pack detail record (surfaces, divergence notes, fixture drivers).
     - [ ] Crystal author and deterministic scenarios — a keyless Crig-backed
           drafting seam plus Crystal candidate fixtures; Python author source
           and fixture modules are references, not runtime dependencies.
+        - [x] Keyless author source contract — a host author receives pure
+          data and may return only the four Crystal source bodies; pack-owned
+          identity, manifests, provenance, fixtures, and activation remain
+          outside the model boundary.
       See the `evolution` divergence note for the exact boundary between the
       Crystal candidate path and missing Python-specific behavior.
 - [x] `demo_server` — HTTP API surface: /summary /graph /trace /packs
