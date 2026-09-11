@@ -281,6 +281,34 @@ describe Chronicle::Packs::ClaudeExport do
       end
     end
 
+    it "stops on conversation and message bounds without partial emission" do
+      with_temp_dir do |base|
+        archive = base / "claude-export.zip"
+        write_zip_export(archive, flat_conversations)
+
+        _capped_store, capped_graph, _capped_runtime = PackSpecRuntime.runtime
+        capped = Chronicle::Packs::ClaudeExport.import_claude_export_fn(
+          capped_graph, archive.to_s, "surface_claude_conversation_bound",
+          artifact_store_dir: (base / "conversation-bound").to_s,
+          max_conversations: 1,
+        )
+        capped["stopped_at_bound"].as_bool.should be_true
+        capped["imported"].as_i.should eq(2)
+        capped_graph.objects(type: "ingestion_failure").map { |item| JSON.parse(item.data)["error_code"].as_s }.should eq(["conversation_bound_reached"])
+
+        _message_store, message_graph, _message_runtime = PackSpecRuntime.runtime
+        message_capped = Chronicle::Packs::ClaudeExport.import_claude_export_fn(
+          message_graph, archive.to_s, "surface_claude_message_bound",
+          artifact_store_dir: (base / "message-bound").to_s,
+          max_messages: 1,
+        )
+        message_capped["stopped_at_bound"].as_bool.should be_true
+        message_capped["imported"].as_i.should eq(0)
+        message_graph.objects(type: "acquired_item").should be_empty
+        message_graph.objects(type: "ingestion_failure").map { |item| JSON.parse(item.data)["error_code"].as_s }.should eq(["message_bound_reached"])
+      end
+    end
+
     it "isolates a malformed conversation and keeps valid siblings" do
       with_temp_dir do |base|
         archive = base / "claude-export.zip"
