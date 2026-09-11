@@ -440,12 +440,12 @@ tests/test_memory_subject_scoping.py::test::test_strict_scope_excludes_global_nu
 tests/test_memory_subject_scoping.py::test::test_unscoped_retrieval_returns_all	missing	-	baseline
 tests/test_pack_fixtures.py::const::PACKS	missing	-	baseline
 tests/test_pack_fixtures.py::test::test_pack_fixtures	missing	-	baseline
-tests/test_preflight.py::class::_NewCapabilityDecl	deferred	-	deferred: Python stub module (port uses compile-time feature detect)
-tests/test_preflight.py::class::_OldCapabilityDecl	deferred	-	deferred: Python stub module (port uses compile-time feature detect)
-tests/test_preflight.py::function::_stub_runtime	deferred	-	deferred: Python stub-module injection (no runtime module in Crystal)
+tests/test_preflight.py::class::_NewCapabilityDecl	skipped	spec/chronicle_packs/preflight_spec.cr	Python stub class; linked Chronicle shape is compile-time detected
+tests/test_preflight.py::class::_OldCapabilityDecl	skipped	spec/chronicle_packs/preflight_spec.cr	Python stub class; linked Chronicle shape is compile-time detected
+tests/test_preflight.py::function::_stub_runtime	skipped	spec/chronicle_packs/preflight_spec.cr	Python module injection has no compiled-Crystal analogue
 tests/test_preflight.py::test::test_current_environment_passes_and_import_ran_the_check	ported	spec/chronicle_packs/preflight_spec.cr::assert_runtime_compatible	feature detect + assert no-op
 tests/test_preflight.py::test::test_lying_new_version_string_still_fails_on_missing_feature	ported	spec/chronicle_packs/preflight_spec.cr::preflight_message	message embeds found 1.9.0
-tests/test_preflight.py::test::test_lying_old_version_string_passes_when_feature_present	deferred	-	deferred: needs injected old-runtime stub (compile-time feature detect is the decider)
+tests/test_preflight.py::test::test_lying_old_version_string_passes_when_feature_present	ported	spec/chronicle_packs/preflight_spec.cr	linked feature contract, not diagnostic version text, decides compatibility
 tests/test_preflight.py::test::test_old_runtime_raises_the_exact_promised_message	ported	spec/chronicle_packs/preflight_spec.cr::preflight_message	verbatim too-old message
 tests/test_preflight.py::test::test_runtime_missing_manifest_module_entirely_raises	ported	spec/chronicle_packs/preflight_spec.cr::preflight_message	message embeds found 0.9.0
 tests/test_preflight.py::test::test_runtime_without_version_attribute_reports_unknown	ported	spec/chronicle_packs/preflight_spec.cr::preflight_message	message embeds found unknown

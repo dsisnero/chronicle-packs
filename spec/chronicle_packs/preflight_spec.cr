@@ -25,6 +25,15 @@ describe Chronicle::Packs::Preflight do
     Chronicle::Packs::Preflight.runtime_supports_contract.should be_true
   end
 
+  it "uses the linked feature contract rather than message version text" do
+    # A compiled Crystal binary has one linked Chronicle shape, rather than
+    # Python's injectable module object. Arbitrary version text therefore
+    # affects diagnostics only; it cannot veto the present action_class API.
+    Chronicle::Packs::Preflight.preflight_message("1.7.1").should contain("(found 1.7.1)")
+    Chronicle::Packs::Preflight.runtime_supports_contract.should be_true
+    Chronicle::Packs::Preflight.assert_runtime_compatible
+  end
+
   it "reports a concrete runtime version for messages" do
     v = Chronicle::Packs::Preflight.found_runtime_version
     v.should eq(Chronicle::VERSION)
