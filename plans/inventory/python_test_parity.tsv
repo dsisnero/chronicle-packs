@@ -74,17 +74,17 @@ tests/test_assistant_local_sessions_importer.py::test::test_reimport_is_stable_a
 tests/test_assistant_local_sessions_importer.py::test::test_replay_artifact_holds_canonical_message_unit	ported	spec/chronicle_packs/assistant_local_sessions_spec.cr	canonical CAS replay payload is hash pinned
 tests/test_assistant_local_sessions_importer.py::test::test_usage_errors_raise_before_any_graph_writes	ported	spec/chronicle_packs/assistant_local_sessions_spec.cr	invalid provider, replay mode, and surface reject before writes
 tests/test_assistant_local_sessions_importer.py::test::test_window_default_bound_and_explicit_extension	ported	spec/chronicle_packs/assistant_local_sessions_spec.cr	one-session window and explicit extension
-tests/test_assistant_self_summary_importer.py::const::HOSTILE	missing	-	baseline
-tests/test_assistant_self_summary_importer.py::const::SUMMARY	missing	-	baseline
-tests/test_assistant_self_summary_importer.py::function::_build	missing	-	baseline
-tests/test_assistant_self_summary_importer.py::test::test_canonicalization_collapses_cosmetic_differences	missing	-	baseline
-tests/test_assistant_self_summary_importer.py::test::test_distinct_summaries_are_distinct_identities	missing	-	baseline
-tests/test_assistant_self_summary_importer.py::test::test_empty_and_oversized_fail_loud_without_evidence	missing	-	baseline
-tests/test_assistant_self_summary_importer.py::test::test_hostile_summary_is_flagged_and_lands_as_candidates_only	missing	-	baseline
-tests/test_assistant_self_summary_importer.py::test::test_invalid_transport_fails_loud	missing	-	baseline
-tests/test_assistant_self_summary_importer.py::test::test_one_set_of_annotations_across_transports	missing	-	baseline
-tests/test_assistant_self_summary_importer.py::test::test_same_summary_via_manual_and_mcp_is_one_evidence_identity	missing	-	baseline
-tests/test_assistant_self_summary_importer.py::test::test_transport_is_recorded_as_connection_path	missing	-	baseline
+tests/test_assistant_self_summary_importer.py::const::HOSTILE	skipped	spec/chronicle_packs/assistant_self_summary_spec.cr	inline hostile fixture text
+tests/test_assistant_self_summary_importer.py::const::SUMMARY	skipped	spec/chronicle_packs/assistant_self_summary_spec.cr	inline summary fixture text
+tests/test_assistant_self_summary_importer.py::function::_build	skipped	spec/chronicle_packs/assistant_self_summary_spec.cr	with_summary_runtime fixture
+tests/test_assistant_self_summary_importer.py::test::test_canonicalization_collapses_cosmetic_differences	ported	spec/chronicle_packs/assistant_self_summary_spec.cr	newline and outer-whitespace canonicalization
+tests/test_assistant_self_summary_importer.py::test::test_distinct_summaries_are_distinct_identities	ported	spec/chronicle_packs/assistant_self_summary_spec.cr	distinct canonical summaries produce distinct evidence
+tests/test_assistant_self_summary_importer.py::test::test_empty_and_oversized_fail_loud_without_evidence	ported	spec/chronicle_packs/assistant_self_summary_spec.cr	empty and oversized submissions record failures only
+tests/test_assistant_self_summary_importer.py::test::test_hostile_summary_is_flagged_and_lands_as_candidates_only	ported	spec/chronicle_packs/assistant_self_summary_spec.cr	hostile content remains evidence, annotations, and candidates only
+tests/test_assistant_self_summary_importer.py::test::test_invalid_transport_fails_loud	ported	spec/chronicle_packs/assistant_self_summary_spec.cr	unknown transport rejects
+tests/test_assistant_self_summary_importer.py::test::test_one_set_of_annotations_across_transports	ported	spec/chronicle_packs/assistant_self_summary_spec.cr	semantic annotations and runs dedupe across transports
+tests/test_assistant_self_summary_importer.py::test::test_same_summary_via_manual_and_mcp_is_one_evidence_identity	ported	spec/chronicle_packs/assistant_self_summary_spec.cr	canonical hash dedup across transports
+tests/test_assistant_self_summary_importer.py::test::test_transport_is_recorded_as_connection_path	ported	spec/chronicle_packs/assistant_self_summary_spec.cr	connection_path and transport metadata
 tests/test_attention_vectors.py::function::_observe	ported	spec/chronicle_packs/attention_vectors_spec.cr::observe	-
 tests/test_attention_vectors.py::function::_runtime	ported	spec/chronicle_packs/attention_vectors_spec.cr::with_attention_runtime	-
 tests/test_attention_vectors.py::test::test_explicit_signal_requires_explicit_owner_act_and_absence_requires_opportunity	ported	spec/chronicle_packs/attention_vectors_spec.cr	-

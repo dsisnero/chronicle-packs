@@ -184,7 +184,17 @@ module Chronicle::Packs::SemanticExtraction
         attribution: attribution, author_role: author_role,
         event_time: draft.event_time, observation_time: observation_time,
         modality: draft.modality, polarity: draft.polarity,
-        metadata: draft.metadata,
+        metadata: begin
+          annotation_metadata = draft.metadata.dup
+          annotation_metadata["source_category"] = evidence["source_category"]? || JSON::Any.new("")
+          subject_scope = normalized_metadata["subject_scope"]?.try(&.as_s?)
+          annotation_metadata["subject_scope"] = subject_scope ? JSON::Any.new(subject_scope) : JSON::Any.new(nil)
+          annotation_metadata["profile_candidate_eligible"] = JSON::Any.new(subject_scope == "owner_profile")
+          annotation_metadata["memory_candidate_eligible"] = JSON::Any.new(
+            evidence["source_category"]?.try(&.as_s?) != "communication" || subject_scope == "owner_profile",
+          )
+          annotation_metadata
+        end,
       )
       annotation_obj = graph.add_object("semantic_annotation", annotation_record.to_json)
       graph.add_relation(annotation_obj.id, evidence_obj.id, "annotation_for")

@@ -79,7 +79,9 @@ module SemanticSlice2Support
         json.field "replay_complete", false
         json.field "media_type", "text/plain"
         json.field "acquired_at_event_id", "evt_1"
-        json.field "normalized_content", "alice is @alice"
+        # Keep this fixture inert: the projector example below injects the
+        # single eligible annotation whose provenance it is asserting.
+        json.field "normalized_content", "hello"
         json.field "normalized_metadata", JSON::Any.new({"subject_scope" => JSON::Any.new("owner_profile")})
       end
     end)
