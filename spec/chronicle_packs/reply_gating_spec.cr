@@ -128,6 +128,42 @@ describe "reply gating (identity on the respond path)" do
     model.calls.should eq(0)
   end
 
+  it "shapes profile context to the sender role under an open policy" do
+    store, graph, rt, _model = build("open")
+    Chronicle::Packs::AgentProfile.register_profile_fn(
+      graph,
+      name: "Chronicle",
+      mission: "Serve the owner.",
+      owner_name: "Yohei",
+    )
+    rt.run_until_idle
+
+    turn_reply(rt, graph, OWNER, "Who are you?")
+    turn_reply(rt, graph, "stranger@example.com", "Who are you?")
+
+    views_for = ->(sender_ref : String) do
+      message = graph.objects(type: "comm_message").select do |obj|
+        JSON.parse(obj.data)["sender_ref"]?.try(&.as_s?) == sender_ref
+      end.last
+      graph.objects(type: "profile_context_view").select do |view|
+        graph.relations(type: "provides_context_for").any? do |relation|
+          relation.from_id == view.id && relation.to_id == message.id
+        end
+      end.last
+    end
+
+    owner = views_for.call(OWNER)
+    stranger = views_for.call("stranger@example.com")
+    owner.should_not be_nil
+    stranger.should_not be_nil
+    JSON.parse(owner.not_nil!.data)["mission"].as_s.should_not be_empty
+    stranger_data = JSON.parse(stranger.not_nil!.data)
+    # Crystal serializes this suppressed optional field as an empty string;
+    # the vendor contract is that external callers receive no mission text.
+    (stranger_data["mission"]?.try(&.as_s?) || "").should be_empty
+    stranger_data["audience_role"].as_s.in?({"unknown", "external", "customer"}).should be_true
+  end
+
   it "decide_reply fails closed on an unknown policy" do
     store = Chronicle::MemoryEventStore.new
     graph = Chronicle::GraphProjection.empty.attach_store(store)

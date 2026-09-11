@@ -514,23 +514,23 @@ tests/test_registration_check.py::test::test_reload_after_disable_re_enables	por
 tests/test_registration_check.py::test::test_risk_class_drift_refused	ported	spec/chronicle_packs/registration_check_spec.cr	-
 tests/test_registration_check.py::test::test_unarmed_registration_is_unchecked	ported	spec/chronicle_packs/registration_check_spec.cr	-
 tests/test_registration_check.py::test::test_undeclared_pair_refused	ported	spec/chronicle_packs/registration_check_spec.cr	-
-tests/test_reply_gating.py::class::CountingProvider	missing	-	baseline
-tests/test_reply_gating.py::const::OWNER	missing	-	baseline
-tests/test_reply_gating.py::function::_build	missing	-	baseline
-tests/test_reply_gating.py::function::_isolate	missing	-	baseline
-tests/test_reply_gating.py::function::_profile_view_for	missing	-	baseline
-tests/test_reply_gating.py::function::_turn_reply	missing	-	baseline
-tests/test_reply_gating.py::method::CountingProvider.__init__	missing	-	baseline
-tests/test_reply_gating.py::method::CountingProvider.complete	missing	-	baseline
-tests/test_reply_gating.py::method::CountingProvider.count_tokens	missing	-	baseline
-tests/test_reply_gating.py::method::CountingProvider.estimate_cost	missing	-	baseline
-tests/test_reply_gating.py::method::CountingProvider.recognizes_model	missing	-	baseline
-tests/test_reply_gating.py::test::test_blocked_principal_deflected_even_under_open	missing	-	baseline
-tests/test_reply_gating.py::test::test_decide_reply_fails_closed_on_unknown_policy	missing	-	baseline
-tests/test_reply_gating.py::test::test_known_policy_collaborator_passes	missing	-	baseline
-tests/test_reply_gating.py::test::test_open_policy_is_default_and_unchanged	missing	-	baseline
-tests/test_reply_gating.py::test::test_owner_only_policy_owner_passes_stranger_deflected	missing	-	baseline
-tests/test_reply_gating.py::test::test_profile_audience_follows_sender_role	missing	-	baseline
+tests/test_reply_gating.py::class::CountingProvider	skipped	spec/chronicle_packs/reply_gating_spec.cr	Crystal CountingModel fixture
+tests/test_reply_gating.py::const::OWNER	skipped	spec/chronicle_packs/reply_gating_spec.cr	ReplyGatingSpecSupport::OWNER
+tests/test_reply_gating.py::function::_build	skipped	spec/chronicle_packs/reply_gating_spec.cr	build fixture helper
+tests/test_reply_gating.py::function::_isolate	skipped	spec/chronicle_packs/reply_gating_spec.cr	per-runtime registry isolation is in build
+tests/test_reply_gating.py::function::_profile_view_for	skipped	spec/chronicle_packs/reply_gating_spec.cr	inlined view lookup in audience assertion
+tests/test_reply_gating.py::function::_turn_reply	skipped	spec/chronicle_packs/reply_gating_spec.cr	turn_reply helper
+tests/test_reply_gating.py::method::CountingProvider.__init__	skipped	spec/chronicle_packs/reply_gating_spec.cr	Crystal CountingModel construction
+tests/test_reply_gating.py::method::CountingProvider.complete	skipped	spec/chronicle_packs/reply_gating_spec.cr	Crystal CompletionModel implementation
+tests/test_reply_gating.py::method::CountingProvider.count_tokens	skipped	spec/chronicle_packs/reply_gating_spec.cr	Crig completion fixture supplies deterministic usage
+tests/test_reply_gating.py::method::CountingProvider.estimate_cost	skipped	spec/chronicle_packs/reply_gating_spec.cr	Crig completion fixture has no provider cost seam
+tests/test_reply_gating.py::method::CountingProvider.recognizes_model	skipped	spec/chronicle_packs/reply_gating_spec.cr	Crig completion fixture accepts its fixed model
+tests/test_reply_gating.py::test::test_blocked_principal_deflected_even_under_open	ported	spec/chronicle_packs/reply_gating_spec.cr	blocked principal deflection
+tests/test_reply_gating.py::test::test_decide_reply_fails_closed_on_unknown_policy	ported	spec/chronicle_packs/reply_gating_spec.cr	unknown policy fails closed
+tests/test_reply_gating.py::test::test_known_policy_collaborator_passes	ported	spec/chronicle_packs/reply_gating_spec.cr	collaborator allowed and stranger deflected
+tests/test_reply_gating.py::test::test_open_policy_is_default_and_unchanged	ported	spec/chronicle_packs/reply_gating_spec.cr	open policy reply
+tests/test_reply_gating.py::test::test_owner_only_policy_owner_passes_stranger_deflected	ported	spec/chronicle_packs/reply_gating_spec.cr	owner full reply and stranger no LLM/memory
+tests/test_reply_gating.py::test::test_profile_audience_follows_sender_role	ported	spec/chronicle_packs/reply_gating_spec.cr	owner mission vs external suppressed mission
 tests/test_schedule_pack.py::function::_ctx	ported	spec/chronicle_packs/schedule_pack_spec.cr	GatewayToolMetadata in ToolContext inlined
 tests/test_schedule_pack.py::function::rt	ported	spec/chronicle_packs/schedule_pack_spec.cr::with_reminder_runtime	-
 tests/test_schedule_pack.py::test::test_reminder_requires_a_time	ported	spec/chronicle_packs/schedule_pack_spec.cr	-
