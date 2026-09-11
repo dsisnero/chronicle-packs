@@ -5,8 +5,11 @@ require "../spec_helper"
 #
 # Each fixture runs a full multi-pack scenario in-process (no subprocess, no
 # LLM, no API key) and asserts the integration shape — the deterministic
-# driver pattern established by the per-pack fixtures. Mirrors the upstream
-# test_cross_pack_fixtures.py test names.
+# driver pattern established by the per-pack fixtures. The upstream
+# `test_pack_fixtures.py` pytest wrapper launches one Python subprocess per
+# pack; Crystal spec discovery runs the corresponding native fixture specs,
+# and this `main` example pins the shared in-process suite's zero-exit
+# contract.
 module FixtureSpecSupport
   extend self
 

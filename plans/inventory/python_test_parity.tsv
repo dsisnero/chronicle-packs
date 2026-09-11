@@ -438,8 +438,8 @@ tests/test_memory_subject_scoping.py::test::test_global_memories_visible_to_all_
 tests/test_memory_subject_scoping.py::test::test_scoped_retrieval_isolates_users	missing	-	baseline
 tests/test_memory_subject_scoping.py::test::test_strict_scope_excludes_global_nulls	missing	-	baseline
 tests/test_memory_subject_scoping.py::test::test_unscoped_retrieval_returns_all	missing	-	baseline
-tests/test_pack_fixtures.py::const::PACKS	missing	-	baseline
-tests/test_pack_fixtures.py::test::test_pack_fixtures	missing	-	baseline
+tests/test_pack_fixtures.py::const::PACKS	skipped	spec/chronicle_packs/fixtures_spec.cr	Python subprocess parameter list is replaced by Crystal spec discovery over native pack fixture specs
+tests/test_pack_fixtures.py::test::test_pack_fixtures	ported	spec/chronicle_packs/fixtures_spec.cr::run_all	Crystal in-process fixture suite runs every registered Crystal scenario and asserts exit code zero; native spec discovery replaces pytest subprocess dispatch
 tests/test_preflight.py::class::_NewCapabilityDecl	skipped	spec/chronicle_packs/preflight_spec.cr	Python stub class; linked Chronicle shape is compile-time detected
 tests/test_preflight.py::class::_OldCapabilityDecl	skipped	spec/chronicle_packs/preflight_spec.cr	Python stub class; linked Chronicle shape is compile-time detected
 tests/test_preflight.py::function::_stub_runtime	skipped	spec/chronicle_packs/preflight_spec.cr	Python module injection has no compiled-Crystal analogue
