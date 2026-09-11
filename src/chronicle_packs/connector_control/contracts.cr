@@ -110,18 +110,35 @@ module Chronicle::Packs::ConnectorControl
     JSON.parse(raw_json).as_h
   end
 
+  # Python's family models use Pydantic `extra="forbid"`. Crystal's
+  # JSON::Serializable deliberately ignores unknown object keys, so enforce
+  # the same closed root shapes before deserializing rather than silently
+  # admitting provider payloads into a native view.
+  private def self._forbid_unknown_keys!(family : String, data : Hash(String, JSON::Any), allowed : Array(String)) : Nil
+    data.each_key do |key|
+      unless allowed.includes?(key)
+        raise ArgumentError.new("unknown #{family} native data field #{key.inspect}")
+      end
+    end
+  end
+
   # Validate and canonicalize one family-native payload.
   def self.validate_native_data(family : String, data : Hash(String, JSON::Any)) : Hash(String, JSON::Any)
     case family
     when "conversation"
+      _forbid_unknown_keys!(family, data, ["threads", "total_count"])
       _canonicalize(ConversationNativeData.from_json(JSON::Any.new(data).to_json).to_json)
     when "schedule"
+      _forbid_unknown_keys!(family, data, ["occurrences", "window_start", "window_end", "total_count"])
       _canonicalize(AgendaNativeData.from_json(JSON::Any.new(data).to_json).to_json)
     when "records"
+      _forbid_unknown_keys!(family, data, ["columns", "rows", "total_count"])
       _canonicalize(RecordsNativeData.from_json(JSON::Any.new(data).to_json).to_json)
     when "documents"
+      _forbid_unknown_keys!(family, data, ["items", "total_count"])
       _canonicalize(LibraryNativeData.from_json(JSON::Any.new(data).to_json).to_json)
     when "telemetry"
+      _forbid_unknown_keys!(family, data, ["points", "unit"])
       _canonicalize(TelemetryNativeData.from_json(JSON::Any.new(data).to_json).to_json)
     else
       raise ArgumentError.new("unknown connector family #{family.inspect}")

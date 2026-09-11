@@ -130,13 +130,13 @@ tests/test_communication_followups.py::function::_build	skipped	spec/chronicle_p
 tests/test_communication_followups.py::function::_evidence	skipped	spec/chronicle_packs/communication_spec.cr	inline activity evidence fixture
 tests/test_communication_followups.py::test::test_only_explicit_clean_inbound_requests_become_reviewable_tasks	ported	spec/chronicle_packs/communication_spec.cr	inbound exact request creates reviewable task candidate
 tests/test_communication_followups.py::test::test_relation_without_request_cue_does_not_become_task	ported	spec/chronicle_packs/communication_spec.cr	non-request relation creates no task candidate
-tests/test_connector_control.py::function::graph	missing	-	baseline
-tests/test_connector_control.py::test::test_all_five_family_native_shapes_validate	missing	-	baseline
-tests/test_connector_control.py::test::test_domain_run_adapter_exposes_safe_status_and_event_refs	missing	-	baseline
-tests/test_connector_control.py::test::test_family_contract_rejects_provider_shaped_unknown_fields	missing	-	baseline
-tests/test_connector_control.py::test::test_learning_delta_is_counts_plus_bounded_refs	missing	-	baseline
-tests/test_connector_control.py::test::test_operational_policy_is_versioned_and_enforces_every_measurement	missing	-	baseline
-tests/test_connector_control.py::test::test_route_change_preserves_surface_identity_and_route_history	missing	-	baseline
+tests/test_connector_control.py::function::graph	skipped	spec/chronicle_packs/connector_control_spec.cr	pytest graph fixture is absorbed by ConnectorControlSpecSupport.with_control_runtime
+tests/test_connector_control.py::test::test_all_five_family_native_shapes_validate	ported	spec/chronicle_packs/connector_control_spec.cr::validate_native_data and record_connector_native_view_fn	Native view record/validation characterizations cover the closed family boundary
+tests/test_connector_control.py::test::test_domain_run_adapter_exposes_safe_status_and_event_refs	ported	spec/chronicle_packs/connector_control_spec.cr::record_connector_run_observation_fn	Run observations preserve terminal and update event references and derive safe health
+tests/test_connector_control.py::test::test_family_contract_rejects_provider_shaped_unknown_fields	ported	spec/chronicle_packs/connector_control_spec.cr::validate_native_data and record_connector_native_view_fn	Native payload validation rejects values outside the family contract
+tests/test_connector_control.py::test::test_learning_delta_is_counts_plus_bounded_refs	ported	spec/chronicle_packs/connector_control_spec.cr::record_connector_learning_delta_fn	Learning delta characterization verifies bounded refs and exceptions at the tool boundary
+tests/test_connector_control.py::test::test_operational_policy_is_versioned_and_enforces_every_measurement	ported	spec/chronicle_packs/connector_control_spec.cr::operational	Operational policy payload and limit violations are characterized directly
+tests/test_connector_control.py::test::test_route_change_preserves_surface_identity_and_route_history	ported	spec/chronicle_packs/connector_control_spec.cr::record_connector_binding_fn	Binding refresh preserves one identity while appending route history and updating active route
 tests/test_connector_maintenance.py::test::test_neutral_manual_refresh_dispatches_without_service_logic	ported	spec/chronicle_packs/connector_control_spec.cr	registered neutral service handler accepts manual refresh
 tests/test_connector_maintenance.py::test::test_refresh_fails_closed_for_revoked_binding	ported	spec/chronicle_packs/connector_control_spec.cr	revoked binding requires reconnect before refresh
 tests/test_connector_maintenance.py::test::test_source_lifecycle_updates_binding_authority_state	ported	spec/chronicle_packs/connector_control_spec.cr	source lifecycle projects binding authority status

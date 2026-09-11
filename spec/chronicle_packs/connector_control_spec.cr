@@ -116,6 +116,37 @@ describe Chronicle::Packs::ConnectorControl do
         end
       end
     end
+
+    it "accepts each of the five closed native family shapes" do
+      with_control_runtime do |_store, graph, _rt|
+        cc = Chronicle::Packs::ConnectorControl
+        {
+          "conversation" => %({"threads":[],"total_count":0}),
+          "schedule"     => %({"occurrences":[],"total_count":0}),
+          "records"      => %({"columns":[],"rows":[],"total_count":0}),
+          "documents"    => %({"items":[],"total_count":0}),
+          "telemetry"    => %({"points":[],"unit":"count"}),
+        }.each do |family, json|
+          result = cc.record_connector_native_view_fn(graph,
+            source_surface_id: "fixture:#{family}", service: "fixture",
+            family: family, state: "empty", data: JSON.parse(json).as_h)
+          data = JSON.parse(graph.get_object(result["view"].as_s).not_nil!.data)
+          data["family"].as_s.should eq(family)
+          data["state"].as_s.should eq("empty")
+        end
+      end
+    end
+
+    it "rejects provider-shaped fields outside the native family contract" do
+      with_control_runtime do |_store, graph, _rt|
+        expect_raises(ArgumentError, /unknown conversation native data field/) do
+          Chronicle::Packs::ConnectorControl.record_connector_native_view_fn(graph,
+            source_surface_id: "mail:owner", service: "gmail",
+            family: "conversation", state: "ready",
+            data: JSON.parse(%({"messages":[{"gmailMessageId":"provider-leak"}]})).as_h)
+        end
+      end
+    end
   end
 
   describe "projections" do
