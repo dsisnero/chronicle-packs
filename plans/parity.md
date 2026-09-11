@@ -188,7 +188,7 @@ per-pack detail record (surfaces, divergence notes, fixture drivers).
 ### Separate tracking
 
 - [~] Upstream test porting — `plans/inventory/python_test_parity.tsv`
-      tracks 638 upstream tests (198/638 ported; test_action_class_policy,
+      tracks 638 upstream tests (200/638 ported; test_action_class_policy,
       test_assistant_local_sessions_importer, test_assistant_self_summary_importer,
       test_approval_auth, test_preflight,
       test_llm_provider, test_manifests, test_schedule_pack,

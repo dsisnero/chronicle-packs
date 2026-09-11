@@ -120,10 +120,10 @@ tests/test_claude_export_importer.py::test::test_bare_conversations_json_and_mag
 tests/test_claude_export_importer.py::test::test_claude_zip_flat_transcript_emits_paired_records_and_evidence	ported	spec/chronicle_packs/claude_export_spec.cr	flat transcript, paired acquisition, evidence, and replay assertions
 tests/test_claude_export_importer.py::test::test_conversation_and_message_bounds_stop_without_partial_emission	missing	-	baseline
 tests/test_claude_export_importer.py::test::test_identical_reimport_reemits_items_but_evidence_identity_is_stable	ported	spec/chronicle_packs/claude_export_spec.cr	acquisition re-emission with stable evidence revisions
-tests/test_claude_export_importer.py::test::test_is_fixture_flag_propagates_to_content_and_evidence	missing	-	baseline
+tests/test_claude_export_importer.py::test::test_is_fixture_flag_propagates_to_content_and_evidence	ported	spec/chronicle_packs/claude_export_spec.cr	fixture flag reaches acquired content and evidence
 tests/test_claude_export_importer.py::test::test_malformed_conversation_is_skipped_whole_and_siblings_survive	ported	spec/chronicle_packs/claude_export_spec.cr	invalid conversation isolation retains valid siblings
 tests/test_claude_export_importer.py::test::test_provider_time_normalization	missing	-	baseline
-tests/test_claude_export_importer.py::test::test_replay_modes_and_artifact_hash_match	missing	-	baseline
+tests/test_claude_export_importer.py::test::test_replay_modes_and_artifact_hash_match	ported	spec/chronicle_packs/claude_export_spec.cr	artifact hash plus inline and reference-only replay modes
 tests/test_claude_export_importer.py::test::test_unknown_blocks_are_omitted_and_plain_text_field_is_fallback	missing	-	baseline
 tests/test_communication_followups.py::function::_annotation	missing	-	baseline
 tests/test_communication_followups.py::function::_build	missing	-	baseline

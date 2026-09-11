@@ -1,5 +1,6 @@
 require "spec"
 require "json"
+require "digest"
 require "file_utils"
 require "compress/zip"
 require "../spec_helper"
@@ -156,10 +157,18 @@ describe Chronicle::Packs::ClaudeExport do
             idata = JSON.parse(item.data)
             digest = idata["replay_payload_hash"].as_s
             idata["replay_payload_ref"].as_s.should eq("artifact://sha256/#{digest[0, 2]}/#{digest}")
-            File.exists?((store / "sha256" / digest[0, 2] / digest).to_s).should be_true
+            artifact = store / "sha256" / digest[0, 2] / digest
+            File.exists?(artifact.to_s).should be_true
+            Digest::SHA256.hexdigest(File.read(artifact)).should eq(digest)
+            replay_unit = JSON.parse(File.read(artifact))
+            replay_unit["conversation_uuid"].as_s.should_not be_empty
+            replay_unit["message_uuid"].as_s.should_not be_empty
+            replay_unit["normalized_content"].as_s.should be_a(String)
           end
 
-          graph.objects(type: "activity_evidence").size.should eq(3)
+          evidence = graph.objects(type: "activity_evidence")
+          evidence.size.should eq(3)
+          evidence.each { |item| JSON.parse(item.data)["is_fixture"].as_bool.should be_true }
 
           cursors = graph.objects(type: "backfill_cursor")
           cursors.size.should eq(1)
@@ -237,6 +246,38 @@ describe Chronicle::Packs::ClaudeExport do
           end
           graph.objects(type: "backfill_cursor").size.should eq(1)
         end
+      end
+    end
+
+    it "keeps replay bytes inline or absent for non-artifact modes" do
+      with_temp_dir do |base|
+        archive = base / "claude-export.zip"
+        write_zip_export(archive, flat_conversations)
+
+        inline_store = base / "inline-artifacts"
+        _inline_store, inline_graph, _inline_runtime = PackSpecRuntime.runtime
+        inline = Chronicle::Packs::ClaudeExport.import_claude_export_fn(
+          inline_graph, archive.to_s, "surface_claude_inline", artifact_store_dir: inline_store.to_s,
+          replay_mode: "inline",
+        )
+        inline["ok"].as_bool.should be_true
+        inline_graph.objects(type: "acquired_item").each do |item|
+          data = JSON.parse(item.data)
+          Digest::SHA256.hexdigest(data["replay_payload_ref"].as_s).should eq(data["replay_payload_hash"].as_s)
+        end
+        File.exists?(inline_store.to_s).should be_false
+
+        reference_store = base / "reference-artifacts"
+        _reference_store, reference_graph, _reference_runtime = PackSpecRuntime.runtime
+        reference = Chronicle::Packs::ClaudeExport.import_claude_export_fn(
+          reference_graph, archive.to_s, "surface_claude_reference", artifact_store_dir: reference_store.to_s,
+          replay_mode: "reference_only",
+        )
+        reference["ok"].as_bool.should be_true
+        reference_graph.objects(type: "acquired_item").each do |item|
+          JSON.parse(item.data)["replay_payload_ref"].as_s.should eq("reference_only:no-payload")
+        end
+        File.exists?(reference_store.to_s).should be_false
       end
     end
 
