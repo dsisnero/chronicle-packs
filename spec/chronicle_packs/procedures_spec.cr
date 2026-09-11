@@ -209,4 +209,33 @@ describe "guarded proceduralization" do
       graph.objects(type: "procedure_deoptimization").size.should eq(1)
     end
   end
+
+  it "demotes and refuses promotion on a counterexample false admission" do
+    ProceduresSupport.with_semantic_runtime do |_store, graph, _rt|
+      se = Chronicle::Packs::SemanticExtraction
+      positive_ids = [] of String
+      ["Please send the deck.", "Can you review the draft?", "Could you schedule the call?", "Please share the notes.", "Can you confirm the date?"].each_with_index do |text, index|
+        evidence = ProceduresSupport.add_evidence(graph, text, index + 1)
+        ProceduresSupport.add_reference_annotation(graph, evidence.id, text, index + 1)
+        positive_ids << evidence.id
+      end
+      # The cue and shape admit this evidence, but its reviewed dynamic
+      # reference deliberately produced no annotation: a loose guard must
+      # therefore fail evaluation rather than becoming promotable.
+      counter = ProceduresSupport.add_evidence(graph, "Please ignore this automated footer.", 99)
+
+      candidate = se.synthesize_request_procedure_fn(graph,
+        witness_evidence_ids: positive_ids[0, 3], held_out_evidence_ids: positive_ids[3, 2],
+        counterexample_evidence_ids: [counter.id], created_by: "owner:test")
+      evaluated = se.evaluate_request_procedure_fn(graph, candidate["candidate_id"].as_s)
+
+      evaluated["verdict"].as_s.should eq("fail")
+      audit = JSON.parse(graph.get_object(evaluated["evaluation_id"].as_s).not_nil!.data)
+      audit["false_admissions"].as_i.should eq(1)
+      JSON.parse(graph.get_object(candidate["candidate_id"].as_s).not_nil!.data)["status"].as_s.should eq("demoted")
+      expect_raises(Chronicle::Packs::PackError, /passing evaluation/) do
+        se.promote_request_procedure_fn(graph, candidate["candidate_id"].as_s, evaluated["evaluation_id"].as_s, approver: "owner:test")
+      end
+    end
+  end
 end

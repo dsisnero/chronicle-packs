@@ -192,15 +192,15 @@ tests/test_eval_outcome.py::test::test_negative_valence_is_queryable_reliability
 tests/test_eval_outcome.py::test::test_skill_eligibility_uses_the_same_reversible_reliability_handoff	ported	spec/chronicle_packs/skills_spec.cr	skill_reliability_eligibility demotes on harmful verdict
 tests/test_eval_outcome.py::test::test_task_and_memory_contradiction_evaluations_capture_without_ui	ported	spec/chronicle_packs/eval_outcome_contract_spec.cr	-
 tests/test_eval_outcome.py::test::test_terminal_outcomes_are_mutually_exclusive_per_evaluation	ported	spec/chronicle_packs/eval_outcome_contract_spec.cr	-
-tests/test_extraction_proceduralization.py::class::RequestReferenceProvider	missing	-	baseline
-tests/test_extraction_proceduralization.py::function::_accepted_reference	missing	-	baseline
-tests/test_extraction_proceduralization.py::function::_evidence	missing	-	baseline
-tests/test_extraction_proceduralization.py::function::_provider_boundary	missing	-	baseline
-tests/test_extraction_proceduralization.py::function::_runtime	missing	-	baseline
-tests/test_extraction_proceduralization.py::method::RequestReferenceProvider.__init__	missing	-	baseline
-tests/test_extraction_proceduralization.py::method::RequestReferenceProvider.complete	missing	-	baseline
-tests/test_extraction_proceduralization.py::test::test_false_admission_on_counterexample_blocks_procedure_promotion	missing	-	baseline
-tests/test_extraction_proceduralization.py::test::test_reference_hardens_through_real_fork_then_deopts_and_demotes_on_drift	missing	-	baseline
+tests/test_extraction_proceduralization.py::class::RequestReferenceProvider	skipped	spec/chronicle_packs/procedures_spec.cr	Python fixture provider is replaced by the pack-owned recorded completion boundary
+tests/test_extraction_proceduralization.py::function::_accepted_reference	skipped	spec/chronicle_packs/procedures_spec.cr	Test fixture helper is absorbed by ProceduresSupport.add_reference_annotation
+tests/test_extraction_proceduralization.py::function::_evidence	skipped	spec/chronicle_packs/procedures_spec.cr	Test fixture helper is absorbed by ProceduresSupport.add_evidence
+tests/test_extraction_proceduralization.py::function::_provider_boundary	skipped	spec/chronicle_packs/procedures_spec.cr	Crystal specs are hermetic by default and do not use process-global Python providers
+tests/test_extraction_proceduralization.py::function::_runtime	skipped	spec/chronicle_packs/procedures_spec.cr	Test fixture helper is absorbed by ProceduresSupport.with_semantic_runtime
+tests/test_extraction_proceduralization.py::method::RequestReferenceProvider.__init__	skipped	spec/chronicle_packs/procedures_spec.cr	Python provider test-double initializer has no Crystal runtime equivalent
+tests/test_extraction_proceduralization.py::method::RequestReferenceProvider.complete	skipped	spec/chronicle_packs/procedures_spec.cr	Recorded completion boundary replaces Python provider test-double calls
+tests/test_extraction_proceduralization.py::test::test_false_admission_on_counterexample_blocks_procedure_promotion	ported	spec/chronicle_packs/procedures_spec.cr::demotes and refuses promotion on a counterexample false admission	Direct Crystal characterization preserves fail verdict, false-admission audit, demotion, and blocked promotion
+tests/test_extraction_proceduralization.py::test::test_reference_hardens_through_real_fork_then_deopts_and_demotes_on_drift	partial	spec/chronicle_packs/procedures_spec.cr::active_procedure_for and record_deoptimization handle guarded fallback	Crystal evaluates graph-direct and records/auto-demotes shape drift, but fallback remains requested rather than executing the vendor live-provider fork fallback
 tests/test_gmail_connector.py::class::FakeComposio	missing	-	baseline
 tests/test_gmail_connector.py::function::_message	missing	-	baseline
 tests/test_gmail_connector.py::function::_runtime	missing	-	baseline
