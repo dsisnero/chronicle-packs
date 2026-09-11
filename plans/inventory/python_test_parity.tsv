@@ -125,11 +125,11 @@ tests/test_claude_export_importer.py::test::test_malformed_conversation_is_skipp
 tests/test_claude_export_importer.py::test::test_provider_time_normalization	ported	spec/chronicle_packs/claude_export_spec.cr	whitespace ISO and numeric epoch normalize to provider-time wire values
 tests/test_claude_export_importer.py::test::test_replay_modes_and_artifact_hash_match	ported	spec/chronicle_packs/claude_export_spec.cr	artifact hash plus inline and reference-only replay modes
 tests/test_claude_export_importer.py::test::test_unknown_blocks_are_omitted_and_plain_text_field_is_fallback	ported	spec/chronicle_packs/claude_export_spec.cr	mixed blocks, legacy text fallback, empty content, and conversation timestamp fallback
-tests/test_communication_followups.py::function::_annotation	missing	-	baseline
-tests/test_communication_followups.py::function::_build	missing	-	baseline
-tests/test_communication_followups.py::function::_evidence	missing	-	baseline
-tests/test_communication_followups.py::test::test_only_explicit_clean_inbound_requests_become_reviewable_tasks	missing	-	baseline
-tests/test_communication_followups.py::test::test_relation_without_request_cue_does_not_become_task	missing	-	baseline
+tests/test_communication_followups.py::function::_annotation	skipped	spec/chronicle_packs/communication_spec.cr	inline semantic annotation fixture
+tests/test_communication_followups.py::function::_build	skipped	spec/chronicle_packs/communication_spec.cr	with_communication_runtime fixture
+tests/test_communication_followups.py::function::_evidence	skipped	spec/chronicle_packs/communication_spec.cr	inline activity evidence fixture
+tests/test_communication_followups.py::test::test_only_explicit_clean_inbound_requests_become_reviewable_tasks	ported	spec/chronicle_packs/communication_spec.cr	inbound exact request creates reviewable task candidate
+tests/test_communication_followups.py::test::test_relation_without_request_cue_does_not_become_task	ported	spec/chronicle_packs/communication_spec.cr	non-request relation creates no task candidate
 tests/test_connector_control.py::function::graph	missing	-	baseline
 tests/test_connector_control.py::test::test_all_five_family_native_shapes_validate	missing	-	baseline
 tests/test_connector_control.py::test::test_domain_run_adapter_exposes_safe_status_and_event_refs	missing	-	baseline

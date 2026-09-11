@@ -291,4 +291,27 @@ describe Chronicle::Packs::Communication do
       result.suppression_counts["signature"].should eq(1)
     end
   end
+
+  describe "conversation follow-up candidates" do
+    it "creates a reviewable task only for an explicit clean inbound request" do
+      with_communication_runtime do |_store, graph, rt|
+        evidence = graph.add_object("activity_evidence", %({"evidence_identity":"ev","revision_id":"rev","normalized_content":"Could you please send me the deck tomorrow?"}))
+        graph.add_object("conversation_message", %({"message_identity":"m","thread_id":"thread","source_surface_id":"mail","service":"test","account_ref":"owner","provider_message_id":"1","provider_revision_ref":"1","direction":"inbound","message_kind":"human","interpretation_state":"ready","injection_flags":[],"evidence_id":"#{evidence.id}"}))
+        graph.add_object("semantic_annotation", %({"annotation_identity":"a","evidence_id":"#{evidence.id}","evidence_identity":"ev","revision_id":"rev","facet":"relation_mention","body":{"text":"Could you please send me the deck tomorrow?"},"selector":{"exact":"Could you please send me the deck tomorrow?"},"status":"active","confidence":0.9}))
+        rt.run_until_idle
+        data = JSON.parse(graph.objects(type: "task_candidate").first.data)
+        data["metadata"].as_h["requires_review"].as_bool.should be_true
+      end
+    end
+
+    it "does not create a task for a relation without a request cue" do
+      with_communication_runtime do |_store, graph, rt|
+        evidence = graph.add_object("activity_evidence", %({"evidence_identity":"ev2","revision_id":"rev2","normalized_content":"Alice sent the deck yesterday."}))
+        graph.add_object("conversation_message", %({"message_identity":"m2","thread_id":"thread","source_surface_id":"mail","service":"test","account_ref":"owner","provider_message_id":"2","provider_revision_ref":"2","direction":"inbound","message_kind":"human","interpretation_state":"ready","injection_flags":[],"evidence_id":"#{evidence.id}"}))
+        graph.add_object("semantic_annotation", %({"annotation_identity":"a2","evidence_id":"#{evidence.id}","evidence_identity":"ev2","revision_id":"rev2","facet":"relation_mention","body":{"text":"Alice sent the deck yesterday."},"selector":{"exact":"Alice sent the deck yesterday."},"status":"active","confidence":0.9}))
+        rt.run_until_idle
+        graph.objects(type: "task_candidate").should be_empty
+      end
+    end
+  end
 end
