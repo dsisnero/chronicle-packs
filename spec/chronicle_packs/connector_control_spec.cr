@@ -20,11 +20,11 @@ module ConnectorControlSpecSupport
     yield store, graph, rt
   end
 
-  def record_binding(graph, source_surface_id : String = "chat/s1", service : String = "gmail", account_ref : String = "acc_1", family : String = "conversation", active_route : String = "native", routes : Array(String)? = nil, manual_refresh : Bool = false)
+  def record_binding(graph, source_surface_id : String = "chat/s1", service : String = "gmail", account_ref : String = "acc_1", family : String = "conversation", active_route : String = "native", routes : Array(String)? = nil, manual_refresh : Bool = false, status : String = "active")
     Chronicle::Packs::ConnectorControl.record_connector_binding_fn(
       graph, source_surface_id: source_surface_id, service: service, account_ref: account_ref,
       family: family, active_route: active_route, domain_run_type: "connector_run",
-      routes: routes, manual_refresh_available: manual_refresh,
+      routes: routes, manual_refresh_available: manual_refresh, status: status,
     )
   end
 end
@@ -175,6 +175,15 @@ describe Chronicle::Packs::ConnectorControl do
         JSON.parse(request.data)["status"].as_s.should eq("accepted")
       ensure
         Chronicle::Packs::ConnectorControl.clear_connector_maintenance_handlers
+      end
+    end
+
+    it "fails closed when the binding has been revoked" do
+      with_control_runtime do |_store, graph, _rt|
+        record_binding(graph, source_surface_id: "mail/revoked", manual_refresh: true, status: "revoked")
+        expect_raises(Chronicle::Packs::PackError, /reconnect before refreshing/) do
+          Chronicle::Packs::ConnectorControl.request_connector_refresh_fn(graph, "mail/revoked")
+        end
       end
     end
   end
