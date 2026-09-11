@@ -607,12 +607,12 @@ tests/test_skills.py::test::test_normalizer_skill_candidate_becomes_a_provenance
 tests/test_skills.py::test::test_promotion_requires_recorded_evidence_and_is_explainable	ported	spec/chronicle_packs/skills_contract_spec.cr	-
 tests/test_skills.py::test::test_usage_id_executes_and_evaluates_at_most_once_under_retries	ported	spec/chronicle_packs/skills_contract_spec.cr	-
 tests/test_skills.py::test::test_version_selection_is_exact_and_material_changes_require_new_version	ported	spec/chronicle_packs/skills_contract_spec.cr	-
-tests/test_subject_profile.py::function::_candidate	missing	-	baseline
-tests/test_subject_profile.py::function::_evidence	missing	-	baseline
-tests/test_subject_profile.py::function::_runtime	missing	-	baseline
-tests/test_subject_profile.py::test::test_candidate_requires_explicit_verdict_and_preserves_evidence	missing	-	baseline
-tests/test_subject_profile.py::test::test_conflict_and_forget_are_append_only_lifecycles	missing	-	baseline
-tests/test_subject_profile.py::test::test_connector_content_cannot_become_owner_fact_without_owner_scope	missing	-	baseline
+tests/test_subject_profile.py::function::_candidate	skipped	spec/chronicle_packs/subject_profile_spec.cr	Test fixture helper is absorbed by SubjectProfileSpecSupport.add_candidate
+tests/test_subject_profile.py::function::_evidence	skipped	spec/chronicle_packs/subject_profile_spec.cr	Test fixture helper is absorbed by SubjectProfileSpecSupport.add_evidence
+tests/test_subject_profile.py::function::_runtime	skipped	spec/chronicle_packs/subject_profile_spec.cr	Test fixture helper is absorbed by SubjectProfileSpecSupport.with_subject_profile_runtime
+tests/test_subject_profile.py::test::test_candidate_requires_explicit_verdict_and_preserves_evidence	ported	spec/chronicle_packs/subject_profile_spec.cr::upstream test_subject_profile parity	Direct Crystal characterization preserves explicit-review and evidence provenance assertions
+tests/test_subject_profile.py::test::test_conflict_and_forget_are_append_only_lifecycles	ported	spec/chronicle_packs/subject_profile_spec.cr::upstream test_subject_profile parity	Direct Crystal characterization covers confirmed conflict plus append-only forgetting
+tests/test_subject_profile.py::test::test_connector_content_cannot_become_owner_fact_without_owner_scope	ported	spec/chronicle_packs/subject_profile_spec.cr::upstream test_subject_profile parity	Direct Crystal characterization covers absent owner scope fail-closed behavior
 tests/test_usage.py::function::_emit	ported	spec/chronicle_packs/usage_contract_spec.cr	graph.ids.event inlined
 tests/test_usage.py::function::_emit_evidence	ported	spec/chronicle_packs/usage_contract_spec.cr::emit_evidence	-
 tests/test_usage.py::function::_graph	ported	spec/chronicle_packs/usage_contract_spec.cr::with_usage_runtime	-

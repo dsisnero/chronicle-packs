@@ -303,4 +303,66 @@ describe Chronicle::Packs::SubjectProfile do
       end
     end
   end
+
+  # Direct characterizations of vendor tests/test_subject_profile.py. Keep
+  # these separate from the broader pack specs above so the scoped evidence,
+  # explicit review, conflict, and append-only lifecycle contract remains
+  # mechanically traceable in the parity ledger.
+  describe "upstream test_subject_profile parity" do
+    it "requires an explicit verdict and preserves the evidence provenance" do
+      with_subject_profile_runtime do |_store, graph, rt|
+        evidence = add_evidence(graph, source_surface_id: "public_presence")
+        candidate = add_candidate(graph, evidence, value: "ActiveGraph")
+        rt.run_until_idle
+
+        graph.objects(type: "subject_fact").should be_empty
+        result = review(graph, candidate.id, "confirm")
+        rt.run_until_idle
+
+        fact = JSON.parse(graph.objects(type: "subject_fact").first.data)
+        fact["evidence_id"].as_s.should eq(evidence.id)
+        fact["source_surface_id"].as_s.should eq("public_presence")
+        JSON.parse(graph.get_object(result["verdict_id"].as_s).not_nil!.data)["status"].as_s.should eq("applied")
+      end
+    end
+
+    it "refuses connector evidence with no owner scope" do
+      with_subject_profile_runtime do |_store, graph, rt|
+        evidence = add_evidence(graph, scope: nil)
+        candidate = add_candidate(graph, evidence, value: "ActiveGraph")
+        rt.run_until_idle
+
+        result = review(graph, candidate.id, "confirm")
+        rt.run_until_idle
+
+        JSON.parse(graph.get_object(result["verdict_id"].as_s).not_nil!.data)["status"].as_s.should eq("failed")
+        graph.objects(type: "subject_fact").should be_empty
+      end
+    end
+
+    it "records conflict and forgetting as append-only fact lifecycles" do
+      with_subject_profile_runtime do |_store, graph, rt|
+        evidence = add_evidence(graph)
+        first = add_candidate(graph, evidence, value: "ActiveGraph")
+        rt.run_until_idle
+        review(graph, first.id, "confirm")
+        rt.run_until_idle
+
+        second = add_candidate(graph, evidence, value: "BabyAGI")
+        review(graph, second.id, "confirm")
+        rt.run_until_idle
+
+        graph.objects(type: "subject_contradiction").should_not be_empty
+        current = graph.objects(type: "subject_fact").find do |fact|
+          JSON.parse(fact.data)["status"].as_s == "promoted"
+        end.not_nil!
+        result = Chronicle::Packs::SubjectProfile.forget_subject_fact_fn(graph, current.id)
+        rt.run_until_idle
+
+        tombstone = JSON.parse(graph.get_object(result["tombstone_fact_id"].as_s).not_nil!.data)
+        tombstone["status"].as_s.should eq("forgotten")
+        JSON.parse(graph.get_object(current.id).not_nil!.data)["status"].as_s.should eq("superseded")
+      end
+    end
+  end
 end
