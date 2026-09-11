@@ -143,10 +143,10 @@ tests/test_connector_maintenance.py::test::test_source_lifecycle_updates_binding
 tests/test_conversation_family.py::test::test_hygiene_selects_only_new_human_content_with_exact_evidence_offsets	ported	spec/chronicle_packs/communication_spec.cr	exact authoritative offsets after quote suppression
 tests/test_conversation_family.py::test::test_notifications_and_injection_are_displayable_but_never_model_eligible	ported	spec/chronicle_packs/communication_spec.cr	displayable notification/injection content stays model-ineligible
 tests/test_conversation_family.py::test::test_signature_boilerplate_and_tracking_are_not_interpretation_content	ported	spec/chronicle_packs/communication_spec.cr	signature, boilerplate, and tracking suppression
-tests/test_cross_pack_fixtures.py::test::test_chat_memory_cross_session	missing	-	baseline
-tests/test_cross_pack_fixtures.py::test::test_comm_chat_email_integration	missing	-	baseline
-tests/test_cross_pack_fixtures.py::test::test_identity_profile_entity	missing	-	baseline
-tests/test_cross_pack_fixtures.py::test::test_tool_gateway_core_memory	missing	-	baseline
+tests/test_cross_pack_fixtures.py::test::test_chat_memory_cross_session	ported	spec/chronicle_packs/fixtures_spec.cr	preference persists across fresh chat sessions
+tests/test_cross_pack_fixtures.py::test::test_comm_chat_email_integration	ported	spec/chronicle_packs/fixtures_spec.cr	full communication composition shape
+tests/test_cross_pack_fixtures.py::test::test_identity_profile_entity	ported	spec/chronicle_packs/fixtures_spec.cr	identity/profile/entity composition fixture
+tests/test_cross_pack_fixtures.py::test::test_tool_gateway_core_memory	ported	spec/chronicle_packs/fixtures_spec.cr	gateway-to-core-to-memory graph fixture
 tests/test_doctor.py::class::_FakeEntryPoint	skipped	spec/chronicle_packs/doctor_spec.cr	Crystal EntryPoint fixture
 tests/test_doctor.py::class::_OldCapabilityDecl	skipped	spec/chronicle_packs/doctor_spec.cr	injected supported=false runtime probe
 tests/test_doctor.py::const::REPO_ROOT	skipped	spec/chronicle_packs/doctor_spec.cr	DoctorSpecSupport::REPO

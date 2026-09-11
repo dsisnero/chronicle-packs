@@ -26,7 +26,7 @@ Intentional divergences section). The `## Features` sections below remain the
 per-pack detail record (surfaces, divergence notes, fixture drivers).
 
 **Progress: 1739 / 2080 source API items ported, 17 partial, 92 skipped, 111 deferred.**
-**Remaining: 120 missing items + 241/638 upstream tests ported (5 intentional divergences).**
+**Remaining: 120 missing items + 245/638 upstream tests ported (5 intentional divergences).**
 
 ## Remaining feature-size roadmap (S / M / L)
 
@@ -188,7 +188,7 @@ per-pack detail record (surfaces, divergence notes, fixture drivers).
 ### Separate tracking
 
 - [~] Upstream test porting — `plans/inventory/python_test_parity.tsv`
-      tracks 638 upstream tests (241/638 ported; test_action_class_policy,
+      tracks 638 upstream tests (245/638 ported; test_action_class_policy,
       test_assistant_local_sessions_importer, test_assistant_self_summary_importer,
       test_approval_auth, test_preflight,
       test_llm_provider, test_manifests, test_schedule_pack,
@@ -203,7 +203,7 @@ per-pack detail record (surfaces, divergence notes, fixture drivers).
 1. `[x]` `evolution` Crystal candidate trial, soak, and boot lifecycle.
 2. `[x]` `evolution` candidate activation.
 3. `[x]` `evolution` Crystal author and deterministic scenarios.
-4. `[ ]` Upstream test porting (638 tests), tracked separately (241/638).
+4. `[ ]` Upstream test porting (638 tests), tracked separately (245/638).
 
 ### Evolution candidate-language resolution
 
