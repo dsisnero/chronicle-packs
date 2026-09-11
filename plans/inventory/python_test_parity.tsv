@@ -147,39 +147,39 @@ tests/test_cross_pack_fixtures.py::test::test_chat_memory_cross_session	missing	
 tests/test_cross_pack_fixtures.py::test::test_comm_chat_email_integration	missing	-	baseline
 tests/test_cross_pack_fixtures.py::test::test_identity_profile_entity	missing	-	baseline
 tests/test_cross_pack_fixtures.py::test::test_tool_gateway_core_memory	missing	-	baseline
-tests/test_doctor.py::class::_FakeEntryPoint	missing	-	baseline
-tests/test_doctor.py::class::_OldCapabilityDecl	missing	-	baseline
-tests/test_doctor.py::const::REPO_ROOT	missing	-	baseline
-tests/test_doctor.py::function::_old_runtime_stub	missing	-	baseline
-tests/test_doctor.py::method::_FakeEntryPoint.__init__	missing	-	baseline
-tests/test_doctor.py::method::_FakeEntryPoint.load	missing	-	baseline
-tests/test_doctor.py::test::test_artifact_store_fails_on_divergent_dirs	missing	-	baseline
-tests/test_doctor.py::test::test_artifact_store_fails_on_unwritable_dir	missing	-	baseline
-tests/test_doctor.py::test::test_artifact_store_passes_on_current_settings	missing	-	baseline
-tests/test_doctor.py::test::test_cli_broken_store_exits_one	missing	-	baseline
-tests/test_doctor.py::test::test_cli_healthy_environment_exits_zero	missing	-	baseline
-tests/test_doctor.py::test::test_cli_json_is_parseable_and_reports_ok	missing	-	baseline
-tests/test_doctor.py::test::test_entry_points_fail_when_group_is_empty	missing	-	baseline
-tests/test_doctor.py::test::test_entry_points_fail_when_one_does_not_resolve	missing	-	baseline
-tests/test_doctor.py::test::test_entry_points_pass_on_current_environment	missing	-	baseline
-tests/test_doctor.py::test::test_manifest_hash_fails_on_drifted_pack_copy	missing	-	baseline
-tests/test_doctor.py::test::test_manifest_hash_passes_on_current_checkout	missing	-	baseline
-tests/test_doctor.py::test::test_manifest_hash_skips_outside_a_checkout	missing	-	baseline
-tests/test_doctor.py::test::test_module_invocation_works_as_documented	missing	-	baseline
-tests/test_doctor.py::test::test_python_version_fails_below_floor	missing	-	baseline
-tests/test_doctor.py::test::test_python_version_passes_on_current_interpreter	missing	-	baseline
-tests/test_doctor.py::test::test_runtime_version_fails_on_old_runtime_with_preflight_message	missing	-	baseline
-tests/test_doctor.py::test::test_runtime_version_passes_on_current_runtime	missing	-	baseline
-tests/test_doctor.py::test::test_shadowing_fails_on_namespace_directory	missing	-	baseline
-tests/test_doctor.py::test::test_shadowing_fails_when_import_does_not_match_install	missing	-	baseline
-tests/test_doctor.py::test::test_shadowing_fails_when_pip_has_no_record	missing	-	baseline
-tests/test_doctor.py::test::test_shadowing_passes_on_current_environment	missing	-	baseline
-tests/test_doctor.py::test::test_skip_preflight_escape_hatch_lets_doctor_import	missing	-	baseline
-tests/test_doctor.py::test::test_store_path_accepts_sqlite_url_and_plain_path	missing	-	baseline
-tests/test_doctor.py::test::test_store_path_fails_on_directory_target	missing	-	baseline
-tests/test_doctor.py::test::test_store_path_fails_on_readonly_existing_file	missing	-	baseline
-tests/test_doctor.py::test::test_store_path_fails_on_unwritable_parent	missing	-	baseline
-tests/test_doctor.py::test::test_store_path_skips_without_store	missing	-	baseline
+tests/test_doctor.py::class::_FakeEntryPoint	skipped	spec/chronicle_packs/doctor_spec.cr	Crystal EntryPoint fixture
+tests/test_doctor.py::class::_OldCapabilityDecl	skipped	spec/chronicle_packs/doctor_spec.cr	injected supported=false runtime probe
+tests/test_doctor.py::const::REPO_ROOT	skipped	spec/chronicle_packs/doctor_spec.cr	DoctorSpecSupport::REPO
+tests/test_doctor.py::function::_old_runtime_stub	skipped	spec/chronicle_packs/doctor_spec.cr	injected old runtime version probe
+tests/test_doctor.py::method::_FakeEntryPoint.__init__	skipped	spec/chronicle_packs/doctor_spec.cr	Crystal EntryPoint fixture construction
+tests/test_doctor.py::method::_FakeEntryPoint.load	skipped	spec/chronicle_packs/doctor_spec.cr	injected entry-point resolver outcome
+tests/test_doctor.py::test::test_artifact_store_fails_on_divergent_dirs	ported	spec/chronicle_packs/doctor_spec.cr	divergent replay-store settings fail
+tests/test_doctor.py::test::test_artifact_store_fails_on_unwritable_dir	ported	spec/chronicle_packs/doctor_spec.cr	unwritable replay directory fails
+tests/test_doctor.py::test::test_artifact_store_passes_on_current_settings	ported	spec/chronicle_packs/doctor_spec.cr	shared default settings pass
+tests/test_doctor.py::test::test_cli_broken_store_exits_one	ported	spec/chronicle_packs/doctor_spec.cr	broken store CLI failure
+tests/test_doctor.py::test::test_cli_healthy_environment_exits_zero	ported	spec/chronicle_packs/doctor_spec.cr	healthy CLI result
+tests/test_doctor.py::test::test_cli_json_is_parseable_and_reports_ok	ported	spec/chronicle_packs/doctor_spec.cr	JSON CLI report
+tests/test_doctor.py::test::test_entry_points_fail_when_group_is_empty	ported	spec/chronicle_packs/doctor_spec.cr	empty registered-pack group fails
+tests/test_doctor.py::test::test_entry_points_fail_when_one_does_not_resolve	ported	spec/chronicle_packs/doctor_spec.cr	unresolvable registered pack fails
+tests/test_doctor.py::test::test_entry_points_pass_on_current_environment	ported	spec/chronicle_packs/doctor_spec.cr	live registry resolves
+tests/test_doctor.py::test::test_manifest_hash_fails_on_drifted_pack_copy	ported	spec/chronicle_packs/doctor_spec.cr	drifted generated manifest fails
+tests/test_doctor.py::test::test_manifest_hash_passes_on_current_checkout	ported	spec/chronicle_packs/doctor_spec.cr	generated manifest recomputes
+tests/test_doctor.py::test::test_manifest_hash_skips_outside_a_checkout	ported	spec/chronicle_packs/doctor_spec.cr	outside checkout skips
+tests/test_doctor.py::test::test_module_invocation_works_as_documented	intentional_divergence	spec/chronicle_packs/doctor_spec.cr	Python module invocation has no Crystal analogue; shard CLI is covered
+tests/test_doctor.py::test::test_python_version_fails_below_floor	intentional_divergence	spec/chronicle_packs/doctor_spec.cr	Crystal compiler floor replaces Python interpreter floor
+tests/test_doctor.py::test::test_python_version_passes_on_current_interpreter	intentional_divergence	spec/chronicle_packs/doctor_spec.cr	Crystal compiler floor replaces Python interpreter floor
+tests/test_doctor.py::test::test_runtime_version_fails_on_old_runtime_with_preflight_message	ported	spec/chronicle_packs/doctor_spec.cr	injected old runtime preflight failure
+tests/test_doctor.py::test::test_runtime_version_passes_on_current_runtime	ported	spec/chronicle_packs/doctor_spec.cr	linked Chronicle runtime pass
+tests/test_doctor.py::test::test_shadowing_fails_on_namespace_directory	ported	spec/chronicle_packs/doctor_spec.cr	injected namespace shadowing failure
+tests/test_doctor.py::test::test_shadowing_fails_when_import_does_not_match_install	ported	spec/chronicle_packs/doctor_spec.cr	injected stray import root failure
+tests/test_doctor.py::test::test_shadowing_fails_when_pip_has_no_record	ported	spec/chronicle_packs/doctor_spec.cr	missing install record failure
+tests/test_doctor.py::test::test_shadowing_passes_on_current_environment	ported	spec/chronicle_packs/doctor_spec.cr	installed-root resolution pass
+tests/test_doctor.py::test::test_skip_preflight_escape_hatch_lets_doctor_import	intentional_divergence	spec/chronicle_packs/doctor_spec.cr	Python import-time preflight escape hatch is inapplicable to compiled Crystal
+tests/test_doctor.py::test::test_store_path_accepts_sqlite_url_and_plain_path	ported	spec/chronicle_packs/doctor_spec.cr	SQLite URL and plain path pass
+tests/test_doctor.py::test::test_store_path_fails_on_directory_target	ported	spec/chronicle_packs/doctor_spec.cr	directory target fails
+tests/test_doctor.py::test::test_store_path_fails_on_readonly_existing_file	ported	spec/chronicle_packs/doctor_spec.cr	readonly file fails
+tests/test_doctor.py::test::test_store_path_fails_on_unwritable_parent	ported	spec/chronicle_packs/doctor_spec.cr	unwritable parent fails
+tests/test_doctor.py::test::test_store_path_skips_without_store	ported	spec/chronicle_packs/doctor_spec.cr	absent store skips
 tests/test_eval_outcome.py::function::_artifact_and_evaluation	ported	spec/chronicle_packs/eval_outcome_contract_spec.cr::artifact_and_evaluation	-
 tests/test_eval_outcome.py::function::_memory_runtime	ported	spec/chronicle_packs/eval_outcome_contract_spec.cr::with_runtime	memory: true
 tests/test_eval_outcome.py::function::_runtime	ported	spec/chronicle_packs/eval_outcome_contract_spec.cr::with_runtime	-
