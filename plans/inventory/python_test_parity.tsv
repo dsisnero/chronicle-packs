@@ -364,16 +364,16 @@ tests/test_memory_backend_registry.py::test::test_register_mem0_backend_wires_sc
 tests/test_memory_backend_registry.py::test::test_scheme_dispatch_and_sqlite_default	missing	-	baseline
 tests/test_memory_backend_registry.py::test::test_sqlite_file_uri_honors_shared_memory_mode	missing	-	baseline
 tests/test_memory_backend_registry.py::test::test_tools_path_works_against_external_backend	missing	-	baseline
-tests/test_memory_curation.py::function::_isolate	missing	-	baseline
-tests/test_memory_curation.py::function::_rt	missing	-	baseline
-tests/test_memory_curation.py::test::test_conversational_sources_always_build_memory	missing	-	baseline
-tests/test_memory_curation.py::test::test_priority_categories_accept_at_relieved_threshold	missing	-	baseline
-tests/test_memory_curation.py::test::test_questions_are_not_memory_candidates	missing	-	baseline
-tests/test_memory_curation.py::test::test_recall_never_returns_memories_born_in_the_asking_frame	missing	-	baseline
-tests/test_memory_curation.py::test::test_third_party_email_guidance_rejected_with_rationale	missing	-	baseline
-tests/test_memory_curation.py::test::test_trusted_sender_email_guidance_admitted	missing	-	baseline
-tests/test_memory_curation.py::test::test_unverified_public_evidence_requires_review_even_without_sender	missing	-	baseline
-tests/test_memory_curation.py::test::test_without_identity_admission_is_unchanged	missing	-	baseline
+tests/test_memory_curation.py::function::_isolate	skipped	spec/chronicle_packs/chat_spec.cr	Crystal specs clear graph-local registries in their runtime helpers
+tests/test_memory_curation.py::function::_rt	skipped	spec/chronicle_packs/memory_gateway_spec.cr	pytest runtime fixture is absorbed by MemoryGatewaySpecSupport.with_memory_runtime
+tests/test_memory_curation.py::test::test_conversational_sources_always_build_memory	ported	spec/chronicle_packs/chat_spec.cr	Chat memory proposer creates sender-scoped durable candidates for conversational sources
+tests/test_memory_curation.py::test::test_priority_categories_accept_at_relieved_threshold	ported	spec/chronicle_packs/memory_gateway_spec.cr::candidate_evaluator	Priority-category threshold relief is directly characterized
+tests/test_memory_curation.py::test::test_questions_are_not_memory_candidates	ported	src/chronicle_packs/chat/behaviors.cr::Chat._classify_chat_memory	Chat questions return no candidate and Core classifies punctuated questions before keywords
+tests/test_memory_curation.py::test::test_recall_never_returns_memories_born_in_the_asking_frame	ported	src/chronicle_packs/chat/behaviors.cr::chat_memory_context	Recall passes exclude_frame_id through MemoryGateway to prevent same-frame memory visibility
+tests/test_memory_curation.py::test::test_third_party_email_guidance_rejected_with_rationale	ported	src/chronicle_packs/memory_gateway/behaviors.cr::_provenance_verdict	Verified untrusted non-conversational guidance is rejected with the documents-dont-give-orders rationale
+tests/test_memory_curation.py::test::test_trusted_sender_email_guidance_admitted	ported	src/chronicle_packs/memory_gateway/behaviors.cr::_provenance_verdict	Trusted principal guidance is eligible for normal threshold evaluation
+tests/test_memory_curation.py::test::test_unverified_public_evidence_requires_review_even_without_sender	ported	src/chronicle_packs/memory_gateway/behaviors.cr::candidate_evaluator	Review-required provenance produces a requires_review evaluation without a memory item
+tests/test_memory_curation.py::test::test_without_identity_admission_is_unchanged	ported	src/chronicle_packs/memory_gateway/behaviors.cr::_provenance_verdict	No-principal state gracefully preserves admission because provenance cannot be verified
 tests/test_memory_embedding_seam.py::class::BrokenEmbedder	missing	-	baseline
 tests/test_memory_embedding_seam.py::class::CountingProvider	missing	-	baseline
 tests/test_memory_embedding_seam.py::class::FakeEmbedder	missing	-	baseline
