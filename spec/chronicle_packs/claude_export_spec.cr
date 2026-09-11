@@ -309,6 +309,28 @@ describe Chronicle::Packs::ClaudeExport do
       end
     end
 
+    it "normalizes whitespace-padded ISO timestamps and numeric epochs" do
+      with_temp_dir do |base|
+        conversations = flat_conversations.first(1)
+        messages = conversations.first["chat_messages"].as_a
+        messages[0].as_h["created_at"] = JSON::Any.new("  2026-01-05T09:00:00.000000+00:00  ")
+        messages[1].as_h["created_at"] = JSON::Any.new(1_704_067_200_i64)
+        archive = base / "claude-export.zip"
+        write_zip_export(archive, conversations)
+        with_claude_runtime do |_store, graph, runtime|
+          result = Chronicle::Packs::ClaudeExport.import_claude_export_fn(graph, archive.to_s, "surface_claude_time")
+          runtime.run_until_idle
+          result["ok"].as_bool.should be_true
+          items = graph.objects(type: "acquired_item").to_h do |item|
+            data = JSON.parse(item.data)
+            {data["provider_item_id"].as_s, data}
+          end
+          items["conversation-1:msg-1"]["provider_time"].as_s.should eq("2026-01-05T09:00:00.000000+00:00")
+          items["conversation-1:msg-2"]["provider_time"].as_s.should eq("2024-01-01T00:00:00+00:00")
+        end
+      end
+    end
+
     it "isolates a malformed conversation and keeps valid siblings" do
       with_temp_dir do |base|
         archive = base / "claude-export.zip"
