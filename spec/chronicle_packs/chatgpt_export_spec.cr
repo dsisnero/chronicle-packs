@@ -139,6 +139,24 @@ describe Chronicle::Packs::ChatGPTExport do
           abandoned_meta["branch_status"].as_s.should eq("abandoned")
           abandoned_meta["nearest_canonical_ancestor_id"].as_s.should eq("user-1")
 
+          by_node = contents.to_h do |content|
+            metadata = JSON.parse(content.data)["normalized_metadata"].as_h
+            {metadata["node_id"].as_s, metadata}
+          end
+          by_node["user-1"]["branch_status"].as_s.should eq("canonical")
+          by_node["assistant-current"]["branch_status"].as_s.should eq("canonical")
+          by_node["assistant-old"]["branch_status"].as_s.should eq("abandoned")
+          by_node["user-1"]["canonical_path_index"].as_i.should be < by_node["assistant-current"]["canonical_path_index"].as_i
+          by_node["assistant-old"]["canonical_path_index"].raw.should be_nil
+
+          evidence_by_node = graph.objects(type: "activity_evidence").to_h do |evidence|
+            metadata = JSON.parse(evidence.data)["normalized_metadata"].as_h
+            {metadata["node_id"].as_s, evidence}
+          end
+          evidence_by_node.size.should eq(3)
+          JSON.parse(evidence_by_node["assistant-current"].data)["normalized_metadata"].as_h["branch_status"].as_s.should eq("canonical")
+          JSON.parse(evidence_by_node["assistant-old"].data)["normalized_metadata"].as_h["branch_status"].as_s.should eq("abandoned")
+
           items = graph.objects(type: "acquired_item")
           items.each do |item|
             JSON.parse(item.data)["replay_payload_ref"].as_s.should match(/^artifact:\/\/sha256\//)

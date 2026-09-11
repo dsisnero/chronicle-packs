@@ -106,10 +106,10 @@ tests/test_capability_catalog.py::test::test_inbound_catalog_is_role_scoped	port
 tests/test_capability_catalog.py::test::test_inbound_catalog_never_reveals_unexposed_registry	ported	spec/chronicle_packs/mcp_spec.cr	unexposed registry never leaks
 tests/test_capability_catalog.py::test::test_inbound_catalog_respects_its_own_exposure	ported	spec/chronicle_packs/mcp_spec.cr	disabled exposure -> -32003
 tests/test_capability_catalog.py::test::test_never_llm_callable_is_flagged_not_hidden	ported	spec/chronicle_packs/tool_gateway_catalog_spec.cr	never_llm_callable flagged
-tests/test_chatgpt_export_importer.py::function::_message	missing	-	baseline
-tests/test_chatgpt_export_importer.py::function::_write_branching_export	missing	-	baseline
-tests/test_chatgpt_export_importer.py::function::metadata	missing	-	baseline
-tests/test_chatgpt_export_importer.py::test::test_chatgpt_tree_marks_current_leaf_path_and_preserves_abandoned_branch	missing	-	baseline
+tests/test_chatgpt_export_importer.py::function::_message	skipped	spec/chronicle_packs/chatgpt_export_spec.cr	branched_conversation fixture inlines messages
+tests/test_chatgpt_export_importer.py::function::_write_branching_export	skipped	spec/chronicle_packs/chatgpt_export_spec.cr	write_export fixture creates conversations.json ZIP
+tests/test_chatgpt_export_importer.py::function::metadata	skipped	spec/chronicle_packs/chatgpt_export_spec.cr	by_node metadata fixture mapping
+tests/test_chatgpt_export_importer.py::test::test_chatgpt_tree_marks_current_leaf_path_and_preserves_abandoned_branch	ported	spec/chronicle_packs/chatgpt_export_spec.cr	canonical path, abandoned correction, evidence, and replay assertions
 tests/test_claude_export_importer.py::function::_conversation	missing	-	baseline
 tests/test_claude_export_importer.py::function::_flat_export	missing	-	baseline
 tests/test_claude_export_importer.py::function::_message	missing	-	baseline
