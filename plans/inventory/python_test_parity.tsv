@@ -401,7 +401,7 @@ tests/test_memory_embedding_seam.py::test::test_p10_memory_round_trip_replays_wi
 tests/test_memory_embedding_seam.py::test::test_p10_without_runtime_provider_legacy_embedder_still_works	missing	-	baseline
 tests/test_memory_embedding_seam.py::test::test_pack_embedders_satisfy_runtime_protocol	missing	-	baseline
 tests/test_memory_embedding_seam.py::test::test_vector_path_ranks_by_cosine	missing	-	baseline
-tests/test_memory_query_resolver.py::test::test_evidence_floor_precedes_derived_memory_and_is_subject_scoped	missing	-	baseline
+tests/test_memory_query_resolver.py::test::test_evidence_floor_precedes_derived_memory_and_is_subject_scoped	ported	spec/chronicle_packs/memory_gateway_resolve_spec.cr	owner evidence precedes derived memory, outcome-supported trust, and subject isolation
 tests/test_memory_retrieval_quality.py::class::OrthogonalEmbedder	missing	-	baseline
 tests/test_memory_retrieval_quality.py::class::SynonymEmbedder	missing	-	baseline
 tests/test_memory_retrieval_quality.py::const::DEFAULT_MIN_SCORE	missing	-	baseline
