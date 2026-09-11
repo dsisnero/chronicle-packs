@@ -80,7 +80,7 @@ describe Chronicle::Packs::Fixtures do
       result["terminal_outcome"].as_s.should eq("outcome.helped")
       result["interaction_utc_dates"].as_a.map(&.as_s).should eq(["2026-07-09", "2026-07-10"])
       memory = result["memory"].as_h
-      memory["demoted_multiplier"].as_f.should be < 1.0
+      memory["demoted_multiplier"].as_f.should eq(0.1)
       memory["restored_multiplier"].as_f.should eq(1.0)
     end
   end
