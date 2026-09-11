@@ -192,6 +192,54 @@ describe Chronicle::Packs::ClaudeExport do
       end
     end
 
+    it "detects a ZIP export by magic bytes even without a zip suffix" do
+      with_temp_dir do |base|
+        archive = base / "claude-export.zip"
+        write_zip_export(archive, flat_conversations)
+        disguised = base / "claude-export-download"
+        File.write(disguised, File.read(archive))
+        store = base / "replay-magic"
+        with_claude_runtime(artifact_store_dir: store.to_s) do |_store, graph, runtime|
+          result = Chronicle::Packs::ClaudeExport.import_claude_export_fn(
+            graph, disguised.to_s, "surface_claude_magic", artifact_store_dir: store.to_s)
+          runtime.run_until_idle
+          result["ok"].as_bool.should be_true
+          result["imported"].as_i.should eq(3)
+          graph.objects(type: "acquired_item").each do |item|
+            JSON.parse(item.data)["source_ref"].as_s.should contain("!/conversations.json")
+          end
+        end
+      end
+    end
+
+    it "re-emits acquired items while keeping evidence identity stable on reimport" do
+      with_temp_dir do |base|
+        archive = base / "claude-export.zip"
+        write_zip_export(archive, flat_conversations)
+        store = base / "replay-reimport"
+        with_claude_runtime(artifact_store_dir: store.to_s) do |_store, graph, runtime|
+          first = Chronicle::Packs::ClaudeExport.import_claude_export_fn(
+            graph, archive.to_s, "surface_claude_reimport", artifact_store_dir: store.to_s)
+          runtime.run_until_idle
+          second = Chronicle::Packs::ClaudeExport.import_claude_export_fn(
+            graph, archive.to_s, "surface_claude_reimport", artifact_store_dir: store.to_s)
+          runtime.run_until_idle
+
+          first["ok"].as_bool.should be_true
+          second["ok"].as_bool.should be_true
+          graph.objects(type: "acquired_item").size.should eq(6)
+          evidence = graph.objects(type: "activity_evidence")
+          evidence.size.should eq(3)
+          evidence.each do |item|
+            data = JSON.parse(item.data)
+            data["revision_number"].as_i.should eq(1)
+            data["status"].as_s.should eq("current")
+          end
+          graph.objects(type: "backfill_cursor").size.should eq(1)
+        end
+      end
+    end
+
     it "isolates a malformed conversation and keeps valid siblings" do
       with_temp_dir do |base|
         archive = base / "claude-export.zip"

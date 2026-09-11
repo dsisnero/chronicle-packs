@@ -110,18 +110,18 @@ tests/test_chatgpt_export_importer.py::function::_message	skipped	spec/chronicle
 tests/test_chatgpt_export_importer.py::function::_write_branching_export	skipped	spec/chronicle_packs/chatgpt_export_spec.cr	write_export fixture creates conversations.json ZIP
 tests/test_chatgpt_export_importer.py::function::metadata	skipped	spec/chronicle_packs/chatgpt_export_spec.cr	by_node metadata fixture mapping
 tests/test_chatgpt_export_importer.py::test::test_chatgpt_tree_marks_current_leaf_path_and_preserves_abandoned_branch	ported	spec/chronicle_packs/chatgpt_export_spec.cr	canonical path, abandoned correction, evidence, and replay assertions
-tests/test_claude_export_importer.py::function::_conversation	missing	-	baseline
-tests/test_claude_export_importer.py::function::_flat_export	missing	-	baseline
-tests/test_claude_export_importer.py::function::_message	missing	-	baseline
-tests/test_claude_export_importer.py::function::_runtime	missing	-	baseline
-tests/test_claude_export_importer.py::function::_write_bare_export	missing	-	baseline
-tests/test_claude_export_importer.py::function::_write_zip_export	missing	-	baseline
-tests/test_claude_export_importer.py::test::test_bare_conversations_json_and_magic_detection	missing	-	baseline
-tests/test_claude_export_importer.py::test::test_claude_zip_flat_transcript_emits_paired_records_and_evidence	missing	-	baseline
+tests/test_claude_export_importer.py::function::_conversation	skipped	spec/chronicle_packs/claude_export_spec.cr	flat_conversations fixture
+tests/test_claude_export_importer.py::function::_flat_export	skipped	spec/chronicle_packs/claude_export_spec.cr	flat_conversations fixture
+tests/test_claude_export_importer.py::function::_message	skipped	spec/chronicle_packs/claude_export_spec.cr	fixture message hashes
+tests/test_claude_export_importer.py::function::_runtime	skipped	spec/chronicle_packs/claude_export_spec.cr	with_claude_runtime fixture
+tests/test_claude_export_importer.py::function::_write_bare_export	skipped	spec/chronicle_packs/claude_export_spec.cr	inline JSON snapshot write
+tests/test_claude_export_importer.py::function::_write_zip_export	skipped	spec/chronicle_packs/claude_export_spec.cr	write_zip_export fixture
+tests/test_claude_export_importer.py::test::test_bare_conversations_json_and_magic_detection	ported	spec/chronicle_packs/claude_export_spec.cr	bare JSON and ZIP magic-byte import paths
+tests/test_claude_export_importer.py::test::test_claude_zip_flat_transcript_emits_paired_records_and_evidence	ported	spec/chronicle_packs/claude_export_spec.cr	flat transcript, paired acquisition, evidence, and replay assertions
 tests/test_claude_export_importer.py::test::test_conversation_and_message_bounds_stop_without_partial_emission	missing	-	baseline
-tests/test_claude_export_importer.py::test::test_identical_reimport_reemits_items_but_evidence_identity_is_stable	missing	-	baseline
+tests/test_claude_export_importer.py::test::test_identical_reimport_reemits_items_but_evidence_identity_is_stable	ported	spec/chronicle_packs/claude_export_spec.cr	acquisition re-emission with stable evidence revisions
 tests/test_claude_export_importer.py::test::test_is_fixture_flag_propagates_to_content_and_evidence	missing	-	baseline
-tests/test_claude_export_importer.py::test::test_malformed_conversation_is_skipped_whole_and_siblings_survive	missing	-	baseline
+tests/test_claude_export_importer.py::test::test_malformed_conversation_is_skipped_whole_and_siblings_survive	ported	spec/chronicle_packs/claude_export_spec.cr	invalid conversation isolation retains valid siblings
 tests/test_claude_export_importer.py::test::test_provider_time_normalization	missing	-	baseline
 tests/test_claude_export_importer.py::test::test_replay_modes_and_artifact_hash_match	missing	-	baseline
 tests/test_claude_export_importer.py::test::test_unknown_blocks_are_omitted_and_plain_text_field_is_fallback	missing	-	baseline
