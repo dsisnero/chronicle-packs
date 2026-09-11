@@ -221,6 +221,37 @@ describe Chronicle::Packs::ClaudeExport do
       end
     end
 
+    it "omits unknown blocks, falls back to text, and timestamps an empty message from its conversation" do
+      with_temp_dir do |base|
+        conversation = {
+          "uuid" => JSON::Any.new("conversation-content"), "name" => JSON::Any.new("Content shapes"),
+          "created_at" => JSON::Any.new("2026-01-05T09:00:00.000000+00:00"),
+          "updated_at" => JSON::Any.new("2026-01-05T09:05:00.000000+00:00"),
+          "chat_messages" => JSON::Any.new([
+            JSON::Any.new({"uuid" => JSON::Any.new("msg-blocks"), "sender" => JSON::Any.new("human"), "created_at" => JSON::Any.new("2026-01-05T09:00:00.000000+00:00"), "text" => JSON::Any.new("ignored"), "content" => JSON::Any.new([JSON::Any.new({"type" => JSON::Any.new("text"), "text" => JSON::Any.new("Run the report.")}), JSON::Any.new({"type" => JSON::Any.new("tool_use")}), JSON::Any.new({"type" => JSON::Any.new("tool_result")})])}),
+            JSON::Any.new({"uuid" => JSON::Any.new("msg-legacy"), "sender" => JSON::Any.new("assistant"), "created_at" => JSON::Any.new("2026-01-05T09:01:00.000000+00:00"), "text" => JSON::Any.new("Legacy text.")}),
+            JSON::Any.new({"uuid" => JSON::Any.new("msg-empty"), "sender" => JSON::Any.new("assistant"), "content" => JSON::Any.new(nil), "text" => JSON::Any.new(nil)}),
+          ]),
+        }
+        archive = base / "claude-content.zip"
+        write_zip_export(archive, [conversation])
+        with_claude_runtime do |_store, graph, rt|
+          Chronicle::Packs::ClaudeExport.import_claude_export_fn(graph, archive.to_s, "surface_content", replay_mode: "inline")
+          rt.run_until_idle
+          contents = graph.objects(type: "acquired_content").to_h do |obj|
+            data = JSON.parse(obj.data); {data["normalized_metadata"].as_h["message_uuid"].as_s, data}
+          end
+          contents["msg-blocks"]["normalized_content"].as_s.should eq("Run the report.\n[tool_use content omitted]\n[tool_result content omitted]")
+          contents["msg-blocks"]["normalized_metadata"].as_h["block_count"].as_i.should eq(3)
+          contents["msg-legacy"]["normalized_content"].as_s.should eq("Legacy text.")
+          contents["msg-legacy"]["normalized_metadata"].as_h["content_source"].as_s.should eq("text_field")
+          contents["msg-empty"]["normalized_content"].as_s.should eq("")
+          contents["msg-empty"]["normalized_metadata"].as_h["content_source"].as_s.should eq("empty")
+          contents["msg-empty"]["normalized_metadata"].as_h["provider_time"].as_s.should eq("2026-01-05T09:05:00.000000+00:00")
+        end
+      end
+    end
+
     it "re-emits acquired items while keeping evidence identity stable on reimport" do
       with_temp_dir do |base|
         archive = base / "claude-export.zip"

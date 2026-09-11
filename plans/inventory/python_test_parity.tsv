@@ -124,7 +124,7 @@ tests/test_claude_export_importer.py::test::test_is_fixture_flag_propagates_to_c
 tests/test_claude_export_importer.py::test::test_malformed_conversation_is_skipped_whole_and_siblings_survive	ported	spec/chronicle_packs/claude_export_spec.cr	invalid conversation isolation retains valid siblings
 tests/test_claude_export_importer.py::test::test_provider_time_normalization	ported	spec/chronicle_packs/claude_export_spec.cr	whitespace ISO and numeric epoch normalize to provider-time wire values
 tests/test_claude_export_importer.py::test::test_replay_modes_and_artifact_hash_match	ported	spec/chronicle_packs/claude_export_spec.cr	artifact hash plus inline and reference-only replay modes
-tests/test_claude_export_importer.py::test::test_unknown_blocks_are_omitted_and_plain_text_field_is_fallback	missing	-	baseline
+tests/test_claude_export_importer.py::test::test_unknown_blocks_are_omitted_and_plain_text_field_is_fallback	ported	spec/chronicle_packs/claude_export_spec.cr	mixed blocks, legacy text fallback, empty content, and conversation timestamp fallback
 tests/test_communication_followups.py::function::_annotation	missing	-	baseline
 tests/test_communication_followups.py::function::_build	missing	-	baseline
 tests/test_communication_followups.py::function::_evidence	missing	-	baseline
