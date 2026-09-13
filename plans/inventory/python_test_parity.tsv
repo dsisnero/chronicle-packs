@@ -489,19 +489,19 @@ tests/test_provider_compat.py::test::test_runtime_owns_reasoning_family_params	s
 tests/test_provider_compat.py::test::test_terminal_errors_are_no_longer_network_flakes	ported	lib/chronicle/spec/chronicle/wire_spec.cr	Chronicle Wire classifies auth/request terminal and rate/network transient failures
 tests/test_provider_compat.py::test::test_unmapped_response_names_pass_through	ported	lib/chronicle/spec/chronicle/wire_spec.cr	Unmapped wire names pass through for runtime unknown-tool handling
 tests/test_provider_compat.py::test::test_wire_safe_names_pass_through_unchanged	ported	lib/chronicle/spec/chronicle/wire_spec.cr	Wire-safe names remain unchanged
-tests/test_public_presence.py::const::HANDLES	missing	-	baseline
-tests/test_public_presence.py::const::PAGES	missing	-	baseline
-tests/test_public_presence.py::function::_build	missing	-	baseline
-tests/test_public_presence.py::function::_fake_fetch	missing	-	baseline
-tests/test_public_presence.py::function::stub_fetch	missing	-	baseline
-tests/test_public_presence.py::test::test_annotations_flow_from_presence_evidence	missing	-	baseline
-tests/test_public_presence.py::test::test_budget_is_hard_and_overflow_is_logged	missing	-	baseline
-tests/test_public_presence.py::test::test_every_fetch_is_a_recorded_governed_call	missing	-	baseline
-tests/test_public_presence.py::test::test_failed_fetch_records_failure_not_partial_evidence	missing	-	baseline
-tests/test_public_presence.py::test::test_hostile_page_is_flagged_and_inert	missing	-	baseline
-tests/test_public_presence.py::test::test_html_to_text_strips_scripts_and_collapses_whitespace	missing	-	baseline
-tests/test_public_presence.py::test::test_plan_is_deterministic_and_logs_unfetchables	missing	-	baseline
-tests/test_public_presence.py::test::test_rerun_same_inputs_adds_no_evidence	missing	-	baseline
+tests/test_public_presence.py::const::HANDLES	skipped	spec/chronicle_packs/public_presence_spec.cr	Crystal fixture support keeps the upstream handles as typed JSON::Any values
+tests/test_public_presence.py::const::PAGES	skipped	spec/chronicle_packs/public_presence_spec.cr	Crystal fixture support supplies the upstream canned pages without a Python module constant
+tests/test_public_presence.py::function::_build	skipped	spec/chronicle_packs/public_presence_spec.cr	with_presence_runtime absorbs the upstream graph/runtime builder
+tests/test_public_presence.py::function::_fake_fetch	skipped	spec/chronicle_packs/public_presence_spec.cr	register_stub_fetch absorbs the upstream nested fake fetcher
+tests/test_public_presence.py::function::stub_fetch	skipped	spec/chronicle_packs/public_presence_spec.cr	register_stub_fetch replaces the Python pytest fixture
+tests/test_public_presence.py::test::test_annotations_flow_from_presence_evidence	ported	spec/chronicle_packs/public_presence_spec.cr	Focused Crystal runtime test proves presence evidence reaches entity annotations and profile candidates
+tests/test_public_presence.py::test::test_budget_is_hard_and_overflow_is_logged	ported	spec/chronicle_packs/public_presence_spec.cr	Focused Crystal runtime test asserts the budget of one logs two overflow entries
+tests/test_public_presence.py::test::test_every_fetch_is_a_recorded_governed_call	ported	spec/chronicle_packs/public_presence_spec.cr	Focused Crystal runtime test asserts R0 calls, approvals, results, and replay-retained evidence provenance
+tests/test_public_presence.py::test::test_failed_fetch_records_failure_not_partial_evidence	ported	spec/chronicle_packs/public_presence_spec.cr	Focused Crystal runtime test asserts acquisition-stage fetch_failed with only sibling evidence landed
+tests/test_public_presence.py::test::test_hostile_page_is_flagged_and_inert	ported	spec/chronicle_packs/public_presence_spec.cr	Focused Crystal runtime test asserts instruction_override remains inert and makes no extra calls
+tests/test_public_presence.py::test::test_html_to_text_strips_scripts_and_collapses_whitespace	ported	spec/chronicle_packs/public_presence_spec.cr	Focused Crystal unit test strips script content while retaining title and text
+tests/test_public_presence.py::test::test_plan_is_deterministic_and_logs_unfetchables	ported	spec/chronicle_packs/public_presence_spec.cr	Focused Crystal unit test checks deterministic plan repeat and unfetchable handle logging
+tests/test_public_presence.py::test::test_rerun_same_inputs_adds_no_evidence	ported	spec/chronicle_packs/public_presence_spec.cr	Focused Crystal runtime test retains evidence identities and revision one across a repeat
 tests/test_registration_check.py::class::_In	ported	spec/chronicle_packs/registration_check_spec.cr	input hash shape inlined
 tests/test_registration_check.py::function::_declaring_pack	ported	spec/chronicle_packs/registration_check_spec.cr::declaring_pack	-
 tests/test_registration_check.py::function::_noop	ported	spec/chronicle_packs/registration_check_spec.cr	noop fn inlined

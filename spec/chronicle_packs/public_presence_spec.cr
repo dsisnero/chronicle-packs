@@ -30,12 +30,13 @@ module PublicPresenceSpecSupport
     "company" => JSON::Any.new("Untapped Capital"),
   }
 
-  def with_presence_runtime(artifact_store_dir : String = ".activegraph/replay-artifacts", &)
+  def with_presence_runtime(artifact_store_dir : String = ".activegraph/replay-artifacts", with_semantic : Bool = false, &)
     store, graph, rt = PackSpecRuntime.runtime
     rt.load_pack(Chronicle::Packs::Core.pack).should be_true
     settings = Chronicle::Packs::ActivityNormalizer::ActivityNormalizerSettings.new(artifact_store_dir: artifact_store_dir)
     rt.load_pack(Chronicle::Packs::ActivityNormalizer.pack, JSON.parse(settings.to_json).as_h).should be_true
     rt.load_pack(Chronicle::Packs::ToolGateway.pack).should be_true
+    rt.load_pack(Chronicle::Packs::SemanticExtraction.pack).should be_true if with_semantic
     settings_p = Chronicle::Packs::PublicPresence::PublicPresenceSettings.new(artifact_store_dir: artifact_store_dir)
     rt.load_pack(Chronicle::Packs::PublicPresence.pack, JSON.parse(settings_p.to_json).as_h).should be_true
     yield store, graph, rt
@@ -106,12 +107,13 @@ describe Chronicle::Packs::PublicPresence do
   end
 
   describe "html_to_text" do
-    it "extracts text and title, dropping scripts/styles and collapsing whitespace" do
+    it "strips scripts and collapses whitespace" do
       text, title = Chronicle::Packs::PublicPresence.html_to_text(
-        "<html><head><title>Yohei (@yoheinakajima)</title><style>.x{}</style></head><body><p>VC by day.</p><p>Builder by night.</p></body></html>"
+        "<html><head><title>Yohei (@yoheinakajima)</title><script>alert('never seen')</script></head><body><div>Yohei Nakajima builds BabyAGI.</div></body></html>"
       )
       title.should eq("Yohei (@yoheinakajima)")
-      text.should eq("VC by day.\nBuilder by night.")
+      text.includes?("never seen").should be_false
+      text.should eq("Yohei Nakajima builds BabyAGI.")
     end
 
     it "passes plain text through unchanged" do
@@ -130,6 +132,7 @@ describe Chronicle::Packs::PublicPresence do
         {"site", "https://yoheinakajima.com"},
       ])
       skipped.any? { |s| s["key"] == JSON::Any.new("company") && s["reason"] == JSON::Any.new("no_fetch_strategy") }.should be_true
+      Chronicle::Packs::PublicPresence.plan_presence_urls(HANDLES).should eq({planned, skipped})
     end
   end
 
@@ -145,13 +148,22 @@ describe Chronicle::Packs::PublicPresence do
           result["proposed_calls"].as_i.should eq(3)
           result["skipped"].as_a.any? { |e| e.as_h["reason"].as_s == "no_fetch_strategy" }.should be_true
 
+          calls = graph.objects(type: "capability_call")
+          calls.size.should eq(3)
+          calls.all? { |call| JSON.parse(call.data)["action_class"].as_s == "R0" }.should be_true
           graph.objects(type: "capability_approval").size.should eq(3)
+          graph.objects(type: "capability_result").size.should eq(3)
+          run = graph.objects(type: "presence_bootstrap_run").first
+          JSON.parse(run.data)["call_ids"].should eq(result["call_ids"])
           evidences = graph.objects(type: "activity_evidence")
           evidences.size.should eq(3)
           evidences.each do |e|
             ed = JSON.parse(e.data)
             ed["source_surface_id"].as_s.should eq("public_presence")
             ed["replay_mode"].as_s.should eq("artifact")
+            ed["replay_payload_ref"].as_s.starts_with?("artifact://sha256/").should be_true
+            ed["importer_id"].as_s.should eq("public_presence")
+            ed["source_category"].as_s.should eq("local_knowledge")
           end
           flagged = evidences.select { |e| !JSON.parse(e.data)["normalized_metadata"].as_h["injection_flags"].as_a.empty? }
           flagged.size.should eq(1)
@@ -163,7 +175,11 @@ describe Chronicle::Packs::PublicPresence do
           rerun = Chronicle::Packs::PublicPresence.bootstrap_public_presence_fn(graph, HANDLES, is_fixture: true)
           rt.run_until_idle
           rerun["proposed_calls"].as_i.should eq(3)
-          graph.objects(type: "activity_evidence").size.should eq(3)
+          rerun_evidences = graph.objects(type: "activity_evidence")
+          rerun_evidences.size.should eq(3)
+          rerun_evidences.map { |e| JSON.parse(e.data)["evidence_identity"].as_s }.to_set.should eq(
+            evidences.map { |e| JSON.parse(e.data)["evidence_identity"].as_s }.to_set)
+          rerun_evidences.all? { |e| JSON.parse(e.data)["revision_number"].as_i == 1 }.should be_true
         end
       end
     end
@@ -174,14 +190,15 @@ describe Chronicle::Packs::PublicPresence do
         register_stub_fetch
         with_presence_runtime(artifact_store_dir: store.to_s) do |_store, graph, rt|
           result = Chronicle::Packs::PublicPresence.bootstrap_public_presence_fn(
-            graph, HANDLES, budget: 2, is_fixture: true)
+            graph, HANDLES, budget: 1, is_fixture: true)
           rt.run_until_idle
-          result["proposed_calls"].as_i.should eq(2)
-          result["skipped"].as_a.count { |e| e.as_h["reason"].as_s == "budget_exhausted" }.should eq(1)
-          graph.objects(type: "activity_evidence").size.should eq(2)
+          result["proposed_calls"].as_i.should eq(1)
+          result["skipped"].as_a.count { |e| e.as_h["reason"].as_s == "budget_exhausted" }.should eq(2)
+          graph.objects(type: "capability_call").size.should eq(1)
+          graph.objects(type: "activity_evidence").size.should eq(1)
           run = graph.objects(type: "presence_bootstrap_run").first
-          JSON.parse(run.data)["budget"].as_i.should eq(2)
-          JSON.parse(run.data)["call_ids"].as_a.size.should eq(2)
+          JSON.parse(run.data)["budget"].as_i.should eq(1)
+          JSON.parse(run.data)["call_ids"].as_a.size.should eq(1)
         end
       end
     end
@@ -198,6 +215,7 @@ describe Chronicle::Packs::PublicPresence do
           failures = graph.objects(type: "ingestion_failure")
           failures.size.should eq(1)
           JSON.parse(failures.first.data)["error_code"].as_s.should eq("fetch_failed")
+          JSON.parse(failures.first.data)["stage"].as_s.should eq("acquisition")
           graph.objects(type: "activity_evidence").size.should eq(1)
         end
       end
@@ -207,6 +225,42 @@ describe Chronicle::Packs::PublicPresence do
       with_presence_runtime do |_store, graph, _rt|
         expect_raises(Chronicle::Packs::PackError, /budget must be >= 1/) do
           Chronicle::Packs::PublicPresence.bootstrap_public_presence_fn(graph, {} of String => JSON::Any, budget: 0)
+        end
+      end
+    end
+
+    it "flags hostile content without escalating its proposed calls" do
+      with_temp_dir do |base|
+        store = base / "artifacts"
+        register_stub_fetch
+        with_presence_runtime(artifact_store_dir: store.to_s, with_semantic: true) do |_store, graph, rt|
+          Chronicle::Packs::PublicPresence.bootstrap_public_presence_fn(graph, HANDLES, is_fixture: true)
+          rt.run_until_idle
+
+          flagged = graph.objects(type: "activity_evidence").select do |e|
+            JSON.parse(e.data)["normalized_metadata"].as_h["injection_flags"].as_a.any?
+          end
+          flagged.size.should eq(1)
+          JSON.parse(flagged.first.data)["normalized_metadata"].as_h["injection_flags"].as_a.map(&.as_s).should contain("instruction_override")
+          calls = graph.objects(type: "capability_call")
+          calls.size.should eq(3)
+          calls.all? { |call| JSON.parse(call.data)["proposed_by"].as_s == "public_presence.bootstrap" }.should be_true
+        end
+      end
+    end
+
+    it "flows presence evidence into semantic annotations" do
+      with_temp_dir do |base|
+        store = base / "artifacts"
+        register_stub_fetch
+        with_presence_runtime(artifact_store_dir: store.to_s, with_semantic: true) do |_store, graph, rt|
+          Chronicle::Packs::PublicPresence.bootstrap_public_presence_fn(graph, HANDLES, is_fixture: true)
+          rt.run_until_idle
+
+          annotations = graph.objects(type: "semantic_annotation")
+          annotations.should_not be_empty
+          annotations.map { |item| JSON.parse(item.data)["facet"].as_s }.should contain("entity_mention")
+          graph.objects(type: "profile_candidate").should_not be_empty
         end
       end
     end
