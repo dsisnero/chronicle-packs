@@ -402,26 +402,26 @@ tests/test_memory_embedding_seam.py::test::test_p10_without_runtime_provider_leg
 tests/test_memory_embedding_seam.py::test::test_pack_embedders_satisfy_runtime_protocol	missing	-	baseline
 tests/test_memory_embedding_seam.py::test::test_vector_path_ranks_by_cosine	missing	-	baseline
 tests/test_memory_query_resolver.py::test::test_evidence_floor_precedes_derived_memory_and_is_subject_scoped	ported	spec/chronicle_packs/memory_gateway_resolve_spec.cr	owner evidence precedes derived memory, outcome-supported trust, and subject isolation
-tests/test_memory_retrieval_quality.py::class::OrthogonalEmbedder	missing	-	baseline
-tests/test_memory_retrieval_quality.py::class::SynonymEmbedder	missing	-	baseline
-tests/test_memory_retrieval_quality.py::const::DEFAULT_MIN_SCORE	missing	-	baseline
-tests/test_memory_retrieval_quality.py::const::REPORT_FAILURES	missing	-	baseline
-tests/test_memory_retrieval_quality.py::const::REPORT_MEMORY	missing	-	baseline
-tests/test_memory_retrieval_quality.py::const::REPORT_PASSES	missing	-	baseline
-tests/test_memory_retrieval_quality.py::const::SYNONYMS	missing	-	baseline
-tests/test_memory_retrieval_quality.py::function::_backend_with_report_memory	missing	-	baseline
-tests/test_memory_retrieval_quality.py::function::_lexical_default	missing	-	baseline
-tests/test_memory_retrieval_quality.py::method::OrthogonalEmbedder.__init__	missing	-	baseline
-tests/test_memory_retrieval_quality.py::method::OrthogonalEmbedder.embed	missing	-	baseline
-tests/test_memory_retrieval_quality.py::method::SynonymEmbedder.embed	missing	-	baseline
-tests/test_memory_retrieval_quality.py::test::test_coverage_ranks_fuller_matches_higher	missing	-	baseline
-tests/test_memory_retrieval_quality.py::test::test_embedding_recovers_rephrasing_lexical_misses	missing	-	baseline
-tests/test_memory_retrieval_quality.py::test::test_hybrid_takes_strongest_signal	missing	-	baseline
-tests/test_memory_retrieval_quality.py::test::test_keyword_recall_survives_embedder	missing	-	baseline
-tests/test_memory_retrieval_quality.py::test::test_lexical_score_shape	missing	-	baseline
-tests/test_memory_retrieval_quality.py::test::test_report_failure_cases_now_recall	missing	-	baseline
-tests/test_memory_retrieval_quality.py::test::test_report_passing_cases_still_recall	missing	-	baseline
-tests/test_memory_retrieval_quality.py::test::test_unrelated_memory_stays_below_threshold	missing	-	baseline
+tests/test_memory_retrieval_quality.py::class::OrthogonalEmbedder	skipped	spec/chronicle_packs/memory_retrieval_quality_spec.cr	Typed Crystal OrthogonalEmbedder fixture replaces Python protocol double
+tests/test_memory_retrieval_quality.py::class::SynonymEmbedder	skipped	spec/chronicle_packs/memory_retrieval_quality_spec.cr	Typed Crystal SynonymEmbedder fixture replaces HashEmbedder subclass
+tests/test_memory_retrieval_quality.py::const::DEFAULT_MIN_SCORE	skipped	spec/chronicle_packs/memory_retrieval_quality_spec.cr	Crystal report threshold constant is in MemoryRetrievalQualitySupport
+tests/test_memory_retrieval_quality.py::const::REPORT_FAILURES	skipped	spec/chronicle_packs/memory_retrieval_quality_spec.cr	Failure queries are asserted directly in the Crystal characterization
+tests/test_memory_retrieval_quality.py::const::REPORT_MEMORY	skipped	spec/chronicle_packs/memory_retrieval_quality_spec.cr	Crystal report fixture constant is in MemoryRetrievalQualitySupport
+tests/test_memory_retrieval_quality.py::const::REPORT_PASSES	skipped	spec/chronicle_packs/memory_retrieval_quality_spec.cr	Passing queries are asserted directly in the Crystal characterization
+tests/test_memory_retrieval_quality.py::const::SYNONYMS	skipped	spec/chronicle_packs/memory_retrieval_quality_spec.cr	Synonym map is internal to the typed Crystal fixture
+tests/test_memory_retrieval_quality.py::function::_backend_with_report_memory	skipped	spec/chronicle_packs/memory_retrieval_quality_spec.cr	Graph runtime helper plus add_memory replaces SQLite fixture construction
+tests/test_memory_retrieval_quality.py::function::_lexical_default	skipped	spec/chronicle_packs/memory_retrieval_quality_spec.cr	with_memory_runtime ensure block resets legacy embedding seams
+tests/test_memory_retrieval_quality.py::method::OrthogonalEmbedder.__init__	skipped	spec/chronicle_packs/memory_retrieval_quality_spec.cr	Crystal typed fixture initializes its seen-vector map at declaration
+tests/test_memory_retrieval_quality.py::method::OrthogonalEmbedder.embed	skipped	spec/chronicle_packs/memory_retrieval_quality_spec.cr	Typed Crystal fixture emits deterministic orthogonal vectors
+tests/test_memory_retrieval_quality.py::method::SynonymEmbedder.embed	skipped	spec/chronicle_packs/memory_retrieval_quality_spec.cr	Typed Crystal fixture folds synonyms before HashEmbedder vectors
+tests/test_memory_retrieval_quality.py::test::test_coverage_ranks_fuller_matches_higher	ported	spec/chronicle_packs/memory_retrieval_quality_spec.cr	full lexical coverage outranks partial lexical coverage
+tests/test_memory_retrieval_quality.py::test::test_embedding_recovers_rephrasing_lexical_misses	ported	spec/chronicle_packs/memory_retrieval_quality_spec.cr	synonym vector path recalls a zero-overlap rephrasing
+tests/test_memory_retrieval_quality.py::test::test_hybrid_takes_strongest_signal	ported	spec/chronicle_packs/memory_retrieval_quality_spec.cr	hybrid raw score never undercuts lexical score
+tests/test_memory_retrieval_quality.py::test::test_keyword_recall_survives_embedder	ported	spec/chronicle_packs/memory_retrieval_quality_spec.cr	orthogonal vectors do not suppress exact-keyword recall
+tests/test_memory_retrieval_quality.py::test::test_lexical_score_shape	ported	spec/chronicle_packs/memory_retrieval_quality_spec.cr	coverage, Jaccard, stopword, and degenerate lexical-score contract
+tests/test_memory_retrieval_quality.py::test::test_report_failure_cases_now_recall	ported	spec/chronicle_packs/memory_retrieval_quality_spec.cr	all documented natural-language and keyword misses recall at default threshold
+tests/test_memory_retrieval_quality.py::test::test_report_passing_cases_still_recall	ported	spec/chronicle_packs/memory_retrieval_quality_spec.cr	previously successful report queries remain recalled
+tests/test_memory_retrieval_quality.py::test::test_unrelated_memory_stays_below_threshold	ported	spec/chronicle_packs/memory_retrieval_quality_spec.cr	coverage recall does not admit unrelated memory
 tests/test_memory_subject_scoping.py::class::_Graph	skipped	spec/chronicle_packs/memory_subject_scoping_spec.cr	Typed Chronicle graph replaces Python fake graph
 tests/test_memory_subject_scoping.py::class::_Obj	skipped	spec/chronicle_packs/memory_subject_scoping_spec.cr	Typed Chronicle graph object replaces Python fake object
 tests/test_memory_subject_scoping.py::function::_lexical_only	skipped	spec/chronicle_packs/memory_subject_scoping_spec.cr	No process-global Python embedder seam exists; graph backend remains lexical by default
