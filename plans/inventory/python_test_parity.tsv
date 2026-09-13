@@ -374,33 +374,33 @@ tests/test_memory_curation.py::test::test_third_party_email_guidance_rejected_wi
 tests/test_memory_curation.py::test::test_trusted_sender_email_guidance_admitted	ported	src/chronicle_packs/memory_gateway/behaviors.cr::_provenance_verdict	Trusted principal guidance is eligible for normal threshold evaluation
 tests/test_memory_curation.py::test::test_unverified_public_evidence_requires_review_even_without_sender	ported	src/chronicle_packs/memory_gateway/behaviors.cr::candidate_evaluator	Review-required provenance produces a requires_review evaluation without a memory item
 tests/test_memory_curation.py::test::test_without_identity_admission_is_unchanged	ported	src/chronicle_packs/memory_gateway/behaviors.cr::_provenance_verdict	No-principal state gracefully preserves admission because provenance cannot be verified
-tests/test_memory_embedding_seam.py::class::BrokenEmbedder	missing	-	baseline
-tests/test_memory_embedding_seam.py::class::CountingProvider	missing	-	baseline
-tests/test_memory_embedding_seam.py::class::FakeEmbedder	missing	-	baseline
-tests/test_memory_embedding_seam.py::class::PoisonProvider	missing	-	baseline
-tests/test_memory_embedding_seam.py::const::VOCAB	missing	-	baseline
-tests/test_memory_embedding_seam.py::function::_boom	missing	-	baseline
-tests/test_memory_embedding_seam.py::function::_memory_runtime	missing	-	baseline
-tests/test_memory_embedding_seam.py::function::_reset_embedder	missing	-	baseline
-tests/test_memory_embedding_seam.py::function::_retrieve	missing	-	baseline
-tests/test_memory_embedding_seam.py::function::_store_one_memory	missing	-	baseline
-tests/test_memory_embedding_seam.py::function::counting_legacy	missing	-	baseline
-tests/test_memory_embedding_seam.py::method::BrokenEmbedder.embed	missing	-	baseline
-tests/test_memory_embedding_seam.py::method::CountingProvider.__init__	missing	-	baseline
-tests/test_memory_embedding_seam.py::method::CountingProvider.embed	missing	-	baseline
-tests/test_memory_embedding_seam.py::method::FakeEmbedder.embed	missing	-	baseline
-tests/test_memory_embedding_seam.py::method::PoisonProvider.embed	missing	-	baseline
-tests/test_memory_embedding_seam.py::test::test_auto_configure_uses_factory_when_available	missing	-	baseline
-tests/test_memory_embedding_seam.py::test::test_auto_configure_without_key_stays_lexical	missing	-	baseline
-tests/test_memory_embedding_seam.py::test::test_items_are_embedded_at_write_time	missing	-	baseline
-tests/test_memory_embedding_seam.py::test::test_lexical_fallback_for_unembedded_items	missing	-	baseline
-tests/test_memory_embedding_seam.py::test::test_misbehaving_embedder_degrades_to_lexical	missing	-	baseline
-tests/test_memory_embedding_seam.py::test::test_no_embedder_is_pure_lexical	missing	-	baseline
-tests/test_memory_embedding_seam.py::test::test_p10_first_party_embedding_is_runtime_recorded	missing	-	baseline
-tests/test_memory_embedding_seam.py::test::test_p10_memory_round_trip_replays_with_zero_external_contact	missing	-	baseline
-tests/test_memory_embedding_seam.py::test::test_p10_without_runtime_provider_legacy_embedder_still_works	missing	-	baseline
-tests/test_memory_embedding_seam.py::test::test_pack_embedders_satisfy_runtime_protocol	missing	-	baseline
-tests/test_memory_embedding_seam.py::test::test_vector_path_ranks_by_cosine	missing	-	baseline
+tests/test_memory_embedding_seam.py::class::BrokenEmbedder	skipped	spec/chronicle_packs/memory_embedders_spec.cr	FailingEmbedder is the typed Crystal failure fixture
+tests/test_memory_embedding_seam.py::class::CountingProvider	skipped	spec/chronicle_packs/memory_embedders_spec.cr	CountingEmbedder is the typed Crystal recorded-provider fixture
+tests/test_memory_embedding_seam.py::class::FakeEmbedder	skipped	spec/chronicle_packs/memory_embedders_spec.cr	HashEmbedder and SynonymEmbedder are typed Crystal fixtures
+tests/test_memory_embedding_seam.py::class::PoisonProvider	skipped	spec/chronicle_packs/memory_embedders_spec.cr	OtherSpaceEmbedder tests incompatible-vector behavior
+tests/test_memory_embedding_seam.py::const::VOCAB	skipped	spec/chronicle_packs/memory_embedders_spec.cr	Crystal embedder fixtures hold deterministic vocabularies internally
+tests/test_memory_embedding_seam.py::function::_boom	skipped	spec/chronicle_packs/memory_embedders_spec.cr	FailingEmbedder raises directly
+tests/test_memory_embedding_seam.py::function::_memory_runtime	skipped	spec/chronicle_packs/memory_embedders_spec.cr	EmbeddingSupport.with_memory_runtime replaces Python fixture
+tests/test_memory_embedding_seam.py::function::_reset_embedder	skipped	spec/chronicle_packs/memory_embedders_spec.cr	EmbeddingSupport.reset_seams owns cleanup
+tests/test_memory_embedding_seam.py::function::_retrieve	skipped	spec/chronicle_packs/memory_embedders_spec.cr	Crystal specs call retrieve_memories_fn directly
+tests/test_memory_embedding_seam.py::function::_store_one_memory	skipped	spec/chronicle_packs/memory_embedders_spec.cr	EmbeddingSupport.add_candidate plus runtime writer replaces helper
+tests/test_memory_embedding_seam.py::function::counting_legacy	skipped	spec/chronicle_packs/memory_embedders_spec.cr	CountingEmbedder supplies the legacy seam fixture
+tests/test_memory_embedding_seam.py::method::BrokenEmbedder.embed	skipped	spec/chronicle_packs/memory_embedders_spec.cr	FailingEmbedder#embed supplies the failure seam
+tests/test_memory_embedding_seam.py::method::CountingProvider.__init__	skipped	spec/chronicle_packs/memory_embedders_spec.cr	Crystal typed fixture initializes invocation state declaratively
+tests/test_memory_embedding_seam.py::method::CountingProvider.embed	skipped	spec/chronicle_packs/memory_embedders_spec.cr	CountingEmbedder#embed verifies idempotent provider contact
+tests/test_memory_embedding_seam.py::method::FakeEmbedder.embed	skipped	spec/chronicle_packs/memory_embedders_spec.cr	Typed Crystal embedders implement Embedder#embed
+tests/test_memory_embedding_seam.py::method::PoisonProvider.embed	skipped	spec/chronicle_packs/memory_embedders_spec.cr	OtherSpaceEmbedder verifies incompatible-vector fallback
+tests/test_memory_embedding_seam.py::test::test_auto_configure_uses_factory_when_available	ported	spec/chronicle_packs/memory_embedders_spec.cr	legacy factory configures direct embedder seam
+tests/test_memory_embedding_seam.py::test::test_auto_configure_without_key_stays_lexical	ported	spec/chronicle_packs/memory_embedders_spec.cr	missing-key factory returns lexical mode
+tests/test_memory_embedding_seam.py::test::test_items_are_embedded_at_write_time	ported	spec/chronicle_packs/memory_embedders_spec.cr	write-time vector and embedding-space persistence
+tests/test_memory_embedding_seam.py::test::test_lexical_fallback_for_unembedded_items	ported	spec/chronicle_packs/memory_embedders_spec.cr	unembedded items remain lexically retrievable
+tests/test_memory_embedding_seam.py::test::test_misbehaving_embedder_degrades_to_lexical	ported	spec/chronicle_packs/memory_embedders_spec.cr	provider failure degrades safely to lexical recall
+tests/test_memory_embedding_seam.py::test::test_no_embedder_is_pure_lexical	ported	spec/chronicle_packs/memory_embedders_spec.cr	no configured embedder uses pure lexical recall
+tests/test_memory_embedding_seam.py::test::test_p10_first_party_embedding_is_runtime_recorded	ported	spec/chronicle_packs/memory_embedders_spec.cr	recorded service persists request/responded events and vectors
+tests/test_memory_embedding_seam.py::test::test_p10_memory_round_trip_replays_with_zero_external_contact	ported	spec/chronicle_packs/memory_embedders_spec.cr	idempotency replay avoids second provider contact
+tests/test_memory_embedding_seam.py::test::test_p10_without_runtime_provider_legacy_embedder_still_works	ported	spec/chronicle_packs/memory_embedders_spec.cr	legacy direct seam remains supported
+tests/test_memory_embedding_seam.py::test::test_pack_embedders_satisfy_runtime_protocol	ported	spec/chronicle_packs/memory_embedders_spec.cr	HashEmbedder and OpenAIEmbedder satisfy typed protocol
+tests/test_memory_embedding_seam.py::test::test_vector_path_ranks_by_cosine	ported	spec/chronicle_packs/memory_embedders_spec.cr	hybrid cosine signal improves rephrasing ranking
 tests/test_memory_query_resolver.py::test::test_evidence_floor_precedes_derived_memory_and_is_subject_scoped	ported	spec/chronicle_packs/memory_gateway_resolve_spec.cr	owner evidence precedes derived memory, outcome-supported trust, and subject isolation
 tests/test_memory_retrieval_quality.py::class::OrthogonalEmbedder	skipped	spec/chronicle_packs/memory_retrieval_quality_spec.cr	Typed Crystal OrthogonalEmbedder fixture replaces Python protocol double
 tests/test_memory_retrieval_quality.py::class::SynonymEmbedder	skipped	spec/chronicle_packs/memory_retrieval_quality_spec.cr	Typed Crystal SynonymEmbedder fixture replaces HashEmbedder subclass
