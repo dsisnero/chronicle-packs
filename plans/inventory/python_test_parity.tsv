@@ -315,28 +315,28 @@ tests/test_mcp_client.py::test::test_risk_overrides_promote_trusted_tools	missin
 tests/test_mcp_client.py::test::test_schema_model_from_json_schema	missing	-	baseline
 tests/test_mcp_client.py::test::test_schema_model_handles_empty_schema	missing	-	baseline
 tests/test_mcp_client.py::test::test_unreachable_server_is_recorded_not_fatal	missing	-	baseline
-tests/test_mcp_inbound.py::class::EchoInput	missing	-	baseline
-tests/test_mcp_inbound.py::const::AGENT	missing	-	baseline
-tests/test_mcp_inbound.py::const::OWNER	missing	-	baseline
-tests/test_mcp_inbound.py::const::TOKENS	missing	-	baseline
-tests/test_mcp_inbound.py::function::_rpc	missing	-	baseline
-tests/test_mcp_inbound.py::function::_text	missing	-	baseline
-tests/test_mcp_inbound.py::function::_tool_call	missing	-	baseline
-tests/test_mcp_inbound.py::function::chat_fn	missing	-	baseline
-tests/test_mcp_inbound.py::function::env	missing	-	baseline
-tests/test_mcp_inbound.py::function::memory_fn	missing	-	baseline
-tests/test_mcp_inbound.py::test::test_capability_call_runs_governed_path	missing	-	baseline
-tests/test_mcp_inbound.py::test::test_chat_and_memory_dispatch_for_owner	missing	-	baseline
-tests/test_mcp_inbound.py::test::test_default_exposure_owner_full_others_nothing	missing	-	baseline
-tests/test_mcp_inbound.py::test::test_exposure_grants_are_role_scoped	missing	-	baseline
-tests/test_mcp_inbound.py::test::test_exposure_seeding_is_idempotent_and_respects_edits	missing	-	baseline
-tests/test_mcp_inbound.py::test::test_handshake_is_open_but_carries_nothing	missing	-	baseline
-tests/test_mcp_inbound.py::test::test_high_risk_capability_is_held_then_approvable	missing	-	baseline
-tests/test_mcp_inbound.py::test::test_per_tool_exposure_overrides_generic_tools_gate	missing	-	baseline
-tests/test_mcp_inbound.py::test::test_refusals_and_grants_are_audited	missing	-	baseline
-tests/test_mcp_inbound.py::test::test_resolve_caller_matrix	missing	-	baseline
-tests/test_mcp_inbound.py::test::test_set_exposure_is_a_held_capability	missing	-	baseline
-tests/test_mcp_inbound.py::test::test_unverified_mode_treats_token_as_configured_role	missing	-	baseline
+tests/test_mcp_inbound.py::class::EchoInput	skipped	spec/chronicle_packs/mcp_spec.cr	Open MCP tool arguments use the Crystal JSON boundary
+tests/test_mcp_inbound.py::const::AGENT	skipped	spec/chronicle_packs/mcp_spec.cr	Crystal fixture uses the same collaborator identifier inline
+tests/test_mcp_inbound.py::const::OWNER	skipped	spec/chronicle_packs/mcp_spec.cr	Crystal fixture uses the owner identifier inline
+tests/test_mcp_inbound.py::const::TOKENS	skipped	spec/chronicle_packs/mcp_spec.cr	Crystal fixture uses typed MCPSettings token mappings
+tests/test_mcp_inbound.py::function::_rpc	skipped	spec/chronicle_packs/mcp_spec.cr	Crystal spec builds JSON-RPC request hashes inline
+tests/test_mcp_inbound.py::function::_text	skipped	spec/chronicle_packs/mcp_spec.cr	Crystal spec reads MCP content blocks directly
+tests/test_mcp_inbound.py::function::_tool_call	skipped	spec/chronicle_packs/mcp_spec.cr	Crystal spec builds tools/call request hashes inline
+tests/test_mcp_inbound.py::function::chat_fn	skipped	spec/chronicle_packs/mcp_spec.cr	Crystal fixture uses a typed chat callback
+tests/test_mcp_inbound.py::function::env	skipped	spec/chronicle_packs/mcp_spec.cr	MCP spec support owns the equivalent runtime fixture
+tests/test_mcp_inbound.py::function::memory_fn	skipped	spec/chronicle_packs/mcp_spec.cr	Crystal fixture uses a typed memory callback
+tests/test_mcp_inbound.py::test::test_capability_call_runs_governed_path	ported	spec/chronicle_packs/mcp_spec.cr	governed exposed capability path and audit provenance
+tests/test_mcp_inbound.py::test::test_chat_and_memory_dispatch_for_owner	ported	spec/chronicle_packs/mcp_spec.cr	owner chat and subject-scoped memory dispatch
+tests/test_mcp_inbound.py::test::test_default_exposure_owner_full_others_nothing	ported	spec/chronicle_packs/mcp_spec.cr	default owner-full exposure contract
+tests/test_mcp_inbound.py::test::test_exposure_grants_are_role_scoped	ported	spec/chronicle_packs/mcp_spec.cr	role-scoped exposure grants preserve caller identity
+tests/test_mcp_inbound.py::test::test_exposure_seeding_is_idempotent_and_respects_edits	ported	spec/chronicle_packs/mcp_spec.cr	idempotent seeding preserves operator edits
+tests/test_mcp_inbound.py::test::test_handshake_is_open_but_carries_nothing	ported	spec/chronicle_packs/mcp_spec.cr	open handshake exposes no tools
+tests/test_mcp_inbound.py::test::test_high_risk_capability_is_held_then_approvable	ported	spec/chronicle_packs/mcp_spec.cr	high-risk inbound capability hold and normal approval resolution
+tests/test_mcp_inbound.py::test::test_per_tool_exposure_overrides_generic_tools_gate	ported	spec/chronicle_packs/mcp_spec.cr	per-tool override beats generic tools exposure
+tests/test_mcp_inbound.py::test::test_refusals_and_grants_are_audited	ported	spec/chronicle_packs/mcp_spec.cr	grants and refusals create mcp_access audit rows
+tests/test_mcp_inbound.py::test::test_resolve_caller_matrix	ported	spec/chronicle_packs/mcp_spec.cr	Identity/Auth token caller matrix
+tests/test_mcp_inbound.py::test::test_set_exposure_is_a_held_capability	ported	spec/chronicle_packs/mcp_spec.cr	mcp.set_exposure stays held until owner approval
+tests/test_mcp_inbound.py::test::test_unverified_mode_treats_token_as_configured_role	ported	spec/chronicle_packs/mcp_spec.cr	configured token role and strict fail-closed option
 tests/test_memory_backend_registry.py::class::ExplodingClient	missing	-	baseline
 tests/test_memory_backend_registry.py::class::FakeBackend	missing	-	baseline
 tests/test_memory_backend_registry.py::class::FakeMem0Client	missing	-	baseline
