@@ -13,7 +13,7 @@ module MemoryRetrievalQualitySupport
   REPORT_MEMORY     = "my favorite color is teal and I run a bakery called Crumbtown"
   DEFAULT_MIN_SCORE = 0.2
 
-  class SynonymEmbedder < Chronicle::Packs::MemoryGateway::Embedder
+  class RetrievalQualitySynonymEmbedder < Chronicle::Packs::MemoryGateway::Embedder
     getter default_model : String = "synonyms"
 
     SYNONYMS = {"shop" => "bakery", "business" => "bakery", "hue" => "color"}
@@ -142,7 +142,7 @@ describe "memory retrieval quality" do
   it "recovers synonym rephrasing through embeddings without losing keyword recall" do
     with_retrieval_quality_runtime do |graph, rt|
       backend = Chronicle::Packs::MemoryGateway::Backend
-      bind_embedder(graph, SynonymEmbedder.new)
+      bind_embedder(graph, RetrievalQualitySynonymEmbedder.new)
       add_memory(graph, "bakery color")
       rt.run_until_idle
 

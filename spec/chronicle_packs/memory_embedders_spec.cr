@@ -66,7 +66,7 @@ module EmbeddingSupport
   # Maps synonym groups to the same vector — the upstream SynonymEmbedder
   # pattern, so the cosine signal demonstrably catches rephrasings the
   # lexical signal cannot.
-  class SynonymEmbedder < Chronicle::Packs::MemoryGateway::Embedder
+  class EmbeddingSynonymEmbedder < Chronicle::Packs::MemoryGateway::Embedder
     getter default_model : String = "synonyms"
 
     SYNONYMS = {
@@ -91,7 +91,7 @@ module EmbeddingSupport
   end
 
   # Same vectors, different model/version space — cosine must never blend.
-  class OtherSpaceEmbedder < SynonymEmbedder
+  class EmbeddingOtherSpaceEmbedder < EmbeddingSynonymEmbedder
     getter default_model : String = "other-v1"
   end
 end
@@ -201,7 +201,7 @@ describe "memory gateway embedding boundary" do
   it "blends cosine with lexical — rephrasing recall beats lexical-only" do
     with_memory_runtime do |_store, graph, rt|
       reset_seams
-      bind_service(graph, SynonymEmbedder.new)
+      bind_service(graph, EmbeddingSynonymEmbedder.new)
       add_candidate(graph, "my feline sleeps all day")
       rt.run_until_idle
 
@@ -217,14 +217,14 @@ describe "memory gateway embedding boundary" do
   it "never blends vectors across embedding spaces" do
     with_memory_runtime do |_store, graph, rt|
       reset_seams
-      bind_service(graph, SynonymEmbedder.new)
+      bind_service(graph, EmbeddingSynonymEmbedder.new)
       add_candidate(graph, "my feline sleeps all day")
       rt.run_until_idle
 
       # Re-bind a different space for retrieval: the stored vector (space
       # "synonyms") must not be cosine-compared against the query's
       # "other-v1" vectors — lexical-fallback, so this rephrasing is missed.
-      bind_service(graph, OtherSpaceEmbedder.new)
+      bind_service(graph, EmbeddingOtherSpaceEmbedder.new)
       results = Chronicle::Packs::MemoryGateway.retrieve_memories_fn(graph, "cat", top_k: 10, min_score: 0.2)
       results.size.should eq(0)
     end
