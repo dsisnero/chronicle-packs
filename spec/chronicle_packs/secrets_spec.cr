@@ -8,6 +8,16 @@ require "../spec_helper"
 module SecretsSpecSupport
   extend self
 
+  class ExplodingSource < Chronicle::Packs::Secrets::Managed::CredentialSource
+    def label : String
+      "exploding"
+    end
+
+    def resolve(credential_name : String) : String?
+      raise "down"
+    end
+  end
+
   REPO = Path[__DIR__].parent.parent
 
   def secrets_manifest_path : Path
@@ -128,6 +138,12 @@ describe Chronicle::Packs::Secrets do
       Chronicle::Packs::Secrets::Managed.clear_credential_sources
       Chronicle::Packs::Secrets::Managed.registered_credential_sources.should be_empty
     end
+
+    it "continues after a broken source" do
+      Chronicle::Packs::Secrets::Managed.register_credential_source(ExplodingSource.new)
+      Chronicle::Packs::Secrets::Managed.register_credential_source(SecretsSpecFakeSource.new("fallback", {"K" => "value"}))
+      Chronicle::Packs::Secrets.resolve_credential_fn("K").should eq("value")
+    end
   end
 
   describe "OAuthCredentialSource" do
@@ -159,6 +175,13 @@ describe Chronicle::Packs::Secrets do
       store.put("GMAIL_TOKEN", access_token: "ya29.old", expires_in: 10.0, now: 1000.0)
       source = Chronicle::Packs::Secrets::Managed::OAuthCredentialSource.new(store, now_fn: -> { 2000.0 })
       source.resolve("GMAIL_TOKEN").should be_nil
+    end
+
+    it "fails closed when a refresh grant is rejected" do
+      store = Chronicle::Packs::Secrets::Managed::OAuthTokenStore.new(":memory:")
+      store.put("GMAIL_TOKEN", access_token: "old", refresh_token: "rt1", expires_in: 10.0, now: 1000.0)
+      flow = Chronicle::Packs::Secrets::Managed::OAuthDeviceFlow.new(provider: "gmail", client_id: "cid", device_authorization_endpoint: "https://example.com/device", token_endpoint: "https://example.com/token", http_post: ->(url : String, data : Hash(String, String)) : {Int32, Hash(String, JSON::Any)} { {400, {"error" => JSON::Any.new("invalid_grant")}} })
+      Chronicle::Packs::Secrets::Managed::OAuthCredentialSource.new(store, flows: {"GMAIL_TOKEN" => flow}, now_fn: -> { 2000.0 }).resolve("GMAIL_TOKEN").should be_nil
     end
 
     it "returns nil for an unknown credential" do
@@ -202,6 +225,13 @@ describe Chronicle::Packs::Secrets do
       )
       result = flow.poll("dc1")
       result["status"].as_s.should eq("pending")
+    end
+
+    it "reports terminal provider errors" do
+      flow = Chronicle::Packs::Secrets::Managed::OAuthDeviceFlow.new(provider: "gmail", client_id: "cid", device_authorization_endpoint: "https://example.com/device", token_endpoint: "https://example.com/token", http_post: ->(url : String, data : Hash(String, String)) : {Int32, Hash(String, JSON::Any)} { {400, {"error" => JSON::Any.new("access_denied")}} })
+      result = flow.poll("dc1")
+      result["status"].as_s.should eq("error")
+      result["error"].as_s.should eq("access_denied")
     end
   end
 

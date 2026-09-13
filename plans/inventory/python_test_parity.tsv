@@ -265,25 +265,25 @@ tests/test_llm_tool_proxies.py::test::test_capability_without_schema_cannot_be_l
 tests/test_llm_tool_proxies.py::test::test_held_call_denial_never_executes	ported	spec/chronicle_packs/llm_tools_spec.cr	held call denied never executes + denial recorded
 tests/test_llm_tool_proxies.py::test::test_held_call_waits_then_executes_on_approval	ported	spec/chronicle_packs/llm_tools_spec.cr	held call executes on explicit approval
 tests/test_llm_tool_proxies.py::test::test_unknown_capability_key_fails_loud	ported	spec/chronicle_packs/llm_tools_spec.cr	fails loud on unknown keys
-tests/test_managed_auth.py::class::ExplodingSource	missing	-	baseline
-tests/test_managed_auth.py::class::FakeProvider	missing	-	baseline
-tests/test_managed_auth.py::const::REFRESHED	missing	-	baseline
-tests/test_managed_auth.py::const::SECRET	missing	-	baseline
-tests/test_managed_auth.py::function::_clean_chain	missing	-	baseline
-tests/test_managed_auth.py::function::_flow	missing	-	baseline
-tests/test_managed_auth.py::function::denying_post	missing	-	baseline
-tests/test_managed_auth.py::method::ExplodingSource.resolve	missing	-	baseline
-tests/test_managed_auth.py::method::FakeProvider.__init__	missing	-	baseline
-tests/test_managed_auth.py::method::FakeProvider.http_post	missing	-	baseline
-tests/test_managed_auth.py::test::test_audit_names_source_and_value_never_enters_graph	missing	-	baseline
-tests/test_managed_auth.py::test::test_broken_source_does_not_block_chain	missing	-	baseline
-tests/test_managed_auth.py::test::test_dead_grant_fails_closed	missing	-	baseline
-tests/test_managed_auth.py::test::test_device_flow_start_poll_lifecycle	missing	-	baseline
-tests/test_managed_auth.py::test::test_device_flow_terminal_error	missing	-	baseline
-tests/test_managed_auth.py::test::test_expired_without_refresh_path_fails_closed	missing	-	baseline
-tests/test_managed_auth.py::test::test_resolution_chain_env_wins	missing	-	baseline
-tests/test_managed_auth.py::test::test_source_returns_live_token_and_refreshes_expired	missing	-	baseline
-tests/test_managed_auth.py::test::test_store_roundtrip_and_names_never_values	missing	-	baseline
+tests/test_managed_auth.py::class::ExplodingSource	skipped	spec/chronicle_packs/secrets_spec.cr	Typed Crystal source fixture replaces Python class
+tests/test_managed_auth.py::class::FakeProvider	skipped	spec/chronicle_packs/secrets_spec.cr	Injected Crystal OAuth callback replaces Python fake provider
+tests/test_managed_auth.py::const::REFRESHED	skipped	spec/chronicle_packs/secrets_spec.cr	Crystal test literals cover refreshed token behavior
+tests/test_managed_auth.py::const::SECRET	skipped	spec/chronicle_packs/secrets_spec.cr	Crystal test literals cover secret hygiene without shared mutable constant
+tests/test_managed_auth.py::function::_clean_chain	skipped	spec/chronicle_packs/secrets_spec.cr	with_secrets_runtime clears the managed source chain
+tests/test_managed_auth.py::function::_flow	skipped	spec/chronicle_packs/secrets_spec.cr	Inline injected OAuth callbacks absorb flow fixture
+tests/test_managed_auth.py::function::denying_post	skipped	spec/chronicle_packs/secrets_spec.cr	Inline injected callback absorbs denial fixture
+tests/test_managed_auth.py::method::ExplodingSource.resolve	skipped	spec/chronicle_packs/secrets_spec.cr	Typed exploding source is tested through resolution chain
+tests/test_managed_auth.py::method::FakeProvider.__init__	skipped	spec/chronicle_packs/secrets_spec.cr	Injected callback needs no mutable provider object
+tests/test_managed_auth.py::method::FakeProvider.http_post	skipped	spec/chronicle_packs/secrets_spec.cr	Injected callback covers device, refresh, pending, and denial responses
+tests/test_managed_auth.py::test::test_audit_names_source_and_value_never_enters_graph	ported	spec/chronicle_packs/secrets_spec.cr	resolve_and_audit coverage records source without persisting secret values
+tests/test_managed_auth.py::test::test_broken_source_does_not_block_chain	ported	spec/chronicle_packs/secrets_spec.cr	Broken source continues to fallback source
+tests/test_managed_auth.py::test::test_dead_grant_fails_closed	ported	spec/chronicle_packs/secrets_spec.cr	Rejected refresh grant fails closed
+tests/test_managed_auth.py::test::test_device_flow_start_poll_lifecycle	ported	spec/chronicle_packs/secrets_spec.cr	Injected device flow covers start, pending, and success
+tests/test_managed_auth.py::test::test_device_flow_terminal_error	ported	spec/chronicle_packs/secrets_spec.cr	Terminal access_denied response is surfaced
+tests/test_managed_auth.py::test::test_expired_without_refresh_path_fails_closed	ported	spec/chronicle_packs/secrets_spec.cr	Expired token without flow returns nil
+tests/test_managed_auth.py::test::test_resolution_chain_env_wins	ported	spec/chronicle_packs/secrets_spec.cr	Environment resolution precedes managed OAuth source
+tests/test_managed_auth.py::test::test_source_returns_live_token_and_refreshes_expired	ported	spec/chronicle_packs/secrets_spec.cr	Stored token and persisted refresh are verified
+tests/test_managed_auth.py::test::test_store_roundtrip_and_names_never_values	ported	spec/chronicle_packs/secrets_spec.cr	OAuth token store round-trip exposes names only
 tests/test_manifests.py::const::PACKS	ported	spec/chronicle_packs/manifests_spec.cr::all_packs	port-matching pack set (drift packs excluded)
 tests/test_manifests.py::const::REPO	ported	spec/chronicle_packs/manifests_spec.cr	vendor checkout root
 tests/test_manifests.py::function::_pack_dir	ported	spec/chronicle_packs/manifests_spec.cr::vendor_pack_dir	-
