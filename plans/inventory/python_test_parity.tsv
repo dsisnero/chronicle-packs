@@ -201,26 +201,26 @@ tests/test_extraction_proceduralization.py::method::RequestReferenceProvider.__i
 tests/test_extraction_proceduralization.py::method::RequestReferenceProvider.complete	skipped	spec/chronicle_packs/procedures_spec.cr	Recorded completion boundary replaces Python provider test-double calls
 tests/test_extraction_proceduralization.py::test::test_false_admission_on_counterexample_blocks_procedure_promotion	ported	spec/chronicle_packs/procedures_spec.cr::demotes and refuses promotion on a counterexample false admission	Direct Crystal characterization preserves fail verdict, false-admission audit, demotion, and blocked promotion
 tests/test_extraction_proceduralization.py::test::test_reference_hardens_through_real_fork_then_deopts_and_demotes_on_drift	partial	spec/chronicle_packs/procedures_spec.cr::active_procedure_for and record_deoptimization handle guarded fallback	Crystal evaluates graph-direct and records/auto-demotes shape drift, but fallback remains requested rather than executing the vendor live-provider fork fallback
-tests/test_gmail_connector.py::class::FakeComposio	missing	-	baseline
-tests/test_gmail_connector.py::function::_message	missing	-	baseline
-tests/test_gmail_connector.py::function::_runtime	missing	-	baseline
-tests/test_gmail_connector.py::function::execute_native	missing	-	baseline
-tests/test_gmail_connector.py::method::FakeComposio.__init__	missing	-	baseline
-tests/test_gmail_connector.py::method::FakeComposio.authorize	missing	-	baseline
-tests/test_gmail_connector.py::method::FakeComposio.execute	missing	-	baseline
-tests/test_gmail_connector.py::method::FakeComposio.list_connections	missing	-	baseline
-tests/test_gmail_connector.py::method::FakeComposio.resolve_tool	missing	-	baseline
-tests/test_gmail_connector.py::test::test_bound_hit_is_partial_and_requires_an_explicit_deeper_window	missing	-	baseline
-tests/test_gmail_connector.py::test::test_canonical_gmail_pack_accepts_a_non_composio_route_adapter	missing	-	baseline
-tests/test_gmail_connector.py::test::test_catalog_resolution_hardens_latest_and_rejects_an_invalid_pin	missing	-	baseline
-tests/test_gmail_connector.py::test::test_connect_link_is_governed_and_secret_url_never_lands_in_log	missing	-	baseline
-tests/test_gmail_connector.py::test::test_explore_backfill_poll_and_revoke_without_erasing_history	missing	-	baseline
-tests/test_gmail_connector.py::test::test_history_message_404_is_settled_as_a_concurrent_deletion	missing	-	baseline
-tests/test_gmail_connector.py::test::test_interrupted_backfill_restarts_with_overlap_and_dedups	missing	-	baseline
-tests/test_gmail_connector.py::test::test_local_draft_is_r1_and_send_is_never_auto_run	missing	-	baseline
-tests/test_gmail_connector.py::test::test_owner_correction_supersedes_an_integration_claim	missing	-	baseline
-tests/test_gmail_connector.py::test::test_rate_limit_retries_but_invalid_cursor_requires_reanchor	missing	-	baseline
-tests/test_gmail_connector.py::test::test_unexpected_shape_records_drift_and_forced_reexploration	missing	-	baseline
+tests/test_gmail_connector.py::class::FakeComposio	skipped	spec/chronicle_packs/gmail_spec.cr	Python fixture transport is GmailFixtureComposio
+tests/test_gmail_connector.py::function::_message	skipped	spec/chronicle_packs/gmail_spec.cr	Python message helper is gmail_fixture_message
+tests/test_gmail_connector.py::function::_runtime	skipped	spec/chronicle_packs/gmail_spec.cr	Python runtime helper is GmailSpecSupport.with_gmail_runtime
+tests/test_gmail_connector.py::function::execute_native	skipped	spec/chronicle_packs/gmail_spec.cr	Native route callback is inlined with the typed Crystal adapter signature
+tests/test_gmail_connector.py::method::FakeComposio.__init__	skipped	spec/chronicle_packs/gmail_spec.cr	Crystal fixture defaults are declared as typed properties
+tests/test_gmail_connector.py::method::FakeComposio.authorize	skipped	spec/chronicle_packs/gmail_spec.cr	GmailFixtureComposio#authorize supplies the offline redirect
+tests/test_gmail_connector.py::method::FakeComposio.execute	skipped	spec/chronicle_packs/gmail_spec.cr	GmailFixtureComposio#execute supplies the offline Gmail wire responses
+tests/test_gmail_connector.py::method::FakeComposio.list_connections	skipped	spec/chronicle_packs/gmail_spec.cr	GmailFixtureComposio#list_connections supplies the account fixture
+tests/test_gmail_connector.py::method::FakeComposio.resolve_tool	skipped	spec/chronicle_packs/gmail_spec.cr	GmailFixtureComposio#resolve_tool delegates to the Crystal catalog resolver
+tests/test_gmail_connector.py::test::test_bound_hit_is_partial_and_requires_an_explicit_deeper_window	ported	spec/chronicle_packs/gmail_spec.cr	partial bounded backfill is idempotent for an identical request
+tests/test_gmail_connector.py::test::test_canonical_gmail_pack_accepts_a_non_composio_route_adapter	ported	spec/chronicle_packs/gmail_spec.cr	native route adapter remains independent of Composio
+tests/test_gmail_connector.py::test::test_catalog_resolution_hardens_latest_and_rejects_an_invalid_pin	ported	spec/chronicle_packs/gmail_spec.cr	latest catalog resolution records the concrete version and rejects unavailable pins
+tests/test_gmail_connector.py::test::test_connect_link_is_governed_and_secret_url_never_lands_in_log	ported	spec/chronicle_packs/gmail_spec.cr	approved link stores only the redacted durable result while redirect stays ephemeral
+tests/test_gmail_connector.py::test::test_explore_backfill_poll_and_revoke_without_erasing_history	ported	spec/chronicle_packs/gmail_spec.cr	exploration, bounded evidence, local reprocessing, control-plane projection, polling, and revocation are covered across focused examples
+tests/test_gmail_connector.py::test::test_history_message_404_is_settled_as_a_concurrent_deletion	ported	spec/chronicle_packs/gmail_spec.cr	missing history message creates settled tombstones and advances the watermark
+tests/test_gmail_connector.py::test::test_interrupted_backfill_restarts_with_overlap_and_dedups	ported	spec/chronicle_packs/gmail_spec.cr	failed backfill resumes its prior run without duplicate evidence
+tests/test_gmail_connector.py::test::test_local_draft_is_r1_and_send_is_never_auto_run	ported	spec/chronicle_packs/gmail_spec.cr	local R1 draft and held R2/R3 operations preserve approval boundaries
+tests/test_gmail_connector.py::test::test_owner_correction_supersedes_an_integration_claim	ported	spec/chronicle_packs/gmail_spec.cr	owner correction supersedes a Gmail-discovered profile claim
+tests/test_gmail_connector.py::test::test_rate_limit_retries_but_invalid_cursor_requires_reanchor	ported	spec/chronicle_packs/gmail_spec.cr	rate-limited retry resumes while an invalid cursor requires reanchor
+tests/test_gmail_connector.py::test::test_unexpected_shape_records_drift_and_forced_reexploration	ported	spec/chronicle_packs/gmail_spec.cr	unexpected payload marks profile stale and a forced exploration renews it
 tests/test_injection_posture.py::class::ApproveInput	ported	spec/chronicle_packs/injection_posture_spec.cr	input hash shape inlined
 tests/test_injection_posture.py::class::FetchInput	ported	spec/chronicle_packs/injection_posture_spec.cr	input hash shape inlined
 tests/test_injection_posture.py::const::BENIGN_PAYLOAD	ported	spec/chronicle_packs/injection_posture_spec.cr::BENIGN_PAYLOAD	-

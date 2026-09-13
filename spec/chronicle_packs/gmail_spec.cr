@@ -166,6 +166,7 @@ module GmailSpecSupport
     rt.load_pack(Chronicle::Packs::Composio.pack).should be_true
     gmail_settings = settings || Chronicle::Packs::Gmail::GmailSettings.new(artifact_store_dir: artifact_dir)
     rt.load_pack(Chronicle::Packs::Gmail.pack, JSON.parse(gmail_settings.to_json).as_h).should be_true
+    Chronicle::Packs::Composio.register_composio_capabilities
     Chronicle::Packs::Gmail.register_gmail_capabilities(artifact_store_dir: artifact_dir)
     Chronicle::Packs::Gmail.register_gmail_maintenance
 
@@ -236,6 +237,52 @@ describe Chronicle::Packs::Gmail do
       JSON.parse(Chronicle::Packs::Gmail::DraftStatus::SyncProposed.to_json).as_s.should eq("sync_proposed")
       JSON.parse(Chronicle::Packs::Gmail::ErrorCode::CursorInvalid.to_json).as_s.should eq("cursor_invalid")
     end
+
+    it "resolves the latest Gmail catalog entry and rejects an unavailable pin" do
+      rows = [{
+        "slug"               => JSON::Any.new("GMAIL_GET_PROFILE"),
+        "toolkit"            => JSON::Any.new({"slug" => JSON::Any.new("gmail")} of String => JSON::Any),
+        "version"            => JSON::Any.new("20260702_01"),
+        "available_versions" => JSON::Any.new([JSON::Any.new("20260702_01")]),
+        "input_parameters"   => JSON::Any.new({"type" => JSON::Any.new("object"), "properties" => JSON::Any.new({"user_id" => JSON::Any.new({"type" => JSON::Any.new("string")} of String => JSON::Any)} of String => JSON::Any)} of String => JSON::Any),
+        "is_deprecated"      => JSON::Any.new(false),
+      } of String => JSON::Any]
+
+      resolved = Chronicle::Packs::Composio.resolve_catalog_tool(rows, toolkit: "gmail", candidates: ["GMAIL_GET_PROFILE_V2", "GMAIL_GET_PROFILE"], requested_version: "latest")
+      resolved["tool_slug"].as_s.should eq("GMAIL_GET_PROFILE")
+      resolved["version"].as_s.should eq("20260702_01")
+      resolved["resolution"].as_s.should eq("catalog")
+      resolved["input_schema_fingerprint"].as_s.should_not be_empty
+
+      expect_raises(Chronicle::Packs::Composio::ComposioUnavailable, /available versions: 20260702_01/) do
+        Chronicle::Packs::Composio.resolve_catalog_tool(rows, toolkit: "gmail", candidates: ["GMAIL_GET_PROFILE"], requested_version: "20260703_00")
+      end
+    end
+  end
+
+  describe "connection authorization" do
+    it "governs a Gmail connect link and excludes its secret from durable records" do
+      with_gmail_runtime do |_store, graph, rt, _fake|
+        call = Chronicle::Packs::Composio.request_composio_link_fn(
+          graph,
+          user_id: "agent:owner",
+          service: "gmail",
+          callback_url: "http://127.0.0.1/callback",
+        )
+        rt.run_until_idle
+        object_data(graph.get_object(call.id).not_nil!)["status"].as_s.should eq("policy_checking")
+
+        Chronicle::Packs::ToolGateway.approve_capability_fn(graph, call.id, approver_ref: "owner:client")["ok"].as_bool.should be_true
+        rt.run_until_idle
+
+        result = graph.objects(type: "capability_result").find { |obj| object_data(obj)["call_id"].as_s == call.id }.not_nil!
+        output = object_data(result)["output_data"].as_s
+        output.should contain("connect.composio.dev")
+        output.should_not contain("secret-token")
+        Chronicle::Packs::Composio.take_redirect("link_1").should eq("https://connect.composio.dev/link/secret-token")
+        graph.events.map(&.payload).join("\n").should_not contain("secret-token")
+      end
+    end
   end
 
   describe "exploration" do
@@ -286,6 +333,30 @@ describe Chronicle::Packs::Gmail do
         repeat["created"].as_bool.should be_false
         graph.objects(type: "integration_profile").size.should eq(1)
         graph.objects(type: "connection_surface").size.should eq(1)
+      end
+    end
+
+    it "supersedes a Gmail-discovered claim with an owner correction" do
+      with_gmail_runtime do |_store, graph, rt, _fake|
+        Chronicle::Packs::Gmail.request_gmail_exploration_fn(graph, user_id: "agent:owner", connected_account_id: "ca_1")
+        rt.run_until_idle
+        profile = graph.objects(type: "integration_profile").find { |obj| object_data(obj)["status"].as_s == "active" }.not_nil!
+
+        corrected = Chronicle::Packs::ToolGateway.correct_integration_claim_fn(
+          graph,
+          profile_id: profile.id,
+          claim_key: "signal.inbox_richness",
+          value: JSON::Any.new("medium"),
+          actor: "owner:test",
+          reason: "this account is mostly receipts",
+        )
+        current = graph.get_object(corrected["profile_id"].as_s).not_nil!
+        claim = object_data(current)["claims"].as_a.find { |row| row.as_h["claim_key"].as_s == "signal.inbox_richness" }.not_nil!.as_h
+        object_data(graph.get_object(profile.id).not_nil!)["status"].as_s.should eq("superseded")
+        object_data(current)["profile_version"].as_i.should eq(2)
+        claim["classification_source"].as_s.should eq("operator")
+        claim["value"].as_s.should eq("medium")
+        claim["metadata"].as_h["reason"].as_s.should eq("this account is mostly receipts")
       end
     end
   end
