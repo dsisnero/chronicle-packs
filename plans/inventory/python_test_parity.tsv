@@ -422,22 +422,22 @@ tests/test_memory_retrieval_quality.py::test::test_lexical_score_shape	missing	-
 tests/test_memory_retrieval_quality.py::test::test_report_failure_cases_now_recall	missing	-	baseline
 tests/test_memory_retrieval_quality.py::test::test_report_passing_cases_still_recall	missing	-	baseline
 tests/test_memory_retrieval_quality.py::test::test_unrelated_memory_stays_below_threshold	missing	-	baseline
-tests/test_memory_subject_scoping.py::class::_Graph	missing	-	baseline
-tests/test_memory_subject_scoping.py::class::_Obj	missing	-	baseline
-tests/test_memory_subject_scoping.py::function::_lexical_only	missing	-	baseline
-tests/test_memory_subject_scoping.py::method::_Graph.__init__	missing	-	baseline
-tests/test_memory_subject_scoping.py::method::_Graph.get_object	missing	-	baseline
-tests/test_memory_subject_scoping.py::method::_Obj.__init__	missing	-	baseline
-tests/test_memory_subject_scoping.py::test::test_anonymous_caller_sees_only_global	missing	-	baseline
-tests/test_memory_subject_scoping.py::test::test_chat_recall_does_not_leak_across_users	missing	-	baseline
-tests/test_memory_subject_scoping.py::test::test_core_only_candidate_is_tagged_with_author	missing	-	baseline
-tests/test_memory_subject_scoping.py::test::test_dedup_upgrades_null_survivor_to_subject	missing	-	baseline
-tests/test_memory_subject_scoping.py::test::test_derive_subject_ref_from_source	missing	-	baseline
-tests/test_memory_subject_scoping.py::test::test_find_by_text_is_subject_scoped	missing	-	baseline
-tests/test_memory_subject_scoping.py::test::test_global_memories_visible_to_all_scoped_callers	missing	-	baseline
-tests/test_memory_subject_scoping.py::test::test_scoped_retrieval_isolates_users	missing	-	baseline
-tests/test_memory_subject_scoping.py::test::test_strict_scope_excludes_global_nulls	missing	-	baseline
-tests/test_memory_subject_scoping.py::test::test_unscoped_retrieval_returns_all	missing	-	baseline
+tests/test_memory_subject_scoping.py::class::_Graph	skipped	spec/chronicle_packs/memory_subject_scoping_spec.cr	Typed Chronicle graph replaces Python fake graph
+tests/test_memory_subject_scoping.py::class::_Obj	skipped	spec/chronicle_packs/memory_subject_scoping_spec.cr	Typed Chronicle graph object replaces Python fake object
+tests/test_memory_subject_scoping.py::function::_lexical_only	skipped	spec/chronicle_packs/memory_subject_scoping_spec.cr	No process-global Python embedder seam exists; graph backend remains lexical by default
+tests/test_memory_subject_scoping.py::method::_Graph.__init__	skipped	spec/chronicle_packs/memory_subject_scoping_spec.cr	Typed Chronicle graph construction replaces Python fake initializer
+tests/test_memory_subject_scoping.py::method::_Graph.get_object	skipped	spec/chronicle_packs/memory_subject_scoping_spec.cr	Chronicle GraphProjection supplies the tested lookup contract
+tests/test_memory_subject_scoping.py::method::_Obj.__init__	skipped	spec/chronicle_packs/memory_subject_scoping_spec.cr	Typed Chronicle graph object construction replaces Python fake initializer
+tests/test_memory_subject_scoping.py::test::test_anonymous_caller_sees_only_global	ported	spec/chronicle_packs/memory_subject_scoping_spec.cr	Anonymous scoped recall returns only global rows
+tests/test_memory_subject_scoping.py::test::test_chat_recall_does_not_leak_across_users	ported	spec/chronicle_packs/memory_subject_scoping_spec.cr	Real Chat/MemoryGateway runtime keeps Alice preference out of Bob context
+tests/test_memory_subject_scoping.py::test::test_core_only_candidate_is_tagged_with_author	ported	spec/chronicle_packs/memory_subject_scoping_spec.cr	Real Core-style candidate inherits its chat source author before storage
+tests/test_memory_subject_scoping.py::test::test_dedup_upgrades_null_survivor_to_subject	ported	spec/chronicle_packs/memory_subject_scoping_spec.cr	Global duplicate matches named writer then upgrades to that subject
+tests/test_memory_subject_scoping.py::test::test_derive_subject_ref_from_source	ported	spec/chronicle_packs/memory_subject_scoping_spec.cr	Typed source fixture verifies author derivation
+tests/test_memory_subject_scoping.py::test::test_find_by_text_is_subject_scoped	ported	spec/chronicle_packs/memory_subject_scoping_spec.cr	Different subject does not deduplicate while same subject does
+tests/test_memory_subject_scoping.py::test::test_global_memories_visible_to_all_scoped_callers	ported	spec/chronicle_packs/memory_subject_scoping_spec.cr	Scoped caller sees global row but not another user's row
+tests/test_memory_subject_scoping.py::test::test_scoped_retrieval_isolates_users	ported	spec/chronicle_packs/memory_subject_scoping_spec.cr	Alice and Bob retrieve only their own matching memory
+tests/test_memory_subject_scoping.py::test::test_strict_scope_excludes_global_nulls	ported	spec/chronicle_packs/memory_subject_scoping_spec.cr	Strict scoped recall excludes global rows
+tests/test_memory_subject_scoping.py::test::test_unscoped_retrieval_returns_all	ported	spec/chronicle_packs/memory_subject_scoping_spec.cr	Unscoped recall remains backward-compatible across subjects
 tests/test_pack_fixtures.py::const::PACKS	skipped	spec/chronicle_packs/fixtures_spec.cr	Python subprocess parameter list is replaced by Crystal spec discovery over native pack fixture specs
 tests/test_pack_fixtures.py::test::test_pack_fixtures	ported	spec/chronicle_packs/fixtures_spec.cr::run_all	Crystal in-process fixture suite runs every registered Crystal scenario and asserts exit code zero; native spec discovery replaces pytest subprocess dispatch
 tests/test_preflight.py::class::_NewCapabilityDecl	skipped	spec/chronicle_packs/preflight_spec.cr	Python stub class; linked Chronicle shape is compile-time detected

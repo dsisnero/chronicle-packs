@@ -220,13 +220,19 @@ module Chronicle::Packs::MemoryGateway
       results[0, top_k]
     end
 
-    # Find an item with this exact (normalized) text in the same subject scope.
+    # Find an item with this exact (normalized) text in the same subject
+    # scope. An existing global/untagged row is a dedup wildcard for a named
+    # caller so memory_writer can upgrade that survivor to the source author
+    # instead of leaving author-owned memory globally recallable.
     def self.find_by_text(graph : Chronicle::GraphProjection, text : String, subject_ref : String?) : String?
       needle = _normalize_text(text)
       graph.objects(type: "memory_item").find do |obj|
         data = JSON.parse(obj.data).as_h
         _normalize_text(data["text"]?.try(&.as_s?) || "") == needle &&
-          data["subject_ref"]?.try(&.as_s?) == subject_ref
+          begin
+            item_subject = data["subject_ref"]?.try(&.as_s?)
+            item_subject == subject_ref || (item_subject.nil? && !subject_ref.nil?)
+          end
       end.try(&.id)
     end
 
