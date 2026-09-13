@@ -584,21 +584,21 @@ tests/test_semantic_extraction_llm.py::test::test_reextraction_same_identity_is_
 tests/test_semantic_extraction_llm.py::test::test_replay_produces_byte_equal_annotations_and_never_recontacts	missing	-	baseline
 tests/test_semantic_extraction_llm.py::test::test_selected_llm_extraction_cannot_anchor_into_excluded_quoted_history	missing	-	baseline
 tests/test_semantic_extraction_llm.py::test::test_trial_records_promotion_evidence_and_promotion_is_explicit	missing	-	baseline
-tests/test_shared_extraction_migration.py::const::CONTENT	missing	-	baseline
-tests/test_shared_extraction_migration.py::const::DIGEST	missing	-	baseline
-tests/test_shared_extraction_migration.py::const::LEGACY_CANDIDATE_TYPES	missing	-	baseline
-tests/test_shared_extraction_migration.py::function::_acquire	missing	-	baseline
-tests/test_shared_extraction_migration.py::function::_annotation_identities	missing	-	baseline
-tests/test_shared_extraction_migration.py::function::_build_migrated	missing	-	baseline
-tests/test_shared_extraction_migration.py::function::_is_semantic_profile	missing	-	baseline
-tests/test_shared_extraction_migration.py::function::_legacy_candidate_projection	missing	-	baseline
-tests/test_shared_extraction_migration.py::function::_memory_is_structure	missing	-	baseline
-tests/test_shared_extraction_migration.py::test::test_compat_candidates_match_legacy_identities	missing	-	baseline
-tests/test_shared_extraction_migration.py::test::test_direct_write_path_is_disabled_and_annotations_flow	missing	-	baseline
-tests/test_shared_extraction_migration.py::test::test_entity_pack_consumes_annotations_and_keeps_resolution	missing	-	baseline
-tests/test_shared_extraction_migration.py::test::test_entity_raw_source_extraction_is_disabled_by_default	missing	-	baseline
-tests/test_shared_extraction_migration.py::test::test_migration_boundary_reextraction_creates_no_new_candidates	missing	-	baseline
-tests/test_shared_extraction_migration.py::test::test_reingestion_after_migration_is_idempotent_byte_level	missing	-	baseline
+tests/test_shared_extraction_migration.py::const::CONTENT	skipped	spec/chronicle_packs/shared_extraction_migration_spec.cr	Crystal migration fixture keeps the same content as a typed module constant
+tests/test_shared_extraction_migration.py::const::DIGEST	skipped	spec/chronicle_packs/shared_extraction_migration_spec.cr	acquire computes the content digest at the Crystal fixture boundary
+tests/test_shared_extraction_migration.py::const::LEGACY_CANDIDATE_TYPES	skipped	spec/chronicle_packs/shared_extraction_migration_spec.cr	Crystal migration fixture keeps the same legacy candidate-type set
+tests/test_shared_extraction_migration.py::function::_acquire	skipped	spec/chronicle_packs/shared_extraction_migration_spec.cr	acquire is the typed Crystal acquired-item/content fixture helper
+tests/test_shared_extraction_migration.py::function::_annotation_identities	skipped	spec/chronicle_packs/shared_extraction_migration_spec.cr	annotation_identities is the Crystal projection helper
+tests/test_shared_extraction_migration.py::function::_build_migrated	skipped	spec/chronicle_packs/shared_extraction_migration_spec.cr	with_migrated_runtime is the Crystal runtime builder
+tests/test_shared_extraction_migration.py::function::_is_semantic_profile	skipped	spec/chronicle_packs/shared_extraction_migration_spec.cr	legacy_projection absorbs the semantic-profile exclusion
+tests/test_shared_extraction_migration.py::function::_legacy_candidate_projection	skipped	spec/chronicle_packs/shared_extraction_migration_spec.cr	legacy_projection provides the deterministic Crystal candidate projection
+tests/test_shared_extraction_migration.py::function::_memory_is_structure	skipped	spec/chronicle_packs/shared_extraction_migration_spec.cr	legacy_projection absorbs structure-memory ownership classification
+tests/test_shared_extraction_migration.py::test::test_compat_candidates_match_legacy_identities	ported	spec/chronicle_packs/shared_extraction_migration_spec.cr	Compares every legacy candidate kind with compatibility-projector identities
+tests/test_shared_extraction_migration.py::test::test_direct_write_path_is_disabled_and_annotations_flow	ported	spec/chronicle_packs/shared_extraction_migration_spec.cr	Proves default migration routes activity structure through anchored annotations without extraction records
+tests/test_shared_extraction_migration.py::test::test_entity_pack_consumes_annotations_and_keeps_resolution	ported	spec/chronicle_packs/shared_extraction_migration_spec.cr	Proves annotation-owned mentions retain entity resolution and idempotence
+tests/test_shared_extraction_migration.py::test::test_entity_raw_source_extraction_is_disabled_by_default	ported	spec/chronicle_packs/shared_extraction_migration_spec.cr	Proves duplicate raw-source entity extraction is disabled by default
+tests/test_shared_extraction_migration.py::test::test_migration_boundary_reextraction_creates_no_new_candidates	ported	spec/chronicle_packs/shared_extraction_migration_spec.cr	Proves same-graph legacy-to-migrated reextraction preserves the legacy projection as a fixed point
+tests/test_shared_extraction_migration.py::test::test_reingestion_after_migration_is_idempotent_byte_level	ported	spec/chronicle_packs/shared_extraction_migration_spec.cr	Proves repeated migrated ingestion and explicit extraction preserve projection and annotation identities
 tests/test_skills.py::function::_author	ported	spec/chronicle_packs/skills_contract_spec.cr::author	-
 tests/test_skills.py::function::_proof	ported	spec/chronicle_packs/skills_contract_spec.cr::proof	-
 tests/test_skills.py::function::_runtime	ported	spec/chronicle_packs/skills_contract_spec.cr::with_skills_contract_runtime	-

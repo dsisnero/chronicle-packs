@@ -222,11 +222,34 @@ module Chronicle::Packs::SemanticExtraction
     {parts[0], parts.size > 1 ? parts[1] : "0.1.0"}
   end
 
-  # Extract per the active profile's facet policy (single default extractor).
+  # Extract per the active profile's facet and extractor policy. The profile
+  # groups mapped facets into independent cache-identified runs; unmapped
+  # facets stay in the default-extractor run. Keep the default group first
+  # and mapped references sorted so run order is reproducible.
   def self.run_profile_extraction(graph : Chronicle::GraphProjection, evidence_obj : Chronicle::GraphObject, settings : SemanticExtractionSettings, requested_facets : Array(String)? = nil, selection_id : String? = nil, content_segments : Array(Hash(String, JSON::Any))? = nil) : Array(Hash(String, JSON::Any))
     evidence = JSON.parse(evidence_obj.data).as_h
     facets = requested_facets || active_profile_facets(graph, evidence["source_category"]?.try(&.as_s?) || "", settings.default_profile_facets)
     requested = facets.to_set.to_a.sort
-    [run_annotation_extraction(graph, evidence_obj, settings, requested_facets: requested, selection_id: selection_id, content_segments: content_segments)]
+    extractor_map = active_profile_extractor_map(graph)
+    groups = {} of String? => Array(String)
+    requested.each do |facet|
+      ref = extractor_map[facet]?
+      (groups[ref] ||= [] of String) << facet
+    end
+
+    results = [] of Hash(String, JSON::Any)
+    ordered_refs = groups.keys.compact.sort!
+    ([nil] of String?).concat(ordered_refs).each do |ref|
+      grouped_facets = groups[ref]?
+      next if grouped_facets.nil? || grouped_facets.empty?
+      results << run_annotation_extraction(
+        graph, evidence_obj, settings,
+        requested_facets: grouped_facets,
+        extractor_ref: ref,
+        selection_id: selection_id,
+        content_segments: content_segments,
+      )
+    end
+    results
   end
 end
