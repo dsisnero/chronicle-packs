@@ -57,6 +57,54 @@ describe "LLM extraction (recorded)" do
     end
   end
 
+  it "clamps provider confidence instead of amplifying it" do
+    LlmExtractorSupport.with_semantic_runtime do |_store, graph, _rt|
+      provider = ->(model : String, input : String) {
+        %([{"facet":"assertion","exact":"prefers dark mode","body":{"text":"prefers dark mode"},"confidence":9.0}])
+      }
+      completion = Chronicle::Packs::SemanticExtraction::RecordedCompletionService.new(graph, "test-model", provider)
+      extractor = Chronicle::Packs::SemanticExtraction::Extractors::LLMExtractorV1.new(provider: completion, model: "test-model")
+
+      drafts = extractor.extract("Alice prefers dark mode.", {} of String => JSON::Any, ["assertion"])
+      drafts.size.should eq(1)
+      drafts.first.confidence.should eq(1.0)
+    end
+  end
+
+  it "cannot anchor selected LLM extraction into excluded quoted history" do
+    LlmExtractorSupport.with_semantic_runtime do |_store, graph, _rt|
+      text = "Current launches Friday\nOn Thu, Bob wrote:\n> Old launches Monday"
+      evidence = graph.add_object("activity_evidence", {
+        "evidence_identity"    => JSON::Any.new("ev_selection"),
+        "revision_id"          => JSON::Any.new("rev_selection"),
+        "normalized_content"   => JSON::Any.new(text),
+        "normalized_metadata"  => JSON::Any.new({} of String => JSON::Any),
+        "source_category"      => JSON::Any.new("communication"),
+        "status"               => JSON::Any.new("current"),
+        "acquired_at_event_id" => JSON::Any.new("evt_selection"),
+      }.to_json)
+      provider = ->(model : String, input : String) {
+        %([{"facet":"relation_mention","exact":"Current launches Friday","body":{"subject":"Current","predicate":"launches","object":"Friday"}},{"facet":"relation_mention","exact":"Old launches Monday","body":{"subject":"Old","predicate":"launches","object":"Monday"}}])
+      }
+      completion = Chronicle::Packs::SemanticExtraction::RecordedCompletionService.new(graph, "test-model", provider)
+      extractor = Chronicle::Packs::SemanticExtraction::Extractors::LLMExtractorV1.new(provider: completion, model: "test-model")
+      Chronicle::Packs::SemanticExtraction::Extractors.register_annotation_extractor(extractor, replace: true)
+      selected = "Current launches Friday"
+      result = Chronicle::Packs::SemanticExtraction.run_annotation_extraction(
+        graph, evidence,
+        settings: Chronicle::Packs::SemanticExtraction::SemanticExtractionSettings.new,
+        requested_facets: ["relation_mention"], extractor_ref: "semantic.llm@0.1.0",
+        selection_id: "current-only",
+        content_segments: [{"start" => JSON::Any.new(0), "end" => JSON::Any.new(selected.size), "exact_hash" => JSON::Any.new(Digest::SHA256.hexdigest(selected))}],
+      )
+      ids = result["annotations"].as_a.map(&.as_s)
+      ids.size.should eq(1)
+      annotation_data = JSON.parse(graph.get_object(ids.first).not_nil!.data)
+      annotation_data["selector"].as_h["exact"].as_s.should eq(selected)
+      annotation_data["metadata"].as_h["selection_id"].as_s.should eq("current-only")
+    end
+  end
+
   it "records and replays completion calls by idempotency key" do
     LlmExtractorSupport.with_semantic_runtime do |_store, graph, _rt|
       se = Chronicle::Packs::SemanticExtraction

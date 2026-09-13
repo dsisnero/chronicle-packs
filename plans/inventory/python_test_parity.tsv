@@ -560,30 +560,30 @@ tests/test_semantic_extraction.py::test::test_subject_attribution_for_user_role	
 tests/test_semantic_extraction.py::test::test_truncation_is_visible_in_coverage	missing	-	baseline
 tests/test_semantic_extraction.py::test::test_unimplemented_standard_facet_is_recorded_not_silently_claimed	missing	-	baseline
 tests/test_semantic_extraction.py::test::test_version_invalidation_demotes_via_provenance_evidence_intact	missing	-	baseline
-tests/test_semantic_extraction_llm.py::class::PoisonProvider	missing	-	baseline
-tests/test_semantic_extraction_llm.py::class::RawProvider	missing	-	baseline
-tests/test_semantic_extraction_llm.py::class::SelectionProvider	missing	-	baseline
-tests/test_semantic_extraction_llm.py::const::FIXTURE_RESOLVED	missing	-	baseline
-tests/test_semantic_extraction_llm.py::function::_acquire	missing	-	baseline
-tests/test_semantic_extraction_llm.py::function::_annotation_projection	missing	-	baseline
-tests/test_semantic_extraction_llm.py::function::_build	missing	-	baseline
-tests/test_semantic_extraction_llm.py::function::_clean_provider	missing	-	baseline
-tests/test_semantic_extraction_llm.py::function::_settings	missing	-	baseline
-tests/test_semantic_extraction_llm.py::method::PoisonProvider.complete	missing	-	baseline
-tests/test_semantic_extraction_llm.py::method::RawProvider.complete	missing	-	baseline
-tests/test_semantic_extraction_llm.py::method::SelectionProvider.__init__	missing	-	baseline
-tests/test_semantic_extraction_llm.py::method::SelectionProvider.complete	missing	-	baseline
-tests/test_semantic_extraction_llm.py::test::test_confidence_is_clamped_never_amplified	missing	-	baseline
-tests/test_semantic_extraction_llm.py::test::test_llm_annotations_face_identical_projector_and_invalidation_gates	missing	-	baseline
-tests/test_semantic_extraction_llm.py::test::test_llm_extractor_registers_beside_the_deterministic_one	missing	-	baseline
-tests/test_semantic_extraction_llm.py::test::test_llm_may_not_mint_an_annotation_whose_anchor_does_not_exist	missing	-	baseline
-tests/test_semantic_extraction_llm.py::test::test_no_provider_means_byte_identical_behavior_to_today	missing	-	baseline
-tests/test_semantic_extraction_llm.py::test::test_provider_added_after_boot_versions_the_profile_without_replacing_floor	missing	-	baseline
-tests/test_semantic_extraction_llm.py::test::test_provider_upgrades_default_profile_for_the_two_missing_facets	missing	-	baseline
-tests/test_semantic_extraction_llm.py::test::test_reextraction_same_identity_is_a_noop_without_provider_contact	missing	-	baseline
-tests/test_semantic_extraction_llm.py::test::test_replay_produces_byte_equal_annotations_and_never_recontacts	missing	-	baseline
-tests/test_semantic_extraction_llm.py::test::test_selected_llm_extraction_cannot_anchor_into_excluded_quoted_history	missing	-	baseline
-tests/test_semantic_extraction_llm.py::test::test_trial_records_promotion_evidence_and_promotion_is_explicit	missing	-	baseline
+tests/test_semantic_extraction_llm.py::class::PoisonProvider	skipped	spec/chronicle_packs/llm_extractor_spec.cr	Recorded completion seam replaces Python provider fixture
+tests/test_semantic_extraction_llm.py::class::RawProvider	skipped	spec/chronicle_packs/llm_extractor_spec.cr	Typed Crystal provider Proc fixture
+tests/test_semantic_extraction_llm.py::class::SelectionProvider	skipped	spec/chronicle_packs/llm_extractor_spec.cr	Typed Crystal selection provider Proc fixture
+tests/test_semantic_extraction_llm.py::const::FIXTURE_RESOLVED	skipped	spec/chronicle_packs/semantic_extraction_selection_spec.cr	Crystal provider resolution fixture is typed
+tests/test_semantic_extraction_llm.py::function::_acquire	skipped	spec/chronicle_packs/semantic_extraction_selection_spec.cr	Crystal evidence fixture helper
+tests/test_semantic_extraction_llm.py::function::_annotation_projection	skipped	spec/chronicle_packs/llm_extractor_spec.cr	Direct graph assertions replace serialized projection helper
+tests/test_semantic_extraction_llm.py::function::_build	skipped	spec/chronicle_packs/llm_extractor_spec.cr	LlmExtractorSupport runtime fixture
+tests/test_semantic_extraction_llm.py::function::_clean_provider	skipped	spec/chronicle_packs/semantic_extraction_selection_spec.cr	SelectionSupport resets provider state
+tests/test_semantic_extraction_llm.py::function::_settings	skipped	spec/chronicle_packs/llm_extractor_spec.cr	Typed SemanticExtractionSettings fixture
+tests/test_semantic_extraction_llm.py::method::PoisonProvider.complete	skipped	spec/chronicle_packs/llm_extractor_spec.cr	Recorded completion replay contract
+tests/test_semantic_extraction_llm.py::method::RawProvider.complete	skipped	spec/chronicle_packs/llm_extractor_spec.cr	Typed Crystal provider Proc
+tests/test_semantic_extraction_llm.py::method::SelectionProvider.__init__	skipped	spec/chronicle_packs/llm_extractor_spec.cr	Closure state replaces Python fixture initialization
+tests/test_semantic_extraction_llm.py::method::SelectionProvider.complete	skipped	spec/chronicle_packs/llm_extractor_spec.cr	Selection provider response fixture
+tests/test_semantic_extraction_llm.py::test::test_confidence_is_clamped_never_amplified	ported	spec/chronicle_packs/llm_extractor_spec.cr	provider confidence is clamped to [0,1]
+tests/test_semantic_extraction_llm.py::test::test_llm_annotations_face_identical_projector_and_invalidation_gates	ported	spec/chronicle_packs/semantic_extraction_slice2_spec.cr	LLM annotations share projector and invalidation pipeline
+tests/test_semantic_extraction_llm.py::test::test_llm_extractor_registers_beside_the_deterministic_one	ported	spec/chronicle_packs/llm_extractor_spec.cr	registered semantic.llm leaves deterministic extractor available
+tests/test_semantic_extraction_llm.py::test::test_llm_may_not_mint_an_annotation_whose_anchor_does_not_exist	ported	spec/chronicle_packs/llm_extractor_spec.cr	verbatim anchor verification drops absent spans
+tests/test_semantic_extraction_llm.py::test::test_no_provider_means_byte_identical_behavior_to_today	ported	spec/chronicle_packs/semantic_extraction_selection_spec.cr	zero-key profile remains deterministic floor
+tests/test_semantic_extraction_llm.py::test::test_provider_added_after_boot_versions_the_profile_without_replacing_floor	ported	spec/chronicle_packs/llm_profile_spec.cr	versioned upgrade preserves deterministic floor
+tests/test_semantic_extraction_llm.py::test::test_provider_upgrades_default_profile_for_the_two_missing_facets	ported	spec/chronicle_packs/semantic_extraction_selection_spec.cr	configured provider routes only model-only facets
+tests/test_semantic_extraction_llm.py::test::test_reextraction_same_identity_is_a_noop_without_provider_contact	ported	spec/chronicle_packs/semantic_extraction_spec.cr	cache identity prevents duplicate extraction runs
+tests/test_semantic_extraction_llm.py::test::test_replay_produces_byte_equal_annotations_and_never_recontacts	ported	spec/chronicle_packs/llm_extractor_spec.cr	recorded completion idempotency replays without contact
+tests/test_semantic_extraction_llm.py::test::test_selected_llm_extraction_cannot_anchor_into_excluded_quoted_history	ported	spec/chronicle_packs/llm_extractor_spec.cr	selected segment excludes quoted-history anchors
+tests/test_semantic_extraction_llm.py::test::test_trial_records_promotion_evidence_and_promotion_is_explicit	ported	spec/chronicle_packs/extractor_trial_spec.cr	recorded trial evidence requires explicit approver
 tests/test_shared_extraction_migration.py::const::CONTENT	skipped	spec/chronicle_packs/shared_extraction_migration_spec.cr	Crystal migration fixture keeps the same content as a typed module constant
 tests/test_shared_extraction_migration.py::const::DIGEST	skipped	spec/chronicle_packs/shared_extraction_migration_spec.cr	acquire computes the content digest at the Crystal fixture boundary
 tests/test_shared_extraction_migration.py::const::LEGACY_CANDIDATE_TYPES	skipped	spec/chronicle_packs/shared_extraction_migration_spec.cr	Crystal migration fixture keeps the same legacy candidate-type set
