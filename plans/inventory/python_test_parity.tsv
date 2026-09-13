@@ -479,16 +479,16 @@ tests/test_promotion_loop.py::test::test_standing_scope_earned_from_deterministi
 tests/test_promotion_loop.py::test::test_thresholds_are_enforced_below_the_versioned_bar	missing	-	baseline
 tests/test_promotion_loop.py::test::test_unpromoted_memory_cannot_claim_replay_verified	missing	-	baseline
 tests/test_promotion_loop.py::test::test_unpromoted_or_unused_skills_fail_loudly	missing	-	baseline
-tests/test_provider_compat.py::class::_FakeAuthError	missing	-	baseline
-tests/test_provider_compat.py::class::_FakeBadRequest	missing	-	baseline
-tests/test_provider_compat.py::class::_FakeRateLimit	missing	-	baseline
-tests/test_provider_compat.py::class::_FakeTimeout	missing	-	baseline
-tests/test_provider_compat.py::test::test_gateway_capability_keys_are_wire_translatable	missing	-	baseline
-tests/test_provider_compat.py::test::test_pack_scoped_names_sanitize_and_round_trip	missing	-	baseline
-tests/test_provider_compat.py::test::test_runtime_owns_reasoning_family_params	missing	-	baseline
-tests/test_provider_compat.py::test::test_terminal_errors_are_no_longer_network_flakes	missing	-	baseline
-tests/test_provider_compat.py::test::test_unmapped_response_names_pass_through	missing	-	baseline
-tests/test_provider_compat.py::test::test_wire_safe_names_pass_through_unchanged	missing	-	baseline
+tests/test_provider_compat.py::class::_FakeAuthError	skipped	lib/chronicle/spec/chronicle/wire_spec.cr	Python fake exception helper is replaced by Chronicle wire exception specs
+tests/test_provider_compat.py::class::_FakeBadRequest	skipped	lib/chronicle/spec/chronicle/wire_spec.cr	Python fake exception helper is replaced by Chronicle wire exception specs
+tests/test_provider_compat.py::class::_FakeRateLimit	skipped	lib/chronicle/spec/chronicle/wire_spec.cr	Python fake exception helper is replaced by Chronicle wire exception specs
+tests/test_provider_compat.py::class::_FakeTimeout	skipped	lib/chronicle/spec/chronicle/wire_spec.cr	Python fake exception helper is replaced by Chronicle wire exception specs
+tests/test_provider_compat.py::test::test_gateway_capability_keys_are_wire_translatable	ported	lib/chronicle/spec/chronicle/wire_spec.cr	Chronicle Wire sanitizes canonical dotted tool names and restores them from the map
+tests/test_provider_compat.py::test::test_pack_scoped_names_sanitize_and_round_trip	ported	lib/chronicle/spec/chronicle/wire_spec.cr	Chronicle Wire round-trips pack-scoped names
+tests/test_provider_compat.py::test::test_runtime_owns_reasoning_family_params	skipped	lib/crig/src/crig/providers/openai/completion.cr	Crig owns provider-specific reasoning-family request parameters; packs do not carry an OpenAI shim
+tests/test_provider_compat.py::test::test_terminal_errors_are_no_longer_network_flakes	ported	lib/chronicle/spec/chronicle/wire_spec.cr	Chronicle Wire classifies auth/request terminal and rate/network transient failures
+tests/test_provider_compat.py::test::test_unmapped_response_names_pass_through	ported	lib/chronicle/spec/chronicle/wire_spec.cr	Unmapped wire names pass through for runtime unknown-tool handling
+tests/test_provider_compat.py::test::test_wire_safe_names_pass_through_unchanged	ported	lib/chronicle/spec/chronicle/wire_spec.cr	Wire-safe names remain unchanged
 tests/test_public_presence.py::const::HANDLES	missing	-	baseline
 tests/test_public_presence.py::const::PAGES	missing	-	baseline
 tests/test_public_presence.py::function::_build	missing	-	baseline
