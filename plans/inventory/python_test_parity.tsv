@@ -535,31 +535,31 @@ tests/test_schedule_pack.py::function::_ctx	ported	spec/chronicle_packs/schedule
 tests/test_schedule_pack.py::function::rt	ported	spec/chronicle_packs/schedule_pack_spec.cr::with_reminder_runtime	-
 tests/test_schedule_pack.py::test::test_reminder_requires_a_time	ported	spec/chronicle_packs/schedule_pack_spec.cr	-
 tests/test_schedule_pack.py::test::test_reminder_via_gateway_proxy_then_tick_delivers	ported	spec/chronicle_packs/schedule_pack_spec.cr	-
-tests/test_semantic_extraction.py::const::SUMMARY	missing	-	baseline
-tests/test_semantic_extraction.py::function::_acquire	missing	-	baseline
-tests/test_semantic_extraction.py::function::_annotation_fingerprint	missing	-	baseline
-tests/test_semantic_extraction.py::function::_build	missing	-	baseline
-tests/test_semantic_extraction.py::test::test_candidates_chain_to_annotations_and_evidence	missing	-	baseline
-tests/test_semantic_extraction.py::test::test_coverage_recorded_and_queryable	missing	-	baseline
-tests/test_semantic_extraction.py::test::test_default_profile_bounds_multi_subject_communication	missing	-	baseline
-tests/test_semantic_extraction.py::test::test_disabled_extractor_blocks_new_runs	missing	-	baseline
-tests/test_semantic_extraction.py::test::test_every_annotation_carries_the_full_envelope	missing	-	baseline
-tests/test_semantic_extraction.py::test::test_extraction_is_byte_deterministic	missing	-	baseline
-tests/test_semantic_extraction.py::test::test_extraction_run_produces_annotations_never_candidates	missing	-	baseline
-tests/test_semantic_extraction.py::test::test_facet_incremental_reextraction_fills_only_missing	missing	-	baseline
-tests/test_semantic_extraction.py::test::test_idempotent_reextraction_same_cache_identity	missing	-	baseline
-tests/test_semantic_extraction.py::test::test_modality_polarity_and_event_time	missing	-	baseline
-tests/test_semantic_extraction.py::test::test_multi_subject_communication_prefilters_ineligible_candidate_behaviors	missing	-	baseline
-tests/test_semantic_extraction.py::test::test_new_revision_gets_fresh_annotations	missing	-	baseline
-tests/test_semantic_extraction.py::test::test_profile_seeded_once_and_versioned_update_supersedes	missing	-	baseline
-tests/test_semantic_extraction.py::test::test_profile_update_rejects_unknown_facets	missing	-	baseline
-tests/test_semantic_extraction.py::test::test_reacquisition_of_identical_content_adds_nothing	missing	-	baseline
-tests/test_semantic_extraction.py::test::test_replayed_stack_owned_profile_migrates_communication_floor	missing	-	baseline
-tests/test_semantic_extraction.py::test::test_standard_facet_set_is_complete	missing	-	baseline
-tests/test_semantic_extraction.py::test::test_subject_attribution_for_user_role	missing	-	baseline
-tests/test_semantic_extraction.py::test::test_truncation_is_visible_in_coverage	missing	-	baseline
-tests/test_semantic_extraction.py::test::test_unimplemented_standard_facet_is_recorded_not_silently_claimed	missing	-	baseline
-tests/test_semantic_extraction.py::test::test_version_invalidation_demotes_via_provenance_evidence_intact	missing	-	baseline
+tests/test_semantic_extraction.py::const::SUMMARY	skipped	spec/chronicle_packs/semantic_extraction_spec.cr	Crystal specs use focused typed content fixtures per behavior
+tests/test_semantic_extraction.py::function::_acquire	skipped	spec/chronicle_packs/semantic_extraction_spec.cr	SemanticExtractionSpecSupport.ingest_evidence is the typed acquisition fixture
+tests/test_semantic_extraction.py::function::_annotation_fingerprint	skipped	spec/chronicle_packs/semantic_extraction_spec.cr	Canonical JSON row fingerprint is built inline in the deterministic spec
+tests/test_semantic_extraction.py::function::_build	skipped	spec/chronicle_packs/semantic_extraction_spec.cr	SemanticExtractionSpecSupport.with_semantic_runtime is the Crystal runtime fixture
+tests/test_semantic_extraction.py::test::test_candidates_chain_to_annotations_and_evidence	ported	spec/chronicle_packs/semantic_extraction_spec.cr	projected_from_annotation links resolve to source annotation ids
+tests/test_semantic_extraction.py::test::test_coverage_recorded_and_queryable	ported	spec/chronicle_packs/semantic_extraction_spec.cr	coverage exposes run identity and processed content extent
+tests/test_semantic_extraction.py::test::test_default_profile_bounds_multi_subject_communication	ported	spec/chronicle_packs/semantic_extraction_spec.cr	active profile routes communication to the bounded floor
+tests/test_semantic_extraction.py::test::test_disabled_extractor_blocks_new_runs	ported	spec/chronicle_packs/semantic_extraction_spec.cr	disabled deterministic extractor produces no later completed run
+tests/test_semantic_extraction.py::test::test_every_annotation_carries_the_full_envelope	ported	spec/chronicle_packs/semantic_extraction_spec.cr	annotations preserve source anchors provenance confidence and nullable time fields
+tests/test_semantic_extraction.py::test::test_extraction_is_byte_deterministic	ported	spec/chronicle_packs/semantic_extraction_spec.cr	canonical annotation envelope fingerprint is stable across runtimes
+tests/test_semantic_extraction.py::test::test_extraction_run_produces_annotations_never_candidates	ported	spec/chronicle_packs/semantic_extraction_spec.cr	all projectors disabled leaves annotation-only extraction
+tests/test_semantic_extraction.py::test::test_facet_incremental_reextraction_fills_only_missing	ported	spec/chronicle_packs/semantic_extraction_spec.cr	incremental topic_tag run executes only missing facet
+tests/test_semantic_extraction.py::test::test_idempotent_reextraction_same_cache_identity	ported	spec/chronicle_packs/semantic_extraction_spec.cr	explicit cache-identity reextraction does not mint rows
+tests/test_semantic_extraction.py::test::test_modality_polarity_and_event_time	ported	spec/chronicle_packs/semantic_extraction_spec.cr	hedged modality and temporal normalized event_time are retained
+tests/test_semantic_extraction.py::test::test_multi_subject_communication_prefilters_ineligible_candidate_behaviors	ported	spec/chronicle_packs/semantic_extraction_spec.cr	communication with no owner scope cannot reach candidate projectors
+tests/test_semantic_extraction.py::test::test_new_revision_gets_fresh_annotations	ported	spec/chronicle_packs/semantic_extraction_spec.cr	changed source digest supersedes evidence and mints fresh annotations
+tests/test_semantic_extraction.py::test::test_profile_seeded_once_and_versioned_update_supersedes	ported	spec/chronicle_packs/semantic_extraction_spec.cr	seed migration and owner update produce the active versioned profile
+tests/test_semantic_extraction.py::test::test_profile_update_rejects_unknown_facets	ported	spec/chronicle_packs/semantic_extraction_spec.cr	unknown facets fail closed
+tests/test_semantic_extraction.py::test::test_reacquisition_of_identical_content_adds_nothing	ported	spec/chronicle_packs/semantic_extraction_spec.cr	identical acquired evidence retains one evidence and annotation set
+tests/test_semantic_extraction.py::test::test_replayed_stack_owned_profile_migrates_communication_floor	ported	spec/chronicle_packs/shared_extraction_migration_spec.cr	shared extraction migration upgrades the persisted communication floor
+tests/test_semantic_extraction.py::test::test_standard_facet_set_is_complete	ported	spec/chronicle_packs/semantic_extraction_spec.cr	all ten standard facets are asserted in wire order
+tests/test_semantic_extraction.py::test::test_subject_attribution_for_user_role	ported	spec/chronicle_packs/semantic_extraction_spec.cr	user evidence produces subject_self attribution
+tests/test_semantic_extraction.py::test::test_truncation_is_visible_in_coverage	ported	spec/chronicle_packs/semantic_extraction_spec.cr	coverage records bounded processed chars and truncation flag
+tests/test_semantic_extraction.py::test::test_unimplemented_standard_facet_is_recorded_not_silently_claimed	ported	spec/chronicle_packs/semantic_extraction_spec.cr	unsupported idea facet is explicit coverage skip
+tests/test_semantic_extraction.py::test::test_version_invalidation_demotes_via_provenance_evidence_intact	ported	spec/chronicle_packs/semantic_extraction_spec.cr	invalidation demotes deterministic provenance while preserving evidence
 tests/test_semantic_extraction_llm.py::class::PoisonProvider	skipped	spec/chronicle_packs/llm_extractor_spec.cr	Recorded completion seam replaces Python provider fixture
 tests/test_semantic_extraction_llm.py::class::RawProvider	skipped	spec/chronicle_packs/llm_extractor_spec.cr	Typed Crystal provider Proc fixture
 tests/test_semantic_extraction_llm.py::class::SelectionProvider	skipped	spec/chronicle_packs/llm_extractor_spec.cr	Typed Crystal selection provider Proc fixture

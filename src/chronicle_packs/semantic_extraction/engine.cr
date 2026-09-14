@@ -124,7 +124,10 @@ module Chronicle::Packs::SemanticExtraction
     attribution, author_role = _attribution(normalized_metadata)
     observation_time = evidence["provider_time"]?.try(&.as_s?)
 
-    selected_chars = content.size
+    # The extractor consumes at most the configured content bound. Coverage
+    # reports the actual processed extent rather than claiming the whole
+    # evidence payload was examined.
+    selected_chars = Math.min(content.size, settings.max_content_chars)
     if content_segments
       verified_segments = [] of {Int32, String}
       selected_chars = 0

@@ -23,7 +23,9 @@ module Chronicle::Packs::SemanticExtraction
     getter confidence : Float64
     getter attribution : String = "unknown"
     getter author_role : String?
+    @[JSON::Field(emit_null: true)]
     getter event_time : String?
+    @[JSON::Field(emit_null: true)]
     getter observation_time : String?
     getter modality : String = "stated"
     getter polarity : String = "positive"

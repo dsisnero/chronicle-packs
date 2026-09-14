@@ -9,15 +9,45 @@ module Chronicle::Packs::SemanticExtraction
   class_property bound_graph : Chronicle::GraphProjection? = nil
 
   # Extract annotations from one evidence revision through the profile policy.
+  # ameba:disable Metrics/CyclomaticComplexity -- faithful aggregation of the upstream multi-extractor response
   def self.extract_annotations_fn(graph : Chronicle::GraphProjection, evidence_id : String, settings : SemanticExtractionSettings, requested_facets : Array(String)? = nil) : Hash(String, JSON::Any)
     evidence_obj = graph.get_object(evidence_id)
     raise Chronicle::Packs::PackError.new("unknown activity_evidence: #{evidence_id}") if evidence_obj.nil? || evidence_obj.type != "activity_evidence"
 
     results = run_profile_extraction(graph, evidence_obj, settings: settings, requested_facets: requested_facets)
-    last = results.last?
-    return {"ok" => JSON::Any.new(false)} if last.nil?
+    return {"ok" => JSON::Any.new(false)} if results.empty?
 
-    last
+    runs = results.compact_map do |result|
+      graph.get_object(result["run"]?.try(&.as_s?) || "")
+    end
+    return {"ok" => JSON::Any.new(false)} if runs.empty?
+
+    run_data = runs.map { |run| {run, JSON.parse(run.data).as_h} }
+    executed = run_data.flat_map { |_run, data| data["executed_facets"]?.try(&.as_a?.try(&.map(&.as_s))) || [] of String }.to_set.to_a.sort
+    cached = run_data.flat_map { |_run, data| data["cached_facets"]?.try(&.as_a?.try(&.map(&.as_s))) || [] of String }.to_set.to_a.sort
+    annotation_ids = run_data.flat_map { |_run, data| data["annotation_ids"]?.try(&.as_a?.try(&.map(&.as_s))) || [] of String }
+    first, first_data = run_data.first
+    runs_json = run_data.map do |run, data|
+      JSON::Any.new({
+        "run_id"            => JSON::Any.new(run.id),
+        "run_identity"      => data["run_identity"]? || JSON::Any.new(nil),
+        "extractor_id"      => data["extractor_id"]? || JSON::Any.new(nil),
+        "extractor_version" => data["extractor_version"]? || JSON::Any.new(nil),
+        "executed_facets"   => data["executed_facets"]? || JSON::Any.new([] of JSON::Any),
+        "cached_facets"     => data["cached_facets"]? || JSON::Any.new([] of JSON::Any),
+      })
+    end
+    {
+      "ok"              => JSON::Any.new(results.all? { |result| result["ok"]?.try(&.as_bool?) || false }),
+      "created"         => JSON::Any.new(results.any? { |result| result["created"]?.try(&.as_bool?) || false }),
+      "run"             => JSON::Any.new(first.id),
+      "run_id"          => JSON::Any.new(first.id),
+      "run_identity"    => first_data["run_identity"]? || JSON::Any.new(nil),
+      "executed_facets" => JSON::Any.new(executed.map { |facet| JSON::Any.new(facet) }),
+      "cached_facets"   => JSON::Any.new(cached.map { |facet| JSON::Any.new(facet) }),
+      "annotation_ids"  => JSON::Any.new(annotation_ids.map { |id| JSON::Any.new(id) }),
+      "runs"            => JSON::Any.new(runs_json),
+    }
   end
 
   # Fork-trial the candidate extractor against the baseline (ADR 0014).
