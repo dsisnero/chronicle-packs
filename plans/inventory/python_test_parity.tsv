@@ -449,36 +449,36 @@ tests/test_preflight.py::test::test_lying_old_version_string_passes_when_feature
 tests/test_preflight.py::test::test_old_runtime_raises_the_exact_promised_message	ported	spec/chronicle_packs/preflight_spec.cr::preflight_message	verbatim too-old message
 tests/test_preflight.py::test::test_runtime_missing_manifest_module_entirely_raises	ported	spec/chronicle_packs/preflight_spec.cr::preflight_message	message embeds found 0.9.0
 tests/test_preflight.py::test::test_runtime_without_version_attribute_reports_unknown	ported	spec/chronicle_packs/preflight_spec.cr::preflight_message	message embeds found unknown
-tests/test_promotion_loop.py::function::_admit_memory	missing	-	baseline
-tests/test_promotion_loop.py::function::_clean	missing	-	baseline
-tests/test_promotion_loop.py::function::_open_proposals	missing	-	baseline
-tests/test_promotion_loop.py::function::_prediction_history	missing	-	baseline
-tests/test_promotion_loop.py::function::_promote_memory	missing	-	baseline
-tests/test_promotion_loop.py::function::_promoted_skill	missing	-	baseline
-tests/test_promotion_loop.py::function::_record_helped	missing	-	baseline
-tests/test_promotion_loop.py::function::_record_outcome	missing	-	baseline
-tests/test_promotion_loop.py::function::_runtime	missing	-	baseline
-tests/test_promotion_loop.py::function::add_r2_call	missing	-	baseline
-tests/test_promotion_loop.py::test::test_approval_promotes_and_emits_the_contract_key	missing	-	baseline
-tests/test_promotion_loop.py::test::test_backfilled_predictions_can_never_earn_automation	missing	-	baseline
-tests/test_promotion_loop.py::test::test_degradation_demotes_naming_the_missed_predictions	missing	-	baseline
-tests/test_promotion_loop.py::test::test_gateway_r2_requires_promoted_standing_scope	missing	-	baseline
-tests/test_promotion_loop.py::test::test_harmful_outcome_generates_demotion_and_approval_demotes	missing	-	baseline
-tests/test_promotion_loop.py::test::test_local_policy_always_keeps_a_scope_manual	missing	-	baseline
-tests/test_promotion_loop.py::test::test_owner_disable_is_final_until_a_fresh_proposal	missing	-	baseline
-tests/test_promotion_loop.py::test::test_promoted_memory_earns_replay_verified_with_contract_key	missing	-	baseline
-tests/test_promotion_loop.py::test::test_promoted_skill_earns_replay_verified_via_fork_trial	missing	-	baseline
-tests/test_promotion_loop.py::test::test_promotion_machinery_reads_no_score_and_no_product_state	missing	-	baseline
-tests/test_promotion_loop.py::test::test_r3_and_r4_scopes_are_structurally_impossible	missing	-	baseline
-tests/test_promotion_loop.py::test::test_reference_only_lineage_fails_loudly_for_memory	missing	-	baseline
-tests/test_promotion_loop.py::test::test_reference_only_lineage_fails_loudly_for_skills	missing	-	baseline
-tests/test_promotion_loop.py::test::test_rejection_closes_the_proposal_without_promoting	missing	-	baseline
-tests/test_promotion_loop.py::test::test_reliability_guard_demotes_but_never_repromotes	missing	-	baseline
-tests/test_promotion_loop.py::test::test_repeated_helped_outcomes_generate_a_promotion_proposal	missing	-	baseline
-tests/test_promotion_loop.py::test::test_standing_scope_earned_from_deterministic_history	missing	-	baseline
-tests/test_promotion_loop.py::test::test_thresholds_are_enforced_below_the_versioned_bar	missing	-	baseline
-tests/test_promotion_loop.py::test::test_unpromoted_memory_cannot_claim_replay_verified	missing	-	baseline
-tests/test_promotion_loop.py::test::test_unpromoted_or_unused_skills_fail_loudly	missing	-	baseline
+tests/test_promotion_loop.py::function::_admit_memory	skipped	spec/chronicle_packs/memory_promotion_spec.cr	Python test fixture helper; Crystal fixture is PromotionSupport.store_item
+tests/test_promotion_loop.py::function::_clean	skipped	spec/chronicle_packs/memory_promotion_spec.cr	Python registry cleanup helper; graph-backed Crystal backend has no process-global backend cache
+tests/test_promotion_loop.py::function::_open_proposals	skipped	spec/chronicle_packs/memory_promotion_spec.cr	Python test query helper; Crystal specs query memory_promotion_proposal directly
+tests/test_promotion_loop.py::function::_prediction_history	skipped	spec/chronicle_packs/standing_scopes_spec.cr	Python fixture helper; Crystal emit_pairs creates ordered recorded evidence
+tests/test_promotion_loop.py::function::_promote_memory	skipped	spec/chronicle_packs/memory_promotion_spec.cr	Python fixture helper; Crystal PromotionSupport.promote_item is equivalent
+tests/test_promotion_loop.py::function::_promoted_skill	skipped	spec/chronicle_packs/skills_spec.cr	Python fixture helper; skill lifecycle fixture remains pack-local
+tests/test_promotion_loop.py::function::_record_helped	skipped	spec/chronicle_packs/memory_promotion_spec.cr	Python fixture helper; reliability.changed is injected directly in Crystal
+tests/test_promotion_loop.py::function::_record_outcome	skipped	spec/chronicle_packs/memory_promotion_spec.cr	Python fixture helper; outcome behavior is covered by owning pack specs
+tests/test_promotion_loop.py::function::_runtime	skipped	spec/spec_helper.cr	Python runtime fixture is replaced by PackSpecRuntime.runtime
+tests/test_promotion_loop.py::function::add_r2_call	skipped	spec/chronicle_packs/standing_scopes_spec.cr	Python fixture helper; Crystal tests exercise policy decisions directly
+tests/test_promotion_loop.py::test::test_approval_promotes_and_emits_the_contract_key	ported	spec/chronicle_packs/memory_promotion_spec.cr::resolves a promote proposal via an explicit approver and emits memory.promoted	approval, immutable artifact-version key, and durable promoted event
+tests/test_promotion_loop.py::test::test_backfilled_predictions_can_never_earn_automation	ported	spec/chronicle_packs/standing_scopes_spec.cr::proposes a candidate from qualifying prediction history	ordered prediction/decision evidence is validated by _validate_pairs
+tests/test_promotion_loop.py::test::test_degradation_demotes_naming_the_missed_predictions	ported	spec/chronicle_packs/standing_scopes_spec.cr::demotes a scope on accuracy degradation	missed prediction ids and observed accuracy are durable demotion evidence
+tests/test_promotion_loop.py::test::test_gateway_r2_requires_promoted_standing_scope	ported	spec/chronicle_packs/standing_scopes_spec.cr::promotes a candidate and feeds R2 auto-approval	R2 auto-approval requires a promoted standing scope
+tests/test_promotion_loop.py::test::test_harmful_outcome_generates_demotion_and_approval_demotes	ported	spec/chronicle_packs/memory_promotion_spec.cr::demotes a promoted version on harmful evidence	harmful reliability creates a governed demotion proposal
+tests/test_promotion_loop.py::test::test_local_policy_always_keeps_a_scope_manual	ported	spec/chronicle_packs/standing_scopes_spec.cr::promotes a candidate and feeds R2 auto-approval	gateway decision detail enforces capability-local ceilings before standing scope grants
+tests/test_promotion_loop.py::test::test_owner_disable_is_final_until_a_fresh_proposal	ported	spec/chronicle_packs/standing_scopes_spec.cr	promote_tool_policy_fn rejects disabled scopes; re-proposal increments version
+tests/test_promotion_loop.py::test::test_promoted_memory_earns_replay_verified_with_contract_key	ported	spec/chronicle_packs/memory_promotion_spec.cr::verify_memory_replay_fn earns replay.verified for a promoted item and fails loudly on replay-incomplete lineage	recorded admission and retrieval verification is idempotent per item version
+tests/test_promotion_loop.py::test::test_promoted_skill_earns_replay_verified_via_fork_trial	intentional_divergence	src/chronicle_packs/skills/verification.cr	Chronicle's packaged runtime has no durable Runtime#fork child execution seam; Crystal preserves the fail-closed lineage boundary until that dependency API exists
+tests/test_promotion_loop.py::test::test_promotion_machinery_reads_no_score_and_no_product_state	ported	spec/chronicle_packs/promotion_loop_spec.cr	static contract prevents product-score and predictor-state coupling
+tests/test_promotion_loop.py::test::test_r3_and_r4_scopes_are_structurally_impossible	ported	spec/chronicle_packs/standing_scopes_spec.cr::proposes a candidate from qualifying prediction history	standing scopes reject R3 and R4 before evidence is considered
+tests/test_promotion_loop.py::test::test_reference_only_lineage_fails_loudly_for_memory	ported	spec/chronicle_packs/memory_promotion_spec.cr::verify_memory_replay_fn raises on reference_only lineage	ADR 0015 replay-incomplete lineage fails closed
+tests/test_promotion_loop.py::test::test_reference_only_lineage_fails_loudly_for_skills	intentional_divergence	src/chronicle_packs/skills/verification.cr	Skill replay verification is intentionally unavailable until the required durable fork-trial runtime seam exists; lineage helper remains fail-closed
+tests/test_promotion_loop.py::test::test_rejection_closes_the_proposal_without_promoting	ported	spec/chronicle_packs/memory_promotion_spec.cr::rejects a proposal	rejection is durable and leaves the item admitted
+tests/test_promotion_loop.py::test::test_reliability_guard_demotes_but_never_repromotes	ported	spec/chronicle_packs/tool_gateway_reliability_guard_spec.cr::does not auto-re-promote a demoted automation grant	outcome degradation demotes and recovery never silently restores automation
+tests/test_promotion_loop.py::test::test_repeated_helped_outcomes_generate_a_promotion_proposal	ported	spec/chronicle_packs/memory_promotion_spec.cr::memory_promotion_proposer generates proposals from reliability.changed	thresholded supported reliability proposes without promoting
+tests/test_promotion_loop.py::test::test_standing_scope_earned_from_deterministic_history	ported	spec/chronicle_packs/standing_scopes_spec.cr::proposes a candidate from qualifying prediction history	versioned prediction-count and accuracy evidence gates candidate creation
+tests/test_promotion_loop.py::test::test_thresholds_are_enforced_below_the_versioned_bar	ported	spec/chronicle_packs/standing_scopes_spec.cr::proposes a candidate from qualifying prediction history	minimum count and accuracy are checked before policy creation
+tests/test_promotion_loop.py::test::test_unpromoted_memory_cannot_claim_replay_verified	ported	spec/chronicle_packs/memory_promotion_spec.cr::verify_memory_replay_fn earns replay.verified for a promoted item and fails loudly on replay-incomplete lineage	unpromoted items are rejected before replay verification
+tests/test_promotion_loop.py::test::test_unpromoted_or_unused_skills_fail_loudly	intentional_divergence	src/chronicle_packs/skills/verification.cr	The fork-trial verifier is unavailable until Chronicle provides durable fork execution; no success path is exposed in its absence
 tests/test_provider_compat.py::class::_FakeAuthError	skipped	lib/chronicle/spec/chronicle/wire_spec.cr	Python fake exception helper is replaced by Chronicle wire exception specs
 tests/test_provider_compat.py::class::_FakeBadRequest	skipped	lib/chronicle/spec/chronicle/wire_spec.cr	Python fake exception helper is replaced by Chronicle wire exception specs
 tests/test_provider_compat.py::class::_FakeRateLimit	skipped	lib/chronicle/spec/chronicle/wire_spec.cr	Python fake exception helper is replaced by Chronicle wire exception specs

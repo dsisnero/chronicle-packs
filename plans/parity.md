@@ -26,7 +26,7 @@ Intentional divergences section). The `## Features` sections below remain the
 per-pack detail record (surfaces, divergence notes, fixture drivers).
 
 **Progress: 1739 / 2080 source API items ported, 17 partial, 92 skipped, 111 deferred.**
-**Remaining: 120 missing items + 393/638 upstream tests ported (5 intentional divergences).**
+**Remaining: 120 missing items + 410/638 upstream tests ported (8 intentional divergences).**
 
 ## Remaining feature-size roadmap (S / M / L)
 
@@ -198,7 +198,7 @@ per-pack detail record (surfaces, divergence notes, fixture drivers).
       test_memory_retrieval_quality, test_memory_embedding_seam, test_mcp_inbound,
       test_mcp_client, test_semantic_extraction, test_semantic_extraction_llm,
       test_usage, test_activity_normalizer, test_injection_posture
-      ported; stub-injection cases deferred)
+      and test_promotion_loop ported; stub-injection cases deferred)
 
 ### Next up (concrete plan order)
 
