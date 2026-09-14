@@ -26,7 +26,7 @@ Intentional divergences section). The `## Features` sections below remain the
 per-pack detail record (surfaces, divergence notes, fixture drivers).
 
 **Progress: 1739 / 2080 source API items ported, 17 partial, 92 skipped, 111 deferred.**
-**Remaining: 120 missing items + 413/638 upstream tests ported (5 intentional divergences).**
+**Remaining: 120 missing items + 413/638 upstream tests ported (17 intentional divergences).**
 
 ## Remaining feature-size roadmap (S / M / L)
 

@@ -337,33 +337,33 @@ tests/test_mcp_inbound.py::test::test_refusals_and_grants_are_audited	ported	spe
 tests/test_mcp_inbound.py::test::test_resolve_caller_matrix	ported	spec/chronicle_packs/mcp_spec.cr	Identity/Auth token caller matrix
 tests/test_mcp_inbound.py::test::test_set_exposure_is_a_held_capability	ported	spec/chronicle_packs/mcp_spec.cr	mcp.set_exposure stays held until owner approval
 tests/test_mcp_inbound.py::test::test_unverified_mode_treats_token_as_configured_role	ported	spec/chronicle_packs/mcp_spec.cr	configured token role and strict fail-closed option
-tests/test_memory_backend_registry.py::class::ExplodingClient	missing	-	baseline
-tests/test_memory_backend_registry.py::class::FakeBackend	missing	-	baseline
-tests/test_memory_backend_registry.py::class::FakeMem0Client	missing	-	baseline
-tests/test_memory_backend_registry.py::class::WeirdShapeClient	missing	-	baseline
-tests/test_memory_backend_registry.py::function::_clean_registry	missing	-	baseline
-tests/test_memory_backend_registry.py::function::_mem0_backend	missing	-	baseline
-tests/test_memory_backend_registry.py::method::ExplodingClient.add	missing	-	baseline
-tests/test_memory_backend_registry.py::method::ExplodingClient.search	missing	-	baseline
-tests/test_memory_backend_registry.py::method::FakeBackend.__init__	missing	-	baseline
-tests/test_memory_backend_registry.py::method::FakeBackend.retrieve_by_query	missing	-	baseline
-tests/test_memory_backend_registry.py::method::FakeBackend.store_item	missing	-	baseline
-tests/test_memory_backend_registry.py::method::FakeMem0Client.__init__	missing	-	baseline
-tests/test_memory_backend_registry.py::method::FakeMem0Client.add	missing	-	baseline
-tests/test_memory_backend_registry.py::method::FakeMem0Client.search	missing	-	baseline
-tests/test_memory_backend_registry.py::method::WeirdShapeClient.search	missing	-	baseline
-tests/test_memory_backend_registry.py::test::test_backend_instances_are_singletons_per_url	missing	-	baseline
-tests/test_memory_backend_registry.py::test::test_external_backend_defaults_are_safe	missing	-	baseline
-tests/test_memory_backend_registry.py::test::test_mem0_degrades_gracefully	missing	-	baseline
-tests/test_memory_backend_registry.py::test::test_mem0_min_score_category_and_frame_filters	missing	-	baseline
-tests/test_memory_backend_registry.py::test::test_mem0_requires_package_or_client	missing	-	baseline
-tests/test_memory_backend_registry.py::test::test_mem0_retrieval_roundtrip_and_result_shape	missing	-	baseline
-tests/test_memory_backend_registry.py::test::test_mem0_store_maps_subject_to_user_id	missing	-	baseline
-tests/test_memory_backend_registry.py::test::test_mem0_subject_scoping_and_global_merge	missing	-	baseline
-tests/test_memory_backend_registry.py::test::test_register_mem0_backend_wires_scheme	missing	-	baseline
-tests/test_memory_backend_registry.py::test::test_scheme_dispatch_and_sqlite_default	missing	-	baseline
-tests/test_memory_backend_registry.py::test::test_sqlite_file_uri_honors_shared_memory_mode	missing	-	baseline
-tests/test_memory_backend_registry.py::test::test_tools_path_works_against_external_backend	missing	-	baseline
+tests/test_memory_backend_registry.py::class::ExplodingClient	skipped	spec/chronicle_packs/memory_embedders_spec.cr	Python test double for an external authoritative store; failures are modeled at the recorded embedding-service boundary
+tests/test_memory_backend_registry.py::class::FakeBackend	skipped	spec/chronicle_packs/memory_gateway_spec.cr	Python test double for a process-global backend registry; Crystal storage is graph-owned
+tests/test_memory_backend_registry.py::class::FakeMem0Client	skipped	spec/chronicle_packs/memory_embedders_spec.cr	Python Mem0 client fixture has no Crystal runtime equivalent
+tests/test_memory_backend_registry.py::class::WeirdShapeClient	skipped	spec/chronicle_packs/memory_embedders_spec.cr	Python provider-shape fixture is replaced by typed embedding-service results
+tests/test_memory_backend_registry.py::function::_clean_registry	skipped	spec/chronicle_packs/memory_gateway_spec.cr	No global backend cache exists; each graph owns durable memory records
+tests/test_memory_backend_registry.py::function::_mem0_backend	skipped	spec/chronicle_packs/memory_embedders_spec.cr	Python fixture helper for the intentionally absent Mem0 store adapter
+tests/test_memory_backend_registry.py::method::ExplodingClient.add	skipped	spec/chronicle_packs/memory_embedders_spec.cr	Python fake-client helper
+tests/test_memory_backend_registry.py::method::ExplodingClient.search	skipped	spec/chronicle_packs/memory_embedders_spec.cr	Python fake-client helper
+tests/test_memory_backend_registry.py::method::FakeBackend.__init__	skipped	spec/chronicle_packs/memory_gateway_spec.cr	Python fake-backend helper
+tests/test_memory_backend_registry.py::method::FakeBackend.retrieve_by_query	skipped	spec/chronicle_packs/memory_gateway_spec.cr	Python fake-backend helper
+tests/test_memory_backend_registry.py::method::FakeBackend.store_item	skipped	spec/chronicle_packs/memory_gateway_spec.cr	Python fake-backend helper
+tests/test_memory_backend_registry.py::method::FakeMem0Client.__init__	skipped	spec/chronicle_packs/memory_embedders_spec.cr	Python fake-client helper
+tests/test_memory_backend_registry.py::method::FakeMem0Client.add	skipped	spec/chronicle_packs/memory_embedders_spec.cr	Python fake-client helper
+tests/test_memory_backend_registry.py::method::FakeMem0Client.search	skipped	spec/chronicle_packs/memory_embedders_spec.cr	Python fake-client helper
+tests/test_memory_backend_registry.py::method::WeirdShapeClient.search	skipped	spec/chronicle_packs/memory_embedders_spec.cr	Python fake-client helper
+tests/test_memory_backend_registry.py::test::test_backend_instances_are_singletons_per_url	intentional_divergence	src/chronicle_packs/memory_gateway/backend.cr	Memory state is graph-owned, not a process-global URL singleton; graph-local bindings prevent runtime-instance leakage
+tests/test_memory_backend_registry.py::test::test_external_backend_defaults_are_safe	intentional_divergence	src/chronicle_packs/memory_gateway/backend.cr	There is no external authoritative MemoryBackend base class; graph records remain the durable source of truth
+tests/test_memory_backend_registry.py::test::test_mem0_degrades_gracefully	intentional_divergence	src/chronicle_packs/memory_gateway/embedding_service.cr	External embedding failures degrade to lexical retrieval rather than querying an external memory store
+tests/test_memory_backend_registry.py::test::test_mem0_min_score_category_and_frame_filters	intentional_divergence	src/chronicle_packs/memory_gateway/backend.cr	Filtering is applied to durable graph records, never Mem0 provider responses
+tests/test_memory_backend_registry.py::test::test_mem0_requires_package_or_client	intentional_divergence	src/chronicle_packs/memory_gateway/embedding_service.cr	The pack never instantiates provider SDKs; hosts bind a per-graph embedding service
+tests/test_memory_backend_registry.py::test::test_mem0_retrieval_roundtrip_and_result_shape	intentional_divergence	src/chronicle_packs/memory_gateway/backend.cr	Round-trip retrieval uses graph memory_item records and typed result rows
+tests/test_memory_backend_registry.py::test::test_mem0_store_maps_subject_to_user_id	intentional_divergence	src/chronicle_packs/memory_gateway/backend.cr	Subject scope is durable object data, not an external user_id mapping
+tests/test_memory_backend_registry.py::test::test_mem0_subject_scoping_and_global_merge	intentional_divergence	spec/chronicle_packs/memory_subject_scoping_spec.cr	Graph-backed subject/global merge is covered without an external store adapter
+tests/test_memory_backend_registry.py::test::test_register_mem0_backend_wires_scheme	intentional_divergence	src/chronicle_packs/memory_gateway/embedding_service.cr	External backend URL schemes are intentionally absent; optional vectors bind per graph
+tests/test_memory_backend_registry.py::test::test_scheme_dispatch_and_sqlite_default	intentional_divergence	src/chronicle_packs/memory_gateway/backend.cr	The legacy URL-dispatched SQLite/external store seam is replaced by graph-owned durable storage
+tests/test_memory_backend_registry.py::test::test_sqlite_file_uri_honors_shared_memory_mode	intentional_divergence	src/chronicle_packs/memory_gateway/backend.cr	SQLite URI handling belongs to Chronicle EventStore persistence, not MemoryGateway storage
+tests/test_memory_backend_registry.py::test::test_tools_path_works_against_external_backend	intentional_divergence	src/chronicle_packs/memory_gateway/tools.cr	Tools query the graph-backed retrieval contract; provider backends may only accelerate embeddings
 tests/test_memory_curation.py::function::_isolate	skipped	spec/chronicle_packs/chat_spec.cr	Crystal specs clear graph-local registries in their runtime helpers
 tests/test_memory_curation.py::function::_rt	skipped	spec/chronicle_packs/memory_gateway_spec.cr	pytest runtime fixture is absorbed by MemoryGatewaySpecSupport.with_memory_runtime
 tests/test_memory_curation.py::test::test_conversational_sources_always_build_memory	ported	spec/chronicle_packs/chat_spec.cr	Chat memory proposer creates sender-scoped durable candidates for conversational sources
