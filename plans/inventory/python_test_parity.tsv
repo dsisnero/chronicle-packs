@@ -292,29 +292,29 @@ tests/test_manifests.py::test::test_bundle_hash_catches_manifest_only_swap	porte
 tests/test_manifests.py::test::test_capability_declarations_match_source	ported	spec/chronicle_packs/manifests_spec.cr	declared vs live Pack surface (no Python AST)
 tests/test_manifests.py::test::test_manifest_validates_and_hash_pins	ported	spec/chronicle_packs/manifests_spec.cr	aggregate per-pack schema+hash+surface+fixtures
 tests/test_manifests.py::test::test_stale_hash_is_caught	ported	spec/chronicle_packs/manifests_spec.cr	tamper a pack file, verify_content_hash raises
-tests/test_mcp_client.py::class::FakeTransport	missing	-	baseline
-tests/test_mcp_client.py::const::TOOLS	missing	-	baseline
-tests/test_mcp_client.py::function::_ctx	missing	-	baseline
-tests/test_mcp_client.py::function::rt	missing	-	baseline
-tests/test_mcp_client.py::method::FakeTransport.__init__	missing	-	baseline
-tests/test_mcp_client.py::method::FakeTransport.close	missing	-	baseline
-tests/test_mcp_client.py::method::FakeTransport.notify	missing	-	baseline
-tests/test_mcp_client.py::method::FakeTransport.request	missing	-	baseline
-tests/test_mcp_client.py::test::test_client_call_tool_text_and_errors	missing	-	baseline
-tests/test_mcp_client.py::test::test_client_handshake_and_discovery	missing	-	baseline
-tests/test_mcp_client.py::test::test_client_raises_on_jsonrpc_error	missing	-	baseline
-tests/test_mcp_client.py::test::test_discovery_registers_governed_capabilities	missing	-	baseline
-tests/test_mcp_client.py::test::test_high_risk_mcp_tool_is_held	missing	-	baseline
-tests/test_mcp_client.py::test::test_injected_mcp_output_is_flagged	missing	-	baseline
-tests/test_mcp_client.py::test::test_mcp_r3_default_is_ineligible_for_ceiling_automation	missing	-	baseline
-tests/test_mcp_client.py::test::test_mcp_tool_call_flows_through_gateway	missing	-	baseline
-tests/test_mcp_client.py::test::test_mcp_tools_default_to_r3_presumed_outward	missing	-	baseline
-tests/test_mcp_client.py::test::test_operator_action_class_override_is_explicit_per_tool	missing	-	baseline
-tests/test_mcp_client.py::test::test_risk_override_alone_never_changes_action_class	missing	-	baseline
-tests/test_mcp_client.py::test::test_risk_overrides_promote_trusted_tools	missing	-	baseline
-tests/test_mcp_client.py::test::test_schema_model_from_json_schema	missing	-	baseline
-tests/test_mcp_client.py::test::test_schema_model_handles_empty_schema	missing	-	baseline
-tests/test_mcp_client.py::test::test_unreachable_server_is_recorded_not_fatal	missing	-	baseline
+tests/test_mcp_client.py::class::FakeTransport	skipped	spec/chronicle_packs/mcp_spec.cr	MCPFakeTransport is the typed Crystal JSON-RPC fixture
+tests/test_mcp_client.py::const::TOOLS	skipped	spec/chronicle_packs/mcp_spec.cr	MCPFakeTransport::TOOLS is the typed Crystal fixture schema
+tests/test_mcp_client.py::function::_ctx	skipped	spec/chronicle_packs/mcp_spec.cr	Crig ToolContext is created by the gateway proxy transport
+tests/test_mcp_client.py::function::rt	skipped	spec/chronicle_packs/mcp_spec.cr	MCPOutboundSupport.with_mcp_runtime is the Crystal runtime fixture
+tests/test_mcp_client.py::method::FakeTransport.__init__	skipped	spec/chronicle_packs/mcp_spec.cr	Crystal typed fixture initializes properties at declaration
+tests/test_mcp_client.py::method::FakeTransport.close	skipped	spec/chronicle_packs/mcp_spec.cr	MCPFakeTransport implements the abstract close seam
+tests/test_mcp_client.py::method::FakeTransport.notify	skipped	spec/chronicle_packs/mcp_spec.cr	MCPFakeTransport captures initialized notification
+tests/test_mcp_client.py::method::FakeTransport.request	skipped	spec/chronicle_packs/mcp_spec.cr	MCPFakeTransport implements deterministic JSON-RPC responses
+tests/test_mcp_client.py::test::test_client_call_tool_text_and_errors	ported	spec/chronicle_packs/mcp_spec.cr	flattens text content and preserves MCP isError
+tests/test_mcp_client.py::test::test_client_handshake_and_discovery	ported	spec/chronicle_packs/mcp_spec.cr	handshake is once-only and initialized notification is emitted
+tests/test_mcp_client.py::test::test_client_raises_on_jsonrpc_error	ported	spec/chronicle_packs/mcp_spec.cr	JSON-RPC errors raise MCPError
+tests/test_mcp_client.py::test::test_discovery_registers_governed_capabilities	ported	spec/chronicle_packs/mcp_spec.cr	discovery registers high-risk governed capability proxies and audits server
+tests/test_mcp_client.py::test::test_high_risk_mcp_tool_is_held	ported	spec/chronicle_packs/mcp_spec.cr	default high-risk tool is held before execution
+tests/test_mcp_client.py::test::test_injected_mcp_output_is_flagged	ported	spec/chronicle_packs/mcp_spec.cr	poisoned MCP output is flagged and fenced
+tests/test_mcp_client.py::test::test_mcp_r3_default_is_ineligible_for_ceiling_automation	ported	spec/chronicle_packs/mcp_spec.cr	R3 default remains approval-required below the ceiling
+tests/test_mcp_client.py::test::test_mcp_tool_call_flows_through_gateway	ported	spec/chronicle_packs/mcp_spec.cr	gateway records, policies, executes, and fences promoted tool output
+tests/test_mcp_client.py::test::test_mcp_tools_default_to_r3_presumed_outward	ported	spec/chronicle_packs/mcp_spec.cr	discovered tools separately default to high risk and R3 action class
+tests/test_mcp_client.py::test::test_operator_action_class_override_is_explicit_per_tool	ported	spec/chronicle_packs/mcp_spec.cr	explicit action override is per-tool and independent of risk
+tests/test_mcp_client.py::test::test_risk_override_alone_never_changes_action_class	ported	spec/chronicle_packs/mcp_spec.cr	risk override preserves R3 action class
+tests/test_mcp_client.py::test::test_risk_overrides_promote_trusted_tools	ported	spec/chronicle_packs/mcp_spec.cr	only named risk override lowers the selected capability
+tests/test_mcp_client.py::test::test_schema_model_from_json_schema	ported	spec/chronicle_packs/mcp_spec.cr	Crystal JSON Schema boundary preserves properties defaults and required list
+tests/test_mcp_client.py::test::test_schema_model_handles_empty_schema	ported	spec/chronicle_packs/mcp_spec.cr	empty input schema maps to explicit object schema
+tests/test_mcp_client.py::test::test_unreachable_server_is_recorded_not_fatal	ported	spec/chronicle_packs/mcp_spec.cr	unreachable configured server is audited without startup failure
 tests/test_mcp_inbound.py::class::EchoInput	skipped	spec/chronicle_packs/mcp_spec.cr	Open MCP tool arguments use the Crystal JSON boundary
 tests/test_mcp_inbound.py::const::AGENT	skipped	spec/chronicle_packs/mcp_spec.cr	Crystal fixture uses the same collaborator identifier inline
 tests/test_mcp_inbound.py::const::OWNER	skipped	spec/chronicle_packs/mcp_spec.cr	Crystal fixture uses the owner identifier inline
