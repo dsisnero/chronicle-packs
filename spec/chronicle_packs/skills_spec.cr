@@ -30,6 +30,21 @@ module SkillsSpecSupport
     yield store, graph, rt
   end
 
+  def with_durable_skills_runtime(&)
+    path = File.tempname("skills_replay", ".sqlite")
+    store = Chronicle::SQLiteEventStore.new(path, run_id: "skills_parent")
+    graph = Chronicle::GraphProjection.empty.attach_store(store)
+    agent = Crig::Agent(PackModel).new(model: PackModel.new, preamble: "")
+    log_agent = Chronicle::LogAgent(PackModel).new(agent, store: store, max_turns: 1)
+    rt = Chronicle::Runtime(PackModel).new(store: store, log_agent: log_agent, graph: graph, run_id: "skills_parent")
+    rt.load_pack(Chronicle::Packs::Core.pack).should be_true
+    rt.load_pack(Chronicle::Packs::Skills.pack).should be_true
+    yield graph, rt
+  ensure
+    store.close if store
+    File.delete(path.not_nil!) if path && File.exists?(path.not_nil!)
+  end
+
   def emit(graph : Chronicle::GraphProjection, type : String, payload : String, seq : UInt64)
     graph.emit(Chronicle::Event.new(
       schema_version: 1_u16, sequence: seq, id: "#{type.gsub('.', '_')}_#{seq}",
@@ -266,6 +281,53 @@ describe Chronicle::Packs::Skills do
         data = JSON.parse(links.first.data)
         data["usage_id"].as_s.should eq(usage_id)
         graph.relations(type: "links_evaluation").size.should eq(1)
+      end
+    end
+  end
+
+  describe "verify_skill_replay_fn" do
+    it "earns replay.verified once per promoted version from a durable fork trial" do
+      with_durable_skills_runtime do |graph, rt|
+        author_skill(graph, "weekly_briefing", "1.0.0")
+        skill = graph.objects(type: "skill").first
+        Chronicle::Packs::Skills.invoke_skill_fn(graph, "weekly_briefing", "1.0.0", "usage_p6_1", "run_p6_1", "trial")
+        evidence = Chronicle::Packs::Skills.record_promotion_evidence_fn(graph, skill.id, "trial", ["usage_p6_1"], "trial passed", "owner")
+        evidence_id = evidence["evidence"].as_h["data"].as_h["evidence_id"].as_s
+        Chronicle::Packs::Skills.promote_skill_fn(graph, skill.id, evidence_id, "trial passed", "owner")
+
+        verified = Chronicle::Packs::Skills.verify_skill_replay_fn(graph, rt, skill.id)
+        verified["created"].as_bool.should be_true
+        replay = graph.events.find { |event| event.type == "replay.verified" }.not_nil!
+        data = JSON.parse(replay.payload)
+        data["subject_id"].as_s.should eq(JSON.parse(skill.data)["skill_id"].as_s)
+        data["subject_version"].as_s.should eq("1.0.0")
+        data["method"].as_s.should eq("fork_trial_rerun")
+        graph.objects(type: "skill_usage").map { |usage| JSON.parse(usage.data)["usage_id"].as_s }.should_not contain("replay::usage_p6_1")
+
+        again = Chronicle::Packs::Skills.verify_skill_replay_fn(graph, rt, skill.id)
+        again["created"].as_bool.should be_false
+        again["event_id"].as_s.should eq(verified["event_id"].as_s)
+      end
+    end
+
+    it "fails closed for unpromoted versions and replay-incomplete lineage" do
+      with_durable_skills_runtime do |graph, rt|
+        author_skill(graph, "unpromoted", "1.0.0")
+        skill = graph.objects(type: "skill").first
+        expect_raises(Chronicle::Packs::PackError, /promoted/) do
+          Chronicle::Packs::Skills.verify_skill_replay_fn(graph, rt, skill.id)
+        end
+
+        source = graph.add_object("source", {"kind" => JSON::Any.new("export"), "content" => JSON::Any.new("evidence"), "metadata" => JSON::Any.new({"replay_complete" => JSON::Any.new(false), "acquisition" => JSON::Any.new({"replay_mode" => JSON::Any.new("reference_only")})})}.to_json)
+        Chronicle::Packs::Skills.author_skill_fn(graph, "reference_only", "1.0.0", source_evidence_refs: [source.id])
+        ref_skill = graph.objects(type: "skill").last
+        Chronicle::Packs::Skills.invoke_skill_fn(graph, "reference_only", "1.0.0", "usage_ref_1", "run_ref_1", "trial")
+        evidence = Chronicle::Packs::Skills.record_promotion_evidence_fn(graph, ref_skill.id, "trial", ["usage_ref_1"], "trial passed", "owner")
+        evidence_id = evidence["evidence"].as_h["data"].as_h["evidence_id"].as_s
+        Chronicle::Packs::Skills.promote_skill_fn(graph, ref_skill.id, evidence_id, "trial passed", "owner")
+        expect_raises(Chronicle::Packs::Skills::SkillReplayIncompleteError, /ADR 0015/) do
+          Chronicle::Packs::Skills.verify_skill_replay_fn(graph, rt, ref_skill.id)
+        end
       end
     end
   end
