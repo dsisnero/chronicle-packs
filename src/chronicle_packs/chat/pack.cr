@@ -26,6 +26,8 @@ module Chronicle::Packs::Chat
   # registration occurs after construction.
   def self.build_pack(llm_tools : Array(Chronicle::Tool), max_tool_turns : Int32 = 4) : Chronicle::Packs::Pack
     base = pack
+    return base if llm_tools.empty?
+
     behaviors = base.behaviors.map do |behavior|
       behavior.name == "chat_llm_responder" ? behavior.with_llm_tools(llm_tools, max_tool_turns) : behavior
     end
