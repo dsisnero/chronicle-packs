@@ -180,6 +180,42 @@ module Chronicle::Packs::ToolGateway
     CrigGatewayTool.new(graph, spec, settings || ToolGatewaySettings.new, provider_id: provider_id, authority_ceiling: authority_ceiling)
   end
 
+  # Construction-time Chronicle Tool counterpart for an @[LLMBehavior]. It
+  # is deliberately behavior-scoped rather than runtime-registered: the
+  # vendor binds these gateway proxies while rebuilding the agentic Chat pack.
+  def self.as_runtime_llm_tool(graph : Chronicle::GraphProjection, spec : CapabilitySpec, settings : ToolGatewaySettings? = nil, provider_id : String = "", authority_ceiling : String = "none") : Chronicle::Tool
+    if Untrusted::NEVER_LLM_CALLABLE.includes?(spec.capability_name)
+      raise Chronicle::Packs::PackError.new("Capability #{spec.key.inspect} can never be offered to a model: approval resolution is the human half of 'model proposes; runtime disposes'. No allow-list can override this (tool_gateway.untrusted.NEVER_LLM_CALLABLE).")
+    end
+    unless spec.input_schema_available
+      raise Chronicle::Packs::PackError.new("Capability #{spec.key.inspect} has no input_schema, so it cannot be offered to an LLM. Register it with input_schema_available: true.")
+    end
+
+    gateway_settings = settings || ToolGatewaySettings.new
+    Chronicle::Tool.new(
+      spec.key,
+      spec.description.empty? ? "Gateway capability #{spec.key}." : spec.description,
+      false,
+      false,
+      false,
+      nil,
+      nil,
+      ->(args : String, context : Chronicle::ToolContext) : String {
+        input = JSON.parse(args).as_h
+        metadata = GatewayToolMetadata.new(
+          behavior_name: context.behavior_name,
+          frame_id: context.frame_id,
+          idempotency_key: context.idempotency_key,
+        )
+        outcome = _llm_proxy_pipeline(graph, spec, gateway_settings, authority_ceiling, provider_id, input, metadata)
+        # Runtime tool events persist `output` as raw JSON. Preserve arbitrary
+        # capability output (including the untrusted envelope) as one JSON
+        # string value rather than producing invalid event payloads.
+        outcome["status"]?.try(&.as_s?) == "held_for_approval" ? outcome.to_json : (outcome["output"]?.try(&.as_s?) || "").to_json
+      },
+    ) { |_args| "" }
+  end
+
   # Build Crig tool proxies for the given capability keys; unknown keys fail
   # loud with what IS registered. Hand the result to a Crig::ToolSet so an
   # agent tool server can invoke the proxies.
@@ -199,5 +235,21 @@ module Chronicle::Packs::ToolGateway
       )
     end
     tools
+  end
+
+  def self.runtime_llm_tools_for(graph : Chronicle::GraphProjection, keys : Array(String), settings : ToolGatewaySettings? = nil, provider_ids : Hash(String, String)? = nil, authority_ceiling : String = "none") : Array(Chronicle::Tool)
+    keys.map do |key|
+      spec = get_capability_spec(key)
+      if spec.nil?
+        registered = registered_capability_keys
+        raise Chronicle::Packs::PackError.new("No capability registered under #{key.inspect}. Registered keys: #{registered.empty? ? "(none)" : registered.join(", ")}.")
+      end
+      as_runtime_llm_tool(
+        graph, spec,
+        settings: settings,
+        provider_id: (provider_ids || {} of String => String)[spec.provider_name]? || "",
+        authority_ceiling: authority_ceiling,
+      )
+    end
   end
 end

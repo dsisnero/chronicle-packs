@@ -40,16 +40,16 @@ tests/test_activity_normalizer.py::test::test_overlapping_snapshot_reconciles_by
 tests/test_activity_normalizer.py::test::test_reextract_after_deleting_source_uses_recorded_artifact	ported	spec/chronicle_packs/activity_normalizer_contract_spec.cr	replay.verified path
 tests/test_activity_normalizer.py::test::test_reference_only_records_incomplete_and_replay_fails_loudly	ported	spec/chronicle_packs/activity_normalizer_contract_spec.cr	-
 tests/test_activity_normalizer.py::test::test_repeat_import_has_no_new_evidence_or_downstream_duplicates	ported	spec/chronicle_packs/activity_normalizer_contract_spec.cr	-
-tests/test_agentic_chat.py::class::LookupInput	missing	-	baseline
-tests/test_agentic_chat.py::class::ScriptedToolProvider	missing	-	baseline
-tests/test_agentic_chat.py::function::_isolate	missing	-	baseline
-tests/test_agentic_chat.py::method::ScriptedToolProvider.__init__	missing	-	baseline
-tests/test_agentic_chat.py::method::ScriptedToolProvider.complete	missing	-	baseline
-tests/test_agentic_chat.py::method::ScriptedToolProvider.count_tokens	missing	-	baseline
-tests/test_agentic_chat.py::method::ScriptedToolProvider.estimate_cost	missing	-	baseline
-tests/test_agentic_chat.py::method::ScriptedToolProvider.recognizes_model	missing	-	baseline
-tests/test_agentic_chat.py::test::test_agentic_chat_grounds_reply_in_gateway_tool_result	missing	-	baseline
-tests/test_agentic_chat.py::test::test_empty_allow_list_is_conversational_only	missing	-	baseline
+tests/test_agentic_chat.py::class::LookupInput	skipped	spec/chronicle_packs/llm_tools_spec.cr	Python Pydantic fixture schema; Crystal proxy schemas are JSON-bound typed values
+tests/test_agentic_chat.py::class::ScriptedToolProvider	skipped	spec/chronicle_packs/chat_spec.cr	Python provider fixture; Crystal CompletionModel is the provider seam
+tests/test_agentic_chat.py::function::_isolate	skipped	spec/chronicle_packs/chat_spec.cr	pytest registry fixture is replaced by explicit Crystal runtime helper cleanup
+tests/test_agentic_chat.py::method::ScriptedToolProvider.__init__	skipped	spec/chronicle_packs/chat_spec.cr	Python scripted-provider fixture helper
+tests/test_agentic_chat.py::method::ScriptedToolProvider.complete	skipped	spec/chronicle_packs/chat_spec.cr	Python scripted-provider fixture helper
+tests/test_agentic_chat.py::method::ScriptedToolProvider.count_tokens	skipped	spec/chronicle_packs/chat_spec.cr	Python scripted-provider fixture helper
+tests/test_agentic_chat.py::method::ScriptedToolProvider.estimate_cost	skipped	spec/chronicle_packs/chat_spec.cr	Python scripted-provider fixture helper
+tests/test_agentic_chat.py::method::ScriptedToolProvider.recognizes_model	skipped	spec/chronicle_packs/chat_spec.cr	Python scripted-provider fixture helper
+tests/test_agentic_chat.py::test::test_agentic_chat_grounds_reply_in_gateway_tool_result	ported	spec/chronicle_packs/agentic_chat_spec.cr	Construction-bound gateway proxy; no post-construction Runtime registration
+tests/test_agentic_chat.py::test::test_empty_allow_list_is_conversational_only	ported	spec/chronicle_packs/agentic_chat_spec.cr	Empty allow-list retains ordinary conversational chat behavior
 tests/test_approval_auth.py::const::TOKEN	ported	spec/chronicle_packs/demo_server_spec.cr::check_approval_auth	-
 tests/test_approval_auth.py::function::_denials	ported	spec/chronicle_packs/demo_server_spec.cr::check_approval_auth	audit read inlined in spec
 tests/test_approval_auth.py::test::test_correct_token_passes	ported	spec/chronicle_packs/demo_server_spec.cr::check_approval_auth	matching bearer token passes, no denial

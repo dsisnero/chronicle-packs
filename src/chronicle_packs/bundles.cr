@@ -105,7 +105,19 @@ module Chronicle::Packs::Bundles
     rt.load_pack(Chronicle::Packs::IdentityAuth.pack, _settings_hash(identity_settings))
     rt.load_pack(Chronicle::Packs::Communication.pack, _settings_hash(communication_settings))
     rt.load_pack(Chronicle::Packs::Schedule.pack, _settings_hash(schedule_settings))
-    rt.load_pack(Chronicle::Packs::Chat.pack, _settings_hash(chat_settings))
+    settings = chat_settings || Chronicle::Packs::Chat::ChatSettings.new
+    chat_pack = if settings.tool_allow_list.empty?
+                  Chronicle::Packs::Chat.pack
+                else
+                  graph = rt.graph || raise Chronicle::Packs::PackError.new("bundle runtime has no graph")
+                  proxies = Chronicle::Packs::ToolGateway.runtime_llm_tools_for(
+                    graph,
+                    settings.tool_allow_list,
+                    tool_gateway_settings,
+                  )
+                  Chronicle::Packs::Chat.build_pack(proxies, settings.max_tool_turns)
+                end
+    rt.load_pack(chat_pack, _settings_hash(settings))
     rt
   end
 
