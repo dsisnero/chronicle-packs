@@ -25,25 +25,86 @@ each entry is branch-sized and user-visible, `[x]` = green and committed,
 Intentional divergences section). The `## Features` sections below remain the
 per-pack detail record (surfaces, divergence notes, fixture drivers).
 
-**Progress: 1739 / 2080 source API items ported, 17 partial, 92 skipped, 111 deferred.**
-**Remaining: 120 missing items + 415/638 upstream tests ported (17 intentional divergences).**
+**Progress: 1759 / 2080 source API items ported, 21 partial, 92 skipped, 110 deferred, and 1 intentional divergence.**
+**Open source work: 97 missing + 21 partial rows; all are in `packs/evolution`.**
+**Upstream tests: 415 / 638 ported, 204 skipped test-fixture/environment rows, 17 intentional divergences, and 2 partial behavior rows.**
+
+The source and test ledgers were checked against vendor revision
+`6639a5385518ad49f74813373c85cf96eff9adc0`. The source-ledger validator
+currently rejects legacy `deferred` rows; normalizing those 110 rows into
+valid final statuses is therefore an explicit completion task below.
 
 ## Remaining feature-size roadmap (S / M / L)
 
-### S — small (helpers, value objects, narrow surfaces)
+### Current S — ledger hygiene and narrowly bounded contracts
+
+- [ ] **Normalize legacy source statuses** (110 rows). Replace each legacy
+      `deferred` status with `skipped` or `intentional_divergence`, retaining
+      a vendor-backed reason, so `check_port_inventory.sh` becomes a valid
+      completion gate.
+- [ ] **Classify Evolution fixture/template support** (66 source rows in
+      `fixtures/candidates.py` and `fixtures/run_fixtures.py`). Either replace
+      each vendor scenario with a Crystal-host scenario, or record it as a
+      Python language/host divergence; auto-generated helpers are not a
+      standalone runtime API to port.
+- [ ] **Close Evolution gate audit helpers** (`gates.py`, 3 missing rows).
+      Preserve the vendor gate ordering and durable failure records, or name
+      the existing Crystal static-gate result as the explicit replacement.
+
+### Current M — one Evolution boundary at a time
+
+- [ ] **Crystal static-gate equivalence** (`analysis.py`, 13 partial rows).
+      Resolve the declared-surface, imports, banned-constructs, fixture-entry,
+      and file-set boundary for Crystal candidates. Python AST execution must
+      be an intentional divergence, not a permanently partial port.
+- [ ] **Verified materialization and trial evidence** (`materialize.py` and
+      `trial.py`, 5 rows). Specify and test the sealed compiled-candidate,
+      persisted fork, fixture verdict, and replay-evidence contract at the
+      host-service boundary.
+- [ ] **Boot reconciliation host contract** (`boot.py`, 4 rows). Complete
+      promotion/fork discovery and capability-gap records around sealed-pack
+      reload; executable candidate loading remains host owned.
+- [ ] **Adoption execution boundary** (`adopt.py`, 1 partial row). Verify
+      materialize → load → promote → supersede ordering and recovery through
+      the host-provided activation service.
+
+### Current L — real runtime/platform integration
+
+- [ ] **Isolated Crystal trial runner.** Implement the host-owned
+      compiled-child, resource-limited fixture/replay path required by vendor
+      `trial.py`, without importing agent-authored source into the parent.
+- [ ] **Evolution soak runtime** (`soak.py`, 25 open rows). Replace the
+      ledger-only approximation with a host-driven rotation covering boot,
+      approval, trial-child preflight, conflict/taint/restart scenarios, and
+      durable anomaly evidence.
+
+### Current upstream-test closeout
+
+- [x] Agentic-chat allow-list construction path — both vendor behavior tests
+      are ported in `spec/chronicle_packs/agentic_chat_spec.cr`.
+- [ ] **Runtime authority-event audit** — complete
+      `test_action_class_policy::test_llm_proxy_records_class_reason_and_audits_via_runtime`.
+      Crystal records the held action-class reason but lacks the vendor runtime
+      authority-event facade.
+- [ ] **Live-provider procedural fallback** — complete
+      `test_extraction_proceduralization::test_reference_hardens_through_real_fork_then_deopts_and_demotes_on_drift`.
+      Graph-direct fallback and drift demotion are ported; the vendor live
+      provider/fork fallback remains host integration work.
+
+### Historical completed work (superseded counts; retained for detail)
 
 - [x] `packs/_template` — the pack authoring template (9/9)
 - [x] `packs/_preflight.py` — runtime preflight compatibility checks (6/6)
 - [x] `tests/conftest.py` — parity test helpers (4/4)
-- [x] `bundles.*` — bundle composition (`bundles/assistant.py` 6/7,
+- [x] `bundles.*` — bundle composition (`bundles/assistant.py` 7/7,
       `messaging_assistant` 3/3, `email_assistant` 3/3, `research_bundle`
       3/3, `bundles/examples` 3/3)
 - [x] `scripts/manifest_tools.py` — static capability extraction (6/6)
-- [x] Chronicle shard compatibility — update to `0b46f77` and preserve
+- [x] Chronicle shard compatibility — update to `d541967` and preserve
       registration enforcement by reading runtime lifecycle events from the
       durable `EventStore` (S; 793-spec regression suite green)
 
-### M — medium (behavioral surfaces spanning one module)
+### Historical M — medium (behavioral surfaces spanning one module)
 
 - [x] `scripts/generate_manifests.py` — manifest generation (14/14)
 - [x] Importers (packs/importers) — each a self-contained ingestion surface:
@@ -65,7 +126,7 @@ per-pack detail record (surfaces, divergence notes, fixture drivers).
       `run_all` (4), `comm_chat_email_integration` (3),
       `identity_profile_entity_integration` (2), `cross_pack_integration` (2)
 
-### L — large (provider/platform edges, external backends)
+### Historical L — large (provider/platform edges, external backends)
 
 - [x] `evolution` — agent-authored packs under governance (Crystal-candidate
       path complete; Python-only runtime mechanics remain documented as
@@ -185,10 +246,10 @@ per-pack detail record (surfaces, divergence notes, fixture drivers).
       deferred: SQLite persist/resume, MCP outbound, managed OAuth,
       schedule tick driver, demo capability registration helper)
 
-### Separate tracking
+### Historical separate tracking
 
 - [~] Upstream test porting — `plans/inventory/python_test_parity.tsv`
-      tracks 638 upstream tests (393/638 ported; test_action_class_policy,
+      tracks 638 upstream tests (415/638 ported; test_action_class_policy,
       test_assistant_local_sessions_importer, test_assistant_self_summary_importer,
       test_approval_auth, test_preflight,
       test_llm_provider, test_manifests, test_schedule_pack,
@@ -200,12 +261,12 @@ per-pack detail record (surfaces, divergence notes, fixture drivers).
       test_usage, test_activity_normalizer, test_injection_posture
       and test_promotion_loop ported; stub-injection cases deferred)
 
-### Next up (concrete plan order)
+### Historical next-up order (superseded)
 
 1. `[x]` `evolution` Crystal candidate trial, soak, and boot lifecycle.
 2. `[x]` `evolution` candidate activation.
 3. `[x]` `evolution` Crystal author and deterministic scenarios.
-4. `[ ]` Upstream test porting (638 tests), tracked separately (393/638).
+4. `[ ]` Upstream test porting (638 tests), tracked separately (415/638).
 
 ### Evolution candidate-language resolution
 
@@ -461,7 +522,8 @@ All six importers are ported: `local_files` (26/26),
   `Chronicle::Packs::Conftest` in `spec/spec_helper.cr` (see the
   `_preflight`/`_template`/`conftest` divergence note).
 - Upstream test porting — `plans/inventory/python_test_parity.tsv` tracks
-  638 upstream tests (393/638 ported; 5 intentional divergences). The
+  638 upstream tests (415/638 ported; 17 intentional divergences and 2
+  partial behavior rows). The
   `test_pack_fixtures.py` subprocess wrapper is ported through native Crystal
   spec discovery and the zero-exit in-process suite in
   `spec/chronicle_packs/fixtures_spec.cr`; no Python child process is used.
@@ -470,7 +532,7 @@ All six importers are ported: `local_files` (26/26),
 
 - Registration enforcement (`packs/tool_gateway/registration_check.py`) reads
   `graph.events`, which upstream populates with runtime-emitted `pack.loaded`
-  / `pack.disabled` events. In Chronicle `0b46f77`, runtime lifecycle events
+  / `pack.disabled` events. In Chronicle `d541967`, runtime lifecycle events
   are owned by `Runtime#store`; `GraphProjection#events` contains only events
   emitted through the projection. The port therefore arms enforcement with
   the runtime's durable `EventStore` and scans `store.iter_events`, retaining
@@ -675,7 +737,7 @@ All six importers are ported: `local_files` (26/26),
   raises `PackError` with stdout/stderr tails (fixtures run in-process via
   specs rather than as subprocesses).
 - Chronicle is pinned to the latest `dsisnero/chronicle` main
-  (`0b46f77`), which provides `Runtime#fork`/`promote`/`disable_pack` and
+  (`d541967`), which provides `Runtime#fork`/`promote`/`disable_pack` and
   `Runtime#errors` (BehaviorFailure projection); the older locked commit
   lacked them and the working tree relied on a newer checkout that
   `shards install` had clobbered. `similar` (dsisnero/similar.cr) is a
@@ -769,7 +831,7 @@ All six importers are ported: `local_files` (26/26),
   emits `skill.proposed`/`skill.used`/`skill.promoted`/`skill.demoted`
   events; tools use the host-bound graph seam with `_tool`-suffixed
   wrappers. `verify_skill_replay_fn` is DEFERRED — the fork-trial re-run
-  is pending; chronicle now provides `Runtime#fork` (bumped to `0b46f77`),
+  is pending; chronicle now provides `Runtime#fork` (bumped to `d541967`),
   so the fork-based replay step can land with it. The portable replay
   pieces (`SkillReplayIncompleteError`, `_recorded_usage`, `_lineage_gaps`)
   are ported.
@@ -1434,4 +1496,4 @@ All six importers are ported: `local_files` (26/26),
 
 - `plans/inventory/python_port_inventory.tsv` — 2080 API items (tree-sitter backend)
 - `plans/inventory/python_source_parity.tsv` — 2080 source API items
-- `plans/inventory/python_test_parity.tsv` — 638 tests (393/638 ported; 5 intentional divergences)
+- `plans/inventory/python_test_parity.tsv` — 638 tests (415/638 ported; 17 intentional divergences; 2 partial)

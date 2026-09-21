@@ -1,7 +1,7 @@
 # source_id	kind	status	crystal_refs	notes
 bundles/assistant.py::const::ASSISTANT_BUNDLE	const	ported	src/chronicle_packs/bundles.cr::ASSISTANT_BUNDLE	assembled runtime bundle (no list of Pack objects; load_pack per pack)
 bundles/assistant.py::const::ASSISTANT_PACK_LIST	const	ported	src/chronicle_packs/bundles.cr::ASSISTANT_PACK_LIST	alias
-bundles/assistant.py::function::_chat_pack_for	function	deferred	-	no build_chat_pack agentic seam in ported chat pack; see parity.md divergences
+bundles/assistant.py::function::_chat_pack_for	function	ported	src/chronicle_packs/bundles.cr::load_assistant_packs, src/chronicle_packs/chat/pack.cr::build_pack	Empty allow-list loads the unchanged chat pack; a nonempty allow-list builds graph-closing gateway proxy Tools and binds them while rebuilding chat, matching vendor construction-time semantics.
 bundles/assistant.py::function::build_assistant	function	ported	src/chronicle_packs/bundles.cr::build_assistant	-
 bundles/assistant.py::function::load_assistant_packs	function	ported	src/chronicle_packs/bundles.cr::load_assistant_packs	load_pack each pack
 bundles/assistant.py::function::seed_default_profile	function	ported	src/chronicle_packs/bundles.cr::seed_default_profile	-
