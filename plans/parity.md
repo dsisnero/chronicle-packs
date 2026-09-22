@@ -25,23 +25,23 @@ each entry is branch-sized and user-visible, `[x]` = green and committed,
 Intentional divergences section). The `## Features` sections below remain the
 per-pack detail record (surfaces, divergence notes, fixture drivers).
 
-**Progress: 1759 / 2080 source API items ported, 21 partial, 92 skipped, 110 deferred, and 1 intentional divergence.**
-**Open source work: 97 missing + 21 partial rows; all are in `packs/evolution`.**
+**Progress: 1761 / 2080 source API items ported, 8 partial, 106 skipped, and 108 intentional divergences.**
+**Open source work: 97 missing + 8 partial rows; all are in `packs/evolution`.**
 **Upstream tests: 415 / 638 ported, 204 skipped test-fixture/environment rows, 17 intentional divergences, and 2 partial behavior rows.**
 
 The source and test ledgers were checked against vendor revision
-`6639a5385518ad49f74813373c85cf96eff9adc0`. The source-ledger validator
-currently rejects legacy `deferred` rows; normalizing those 110 rows into
-valid final statuses is therefore an explicit completion task below.
+`6639a5385518ad49f74813373c85cf96eff9adc0`. Every former legacy `deferred`
+source row now has a final, vendor-backed status; the source-ledger validator
+is a usable completion gate again.
 
 ## Remaining feature-size roadmap (S / M / L)
 
 ### Current S — ledger hygiene and narrowly bounded contracts
 
-- [ ] **Normalize legacy source statuses** (110 rows). Replace each legacy
-      `deferred` status with `skipped` or `intentional_divergence`, retaining
-      a vendor-backed reason, so `check_port_inventory.sh` becomes a valid
-      completion gate.
+- [x] **Normalize legacy source statuses** (110 rows). Reclassified Python
+      deployment helpers as skipped and Python/runtime-bound adapters or
+      absorbed typed surfaces as intentional divergences, retaining a
+      vendor-backed reason for every row; `check_port_inventory.sh` is green.
 - [ ] **Classify Evolution fixture/template support** (66 source rows in
       `fixtures/candidates.py` and `fixtures/run_fixtures.py`). Either replace
       each vendor scenario with a Crystal-host scenario, or record it as a
@@ -53,10 +53,12 @@ valid final statuses is therefore an explicit completion task below.
 
 ### Current M — one Evolution boundary at a time
 
-- [ ] **Crystal static-gate equivalence** (`analysis.py`, 13 partial rows).
-      Resolve the declared-surface, imports, banned-constructs, fixture-entry,
-      and file-set boundary for Crystal candidates. Python AST execution must
-      be an intentional divergence, not a permanently partial port.
+- [x] **Crystal static-gate equivalence** (`analysis.py`, 13 former partial
+      rows). Reserved-path and byte-cap checks are direct ports; the remaining
+      Python-AST, Python-import, and Python-fixture entries are explicitly
+      intentional divergences. Crystal-only candidates preserve the vendor
+      governance invariants through compiler parsing, manifest/source
+      cross-checking, require controls, construct bans, namespaces, and caps.
 - [ ] **Verified materialization and trial evidence** (`materialize.py` and
       `trial.py`, 5 rows). Specify and test the sealed compiled-candidate,
       persisted fork, fixture verdict, and replay-evidence contract at the
@@ -242,9 +244,9 @@ valid final statuses is therefore an explicit completion task below.
       See the `evolution` divergence note for the exact boundary between the
       Crystal candidate path and missing Python-specific behavior.
 - [x] `demo_server` — HTTP API surface: /summary /graph /trace /packs
-      /frames /chat /sessions /approvals /channels /reset (72/86; 14
-      deferred: SQLite persist/resume, MCP outbound, managed OAuth,
-      schedule tick driver, demo capability registration helper)
+      /frames /chat /sessions /approvals /channels /reset (72/86; 14 skipped
+      Python deployment helpers: SQLite persist/resume, MCP outbound, managed
+      OAuth, schedule tick driver, demo capability registration helper)
 
 ### Historical separate tracking
 
@@ -377,7 +379,9 @@ compatibility—is characterized against the compiled runtime.
       cosine blend stored on memory_item), and versioned promotion
       (propose/resolve with memory.promoted/memory.demoted,
       memory_promotion_proposer behavior, verify_memory_replay_fn);
-      SQLite/adapters deferred)
+      SQLite/adapters intentionally diverge: the graph-backed store is
+      authoritative and the vendor's Python external-backend registry is not
+      a pack dependency)
 - [x] `identity_auth` — principal resolution, role-based access, permission
       checking (35/35) — `src/chronicle_packs/identity_auth/`
 - [x] `agent_profile` — goals, personality, standing instructions scoped by
@@ -413,7 +417,8 @@ compatibility—is characterized against the compiled runtime.
       byte-exact anchor verification, facet-body shaping, per-facet caps,
       prompt-hash idempotency, riding a RecordedCompletion boundary with
       llm.requested/responded + replay);
-      fixture generators remain deferred)
+      Python fixture generators intentionally diverge; deterministic Crystal
+      specs and RecordedCompletion provide the equivalent coverage)
 - [x] `usage` — source surfaces, connector handoffs, stable cursors,
       settlement, interaction facts (71/77) — `src/chronicle_packs/usage/`
 - [x] `connector_control` — service/account/surface status, run adapters,
@@ -566,7 +571,8 @@ All six importers are ported: `local_files` (26/26),
   501 (managed OAuth source), and the schedule tick driver, `_store_has_run`
   /`_wipe_store`/`_db_path`/`_memory_db_path`/`_token_db_path`,
   `_register_demo_capabilities` (partial gateway capability registration),
-  and `_ensure_provider_credential_refs` are deferred. `check_approval_auth`
+  and `_ensure_provider_credential_refs` are skipped Python deployment
+  adapters. `check_approval_auth`
   uses `Crypto::Subtle.constant_time_compare`. GET /capabilities reads the
   ToolGateway `LocalRegistry`; GET /packs enumerates `Registry.discover`.
 - `packs/fixtures` is ported into `Chronicle::Packs::Fixtures`
@@ -605,8 +611,8 @@ All six importers are ported: `local_files` (26/26),
   resolves through the ported `LLMProvider` and its `--live` ping is an
   injectable `live_ping` proc because the pack owns no live provider client
   (the default `_default_live_ping` raises a clear `PackError`).
-  `_installed_activegraph_roots`/`_site_dirs` are deferred (Python pip/site
-  introspection; no Crystal analog).
+  `_installed_activegraph_roots`/`_site_dirs` are intentional divergences
+  (Python pip/site introspection; no Crystal analog).
 - `bundles.*` is ported into `Chronicle::Packs::Bundles`
   (`src/chronicle_packs/bundles.cr`). Bundles are composition helpers, not
   manifest packs: upstream builds a list of `Pack` objects and registers
@@ -1250,9 +1256,9 @@ All six importers are ported: `local_files` (26/26),
   case; the graph validator passes unregistered types through). Core's own
   `observation_extractor` also fires on bridged `source` objects, matching
   the upstream fixture (Core loads alongside the bridge).
-- `evolution` (slices 1–3): the deterministic graph-native surface is
-  ported; the Crystal candidate static-gate path is partial; Python-bound
-  machinery is deferred. **Partial**: the Crystal candidate pipeline parses
+- `evolution` (slices 1–3): the deterministic graph-native surface and
+  Crystal candidate static-gate path are complete; Python-bound machinery is
+  intentionally divergent. **Crystal equivalent**: the candidate pipeline parses
   `pack.cr` with the Crystal compiler parser, checks its own manifest/file/
   surface/require/construct/reserved/size/injection boundaries, and records
   the fail-fast audit trail through `proposal_gatekeeper`. It is not a port of
@@ -1394,8 +1400,10 @@ All six importers are ported: `local_files` (26/26),
   byte-for-byte before materialization. The `Facet` enum models the closed
   standard set; facet FIELDS stay String because activity_normalizer
   registers dotted extension facets (`activity.preference`, `task`) against
-  the same contract. Remaining deferred: the fixture generators
-  (`fixtures/run_fixtures.py`, `fixtures/seed_llm_records.py`).
+  the same contract. The Python fixture generators
+  (`fixtures/run_fixtures.py`, `fixtures/seed_llm_records.py`) are intentional
+  divergences; deterministic Crystal specs and RecordedCompletion cover the
+  ported contract.
 - `connector_control` materializes 6 `JSON::Serializable` struct types with
   zero relation types. The record adapters are idempotent upserts keyed by a
   sha256 `*_identity` (immutable provenance fields cannot change; changed
@@ -1489,8 +1497,9 @@ All six importers are ported: `local_files` (26/26),
   identity, never blended across spaces) and versioned promotion
   (propose/resolve with approver-gated memory.promoted/memory.demoted,
   `memory_promotion_proposer`, `verify_memory_replay_fn`) are ported.
-  Remaining deferred: the SQLite backend (the port's graph-backed store
-  replaces it), the backend registry + external adapters (`Mem0Backend`).
+  Intentional divergences: the SQLite backend is replaced by the graph-backed
+  store, and the Python backend registry plus external `Mem0Backend` adapter
+  are not pack dependencies.
 
 ## Inventory
 

@@ -480,36 +480,36 @@ packs/demo_server.py::function::_approval_token	function	ported	src/chronicle_pa
 packs/demo_server.py::function::_build_runtime	function	ported	src/chronicle_packs/demo_server.cr::reset_runtime	memory store + assistant bundle (upstream SQLite persist/resume deferred)
 packs/demo_server.py::function::_chat_config_payload	function	ported	src/chronicle_packs/demo_server.cr::_chat_config_payload	-
 packs/demo_server.py::function::_current_allow_list	function	ported	src/chronicle_packs/demo_server.cr::_current_allow_list	-
-packs/demo_server.py::function::_db_path	function	deferred	-	deferred: SQLite event-log path (memory store in port)
-packs/demo_server.py::function::_ensure_provider_credential_refs	function	deferred	-	deferred: env provider-key credential refs (no chat.llm SUPPORTED_PROVIDERS seam)
+packs/demo_server.py::function::_db_path	function	skipped	src/chronicle_packs/demo_server.cr	Skipped: vendor Python Inspector deployment adapter, outside the portable pack contract; deferred: SQLite event-log path (memory store in port)
+packs/demo_server.py::function::_ensure_provider_credential_refs	function	skipped	src/chronicle_packs/demo_server.cr	Skipped: vendor Python Inspector deployment adapter, outside the portable pack contract; deferred: env provider-key credential refs (no chat.llm SUPPORTED_PROVIDERS seam)
 packs/demo_server.py::function::_event_to_dict	function	ported	src/chronicle_packs/demo_server.cr::_event_to_dict	-
 packs/demo_server.py::function::_evolution_enabled	function	ported	src/chronicle_packs/demo_server.cr::_evolution_enabled	via ENV check in _handle_approvals_post
-packs/demo_server.py::function::_get_mcp_settings	function	deferred	-	deferred: MCP settings from env (no outbound registration seam)
-packs/demo_server.py::function::_get_oauth_source	function	deferred	-	deferred: managed OAuth token store (secrets.managed)
+packs/demo_server.py::function::_get_mcp_settings	function	skipped	src/chronicle_packs/demo_server.cr	Skipped: vendor Python Inspector deployment adapter, outside the portable pack contract; deferred: MCP settings from env (no outbound registration seam)
+packs/demo_server.py::function::_get_oauth_source	function	skipped	src/chronicle_packs/demo_server.cr	Skipped: vendor Python Inspector deployment adapter, outside the portable pack contract; deferred: managed OAuth token store (secrets.managed)
 packs/demo_server.py::function::_get_rt	function	ported	src/chronicle_packs/demo_server.cr::_get_rt	-
 packs/demo_server.py::function::_global_personality_obj	function	ported	src/chronicle_packs/demo_server.cr::_global_personality_obj	-
-packs/demo_server.py::function::_mcp_chat_fn	function	deferred	-	deferred: MCP outbound chat (no MCP gateway seam)
-packs/demo_server.py::function::_mcp_memory_fn	function	deferred	-	deferred: MCP outbound memory (no MCP gateway seam)
-packs/demo_server.py::function::_memory_db_path	function	deferred	-	deferred: SQLite memory backend path (graph-backed memory in port)
+packs/demo_server.py::function::_mcp_chat_fn	function	skipped	src/chronicle_packs/demo_server.cr	Skipped: vendor Python Inspector deployment adapter, outside the portable pack contract; deferred: MCP outbound chat (no MCP gateway seam)
+packs/demo_server.py::function::_mcp_memory_fn	function	skipped	src/chronicle_packs/demo_server.cr	Skipped: vendor Python Inspector deployment adapter, outside the portable pack contract; deferred: MCP outbound memory (no MCP gateway seam)
+packs/demo_server.py::function::_memory_db_path	function	skipped	src/chronicle_packs/demo_server.cr	Skipped: vendor Python Inspector deployment adapter, outside the portable pack contract; deferred: SQLite memory backend path (graph-backed memory in port)
 packs/demo_server.py::function::_object_to_dict	function	ported	src/chronicle_packs/demo_server.cr::_object_to_dict	-
 packs/demo_server.py::function::_on_evt	function	ported	src/chronicle_packs/demo_server.cr::Handler#_handle_chat	frame collection via _frames hash in chat handler
 packs/demo_server.py::function::_owned_profile_object	function	ported	src/chronicle_packs/demo_server.cr::_owned_profile_object	-
 packs/demo_server.py::function::_pack_to_dict	function	ported	src/chronicle_packs/demo_server.cr::_pack_to_dict	-
 packs/demo_server.py::function::_profile_payload	function	ported	src/chronicle_packs/demo_server.cr::_profile_payload	-
 packs/demo_server.py::function::_refresh_chat_provider	function	ported	src/chronicle_packs/demo_server.cr::Handler#_refresh_chat_provider	-
-packs/demo_server.py::function::_register_demo_capabilities	function	deferred	-	deferred: gateway capability registration (schedule/telegram/whatsapp capabilities partially deferred)
+packs/demo_server.py::function::_register_demo_capabilities	function	skipped	src/chronicle_packs/demo_server.cr	Skipped: vendor Python Inspector deployment adapter, outside the portable pack contract; deferred: gateway capability registration (schedule/telegram/whatsapp capabilities partially deferred)
 packs/demo_server.py::function::_relation_to_dict	function	ported	src/chronicle_packs/demo_server.cr::_relation_to_dict	-
 packs/demo_server.py::function::_reset_rt	function	ported	src/chronicle_packs/demo_server.cr::reset_runtime	-
 packs/demo_server.py::function::_safe_json	function	ported	src/chronicle_packs/demo_server.cr::_safe_json	-
 packs/demo_server.py::function::_secrets_payload	function	ported	src/chronicle_packs/demo_server.cr::_secrets_payload	-
 packs/demo_server.py::function::_seed_demo	function	ported	src/chronicle_packs/demo_server.cr::_seed_demo	-
-packs/demo_server.py::function::_start_tick_driver	function	deferred	-	deferred: schedule tick driver thread
-packs/demo_server.py::function::_store_has_run	function	deferred	-	deferred: SQLite run detection (memory store in port)
-packs/demo_server.py::function::_sweep	function	deferred	-	deferred: schedule tick sweep (schedule pack deferred pieces)
-packs/demo_server.py::function::_tick_driver_loop	function	deferred	-	deferred: schedule tick driver thread
-packs/demo_server.py::function::_token_db_path	function	deferred	-	deferred: managed OAuth token store path
+packs/demo_server.py::function::_start_tick_driver	function	skipped	src/chronicle_packs/demo_server.cr	Skipped: vendor Python Inspector deployment adapter, outside the portable pack contract; deferred: schedule tick driver thread
+packs/demo_server.py::function::_store_has_run	function	skipped	src/chronicle_packs/demo_server.cr	Skipped: vendor Python Inspector deployment adapter, outside the portable pack contract; deferred: SQLite run detection (memory store in port)
+packs/demo_server.py::function::_sweep	function	skipped	src/chronicle_packs/demo_server.cr	Skipped: vendor Python Inspector deployment adapter, outside the portable pack contract; deferred: schedule tick sweep (schedule pack deferred pieces)
+packs/demo_server.py::function::_tick_driver_loop	function	skipped	src/chronicle_packs/demo_server.cr	Skipped: vendor Python Inspector deployment adapter, outside the portable pack contract; deferred: schedule tick driver thread
+packs/demo_server.py::function::_token_db_path	function	skipped	src/chronicle_packs/demo_server.cr	Skipped: vendor Python Inspector deployment adapter, outside the portable pack contract; deferred: managed OAuth token store path
 packs/demo_server.py::function::_ts	function	ported	src/chronicle_packs/demo_server.cr::_ts	-
-packs/demo_server.py::function::_wipe_store	function	deferred	-	deferred: SQLite store wipe (memory store in port)
+packs/demo_server.py::function::_wipe_store	function	skipped	src/chronicle_packs/demo_server.cr	Skipped: vendor Python Inspector deployment adapter, outside the portable pack contract; deferred: SQLite store wipe (memory store in port)
 packs/demo_server.py::function::check_approval_auth	function	ported	src/chronicle_packs/demo_server.cr::check_approval_auth	Crypto::Subtle constant-time compare
 packs/demo_server.py::function::main	function	ported	src/chronicle_packs/demo_server.cr::main	binds HTTP::Server; io-less, testable via Handler dispatch
 packs/demo_server.py::method::Handler._decision_rows	method	ported	src/chronicle_packs/demo_server.cr::Handler#_decision_rows	-
@@ -565,9 +565,9 @@ packs/doctor.py::const::PASS	const	ported	src/chronicle_packs/doctor.cr::PASS	-
 packs/doctor.py::const::PYTHON_FLOOR	const	ported	src/chronicle_packs/doctor.cr::CRYSTAL_FLOOR	renamed: Crystal compiler floor (shard.yml)
 packs/doctor.py::const::SKIP	const	ported	src/chronicle_packs/doctor.cr::SKIP	-
 packs/doctor.py::function::_default_live_ping	function	ported	src/chronicle_packs/doctor.cr::_default_live_ping	raises: pack owns no live client; live_ping injectable
-packs/doctor.py::function::_installed_activegraph_roots	function	deferred	-	deferred: Python pip distribution introspection; no Crystal analog (live probe SKIPs)
+packs/doctor.py::function::_installed_activegraph_roots	function	intentional_divergence	src/chronicle_packs/doctor.cr	Intentional divergence: vendor Python pip/site-package introspection has no compiled Crystal/shard equivalent; deferred: Python pip distribution introspection; no Crystal analog (live probe SKIPs)
 packs/doctor.py::function::_ping_message	function	ported	src/chronicle_packs/doctor.cr::_ping_message	-
-packs/doctor.py::function::_site_dirs	function	deferred	-	deferred: Python site-packages introspection; no Crystal analog
+packs/doctor.py::function::_site_dirs	function	intentional_divergence	src/chronicle_packs/doctor.cr	Intentional divergence: vendor Python pip/site-package introspection has no compiled Crystal/shard equivalent; deferred: Python site-packages introspection; no Crystal analog
 packs/doctor.py::function::_version_strictly_below	function	ported	src/chronicle_packs/doctor.cr::_version_strictly_below	-
 packs/doctor.py::function::_writability	function	ported	src/chronicle_packs/doctor.cr::_writability	-
 packs/doctor.py::function::check_artifact_store	function	ported	src/chronicle_packs/doctor.cr::check_artifact_store	-
@@ -684,19 +684,19 @@ packs/evolution/adopt.py::function::_supersede_prior_actives	function	ported	src
 packs/evolution/adopt.py::function::_verified_approver_exists	function	ported	src/chronicle_packs/evolution/adopt.cr::_verified_approver_exists	-
 packs/evolution/adopt.py::function::process_adoption_tickets	function	partial	src/chronicle_packs/evolution/adopt.cr::process_adoption_tickets	Ports preflight plus host-bound sealed activation: bundle pin, static/injection gate re-run, durable fork, dry-run, loading record, promotion, and supersession. Host service provisioning and boot reload activation remain pending.
 packs/evolution/adopt.py::function::register_adoption_capabilities	function	ported	src/chronicle_packs/evolution/adopt.cr::register_adoption_capabilities	registration + refusals; processing deferred
-packs/evolution/analysis.py::const::FIXTURE_FILE	const	partial	src/chronicle_packs/evolution/analysis.cr::CRYSTAL_REQUIRED_FILES	Crystal candidate entrypoint contract; Python fixture contract remains missing
-packs/evolution/analysis.py::const::RUNTIME_FILES	const	partial	src/chronicle_packs/evolution/analysis.cr::CRYSTAL_REQUIRED_FILES	Crystal candidate runtime file set; Python runtime file set remains missing
-packs/evolution/analysis.py::function::_decorator_names	function	partial	src/chronicle_packs/evolution/analysis.cr::extract_crystal_declared_surface	Crystal annotations replace Python decorator inspection; Python AST semantics remain missing
-packs/evolution/analysis.py::function::_parse	function	partial	src/chronicle_packs/evolution/analysis.cr::check_crystal_syntax	Crystal compiler parser replaces Python ast.parse; Python parser semantics remain missing
-packs/evolution/analysis.py::function::check_banned_constructs	function	partial	src/chronicle_packs/evolution/analysis.cr::check_crystal_banned_constructs	Crystal process and compile-time shell refusal; Python construct coverage remains missing
-packs/evolution/analysis.py::function::check_declared_vs_actual	function	partial	src/chronicle_packs/evolution/analysis.cr::check_declared_vs_crystal_surface	Crystal manifest/source two-way surface plus capability risk/action schema and class parity; Python extraction remains missing
-packs/evolution/analysis.py::function::check_file_set	function	partial	src/chronicle_packs/evolution/analysis.cr::check_crystal_file_set	Crystal manifest plus pack.cr contract; Python fixture file contract remains missing
-packs/evolution/analysis.py::function::check_fixture_entrypoint	function	partial	src/chronicle_packs/evolution/analysis.cr::check_crystal_file_set	Crystal candidates have no Python fixture entrypoint; upstream Python fixture check remains missing
-packs/evolution/analysis.py::function::check_imports	function	partial	src/chronicle_packs/evolution/analysis.cr::check_crystal_requires	Crystal require allow-list and authored-relative resolution; Python import semantics remain missing
-packs/evolution/analysis.py::function::check_reserved_namespaces	function	partial	src/chronicle_packs/evolution/analysis.cr::check_crystal_reserved_namespaces	Crystal declared capabilities, pack names, and never-callable checks; Python AST surface remains missing
-packs/evolution/analysis.py::function::check_reserved_paths	function	partial	src/chronicle_packs/evolution/analysis.cr::check_reserved_paths	Shared reserved-path behavior used by Crystal candidate pipeline
-packs/evolution/analysis.py::function::check_size_caps	function	partial	src/chronicle_packs/evolution/analysis.cr::check_size_caps	Shared UTF-8 byte-cap behavior used by Crystal candidate pipeline
-packs/evolution/analysis.py::function::extract_surface	function	partial	src/chronicle_packs/evolution/analysis.cr::extract_crystal_declared_surface	Crystal annotation/capability extraction; Python AST extraction remains missing
+packs/evolution/analysis.py::const::FIXTURE_FILE	const	intentional_divergence	src/chronicle_packs/evolution/analysis.cr::CRYSTAL_REQUIRED_FILES	Intentional divergence: Crystal-only candidates preserve the vendor governance invariant without Python AST/package semantics; Crystal candidate entrypoint contract; Python fixture contract remains missing
+packs/evolution/analysis.py::const::RUNTIME_FILES	const	intentional_divergence	src/chronicle_packs/evolution/analysis.cr::CRYSTAL_REQUIRED_FILES	Intentional divergence: Crystal-only candidates preserve the vendor governance invariant without Python AST/package semantics; Crystal candidate runtime file set; Python runtime file set remains missing
+packs/evolution/analysis.py::function::_decorator_names	function	intentional_divergence	src/chronicle_packs/evolution/analysis.cr::extract_crystal_declared_surface	Intentional divergence: Crystal-only candidates preserve the vendor governance invariant without Python AST/package semantics; Crystal annotations replace Python decorator inspection; Python AST semantics remain missing
+packs/evolution/analysis.py::function::_parse	function	intentional_divergence	src/chronicle_packs/evolution/analysis.cr::check_crystal_syntax	Intentional divergence: Crystal-only candidates preserve the vendor governance invariant without Python AST/package semantics; Crystal compiler parser replaces Python ast.parse; Python parser semantics remain missing
+packs/evolution/analysis.py::function::check_banned_constructs	function	intentional_divergence	src/chronicle_packs/evolution/analysis.cr::check_crystal_banned_constructs	Intentional divergence: Crystal-only candidates preserve the vendor governance invariant without Python AST/package semantics; Crystal process and compile-time shell refusal; Python construct coverage remains missing
+packs/evolution/analysis.py::function::check_declared_vs_actual	function	intentional_divergence	src/chronicle_packs/evolution/analysis.cr::check_declared_vs_crystal_surface	Intentional divergence: Crystal-only candidates preserve the vendor governance invariant without Python AST/package semantics; Crystal manifest/source two-way surface plus capability risk/action schema and class parity; Python extraction remains missing
+packs/evolution/analysis.py::function::check_file_set	function	intentional_divergence	src/chronicle_packs/evolution/analysis.cr::check_crystal_file_set	Intentional divergence: Crystal-only candidates preserve the vendor governance invariant without Python AST/package semantics; Crystal manifest plus pack.cr contract; Python fixture file contract remains missing
+packs/evolution/analysis.py::function::check_fixture_entrypoint	function	intentional_divergence	src/chronicle_packs/evolution/analysis.cr::check_crystal_file_set	Intentional divergence: Crystal-only candidates preserve the vendor governance invariant without Python AST/package semantics; Crystal candidates have no Python fixture entrypoint; upstream Python fixture check remains missing
+packs/evolution/analysis.py::function::check_imports	function	intentional_divergence	src/chronicle_packs/evolution/analysis.cr::check_crystal_requires	Intentional divergence: Crystal-only candidates preserve the vendor governance invariant without Python AST/package semantics; Crystal require allow-list and authored-relative resolution; Python import semantics remain missing
+packs/evolution/analysis.py::function::check_reserved_namespaces	function	intentional_divergence	src/chronicle_packs/evolution/analysis.cr::check_crystal_reserved_namespaces	Intentional divergence: Crystal-only candidates preserve the vendor governance invariant without Python AST/package semantics; Crystal declared capabilities, pack names, and never-callable checks; Python AST surface remains missing
+packs/evolution/analysis.py::function::check_reserved_paths	function	ported	src/chronicle_packs/evolution/analysis.cr::check_reserved_paths	Resolved: exact Crystal static-gate behavior; Shared reserved-path behavior used by Crystal candidate pipeline
+packs/evolution/analysis.py::function::check_size_caps	function	ported	src/chronicle_packs/evolution/analysis.cr::check_size_caps	Resolved: exact Crystal static-gate behavior; Shared UTF-8 byte-cap behavior used by Crystal candidate pipeline
+packs/evolution/analysis.py::function::extract_surface	function	intentional_divergence	src/chronicle_packs/evolution/analysis.cr::extract_crystal_declared_surface	Intentional divergence: Crystal-only candidates preserve the vendor governance invariant without Python AST/package semantics; Crystal annotation/capability extraction; Python AST extraction remains missing
 packs/evolution/author.py::class::AuthorRefusal	class	ported	src/chronicle_packs/evolution/author.cr::AuthorRefusal	Keyless Crystal author refusal type used by host dispatch, caps, source wrapping, and one-shot submission.
 packs/evolution/author.py::class::AuthoredSource	class	ported	src/chronicle_packs/evolution/author.cr::AuthoredSource	Typed keyless contract for exactly four Crystal source bodies, dispatched only through a per-graph host service.
 packs/evolution/author.py::function::_assemble_files	function	ported	src/chronicle_packs/evolution/author.cr::Author.wrap_source	Crystal equivalent creates fixed pack-owned Crystal files and a surface-derived content-pinned manifest; Python fixture and trial-driver files are intentionally replaced by the host-bound Crystal TrialService.
@@ -1347,17 +1347,17 @@ packs/meeting/tools.py::function::create_meeting	function	ported	src/chronicle_p
 packs/meeting/tools.py::function::create_meeting_fn	function	ported	src/chronicle_packs/meeting/tools.cr::create_meeting_fn	-
 packs/meeting/tools.py::function::ingest_transcript	function	ported	src/chronicle_packs/meeting/tools.cr::ingest_transcript_tool	@[Tool] wrapper over bound graph
 packs/meeting/tools.py::function::ingest_transcript_fn	function	ported	src/chronicle_packs/meeting/tools.cr::ingest_transcript_fn	-
-packs/memory_gateway/adapters.py::class::Mem0Backend	class	deferred	-	host mem0 adapter
-packs/memory_gateway/adapters.py::function::register_mem0_backend	function	deferred	-	host mem0 adapter
-packs/memory_gateway/adapters.py::method::Mem0Backend.__init__	method	deferred	-	host mem0 adapter
-packs/memory_gateway/adapters.py::method::Mem0Backend._normalize	method	deferred	-	host mem0 adapter
-packs/memory_gateway/adapters.py::method::Mem0Backend._search	method	deferred	-	host mem0 adapter
-packs/memory_gateway/adapters.py::method::Mem0Backend.retrieve_by_query	method	deferred	-	host mem0 adapter
-packs/memory_gateway/adapters.py::method::Mem0Backend.store_item	method	deferred	-	host mem0 adapter
+packs/memory_gateway/adapters.py::class::Mem0Backend	class	intentional_divergence	src/chronicle_packs/memory_gateway/backend.cr	Intentional divergence: vendor mem0 Python-SDK adapter is not a pack dependency; Chronicle graph records remain authoritative; host mem0 adapter
+packs/memory_gateway/adapters.py::function::register_mem0_backend	function	intentional_divergence	src/chronicle_packs/memory_gateway/backend.cr	Intentional divergence: vendor mem0 Python-SDK adapter is not a pack dependency; Chronicle graph records remain authoritative; host mem0 adapter
+packs/memory_gateway/adapters.py::method::Mem0Backend.__init__	method	intentional_divergence	src/chronicle_packs/memory_gateway/backend.cr	Intentional divergence: vendor mem0 Python-SDK adapter is not a pack dependency; Chronicle graph records remain authoritative; host mem0 adapter
+packs/memory_gateway/adapters.py::method::Mem0Backend._normalize	method	intentional_divergence	src/chronicle_packs/memory_gateway/backend.cr	Intentional divergence: vendor mem0 Python-SDK adapter is not a pack dependency; Chronicle graph records remain authoritative; host mem0 adapter
+packs/memory_gateway/adapters.py::method::Mem0Backend._search	method	intentional_divergence	src/chronicle_packs/memory_gateway/backend.cr	Intentional divergence: vendor mem0 Python-SDK adapter is not a pack dependency; Chronicle graph records remain authoritative; host mem0 adapter
+packs/memory_gateway/adapters.py::method::Mem0Backend.retrieve_by_query	method	intentional_divergence	src/chronicle_packs/memory_gateway/backend.cr	Intentional divergence: vendor mem0 Python-SDK adapter is not a pack dependency; Chronicle graph records remain authoritative; host mem0 adapter
+packs/memory_gateway/adapters.py::method::Mem0Backend.store_item	method	intentional_divergence	src/chronicle_packs/memory_gateway/backend.cr	Intentional divergence: vendor mem0 Python-SDK adapter is not a pack dependency; Chronicle graph records remain authoritative; host mem0 adapter
 packs/memory_gateway/backend.py::class::Embedder	class	ported	src/chronicle_packs/memory_gateway/backend.cr::Embedder	abstract class; the pack-facing recorded seam
-packs/memory_gateway/backend.py::class::ExternalMemoryBackend	class	deferred	-	slice 2: external backends
-packs/memory_gateway/backend.py::class::MemoryBackend	class	deferred	-	slice 2: SQLite store
-packs/memory_gateway/backend.py::class::SqliteMemoryBackend	class	deferred	-	slice 2: SQLite store
+packs/memory_gateway/backend.py::class::ExternalMemoryBackend	class	intentional_divergence	src/chronicle_packs/memory_gateway/backend.cr	Intentional divergence: vendor SQLite/external backend registry is replaced by the graph-authoritative backend with lexical fallback; slice 2: external backends
+packs/memory_gateway/backend.py::class::MemoryBackend	class	intentional_divergence	src/chronicle_packs/memory_gateway/backend.cr	Intentional divergence: vendor SQLite/external backend registry is replaced by the graph-authoritative backend with lexical fallback; slice 2: SQLite store
+packs/memory_gateway/backend.py::class::SqliteMemoryBackend	class	intentional_divergence	src/chronicle_packs/memory_gateway/backend.cr	Intentional divergence: vendor SQLite/external backend registry is replaced by the graph-authoritative backend with lexical fallback; slice 2: SQLite store
 packs/memory_gateway/backend.py::const::STOPWORDS	const	ported	src/chronicle_packs/memory_gateway/backend.cr::Backend::STOPWORDS	-
 packs/memory_gateway/backend.py::function::_cosine	function	ported	src/chronicle_packs/memory_gateway/backend.cr::_cosine	clamped [0,1]
 packs/memory_gateway/backend.py::function::_embed	function	ported	src/chronicle_packs/memory_gateway/embedding_service.cr::RecordedEmbeddingService	folded into the recorded service closure
@@ -1368,55 +1368,55 @@ packs/memory_gateway/backend.py::function::_recorded_embed_fn	function	ported	sr
 packs/memory_gateway/backend.py::function::_safe_embed	function	ported	src/chronicle_packs/memory_gateway/backend.cr::_safe_embed	returns EmbeddingOutcome (vectors + space identity)
 packs/memory_gateway/backend.py::function::_word_set	function	ported	src/chronicle_packs/memory_gateway/backend.cr::Backend._word_set	-
 packs/memory_gateway/backend.py::function::auto_configure_embedder	function	ported	src/chronicle_packs/memory_gateway/backend.cr::auto_configure_embedder	-
-packs/memory_gateway/backend.py::function::clear_all_backends	function	deferred	-	slice 2: backend registry
+packs/memory_gateway/backend.py::function::clear_all_backends	function	intentional_divergence	src/chronicle_packs/memory_gateway/backend.cr	Intentional divergence: vendor SQLite/external backend registry is replaced by the graph-authoritative backend with lexical fallback; slice 2: backend registry
 packs/memory_gateway/backend.py::function::clear_embedder	function	ported	src/chronicle_packs/memory_gateway/backend.cr::clear_embedder	-
-packs/memory_gateway/backend.py::function::close_all_backends	function	deferred	-	slice 2: backend registry
-packs/memory_gateway/backend.py::function::get_backend	function	deferred	-	slice 2: backend registry (graph-backed in slice 1)
+packs/memory_gateway/backend.py::function::close_all_backends	function	intentional_divergence	src/chronicle_packs/memory_gateway/backend.cr	Intentional divergence: vendor SQLite/external backend registry is replaced by the graph-authoritative backend with lexical fallback; slice 2: backend registry
+packs/memory_gateway/backend.py::function::get_backend	function	intentional_divergence	src/chronicle_packs/memory_gateway/backend.cr	Intentional divergence: vendor SQLite/external backend registry is replaced by the graph-authoritative backend with lexical fallback; slice 2: backend registry (graph-backed in slice 1)
 packs/memory_gateway/backend.py::function::get_embedder	function	ported	src/chronicle_packs/memory_gateway/backend.cr::get_embedder	legacy direct seam
 packs/memory_gateway/backend.py::function::lexical_score	function	ported	src/chronicle_packs/memory_gateway/backend.cr::Backend.lexical_score	-
-packs/memory_gateway/backend.py::function::register_backend	function	deferred	-	slice 2: backend registry
+packs/memory_gateway/backend.py::function::register_backend	function	intentional_divergence	src/chronicle_packs/memory_gateway/backend.cr	Intentional divergence: vendor SQLite/external backend registry is replaced by the graph-authoritative backend with lexical fallback; slice 2: backend registry
 packs/memory_gateway/backend.py::function::runtime_recorded_embedding	function	ported	src/chronicle_packs/memory_gateway/backend.cr::runtime_recorded_embedding	per-graph binding
 packs/memory_gateway/backend.py::function::set_embedder	function	ported	src/chronicle_packs/memory_gateway/backend.cr::set_embedder	legacy direct seam
 packs/memory_gateway/backend.py::function::set_embedder_factory	function	ported	src/chronicle_packs/memory_gateway/backend.cr::set_embedder_factory	-
-packs/memory_gateway/backend.py::function::unregister_backend	function	deferred	-	slice 2: backend registry
-packs/memory_gateway/backend.py::method::Embedder.embed	method	deferred	-	slice 2: embedder seam
-packs/memory_gateway/backend.py::method::ExternalMemoryBackend.__init__	method	deferred	-	slice 2: external backends
-packs/memory_gateway/backend.py::method::ExternalMemoryBackend.apply_reliability	method	deferred	-	slice 2
-packs/memory_gateway/backend.py::method::ExternalMemoryBackend.clear	method	deferred	-	slice 2
-packs/memory_gateway/backend.py::method::ExternalMemoryBackend.close	method	deferred	-	slice 2
-packs/memory_gateway/backend.py::method::ExternalMemoryBackend.count	method	deferred	-	slice 2
-packs/memory_gateway/backend.py::method::ExternalMemoryBackend.enforce_limit	method	deferred	-	slice 2
-packs/memory_gateway/backend.py::method::ExternalMemoryBackend.find_by_text	method	deferred	-	slice 2
-packs/memory_gateway/backend.py::method::ExternalMemoryBackend.get_subject	method	deferred	-	slice 2
-packs/memory_gateway/backend.py::method::ExternalMemoryBackend.retrieve_by_query	method	deferred	-	slice 2
-packs/memory_gateway/backend.py::method::ExternalMemoryBackend.set_reliability	method	deferred	-	slice 2
-packs/memory_gateway/backend.py::method::ExternalMemoryBackend.set_subject	method	deferred	-	slice 2
-packs/memory_gateway/backend.py::method::ExternalMemoryBackend.store_item	method	deferred	-	slice 2
-packs/memory_gateway/backend.py::method::ExternalMemoryBackend.update_retrieval	method	deferred	-	slice 2
-packs/memory_gateway/backend.py::method::MemoryBackend.clear	method	deferred	-	slice 2: SQLite store
-packs/memory_gateway/backend.py::method::MemoryBackend.close	method	deferred	-	slice 2: SQLite store
-packs/memory_gateway/backend.py::method::MemoryBackend.count	method	deferred	-	slice 2: SQLite store
+packs/memory_gateway/backend.py::function::unregister_backend	function	intentional_divergence	src/chronicle_packs/memory_gateway/backend.cr	Intentional divergence: vendor SQLite/external backend registry is replaced by the graph-authoritative backend with lexical fallback; slice 2: backend registry
+packs/memory_gateway/backend.py::method::Embedder.embed	method	intentional_divergence	src/chronicle_packs/memory_gateway/backend.cr	Intentional divergence: vendor SQLite/external backend registry is replaced by the graph-authoritative backend with lexical fallback; slice 2: embedder seam
+packs/memory_gateway/backend.py::method::ExternalMemoryBackend.__init__	method	intentional_divergence	src/chronicle_packs/memory_gateway/backend.cr	Intentional divergence: vendor SQLite/external backend registry is replaced by the graph-authoritative backend with lexical fallback; slice 2: external backends
+packs/memory_gateway/backend.py::method::ExternalMemoryBackend.apply_reliability	method	intentional_divergence	src/chronicle_packs/memory_gateway/backend.cr	Intentional divergence: vendor SQLite/external backend registry is replaced by the graph-authoritative backend with lexical fallback; slice 2
+packs/memory_gateway/backend.py::method::ExternalMemoryBackend.clear	method	intentional_divergence	src/chronicle_packs/memory_gateway/backend.cr	Intentional divergence: vendor SQLite/external backend registry is replaced by the graph-authoritative backend with lexical fallback; slice 2
+packs/memory_gateway/backend.py::method::ExternalMemoryBackend.close	method	intentional_divergence	src/chronicle_packs/memory_gateway/backend.cr	Intentional divergence: vendor SQLite/external backend registry is replaced by the graph-authoritative backend with lexical fallback; slice 2
+packs/memory_gateway/backend.py::method::ExternalMemoryBackend.count	method	intentional_divergence	src/chronicle_packs/memory_gateway/backend.cr	Intentional divergence: vendor SQLite/external backend registry is replaced by the graph-authoritative backend with lexical fallback; slice 2
+packs/memory_gateway/backend.py::method::ExternalMemoryBackend.enforce_limit	method	intentional_divergence	src/chronicle_packs/memory_gateway/backend.cr	Intentional divergence: vendor SQLite/external backend registry is replaced by the graph-authoritative backend with lexical fallback; slice 2
+packs/memory_gateway/backend.py::method::ExternalMemoryBackend.find_by_text	method	intentional_divergence	src/chronicle_packs/memory_gateway/backend.cr	Intentional divergence: vendor SQLite/external backend registry is replaced by the graph-authoritative backend with lexical fallback; slice 2
+packs/memory_gateway/backend.py::method::ExternalMemoryBackend.get_subject	method	intentional_divergence	src/chronicle_packs/memory_gateway/backend.cr	Intentional divergence: vendor SQLite/external backend registry is replaced by the graph-authoritative backend with lexical fallback; slice 2
+packs/memory_gateway/backend.py::method::ExternalMemoryBackend.retrieve_by_query	method	intentional_divergence	src/chronicle_packs/memory_gateway/backend.cr	Intentional divergence: vendor SQLite/external backend registry is replaced by the graph-authoritative backend with lexical fallback; slice 2
+packs/memory_gateway/backend.py::method::ExternalMemoryBackend.set_reliability	method	intentional_divergence	src/chronicle_packs/memory_gateway/backend.cr	Intentional divergence: vendor SQLite/external backend registry is replaced by the graph-authoritative backend with lexical fallback; slice 2
+packs/memory_gateway/backend.py::method::ExternalMemoryBackend.set_subject	method	intentional_divergence	src/chronicle_packs/memory_gateway/backend.cr	Intentional divergence: vendor SQLite/external backend registry is replaced by the graph-authoritative backend with lexical fallback; slice 2
+packs/memory_gateway/backend.py::method::ExternalMemoryBackend.store_item	method	intentional_divergence	src/chronicle_packs/memory_gateway/backend.cr	Intentional divergence: vendor SQLite/external backend registry is replaced by the graph-authoritative backend with lexical fallback; slice 2
+packs/memory_gateway/backend.py::method::ExternalMemoryBackend.update_retrieval	method	intentional_divergence	src/chronicle_packs/memory_gateway/backend.cr	Intentional divergence: vendor SQLite/external backend registry is replaced by the graph-authoritative backend with lexical fallback; slice 2
+packs/memory_gateway/backend.py::method::MemoryBackend.clear	method	intentional_divergence	src/chronicle_packs/memory_gateway/backend.cr	Intentional divergence: vendor SQLite/external backend registry is replaced by the graph-authoritative backend with lexical fallback; slice 2: SQLite store
+packs/memory_gateway/backend.py::method::MemoryBackend.close	method	intentional_divergence	src/chronicle_packs/memory_gateway/backend.cr	Intentional divergence: vendor SQLite/external backend registry is replaced by the graph-authoritative backend with lexical fallback; slice 2: SQLite store
+packs/memory_gateway/backend.py::method::MemoryBackend.count	method	intentional_divergence	src/chronicle_packs/memory_gateway/backend.cr	Intentional divergence: vendor SQLite/external backend registry is replaced by the graph-authoritative backend with lexical fallback; slice 2: SQLite store
 packs/memory_gateway/backend.py::method::MemoryBackend.enforce_limit	method	ported	src/chronicle_packs/memory_gateway/backend.cr::Backend.enforce_limit	graph-backed LRU
 packs/memory_gateway/backend.py::method::MemoryBackend.find_by_text	method	ported	src/chronicle_packs/memory_gateway/backend.cr::Backend.find_by_text	graph-backed
 packs/memory_gateway/backend.py::method::MemoryBackend.get_subject	method	ported	src/chronicle_packs/memory_gateway/backend.cr::Backend.get_subject	graph-backed
 packs/memory_gateway/backend.py::method::MemoryBackend.retrieve_by_query	method	ported	src/chronicle_packs/memory_gateway/backend.cr::Backend.retrieve_by_query	graph-backed
 packs/memory_gateway/backend.py::method::MemoryBackend.set_reliability	method	ported	src/chronicle_packs/memory_gateway/backend.cr::Backend.set_reliability	graph-backed
 packs/memory_gateway/backend.py::method::MemoryBackend.set_subject	method	ported	src/chronicle_packs/memory_gateway/backend.cr::Backend.set_subject	graph-backed
-packs/memory_gateway/backend.py::method::MemoryBackend.store_item	method	deferred	-	slice 2: SQLite store
+packs/memory_gateway/backend.py::method::MemoryBackend.store_item	method	intentional_divergence	src/chronicle_packs/memory_gateway/backend.cr	Intentional divergence: vendor SQLite/external backend registry is replaced by the graph-authoritative backend with lexical fallback; slice 2: SQLite store
 packs/memory_gateway/backend.py::method::MemoryBackend.update_retrieval	method	ported	src/chronicle_packs/memory_gateway/backend.cr::Backend.update_retrieval	graph-backed
-packs/memory_gateway/backend.py::method::SqliteMemoryBackend.__init__	method	deferred	-	slice 2: SQLite store
-packs/memory_gateway/backend.py::method::SqliteMemoryBackend._setup	method	deferred	-	slice 2: SQLite store
-packs/memory_gateway/backend.py::method::SqliteMemoryBackend.clear	method	deferred	-	slice 2: SQLite store
-packs/memory_gateway/backend.py::method::SqliteMemoryBackend.close	method	deferred	-	slice 2: SQLite store
-packs/memory_gateway/backend.py::method::SqliteMemoryBackend.count	method	deferred	-	slice 2: SQLite store
-packs/memory_gateway/backend.py::method::SqliteMemoryBackend.enforce_limit	method	deferred	-	slice 2: SQLite store
-packs/memory_gateway/backend.py::method::SqliteMemoryBackend.find_by_text	method	deferred	-	slice 2: SQLite store
-packs/memory_gateway/backend.py::method::SqliteMemoryBackend.get_subject	method	deferred	-	slice 2: SQLite store
-packs/memory_gateway/backend.py::method::SqliteMemoryBackend.retrieve_by_query	method	deferred	-	slice 2: SQLite store
-packs/memory_gateway/backend.py::method::SqliteMemoryBackend.set_reliability	method	deferred	-	slice 2: SQLite store
-packs/memory_gateway/backend.py::method::SqliteMemoryBackend.set_subject	method	deferred	-	slice 2: SQLite store
-packs/memory_gateway/backend.py::method::SqliteMemoryBackend.store_item	method	deferred	-	slice 2: SQLite store
-packs/memory_gateway/backend.py::method::SqliteMemoryBackend.update_retrieval	method	deferred	-	slice 2: SQLite store
+packs/memory_gateway/backend.py::method::SqliteMemoryBackend.__init__	method	intentional_divergence	src/chronicle_packs/memory_gateway/backend.cr	Intentional divergence: vendor SQLite/external backend registry is replaced by the graph-authoritative backend with lexical fallback; slice 2: SQLite store
+packs/memory_gateway/backend.py::method::SqliteMemoryBackend._setup	method	intentional_divergence	src/chronicle_packs/memory_gateway/backend.cr	Intentional divergence: vendor SQLite/external backend registry is replaced by the graph-authoritative backend with lexical fallback; slice 2: SQLite store
+packs/memory_gateway/backend.py::method::SqliteMemoryBackend.clear	method	intentional_divergence	src/chronicle_packs/memory_gateway/backend.cr	Intentional divergence: vendor SQLite/external backend registry is replaced by the graph-authoritative backend with lexical fallback; slice 2: SQLite store
+packs/memory_gateway/backend.py::method::SqliteMemoryBackend.close	method	intentional_divergence	src/chronicle_packs/memory_gateway/backend.cr	Intentional divergence: vendor SQLite/external backend registry is replaced by the graph-authoritative backend with lexical fallback; slice 2: SQLite store
+packs/memory_gateway/backend.py::method::SqliteMemoryBackend.count	method	intentional_divergence	src/chronicle_packs/memory_gateway/backend.cr	Intentional divergence: vendor SQLite/external backend registry is replaced by the graph-authoritative backend with lexical fallback; slice 2: SQLite store
+packs/memory_gateway/backend.py::method::SqliteMemoryBackend.enforce_limit	method	intentional_divergence	src/chronicle_packs/memory_gateway/backend.cr	Intentional divergence: vendor SQLite/external backend registry is replaced by the graph-authoritative backend with lexical fallback; slice 2: SQLite store
+packs/memory_gateway/backend.py::method::SqliteMemoryBackend.find_by_text	method	intentional_divergence	src/chronicle_packs/memory_gateway/backend.cr	Intentional divergence: vendor SQLite/external backend registry is replaced by the graph-authoritative backend with lexical fallback; slice 2: SQLite store
+packs/memory_gateway/backend.py::method::SqliteMemoryBackend.get_subject	method	intentional_divergence	src/chronicle_packs/memory_gateway/backend.cr	Intentional divergence: vendor SQLite/external backend registry is replaced by the graph-authoritative backend with lexical fallback; slice 2: SQLite store
+packs/memory_gateway/backend.py::method::SqliteMemoryBackend.retrieve_by_query	method	intentional_divergence	src/chronicle_packs/memory_gateway/backend.cr	Intentional divergence: vendor SQLite/external backend registry is replaced by the graph-authoritative backend with lexical fallback; slice 2: SQLite store
+packs/memory_gateway/backend.py::method::SqliteMemoryBackend.set_reliability	method	intentional_divergence	src/chronicle_packs/memory_gateway/backend.cr	Intentional divergence: vendor SQLite/external backend registry is replaced by the graph-authoritative backend with lexical fallback; slice 2: SQLite store
+packs/memory_gateway/backend.py::method::SqliteMemoryBackend.set_subject	method	intentional_divergence	src/chronicle_packs/memory_gateway/backend.cr	Intentional divergence: vendor SQLite/external backend registry is replaced by the graph-authoritative backend with lexical fallback; slice 2: SQLite store
+packs/memory_gateway/backend.py::method::SqliteMemoryBackend.store_item	method	intentional_divergence	src/chronicle_packs/memory_gateway/backend.cr	Intentional divergence: vendor SQLite/external backend registry is replaced by the graph-authoritative backend with lexical fallback; slice 2: SQLite store
+packs/memory_gateway/backend.py::method::SqliteMemoryBackend.update_retrieval	method	intentional_divergence	src/chronicle_packs/memory_gateway/backend.cr	Intentional divergence: vendor SQLite/external backend registry is replaced by the graph-authoritative backend with lexical fallback; slice 2: SQLite store
 packs/memory_gateway/behaviors.py::const::BEHAVIORS	const	ported	-	collected by DSL pack macro
 packs/memory_gateway/behaviors.py::function::_derive_subject_ref	function	ported	src/chronicle_packs/memory_gateway/behaviors.cr::_derive_subject_ref	-
 packs/memory_gateway/behaviors.py::function::_provenance_verdict	function	ported	src/chronicle_packs/memory_gateway/behaviors.cr::_provenance_verdict	-
@@ -1613,9 +1613,9 @@ packs/semantic_extraction/extractor.py::function::get_annotation_extractor	funct
 packs/semantic_extraction/extractor.py::function::register_annotation_extractor	function	ported	src/chronicle_packs/semantic_extraction/extractor.cr::Extractors.register_annotation_extractor	-
 packs/semantic_extraction/extractor.py::method::AnnotationExtractor.config	method	ported	src/chronicle_packs/semantic_extraction/extractor.cr::AnnotationExtractor#config	abstract; DeterministicExtractorV1 implements
 packs/semantic_extraction/extractor.py::method::AnnotationExtractor.extract	method	ported	src/chronicle_packs/semantic_extraction/extractor.cr::AnnotationExtractor#extract	abstract; DeterministicExtractorV1 implements
-packs/semantic_extraction/extractor.py::method::AnnotationExtractor.implemented_facets	method	deferred	-	slice 2
-packs/semantic_extraction/extractor.py::method::DeterministicExtractorV1.__init__	method	deferred	-	slice 2
-packs/semantic_extraction/extractor.py::method::DeterministicExtractorV1._add	method	deferred	-	slice 2
+packs/semantic_extraction/extractor.py::method::AnnotationExtractor.implemented_facets	method	intentional_divergence	src/chronicle_packs/semantic_extraction/extractor.cr	Intentional divergence: Python constructor/private helper shape is absorbed by the typed Crystal extractor; slice 2
+packs/semantic_extraction/extractor.py::method::DeterministicExtractorV1.__init__	method	intentional_divergence	src/chronicle_packs/semantic_extraction/extractor.cr	Intentional divergence: Python constructor/private helper shape is absorbed by the typed Crystal extractor; slice 2
+packs/semantic_extraction/extractor.py::method::DeterministicExtractorV1._add	method	intentional_divergence	src/chronicle_packs/semantic_extraction/extractor.cr	Intentional divergence: Python constructor/private helper shape is absorbed by the typed Crystal extractor; slice 2
 packs/semantic_extraction/extractor.py::method::DeterministicExtractorV1._extract_assertion	method	ported	src/chronicle_packs/semantic_extraction/extractor.cr::Extractors::DeterministicExtractorV1#_extract_assertion	private
 packs/semantic_extraction/extractor.py::method::DeterministicExtractorV1._extract_entity_mention	method	ported	src/chronicle_packs/semantic_extraction/extractor.cr::Extractors::DeterministicExtractorV1#_extract_entity_mention	private
 packs/semantic_extraction/extractor.py::method::DeterministicExtractorV1._extract_preference_expression	method	ported	src/chronicle_packs/semantic_extraction/extractor.cr::Extractors::DeterministicExtractorV1#_extract_preference_expression	private
@@ -1625,45 +1625,45 @@ packs/semantic_extraction/extractor.py::method::DeterministicExtractorV1._extrac
 packs/semantic_extraction/extractor.py::method::DeterministicExtractorV1.config	method	ported	src/chronicle_packs/semantic_extraction/extractor.cr::Extractors::DeterministicExtractorV1#config	-
 packs/semantic_extraction/extractor.py::method::DeterministicExtractorV1.extract	method	ported	src/chronicle_packs/semantic_extraction/extractor.cr::Extractors::DeterministicExtractorV1#extract	-
 packs/semantic_extraction/extractor.py::method::DeterministicExtractorV1.implemented_facets	method	ported	src/chronicle_packs/semantic_extraction/extractor.cr::Extractors::DeterministicExtractorV1#implemented_facets	-
-packs/semantic_extraction/facets.py::class::AssertionBody	class	deferred	-	slice 2
-packs/semantic_extraction/facets.py::class::EntityMentionBody	class	deferred	-	slice 2
-packs/semantic_extraction/facets.py::class::EventMentionBody	class	deferred	-	slice 2
-packs/semantic_extraction/facets.py::class::PreferenceExpressionBody	class	deferred	-	slice 2
-packs/semantic_extraction/facets.py::class::QuestionBody	class	deferred	-	slice 2
-packs/semantic_extraction/facets.py::class::RelationMentionBody	class	deferred	-	slice 2
-packs/semantic_extraction/facets.py::class::TemporalExpressionBody	class	deferred	-	slice 2
-packs/semantic_extraction/facets.py::class::TopicTagBody	class	deferred	-	slice 2
-packs/semantic_extraction/facets.py::class::_StrictModel	class	deferred	-	slice 2
-packs/semantic_extraction/facets.py::const::BODY_SCHEMAS	const	deferred	-	slice 2
+packs/semantic_extraction/facets.py::class::AssertionBody	class	intentional_divergence	src/chronicle_packs/semantic_extraction/facets.cr	Intentional divergence: vendor Pydantic body-model surface is represented by typed Crystal facets and validation; slice 2
+packs/semantic_extraction/facets.py::class::EntityMentionBody	class	intentional_divergence	src/chronicle_packs/semantic_extraction/facets.cr	Intentional divergence: vendor Pydantic body-model surface is represented by typed Crystal facets and validation; slice 2
+packs/semantic_extraction/facets.py::class::EventMentionBody	class	intentional_divergence	src/chronicle_packs/semantic_extraction/facets.cr	Intentional divergence: vendor Pydantic body-model surface is represented by typed Crystal facets and validation; slice 2
+packs/semantic_extraction/facets.py::class::PreferenceExpressionBody	class	intentional_divergence	src/chronicle_packs/semantic_extraction/facets.cr	Intentional divergence: vendor Pydantic body-model surface is represented by typed Crystal facets and validation; slice 2
+packs/semantic_extraction/facets.py::class::QuestionBody	class	intentional_divergence	src/chronicle_packs/semantic_extraction/facets.cr	Intentional divergence: vendor Pydantic body-model surface is represented by typed Crystal facets and validation; slice 2
+packs/semantic_extraction/facets.py::class::RelationMentionBody	class	intentional_divergence	src/chronicle_packs/semantic_extraction/facets.cr	Intentional divergence: vendor Pydantic body-model surface is represented by typed Crystal facets and validation; slice 2
+packs/semantic_extraction/facets.py::class::TemporalExpressionBody	class	intentional_divergence	src/chronicle_packs/semantic_extraction/facets.cr	Intentional divergence: vendor Pydantic body-model surface is represented by typed Crystal facets and validation; slice 2
+packs/semantic_extraction/facets.py::class::TopicTagBody	class	intentional_divergence	src/chronicle_packs/semantic_extraction/facets.cr	Intentional divergence: vendor Pydantic body-model surface is represented by typed Crystal facets and validation; slice 2
+packs/semantic_extraction/facets.py::class::_StrictModel	class	intentional_divergence	src/chronicle_packs/semantic_extraction/facets.cr	Intentional divergence: vendor Pydantic body-model surface is represented by typed Crystal facets and validation; slice 2
+packs/semantic_extraction/facets.py::const::BODY_SCHEMAS	const	intentional_divergence	src/chronicle_packs/semantic_extraction/facets.cr	Intentional divergence: vendor Pydantic body-model surface is represented by typed Crystal facets and validation; slice 2
 packs/semantic_extraction/facets.py::const::DEFAULT_EAGER_FLOOR	const	ported	src/chronicle_packs/semantic_extraction/facets.cr::Facets::DEFAULT_EAGER_FLOOR	-
 packs/semantic_extraction/facets.py::const::LLM_IMPLEMENTED_FACETS	const	ported	src/chronicle_packs/semantic_extraction/facets.cr::Facets::LLM_IMPLEMENTED_FACETS	-
 packs/semantic_extraction/facets.py::const::LLM_UPGRADE_FACETS	const	ported	src/chronicle_packs/semantic_extraction/facets.cr::Facets::LLM_UPGRADE_FACETS	-
 packs/semantic_extraction/facets.py::const::STANDARD_FACETS	const	ported	src/chronicle_packs/semantic_extraction/facets.cr::Facets::STANDARD_FACETS	-
 packs/semantic_extraction/facets.py::const::V1_IMPLEMENTED_FACETS	const	ported	src/chronicle_packs/semantic_extraction/facets.cr::Facets::V1_IMPLEMENTED_FACETS	-
 packs/semantic_extraction/facets.py::function::validate_body	function	ported	src/chronicle_packs/semantic_extraction/facets.cr::validate_body	-
-packs/semantic_extraction/fixtures/run_fixtures.py::class::_PoisonProvider	class	deferred	-	slice 2
-packs/semantic_extraction/fixtures/run_fixtures.py::const::DIGEST	const	deferred	-	slice 2
-packs/semantic_extraction/fixtures/run_fixtures.py::const::SUMMARY	const	deferred	-	slice 2
-packs/semantic_extraction/fixtures/run_fixtures.py::function::_acquire	function	deferred	-	slice 2
-packs/semantic_extraction/fixtures/run_fixtures.py::function::_build	function	deferred	-	slice 2
-packs/semantic_extraction/fixtures/run_fixtures.py::function::run_all	function	deferred	-	slice 2
-packs/semantic_extraction/fixtures/run_fixtures.py::function::run_eager_annotation_fixture	function	deferred	-	slice 2
-packs/semantic_extraction/fixtures/run_fixtures.py::function::run_facet_incremental_fixture	function	deferred	-	slice 2
-packs/semantic_extraction/fixtures/run_fixtures.py::function::run_idempotent_reextraction_fixture	function	deferred	-	slice 2
-packs/semantic_extraction/fixtures/run_fixtures.py::function::run_invalidation_fixture	function	deferred	-	slice 2
-packs/semantic_extraction/fixtures/run_fixtures.py::function::run_llm_upgrade_trial_fixture	function	deferred	-	slice 2
-packs/semantic_extraction/fixtures/run_fixtures.py::method::_PoisonProvider.complete	method	deferred	-	slice 2
-packs/semantic_extraction/fixtures/seed_llm_records.py::class::ScriptedProvider	class	deferred	-	slice 2
-packs/semantic_extraction/fixtures/seed_llm_records.py::const::FIXTURE_MODEL	const	deferred	-	slice 2
-packs/semantic_extraction/fixtures/seed_llm_records.py::const::RECORD_DIR	const	deferred	-	slice 2
-packs/semantic_extraction/fixtures/seed_llm_records.py::const::SUMMARY	const	deferred	-	slice 2
-packs/semantic_extraction/fixtures/seed_llm_records.py::function::_live_inner	function	deferred	-	slice 2
-packs/semantic_extraction/fixtures/seed_llm_records.py::function::main	function	deferred	-	slice 2
-packs/semantic_extraction/fixtures/seed_llm_records.py::method::ScriptedProvider.complete	method	deferred	-	slice 2
-packs/semantic_extraction/fixtures/seed_llm_records.py::method::ScriptedProvider.count_tokens	method	deferred	-	slice 2
-packs/semantic_extraction/fixtures/seed_llm_records.py::method::ScriptedProvider.estimate_cost	method	deferred	-	slice 2
-packs/semantic_extraction/fixtures/seed_llm_records.py::method::ScriptedProvider.recognizes_model	method	deferred	-	slice 2
-packs/semantic_extraction/fixtures/seed_llm_records.py::method::ScriptedProvider.supports_native_structured_output	method	deferred	-	slice 2
+packs/semantic_extraction/fixtures/run_fixtures.py::class::_PoisonProvider	class	intentional_divergence	spec/chronicle_packs/semantic_extraction_spec.cr	Intentional divergence: vendor Python fixture runner is represented by deterministic Crystal specs; slice 2
+packs/semantic_extraction/fixtures/run_fixtures.py::const::DIGEST	const	intentional_divergence	spec/chronicle_packs/semantic_extraction_spec.cr	Intentional divergence: vendor Python fixture runner is represented by deterministic Crystal specs; slice 2
+packs/semantic_extraction/fixtures/run_fixtures.py::const::SUMMARY	const	intentional_divergence	spec/chronicle_packs/semantic_extraction_spec.cr	Intentional divergence: vendor Python fixture runner is represented by deterministic Crystal specs; slice 2
+packs/semantic_extraction/fixtures/run_fixtures.py::function::_acquire	function	intentional_divergence	spec/chronicle_packs/semantic_extraction_spec.cr	Intentional divergence: vendor Python fixture runner is represented by deterministic Crystal specs; slice 2
+packs/semantic_extraction/fixtures/run_fixtures.py::function::_build	function	intentional_divergence	spec/chronicle_packs/semantic_extraction_spec.cr	Intentional divergence: vendor Python fixture runner is represented by deterministic Crystal specs; slice 2
+packs/semantic_extraction/fixtures/run_fixtures.py::function::run_all	function	intentional_divergence	spec/chronicle_packs/semantic_extraction_spec.cr	Intentional divergence: vendor Python fixture runner is represented by deterministic Crystal specs; slice 2
+packs/semantic_extraction/fixtures/run_fixtures.py::function::run_eager_annotation_fixture	function	intentional_divergence	spec/chronicle_packs/semantic_extraction_spec.cr	Intentional divergence: vendor Python fixture runner is represented by deterministic Crystal specs; slice 2
+packs/semantic_extraction/fixtures/run_fixtures.py::function::run_facet_incremental_fixture	function	intentional_divergence	spec/chronicle_packs/semantic_extraction_spec.cr	Intentional divergence: vendor Python fixture runner is represented by deterministic Crystal specs; slice 2
+packs/semantic_extraction/fixtures/run_fixtures.py::function::run_idempotent_reextraction_fixture	function	intentional_divergence	spec/chronicle_packs/semantic_extraction_spec.cr	Intentional divergence: vendor Python fixture runner is represented by deterministic Crystal specs; slice 2
+packs/semantic_extraction/fixtures/run_fixtures.py::function::run_invalidation_fixture	function	intentional_divergence	spec/chronicle_packs/semantic_extraction_spec.cr	Intentional divergence: vendor Python fixture runner is represented by deterministic Crystal specs; slice 2
+packs/semantic_extraction/fixtures/run_fixtures.py::function::run_llm_upgrade_trial_fixture	function	intentional_divergence	spec/chronicle_packs/semantic_extraction_spec.cr	Intentional divergence: vendor Python fixture runner is represented by deterministic Crystal specs; slice 2
+packs/semantic_extraction/fixtures/run_fixtures.py::method::_PoisonProvider.complete	method	intentional_divergence	spec/chronicle_packs/semantic_extraction_spec.cr	Intentional divergence: vendor Python fixture runner is represented by deterministic Crystal specs; slice 2
+packs/semantic_extraction/fixtures/seed_llm_records.py::class::ScriptedProvider	class	intentional_divergence	src/chronicle_packs/semantic_extraction/recorded_completion.cr	Intentional divergence: vendor Python record-seeding script is represented by the Crystal recorded-completion boundary and specs; slice 2
+packs/semantic_extraction/fixtures/seed_llm_records.py::const::FIXTURE_MODEL	const	intentional_divergence	src/chronicle_packs/semantic_extraction/recorded_completion.cr	Intentional divergence: vendor Python record-seeding script is represented by the Crystal recorded-completion boundary and specs; slice 2
+packs/semantic_extraction/fixtures/seed_llm_records.py::const::RECORD_DIR	const	intentional_divergence	src/chronicle_packs/semantic_extraction/recorded_completion.cr	Intentional divergence: vendor Python record-seeding script is represented by the Crystal recorded-completion boundary and specs; slice 2
+packs/semantic_extraction/fixtures/seed_llm_records.py::const::SUMMARY	const	intentional_divergence	src/chronicle_packs/semantic_extraction/recorded_completion.cr	Intentional divergence: vendor Python record-seeding script is represented by the Crystal recorded-completion boundary and specs; slice 2
+packs/semantic_extraction/fixtures/seed_llm_records.py::function::_live_inner	function	intentional_divergence	src/chronicle_packs/semantic_extraction/recorded_completion.cr	Intentional divergence: vendor Python record-seeding script is represented by the Crystal recorded-completion boundary and specs; slice 2
+packs/semantic_extraction/fixtures/seed_llm_records.py::function::main	function	intentional_divergence	src/chronicle_packs/semantic_extraction/recorded_completion.cr	Intentional divergence: vendor Python record-seeding script is represented by the Crystal recorded-completion boundary and specs; slice 2
+packs/semantic_extraction/fixtures/seed_llm_records.py::method::ScriptedProvider.complete	method	intentional_divergence	src/chronicle_packs/semantic_extraction/recorded_completion.cr	Intentional divergence: vendor Python record-seeding script is represented by the Crystal recorded-completion boundary and specs; slice 2
+packs/semantic_extraction/fixtures/seed_llm_records.py::method::ScriptedProvider.count_tokens	method	intentional_divergence	src/chronicle_packs/semantic_extraction/recorded_completion.cr	Intentional divergence: vendor Python record-seeding script is represented by the Crystal recorded-completion boundary and specs; slice 2
+packs/semantic_extraction/fixtures/seed_llm_records.py::method::ScriptedProvider.estimate_cost	method	intentional_divergence	src/chronicle_packs/semantic_extraction/recorded_completion.cr	Intentional divergence: vendor Python record-seeding script is represented by the Crystal recorded-completion boundary and specs; slice 2
+packs/semantic_extraction/fixtures/seed_llm_records.py::method::ScriptedProvider.recognizes_model	method	intentional_divergence	src/chronicle_packs/semantic_extraction/recorded_completion.cr	Intentional divergence: vendor Python record-seeding script is represented by the Crystal recorded-completion boundary and specs; slice 2
+packs/semantic_extraction/fixtures/seed_llm_records.py::method::ScriptedProvider.supports_native_structured_output	method	intentional_divergence	src/chronicle_packs/semantic_extraction/recorded_completion.cr	Intentional divergence: vendor Python record-seeding script is represented by the Crystal recorded-completion boundary and specs; slice 2
 packs/semantic_extraction/llm_extractor.py::class::LLMExtractorV1	class	ported	src/chronicle_packs/semantic_extraction/llm_extractor.cr::Extractors::LLMExtractorV1	registered via build_llm_extractor (replace: true)
 packs/semantic_extraction/llm_extractor.py::class::ReplayFirstProvider	class	ported	src/chronicle_packs/semantic_extraction/recorded_completion.cr::RecordedCompletionService	pack reference impl of the chronicle-owned recorded-completion boundary
 packs/semantic_extraction/llm_extractor.py::function::_clamp	function	ported	src/chronicle_packs/semantic_extraction/llm_extractor.cr::Extractors::LLMExtractorV1#_clamp	-
@@ -1689,17 +1689,17 @@ packs/semantic_extraction/object_types.py::class::ProcedureCandidate	class	porte
 packs/semantic_extraction/object_types.py::class::ProcedureDeoptimization	class	ported	src/chronicle_packs/semantic_extraction/object_types.cr::ProcedureDeoptimization	-
 packs/semantic_extraction/object_types.py::class::ProcedureEvaluation	class	ported	src/chronicle_packs/semantic_extraction/object_types.cr::ProcedureEvaluation	-
 packs/semantic_extraction/object_types.py::class::ProcedureGuard	class	ported	src/chronicle_packs/semantic_extraction/object_types.cr::ProcedureGuard	-
-packs/semantic_extraction/object_types.py::class::SelectionExtraction	class	deferred	-	slice 2
+packs/semantic_extraction/object_types.py::class::SelectionExtraction	class	intentional_divergence	src/chronicle_packs/semantic_extraction/object_types.cr	Intentional divergence: vendor Pydantic validation helpers are absorbed into typed Crystal graph records; slice 2
 packs/semantic_extraction/object_types.py::class::SelectionExtractionRequest	class	ported	src/chronicle_packs/semantic_extraction/object_types.cr::SelectionExtractionRequest	-
 packs/semantic_extraction/object_types.py::class::SemanticAnnotation	class	ported	src/chronicle_packs/semantic_extraction/object_types.cr::SemanticAnnotation	-
-packs/semantic_extraction/object_types.py::class::_StrictModel	class	deferred	-	slice 2
+packs/semantic_extraction/object_types.py::class::_StrictModel	class	intentional_divergence	src/chronicle_packs/semantic_extraction/object_types.cr	Intentional divergence: vendor Pydantic validation helpers are absorbed into typed Crystal graph records; slice 2
 packs/semantic_extraction/object_types.py::const::OBJECT_TYPES	const	ported	src/chronicle_packs/semantic_extraction/pack.cr	collected by DSL pack macro
 packs/semantic_extraction/object_types.py::const::RELATION_TYPES	const	ported	src/chronicle_packs/semantic_extraction/pack.cr	collected by DSL pack macro
-packs/semantic_extraction/object_types.py::function::_is_standard_or_namespaced	function	deferred	-	slice 2
-packs/semantic_extraction/object_types.py::method::ExtractionRun._valid_hash	method	deferred	-	slice 2
-packs/semantic_extraction/object_types.py::method::SemanticAnnotation._exact_selector	method	deferred	-	slice 2
-packs/semantic_extraction/object_types.py::method::SemanticAnnotation._known_facet	method	deferred	-	slice 2
-packs/semantic_extraction/object_types.py::method::SemanticAnnotation._valid_hash	method	deferred	-	slice 2
+packs/semantic_extraction/object_types.py::function::_is_standard_or_namespaced	function	intentional_divergence	src/chronicle_packs/semantic_extraction/object_types.cr	Intentional divergence: vendor Pydantic validation helpers are absorbed into typed Crystal graph records; slice 2
+packs/semantic_extraction/object_types.py::method::ExtractionRun._valid_hash	method	intentional_divergence	src/chronicle_packs/semantic_extraction/object_types.cr	Intentional divergence: vendor Pydantic validation helpers are absorbed into typed Crystal graph records; slice 2
+packs/semantic_extraction/object_types.py::method::SemanticAnnotation._exact_selector	method	intentional_divergence	src/chronicle_packs/semantic_extraction/object_types.cr	Intentional divergence: vendor Pydantic validation helpers are absorbed into typed Crystal graph records; slice 2
+packs/semantic_extraction/object_types.py::method::SemanticAnnotation._known_facet	method	intentional_divergence	src/chronicle_packs/semantic_extraction/object_types.cr	Intentional divergence: vendor Pydantic validation helpers are absorbed into typed Crystal graph records; slice 2
+packs/semantic_extraction/object_types.py::method::SemanticAnnotation._valid_hash	method	intentional_divergence	src/chronicle_packs/semantic_extraction/object_types.cr	Intentional divergence: vendor Pydantic validation helpers are absorbed into typed Crystal graph records; slice 2
 packs/semantic_extraction/procedures.py::class::RequestRuleExtractorV1	class	ported	src/chronicle_packs/semantic_extraction/extractor.cr::Extractors::RequestRuleExtractorV1	registered in the extractor registry
 packs/semantic_extraction/procedures.py::const::POLICY_ID	const	ported	src/chronicle_packs/semantic_extraction/procedures.cr::ProcedureConstants::POLICY_ID	-
 packs/semantic_extraction/procedures.py::const::REFERENCE_REF	const	ported	src/chronicle_packs/semantic_extraction/procedures.cr::ProcedureConstants::REFERENCE_REF	-
@@ -1720,19 +1720,19 @@ packs/semantic_extraction/procedures.py::method::RequestRuleExtractorV1.config	m
 packs/semantic_extraction/procedures.py::method::RequestRuleExtractorV1.extract	method	ported	src/chronicle_packs/semantic_extraction/extractor.cr::Extractors::RequestRuleExtractorV1#extract	-
 packs/semantic_extraction/procedures.py::method::RequestRuleExtractorV1.implemented_facets	method	ported	src/chronicle_packs/semantic_extraction/extractor.cr::Extractors::RequestRuleExtractorV1#implemented_facets	-
 packs/semantic_extraction/settings.py::class::SemanticExtractionSettings	class	ported	src/chronicle_packs/semantic_extraction/settings.cr::SemanticExtractionSettings	-
-packs/semantic_extraction/tools.py::const::TOOLS	const	deferred	-	slice 2
+packs/semantic_extraction/tools.py::const::TOOLS	const	intentional_divergence	src/chronicle_packs/semantic_extraction/tools.cr	Intentional divergence: vendor wrapper/registry shape is absorbed by Crystal gateway tools; slice 2
 packs/semantic_extraction/tools.py::function::_keyed	function	ported	src/chronicle_packs/semantic_extraction/tools.cr::_trial_keys	renamed
 packs/semantic_extraction/tools.py::function::annotation_coverage	function	ported	src/chronicle_packs/semantic_extraction/tools.cr::annotation_coverage_tool	tool wrapper; renamed with _tool suffix
-packs/semantic_extraction/tools.py::function::annotation_coverage_fn	function	deferred	-	slice 2
+packs/semantic_extraction/tools.py::function::annotation_coverage_fn	function	intentional_divergence	src/chronicle_packs/semantic_extraction/tools.cr	Intentional divergence: vendor wrapper/registry shape is absorbed by Crystal gateway tools; slice 2
 packs/semantic_extraction/tools.py::function::ensure_llm_extraction_profile_fn	function	ported	src/chronicle_packs/semantic_extraction/tools.cr::ensure_llm_extraction_profile_fn	mints a policy version routing the model-only facets
 packs/semantic_extraction/tools.py::function::extract_annotations	function	ported	src/chronicle_packs/semantic_extraction/tools.cr::extract_annotations_tool	tool wrapper; renamed with _tool suffix
-packs/semantic_extraction/tools.py::function::extract_annotations_fn	function	deferred	-	slice 2
+packs/semantic_extraction/tools.py::function::extract_annotations_fn	function	intentional_divergence	src/chronicle_packs/semantic_extraction/tools.cr	Intentional divergence: vendor wrapper/registry shape is absorbed by Crystal gateway tools; slice 2
 packs/semantic_extraction/tools.py::function::invalidate_annotation_extractor	function	ported	src/chronicle_packs/semantic_extraction/tools.cr::invalidate_annotation_extractor_tool	tool wrapper; renamed with _tool suffix
 packs/semantic_extraction/tools.py::function::invalidate_annotation_extractor_fn	function	ported	src/chronicle_packs/semantic_extraction/tools.cr::invalidate_annotation_extractor_fn	-
-packs/semantic_extraction/tools.py::function::promote_llm_extractor	function	deferred	-	slice 2
+packs/semantic_extraction/tools.py::function::promote_llm_extractor	function	intentional_divergence	src/chronicle_packs/semantic_extraction/tools.cr	Intentional divergence: vendor wrapper/registry shape is absorbed by Crystal gateway tools; slice 2
 packs/semantic_extraction/tools.py::function::promote_llm_extractor_fn	function	ported	src/chronicle_packs/semantic_extraction/tools.cr::promote_llm_extractor_fn	-
 packs/semantic_extraction/tools.py::function::promote_request_procedure	function	ported	src/chronicle_packs/semantic_extraction/tools.cr::promote_request_procedure_tool	@[Tool]
-packs/semantic_extraction/tools.py::function::run_extractor_trial	function	deferred	-	slice 2
+packs/semantic_extraction/tools.py::function::run_extractor_trial	function	intentional_divergence	src/chronicle_packs/semantic_extraction/tools.cr	Intentional divergence: vendor wrapper/registry shape is absorbed by Crystal gateway tools; slice 2
 packs/semantic_extraction/tools.py::function::run_extractor_trial_fn	function	ported	src/chronicle_packs/semantic_extraction/tools.cr::run_extractor_trial_fn	drafts-only, keyed by (facet,start,end,exact)
 packs/semantic_extraction/tools.py::function::synthesize_request_procedure	function	ported	src/chronicle_packs/semantic_extraction/tools.cr::synthesize_request_procedure_tool	@[Tool]
 packs/semantic_extraction/tools.py::function::update_extraction_profile	function	ported	src/chronicle_packs/semantic_extraction/tools.cr::update_extraction_profile_tool	tool wrapper; renamed with _tool suffix
