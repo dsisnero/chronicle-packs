@@ -25,8 +25,8 @@ each entry is branch-sized and user-visible, `[x]` = green and committed,
 Intentional divergences section). The `## Features` sections below remain the
 per-pack detail record (surfaces, divergence notes, fixture drivers).
 
-**Progress: 1761 / 2080 source API items ported, 8 partial, 106 skipped, and 108 intentional divergences.**
-**Open source work: 97 missing + 8 partial rows; all are in `packs/evolution`.**
+**Progress: 1761 / 2080 source API items ported, 8 partial, 106 skipped, and 174 intentional divergences.**
+**Open source work: 31 missing + 8 partial rows; all are in `packs/evolution`.**
 **Upstream tests: 415 / 638 ported, 204 skipped test-fixture/environment rows, 17 intentional divergences, and 2 partial behavior rows.**
 
 The source and test ledgers were checked against vendor revision
@@ -42,11 +42,12 @@ is a usable completion gate again.
       deployment helpers as skipped and Python/runtime-bound adapters or
       absorbed typed surfaces as intentional divergences, retaining a
       vendor-backed reason for every row; `check_port_inventory.sh` is green.
-- [ ] **Classify Evolution fixture/template support** (66 source rows in
-      `fixtures/candidates.py` and `fixtures/run_fixtures.py`). Either replace
-      each vendor scenario with a Crystal-host scenario, or record it as a
-      Python language/host divergence; auto-generated helpers are not a
-      standalone runtime API to port.
+- [x] **Classify Evolution fixture/template support** (66 source rows in
+      `fixtures/candidates.py` and `fixtures/run_fixtures.py`). The vendor's
+      Python template/runner symbols are intentional language/host
+      divergences; Crystal-host specs cover the portable governance outcomes
+      (gates, trial isolation, approvals, pins, retention, boot, and author
+      provenance) without creating a second runner API.
 - [ ] **Close Evolution gate audit helpers** (`gates.py`, 3 missing rows).
       Preserve the vendor gate ordering and durable failure records, or name
       the existing Crystal static-gate result as the explicit replacement.
