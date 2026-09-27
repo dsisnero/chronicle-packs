@@ -36,7 +36,7 @@ is a usable completion gate again.
 
 ## Remaining feature-size roadmap (S / M / L)
 
-### Current S — ledger hygiene and narrowly bounded contracts
+### Completed S — ledger hygiene and fixture boundaries
 
 - [x] **Normalize legacy source statuses** (110 rows). Reclassified Python
       deployment helpers as skipped and Python/runtime-bound adapters or
@@ -48,11 +48,15 @@ is a usable completion gate again.
       divergences; Crystal-host specs cover the portable governance outcomes
       (gates, trial isolation, approvals, pins, retention, boot, and author
       provenance) without creating a second runner API.
-- [ ] **Close Evolution gate audit helpers** (`gates.py`, 3 missing rows).
-      Preserve the vendor gate ordering and durable failure records, or name
-      the existing Crystal static-gate result as the explicit replacement.
+### Next S — static-gate audit equivalence (4 rows)
 
-### Current M — one Evolution boundary at a time
+- [ ] **Close Evolution gate audit helpers** (`gates.py`: 3 missing +
+      `run_static_gates` partial). Verify the existing Crystal fail-fast
+      sequence records the vendor-equivalent ordered, durable `gate_result`
+      evidence; classify the Python clock/record/failure helper shapes only
+      after that behavior is pinned.
+
+### Follow-on M — host-service boundaries (10 rows)
 
 - [x] **Crystal static-gate equivalence** (`analysis.py`, 13 former partial
       rows). Reserved-path and byte-cap checks are direct ports; the remaining
@@ -63,7 +67,8 @@ is a usable completion gate again.
 - [ ] **Verified materialization and trial evidence** (`materialize.py` and
       `trial.py`, 5 rows). Specify and test the sealed compiled-candidate,
       persisted fork, fixture verdict, and replay-evidence contract at the
-      host-service boundary.
+      host-service boundary. This follows gate equivalence because every
+      materialized candidate must enter through the recorded static verdict.
 - [ ] **Boot reconciliation host contract** (`boot.py`, 4 rows). Complete
       promotion/fork discovery and capability-gap records around sealed-pack
       reload; executable candidate loading remains host owned.
@@ -71,7 +76,7 @@ is a usable completion gate again.
       materialize → load → promote → supersede ordering and recovery through
       the host-provided activation service.
 
-### Current L — real runtime/platform integration
+### Final L — runtime/platform integration (25 rows)
 
 - [ ] **Isolated Crystal trial runner.** Implement the host-owned
       compiled-child, resource-limited fixture/replay path required by vendor
