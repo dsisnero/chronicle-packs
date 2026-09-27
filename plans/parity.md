@@ -83,21 +83,33 @@ is a usable completion gate again.
       every eligible sealed bundle; only the final compiled-pack load is
       delegated to the per-graph host activation service.
 
-### Next M — adoption execution boundary (1 row)
+### Next L — hosted candidate lifecycle
 
-- [ ] **Adoption execution boundary** (`adopt.py`, 1 partial row). Verify
-      materialize → load → promote → supersede ordering and recovery through
-      the host-provided activation service.
+- [ ] **End-to-end governed candidate lifecycle** (`trial.py` host runner +
+      `adopt.py::process_adoption_tickets`). Deliver one host-facing service
+      that can execute an already-gated Crystal candidate in an isolated
+      resource-limited child, persist and reload its fork evidence, accept an
+      approved adoption ticket, activate the sealed compiled pack, promote the
+      fork, supersede an earlier version, and survive a restart. This joins the
+      currently separate trial, adoption, and boot seams into the first usable
+      host integration—not a one-row `adopt.py` exercise.
 
-### Final L — runtime/platform integration (25 rows)
+### Follow-on M — unattended Evolution soak, delivered as operator features
 
-- [ ] **Isolated Crystal trial runner.** Implement the host-owned
-      compiled-child, resource-limited fixture/replay path required by vendor
-      `trial.py`, without importing agent-authored source into the parent.
-- [ ] **Evolution soak runtime** (`soak.py`, 25 open rows). Replace the
-      ledger-only approximation with a host-driven rotation covering boot,
-      approval, trial-child preflight, conflict/taint/restart scenarios, and
-      durable anomaly evidence.
+- [ ] **Happy-path rotation runner** (`soak.py`, 9 rows). Provide a host-run
+      rotation that creates its workspace, boots a persisted runtime, authors
+      and gates a candidate, drives the isolated trial and verified adoption,
+      records a successful `scenario_happy`, and tears down cleanly. This is
+      the first reproducible unattended lifecycle demonstration.
+- [ ] **Adversarial recovery rotation** (`soak.py`, 9 rows). Add the
+      operator-visible scenarios for tainted inputs, promotion conflicts,
+      governed disable/restart, and contest/retry handling, with child-failure
+      and resource-budget evidence. A rotation must demonstrate safe recovery,
+      not merely a happy deployment.
+- [ ] **Soak health report and scheduled entrypoint** (`soak.py`, 7 rows).
+      Make the harness runnable as an operational command, aggregate graph and
+      invariant health across rotations, and emit the durable anomaly/completion
+      report that tells an operator whether the soak remains green.
 
 ### Current upstream-test closeout
 
