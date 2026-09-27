@@ -25,8 +25,8 @@ each entry is branch-sized and user-visible, `[x]` = green and committed,
 Intentional divergences section). The `## Features` sections below remain the
 per-pack detail record (surfaces, divergence notes, fixture drivers).
 
-**Progress: 1761 / 2080 source API items ported, 8 partial, 106 skipped, and 174 intentional divergences.**
-**Open source work: 31 missing + 8 partial rows; all are in `packs/evolution`.**
+**Progress: 1765 / 2080 source API items ported, 7 partial, 106 skipped, and 174 intentional divergences.**
+**Open source work: 28 missing + 7 partial rows; all are in `packs/evolution`.**
 **Upstream tests: 415 / 638 ported, 204 skipped test-fixture/environment rows, 17 intentional divergences, and 2 partial behavior rows.**
 
 The source and test ledgers were checked against vendor revision
@@ -48,13 +48,14 @@ is a usable completion gate again.
       divergences; Crystal-host specs cover the portable governance outcomes
       (gates, trial isolation, approvals, pins, retention, boot, and author
       provenance) without creating a second runner API.
-### Next S — static-gate audit equivalence (4 rows)
+### Completed S — static-gate audit equivalence (4 rows)
 
-- [ ] **Close Evolution gate audit helpers** (`gates.py`: 3 missing +
-      `run_static_gates` partial). Verify the existing Crystal fail-fast
-      sequence records the vendor-equivalent ordered, durable `gate_result`
-      evidence; classify the Python clock/record/failure helper shapes only
-      after that behavior is pinned.
+- [x] **Close Evolution gate audit helpers** (`gates.py`: 3 missing +
+      `run_static_gates` partial). Crystal now explicitly characterizes the
+      vendor-equivalent ordered, durable `gate_result` evidence—including UTC
+      timestamps and `gated_by` relations—and records the first failure before
+      rejecting. The Python helper shapes map to `_beh_now`,
+      `_record_static_gate`, and the inlined fail-fast path.
 
 ### Follow-on M — host-service boundaries (10 rows)
 

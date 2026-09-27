@@ -1545,6 +1545,7 @@ describe Chronicle::Packs::Evolution do
           data["proposal_id"].as_s.should eq(proposal.id)
           data["verdict"].as_s.should eq("pass")
           data["details"].as_s.should be_empty
+          data["at"].as_s.should match(/^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}[+-]\d{2}:\d{2}$/)
         end
         graph.relations(source: proposal.id, type: "gated_by").map(&.to_id).should eq(gates.map(&.id))
       end
