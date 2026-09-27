@@ -1023,7 +1023,49 @@ describe Chronicle::Packs::Evolution do
         service.candidate_files_observed.should eq([true, true])
         JSON.parse(graph.get_object(proposal.id).not_nil!.data)["status"].as_s.should eq("trialed")
         graph.objects(type: "gate_result").select { |gate| JSON.parse(gate.data)["proposal_id"].as_s == proposal.id }.map { |gate| JSON.parse(gate.data)["gate"].as_s }.should contain("fixtures")
-        graph.objects(type: "mod_trial").size.should eq(1)
+        trial = graph.objects(type: "mod_trial").first
+        trial.should_not be_nil
+        trial_data = JSON.parse(trial.not_nil!.data)
+        trial_data["fork_run_id"].as_s.should eq("fork_123")
+        trial_data["forked_at_event"].as_s.should eq(service.requests.last.at_event)
+        trial_data["eval_summary"].as_h["child_outcome"].as_s.should eq("completed")
+        trial_data["eval_summary"].as_h["replay_residue_removed"].as_h["objects"].as_i.should eq(0)
+        trial_data["failures"].as_a.should be_empty
+      end
+    ensure
+      Chronicle::Packs::Evolution::Trial.clear_services
+    end
+
+    it "rejects a replay report without durable fork evidence" do
+      fixture = Chronicle::Packs::Evolution::TrialReport.new(outcome: "completed")
+      replay = Chronicle::Packs::Evolution::TrialReport.new(
+        outcome: "completed", fork_run_id: ""
+      )
+      service = EvolutionSpecSupport::RecordingTrialService.new(fixture, replay)
+
+      with_evolution_runtime do |_store, graph, _rt|
+        files = crystal_candidate_files("missing_evidence", "require \"chronicle-packs\"\n")
+        artifact_ids = files.map do |path, content|
+          graph.add_object("artifact", {"kind" => JSON::Any.new("source"), "title" => JSON::Any.new(path), "content" => JSON::Any.new(content)}.to_json).id
+        end
+        proposal = graph.add_object("mod_proposal", {
+          "pack_name"           => JSON::Any.new("missing_evidence"),
+          "source_artifact_ids" => JSON::Any.new(artifact_ids.map { |id| JSON::Any.new(id) }),
+          "bundle_hash"         => JSON::Any.new(Chronicle::Packs::Evolution::Materialize.bundle_hash_of(files)),
+          "status"              => JSON::Any.new("gated"),
+        }.to_json)
+        Chronicle::Packs::Evolution::Trial.set_service(graph, service)
+
+        result = Chronicle::Packs::Evolution::Trial.run_trial(graph, proposal, Chronicle::Packs::Evolution::EvolutionSettings.new(enabled: true))
+
+        result.verdict.should eq("fail")
+        JSON.parse(graph.get_object(proposal.id).not_nil!.data)["status_note"].as_s.should eq("trial evidence missing fork run id")
+        trial = graph.objects(type: "mod_trial").first
+        trial.should_not be_nil
+        JSON.parse(trial.not_nil!.data)["verdict"].as_s.should eq("fail")
+        gates = graph.objects(type: "gate_result").select { |gate| JSON.parse(gate.data)["proposal_id"].as_s == proposal.id }
+        JSON.parse(gates.last.data)["gate"].as_s.should eq("trial_evidence")
+        JSON.parse(gates.last.data)["verdict"].as_s.should eq("fail")
       end
     ensure
       Chronicle::Packs::Evolution::Trial.clear_services

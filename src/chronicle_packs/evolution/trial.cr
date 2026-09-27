@@ -111,7 +111,7 @@ module Chronicle::Packs::Evolution
         return fixture_failure(graph, proposal.id, fixture) unless fixture_passes?(fixture)
         record_gate(graph, proposal.id, "fixtures", "pass", report_details(fixture))
 
-        finish_replay(graph, proposal.id, executor.run_replay(request))
+        finish_replay(graph, proposal.id, request, executor.run_replay(request))
       ensure
         FileUtils.rm_rf(root.parent)
       end
@@ -127,15 +127,18 @@ module Chronicle::Packs::Evolution
       TrialResult.new("fail", "fixtures")
     end
 
-    private def self.finish_replay(graph : Chronicle::GraphProjection, proposal_id : String, replay : TrialReport) : TrialResult
+    private def self.finish_replay(graph : Chronicle::GraphProjection, proposal_id : String, request : TrialRequest, replay : TrialReport) : TrialResult
       record_replay_gates(graph, proposal_id, replay)
-      verdict = replay_passes?(replay) ? "pass" : "fail"
-      trial = graph.add_object("mod_trial", trial_payload(proposal_id, replay, verdict).to_json, actor: "evolution.trial")
+      evidence_error = replay_evidence_error(replay)
+      record_gate(graph, proposal_id, "trial_evidence", "fail", evidence_error) if evidence_error
+      verdict = replay_passes?(replay) && evidence_error.nil? ? "pass" : "fail"
+      trial = graph.add_object("mod_trial", trial_payload(proposal_id, request.at_event, replay, verdict).to_json, actor: "evolution.trial")
       graph.add_relation(proposal_id, trial.id, "trialed_in", actor: "evolution.trial")
       if verdict == "pass"
         graph.patch_object(proposal_id, {"status" => JSON::Any.new("trialed"), "status_note" => JSON::Any.new("")}.to_json, actor: "evolution.trial")
       else
-        reject(graph, proposal_id, "trial failed (outcome=#{replay.outcome}, #{replay.behavior_failures} candidate failures)")
+        note = evidence_error || "trial failed (outcome=#{replay.outcome}, #{replay.behavior_failures} candidate failures)"
+        reject(graph, proposal_id, note)
       end
       TrialResult.new(verdict, "", trial.id)
     end
@@ -148,6 +151,16 @@ module Chronicle::Packs::Evolution
 
     private def self.replay_passes?(report : TrialReport) : Bool
       report.outcome == "completed" && report.behavior_failures == 0 && report.in_sample_failures == 0 && report.held_out_failures == 0
+    end
+
+    # The child host is responsible for creating the fork, but the pack must
+    # not turn a host claim into an adoptable trial without durable identity
+    # for that fork. The selected parent snapshot is recorded from the
+    # request, matching the vendor's parent-side `tip` value.
+    private def self.replay_evidence_error(report : TrialReport) : String?
+      return "trial evidence missing fork run id" if report.fork_run_id.empty?
+
+      nil
     end
 
     private def self.record_gate(graph : Chronicle::GraphProjection, proposal_id : String, gate : String, verdict : String, details : String) : Nil
@@ -171,14 +184,14 @@ module Chronicle::Packs::Evolution
       detail[0, Math.min(detail.size, 500)]
     end
 
-    private def self.trial_payload(proposal_id : String, report : TrialReport, verdict : String) : Hash(String, JSON::Any)
+    private def self.trial_payload(proposal_id : String, forked_at_event : String, report : TrialReport, verdict : String) : Hash(String, JSON::Any)
       failures = report.failures.first(20).map do |failure|
         JSON.parse(failure.to_json)
       end
       {
         "proposal_id"     => JSON::Any.new(proposal_id),
         "fork_run_id"     => JSON::Any.new(report.fork_run_id),
-        "forked_at_event" => JSON::Any.new(report.forked_at_event),
+        "forked_at_event" => JSON::Any.new(forked_at_event),
         "eval_summary"    => JSON::Any.new({
           "in_sample_inputs"       => JSON::Any.new(report.in_sample_inputs),
           "held_out_inputs"        => JSON::Any.new(report.held_out_inputs),

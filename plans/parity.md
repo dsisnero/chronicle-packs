@@ -25,8 +25,8 @@ each entry is branch-sized and user-visible, `[x]` = green and committed,
 Intentional divergences section). The `## Features` sections below remain the
 per-pack detail record (surfaces, divergence notes, fixture drivers).
 
-**Progress: 1765 / 2080 source API items ported, 7 partial, 106 skipped, and 174 intentional divergences.**
-**Open source work: 28 missing + 7 partial rows; all are in `packs/evolution`.**
+**Progress: 1768 / 2080 source API items ported, 5 partial, 106 skipped, and 176 intentional divergences.**
+**Open source work: 25 missing + 5 partial rows; all are in `packs/evolution`.**
 **Upstream tests: 415 / 638 ported, 204 skipped test-fixture/environment rows, 17 intentional divergences, and 2 partial behavior rows.**
 
 The source and test ledgers were checked against vendor revision
@@ -57,7 +57,7 @@ is a usable completion gate again.
       rejecting. The Python helper shapes map to `_beh_now`,
       `_record_static_gate`, and the inlined fail-fast path.
 
-### Follow-on M — host-service boundaries (10 rows)
+### Completed M — verified materialization and trial evidence (5 rows)
 
 - [x] **Crystal static-gate equivalence** (`analysis.py`, 13 former partial
       rows). Reserved-path and byte-cap checks are direct ports; the remaining
@@ -65,14 +65,23 @@ is a usable completion gate again.
       intentional divergences. Crystal-only candidates preserve the vendor
       governance invariants through compiler parsing, manifest/source
       cross-checking, require controls, construct bans, namespaces, and caps.
-- [ ] **Verified materialization and trial evidence** (`materialize.py` and
-      `trial.py`, 5 rows). Specify and test the sealed compiled-candidate,
-      persisted fork, fixture verdict, and replay-evidence contract at the
-      host-service boundary. This follows gate equivalence because every
-      materialized candidate must enter through the recorded static verdict.
+- [x] **Verified materialization and trial evidence** (`materialize.py` and
+      `trial.py`, 5 rows). Materialization reassembles and verifies the pinned
+      bundle without parent-side loading; the host receives only that verified
+      candidate root. Fixture execution precedes replay, and a replay can pass
+      only with a persisted fork id; `mod_trial` records the exact
+      parent-selected event plus immutable replay, residue, and failure
+      evidence. Python dynamic import and SQLite-store-path helpers are
+      intentional Crystal host-boundary divergences.
+
+### Next M — boot reconciliation host contract (4 rows)
+
 - [ ] **Boot reconciliation host contract** (`boot.py`, 4 rows). Complete
       promotion/fork discovery and capability-gap records around sealed-pack
       reload; executable candidate loading remains host owned.
+
+### Follow-on M — adoption execution boundary (1 row)
+
 - [ ] **Adoption execution boundary** (`adopt.py`, 1 partial row). Verify
       materialize → load → promote → supersede ordering and recovery through
       the host-provided activation service.
