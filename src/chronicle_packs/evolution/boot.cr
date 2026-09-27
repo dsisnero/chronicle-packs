@@ -27,11 +27,15 @@ module Chronicle::Packs::Evolution
           if !fork_run_id.empty? && promoted_runs.includes?(fork_run_id)
             graph.patch_object(promotion.id, {"status" => JSON::Any.new("active"), "status_note" => JSON::Any.new("healed at boot: promote.applied present in the log")}.to_json, actor: "evolution.boot")
             close_open_adoption_tickets(graph, proposal_id)
-            boot_gap(graph, name, promotion.id, "loading_with_marker")
+            boot_gap(graph,
+              "adopted pack #{name.inspect}: a loading promotion (#{promotion.id}) had a completed promote (promote.applied in the log) but the recorder never ran; boot resolved it to active and loaded the pack.",
+              {"promotion_id" => JSON::Any.new(promotion.id), "pack_name" => JSON::Any.new(name), "case" => JSON::Any.new("loading_with_marker")})
             outcomes[name] = "active (healed; activation pending)"
           else
             graph.patch_object(promotion.id, {"status" => JSON::Any.new("disabled"), "status_note" => JSON::Any.new("parked at boot: incomplete adoption, no promote.applied in the log")}.to_json, actor: "evolution.boot")
-            boot_gap(graph, name, promotion.id, "loading_no_marker")
+            boot_gap(graph,
+              "adopted pack #{name.inspect}: a loading promotion (#{promotion.id}) had no promote.applied in the log (an incomplete adoption); boot parked it. The chassis re-runs its open ticket against a clean slate.",
+              {"promotion_id" => JSON::Any.new(promotion.id), "pack_name" => JSON::Any.new(name), "case" => JSON::Any.new("loading_no_marker")})
             outcomes[name] = "disabled (parked incomplete adoption)"
           end
         end
@@ -81,7 +85,12 @@ module Chronicle::Packs::Evolution
         end
       rescue ex : Chronicle::Packs::PackManifestError
         graph.patch_object(promotion.id, {"status" => JSON::Any.new("disabled")}.to_json, actor: "evolution.boot")
-        boot_gap(graph, pack_name, promotion.id, "hash_mismatch")
+        graph.add_object("capability_gap", {
+          "kind"        => JSON::Any.new("reflection"),
+          "description" => JSON::Any.new("adopted pack #{pack_name.inspect} failed its bundle-hash pin at boot and was disabled: #{ex}"),
+          "status"      => JSON::Any.new("open"),
+          "metadata"    => JSON::Any.new({"promotion_id" => JSON::Any.new(promotion.id)}),
+        }.to_json, actor: "evolution.boot")
         "disabled (hash mismatch)"
       rescue ex
         "error: #{ex.message || ex.class.name}"
@@ -101,7 +110,10 @@ module Chronicle::Packs::Evolution
         metadata["superseded_by"] = JSON::Any.new(survivor.id)
         graph.patch_object(loser.id, {"status" => JSON::Any.new("disabled"), "status_note" => JSON::Any.new("superseded by #{survivor.id} (boot heal)"), "metadata" => JSON::Any.new(metadata)}.to_json, actor: "evolution.boot")
       end
-      boot_gap(graph, pack_name, survivor.id, "two_active")
+      ids = active.map(&.id)
+      boot_gap(graph,
+        "adopted pack #{pack_name.inspect} had #{active.size} active promotions at boot (#{ids}); boot superseded the older by recency and loaded #{survivor.id}.",
+        {"promotion_ids" => JSON::Any.new(ids.map { |id| JSON::Any.new(id) }), "loaded" => JSON::Any.new(survivor.id), "pack_name" => JSON::Any.new(pack_name), "case" => JSON::Any.new("two_active")})
       outcomes[pack_name] = "active (healed; activation pending)"
     end
 
@@ -138,8 +150,14 @@ module Chronicle::Packs::Evolution
       end
     end
 
-    private def self.boot_gap(graph : Chronicle::GraphProjection, pack_name : String, promotion_id : String, recovery_case : String) : Nil
-      graph.add_object("capability_gap", {"kind" => JSON::Any.new("reflection"), "description" => JSON::Any.new("adopted pack #{pack_name.inspect}: boot reconciled promotion #{promotion_id}"), "status" => JSON::Any.new("open"), "metadata" => JSON::Any.new({"source" => JSON::Any.new("boot_heal"), "promotion_id" => JSON::Any.new(promotion_id), "pack_name" => JSON::Any.new(pack_name), "case" => JSON::Any.new(recovery_case)})}.to_json, actor: "evolution.boot")
+    private def self.boot_gap(graph : Chronicle::GraphProjection, description : String, metadata : Hash(String, JSON::Any)) : Nil
+      metadata["source"] = JSON::Any.new("boot_heal")
+      graph.add_object("capability_gap", {
+        "kind"        => JSON::Any.new("reflection"),
+        "description" => JSON::Any.new(description),
+        "status"      => JSON::Any.new("open"),
+        "metadata"    => JSON::Any.new(metadata),
+      }.to_json, actor: "evolution.boot")
     end
 
     # Archive trial forks which are neither retained by an adoptable proposal

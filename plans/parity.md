@@ -25,8 +25,8 @@ each entry is branch-sized and user-visible, `[x]` = green and committed,
 Intentional divergences section). The `## Features` sections below remain the
 per-pack detail record (surfaces, divergence notes, fixture drivers).
 
-**Progress: 1768 / 2080 source API items ported, 5 partial, 106 skipped, and 176 intentional divergences.**
-**Open source work: 25 missing + 5 partial rows; all are in `packs/evolution`.**
+**Progress: 1772 / 2080 source API items ported, 3 partial, 106 skipped, and 176 intentional divergences.**
+**Open source work: 23 missing + 3 partial rows; all are in `packs/evolution`.**
 **Upstream tests: 415 / 638 ported, 204 skipped test-fixture/environment rows, 17 intentional divergences, and 2 partial behavior rows.**
 
 The source and test ledgers were checked against vendor revision
@@ -74,13 +74,16 @@ is a usable completion gate again.
       evidence. Python dynamic import and SQLite-store-path helpers are
       intentional Crystal host-boundary divergences.
 
-### Next M — boot reconciliation host contract (4 rows)
+### Completed M — boot reconciliation host contract (4 rows)
 
-- [ ] **Boot reconciliation host contract** (`boot.py`, 4 rows). Complete
-      promotion/fork discovery and capability-gap records around sealed-pack
-      reload; executable candidate loading remains host owned.
+- [x] **Boot reconciliation host contract** (`boot.py`, 4 rows). Reconciles
+      loading promotions only from `promote.applied` evidence, closes their
+      tickets, parks ambiguous work, and resolves duplicate actives by recency
+      with vendor-shaped reflection gaps. It re-materializes and re-verifies
+      every eligible sealed bundle; only the final compiled-pack load is
+      delegated to the per-graph host activation service.
 
-### Follow-on M — adoption execution boundary (1 row)
+### Next M — adoption execution boundary (1 row)
 
 - [ ] **Adoption execution boundary** (`adopt.py`, 1 partial row). Verify
       materialize → load → promote → supersede ordering and recovery through

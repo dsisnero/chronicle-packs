@@ -731,6 +731,112 @@ describe Chronicle::Packs::Evolution do
       end
     end
 
+    it "leaves an active promotion pending when no boot activation service is bound" do
+      with_evolution_runtime do |_store, graph, rt|
+        proposal = Chronicle::Packs::Evolution.submit_proposal_fn(
+          graph, pack_name: "pending_boot_pack",
+          files: crystal_candidate_files("pending_boot_pack", "module PendingBootPack\nend\n"),
+        )
+        promotion = graph.add_object("mod_promotion", {
+          "proposal_id" => JSON::Any.new(proposal.id), "pack_name" => JSON::Any.new("pending_boot_pack"),
+          "status" => JSON::Any.new("active"),
+        }.to_json)
+
+        outcomes = Chronicle::Packs::Evolution::Boot.reload_adopted_packs(rt)
+
+        outcomes["pending_boot_pack"].should eq("active (activation pending)")
+        JSON.parse(graph.get_object(promotion.id).not_nil!.data)["status"].as_s.should eq("active")
+      end
+    end
+
+    it "heals marker-proven boot promotions and reloads the sealed survivor once" do
+      with_evolution_runtime do |_store, graph, rt|
+        proposal = Chronicle::Packs::Evolution.submit_proposal_fn(
+          graph, pack_name: "healed_boot_pack",
+          files: crystal_candidate_files("healed_boot_pack", "module HealedBootPack\nend\n"),
+        )
+        promotion = graph.add_object("mod_promotion", {
+          "proposal_id" => JSON::Any.new(proposal.id), "pack_name" => JSON::Any.new("healed_boot_pack"),
+          "fork_run_id" => JSON::Any.new("boot_fork"), "status" => JSON::Any.new("loading"),
+        }.to_json)
+        ticket = graph.add_object("adoption_ticket", {
+          "proposal_id" => JSON::Any.new(proposal.id), "kind" => JSON::Any.new("adopt"),
+          "status" => JSON::Any.new("open"),
+        }.to_json)
+        graph.emit(Chronicle::Event.new(schema_version: 1_u16, sequence: 99_u64, id: "boot_promote_marker", type: "promote.applied", actor: "spec", caused_by: nil, payload: %({"from_run":"boot_fork"})))
+        service = RecordingActivationService.new(Chronicle::Packs::Pack.new(name: "healed_boot_pack", version: "0.1.0"))
+        Chronicle::Packs::Evolution.set_activation_service(graph, service)
+
+        outcomes = Chronicle::Packs::Evolution::Boot.reload_adopted_packs(rt)
+
+        outcomes["healed_boot_pack"].should eq("loaded")
+        service.requests.size.should eq(1)
+        JSON.parse(graph.get_object(promotion.id).not_nil!.data)["status"].as_s.should eq("active")
+        JSON.parse(graph.get_object(ticket.id).not_nil!.data)["status"].as_s.should eq("done")
+        gap = graph.objects(type: "capability_gap").last
+        gap_data = JSON.parse(gap.data)
+        gap_data["metadata"].as_h["source"].as_s.should eq("boot_heal")
+        gap_data["metadata"].as_h["case"].as_s.should eq("loading_with_marker")
+      ensure
+        Chronicle::Packs::Evolution.clear_activation_services
+      end
+    end
+
+    it "supersedes duplicate actives at boot and keeps ambiguous loading records down" do
+      with_evolution_runtime do |_store, graph, rt|
+        files = crystal_candidate_files("deduped_boot_pack", "module DedupedBootPack\nend\n")
+        proposal = Chronicle::Packs::Evolution.submit_proposal_fn(graph, pack_name: "deduped_boot_pack", files: files)
+        older = graph.add_object("mod_promotion", {"proposal_id" => JSON::Any.new(proposal.id), "pack_name" => JSON::Any.new("deduped_boot_pack"), "status" => JSON::Any.new("active")}.to_json)
+        newer = graph.add_object("mod_promotion", {"proposal_id" => JSON::Any.new(proposal.id), "pack_name" => JSON::Any.new("deduped_boot_pack"), "status" => JSON::Any.new("active")}.to_json)
+        parked = graph.add_object("mod_promotion", {"proposal_id" => JSON::Any.new("ghost"), "pack_name" => JSON::Any.new("parked_boot_pack"), "fork_run_id" => JSON::Any.new("no_marker"), "status" => JSON::Any.new("loading")}.to_json)
+        service = RecordingActivationService.new(Chronicle::Packs::Pack.new(name: "deduped_boot_pack", version: "0.1.0"))
+        Chronicle::Packs::Evolution.set_activation_service(graph, service)
+
+        outcomes = Chronicle::Packs::Evolution::Boot.reload_adopted_packs(rt)
+
+        outcomes["deduped_boot_pack"].should eq("loaded")
+        outcomes["parked_boot_pack"].should eq("disabled (parked incomplete adoption)")
+        service.requests.size.should eq(1)
+        old_data = JSON.parse(graph.get_object(older.id).not_nil!.data)
+        old_data["status"].as_s.should eq("disabled")
+        old_data["metadata"].as_h["superseded_by"].as_s.should eq(newer.id)
+        JSON.parse(graph.get_object(parked.id).not_nil!.data)["status"].as_s.should eq("disabled")
+        cases = graph.objects(type: "capability_gap").map { |gap| JSON.parse(gap.data)["metadata"].as_h["case"].as_s }
+        cases.should contain("two_active")
+        cases.should contain("loading_no_marker")
+      ensure
+        Chronicle::Packs::Evolution.clear_activation_services
+      end
+    end
+
+    it "disables a corrupted active bundle at boot without calling the host loader" do
+      with_evolution_runtime do |_store, graph, rt|
+        proposal = Chronicle::Packs::Evolution.submit_proposal_fn(
+          graph, pack_name: "corrupt_boot_pack",
+          files: crystal_candidate_files("corrupt_boot_pack", "module CorruptBootPack\nend\n"),
+        )
+        promotion = graph.add_object("mod_promotion", {
+          "proposal_id" => JSON::Any.new(proposal.id), "pack_name" => JSON::Any.new("corrupt_boot_pack"),
+          "status" => JSON::Any.new("active"),
+        }.to_json)
+        artifact = graph.objects(type: "artifact").find { |object| JSON.parse(object.data)["title"].as_s == "pack.cr" }.not_nil!
+        graph.patch_object(artifact.id, {"content" => JSON::Any.new("# corrupted\n")}.to_json)
+        service = RecordingActivationService.new(Chronicle::Packs::Pack.new(name: "corrupt_boot_pack", version: "0.1.0"))
+        Chronicle::Packs::Evolution.set_activation_service(graph, service)
+
+        outcomes = Chronicle::Packs::Evolution::Boot.reload_adopted_packs(rt)
+
+        outcomes["corrupt_boot_pack"].should eq("disabled (hash mismatch)")
+        service.requests.should be_empty
+        JSON.parse(graph.get_object(promotion.id).not_nil!.data)["status"].as_s.should eq("disabled")
+        gap_data = JSON.parse(graph.objects(type: "capability_gap").last.data)
+        gap_data["metadata"].as_h["promotion_id"].as_s.should eq(promotion.id)
+        gap_data["metadata"].as_h.has_key?("source").should be_false
+      ensure
+        Chronicle::Packs::Evolution.clear_activation_services
+      end
+    end
+
     it "activates only through a host-bound sealed Crystal pack service" do
       path = ""
       store = nil
