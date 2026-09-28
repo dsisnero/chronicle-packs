@@ -58,6 +58,7 @@ module Chronicle::Packs::Evolution
         "settings.cr"     => source.settings_src,
         "tools.cr"        => source.tools_src,
         "pack.cr"         => _pack_entrypoint(pack_name),
+        "entrypoint.cr"   => _sandbox_entrypoint(pack_name),
       }
       surface = begin
         Analysis.extract_crystal_declared_surface(files)
@@ -160,6 +161,20 @@ module Chronicle::Packs::Evolution
           version: "0.1.0",
           description: "Agent-authored Crystal candidate pack.",
         )
+      end
+      CR
+    end
+
+    # Chronicle's fresh-process sandbox loads this fixed ABI name. It aliases
+    # the pack-owned module generated above; the author cannot provide or
+    # replace this bridge.
+    private def self._sandbox_entrypoint(pack_name : String) : String
+      module_name = pack_name.split('_').map(&.capitalize).join
+      <<-CR
+      require "./pack"
+
+      module Chronicle::Sandbox::CandidatePack
+        PACK = #{module_name}::PACK
       end
       CR
     end

@@ -24,7 +24,7 @@ module Chronicle::Packs::Evolution
 
   module DefaultCrystalAllowedFiles
     LIST = [
-      "manifest.toml", "pack.cr", "object_types.cr", "relation_types.cr",
+      "manifest.toml", "pack.cr", "entrypoint.cr", "object_types.cr", "relation_types.cr",
       "behaviors.cr", "tools.cr", "settings.cr", "capabilities.cr",
     ]
   end

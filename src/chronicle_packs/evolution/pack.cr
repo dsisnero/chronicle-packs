@@ -13,6 +13,7 @@ require "./boot"
 require "./tools"
 require "./behaviors"
 require "./adopt"
+require "./lifecycle"
 require "./chassis"
 require "./soak"
 require "./review"
@@ -32,10 +33,9 @@ require "./review"
 # Ported from upstream `packs/evolution` (revision
 # 6639a5385518ad49f74813373c85cf96eff9adc0). Slice 1: the deterministic
 # graph-native surface + behaviors + authoring tools; Crystal static gates
-# and the parent half of isolated trial orchestration are ported. The host
-# compiled-child service, boot retention, activation, and authoring remain
-# tracked in plans/parity.md. Python AST/import execution is intentionally
-# outside this Crystal-candidate-only boundary.
+# and the isolated trial/adoption/boot lifecycle are ported. The host binds a
+# compiled-artifact resolver for candidate activation; Python AST/import
+# execution is intentionally outside this Crystal-candidate-only boundary.
 module Chronicle::Packs::Evolution
   include Chronicle::Packs::DSL
 

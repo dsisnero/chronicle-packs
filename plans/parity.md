@@ -25,8 +25,8 @@ each entry is branch-sized and user-visible, `[x]` = green and committed,
 Intentional divergences section). The `## Features` sections below remain the
 per-pack detail record (surfaces, divergence notes, fixture drivers).
 
-**Progress: 1772 / 2080 source API items ported, 3 partial, 106 skipped, and 176 intentional divergences.**
-**Open source work: 23 missing + 3 partial rows; all are in `packs/evolution`.**
+**Progress: 1773 / 2080 source API items ported, 2 partial, 106 skipped, and 176 intentional divergences.**
+**Open source work: 23 missing + 2 partial rows; all are in `packs/evolution`.**
 **Upstream tests: 415 / 638 ported, 204 skipped test-fixture/environment rows, 17 intentional divergences, and 2 partial behavior rows.**
 
 The source and test ledgers were checked against vendor revision
@@ -83,16 +83,16 @@ is a usable completion gate again.
       every eligible sealed bundle; only the final compiled-pack load is
       delegated to the per-graph host activation service.
 
-### Next L — hosted candidate lifecycle
+### Completed L — hosted candidate lifecycle
 
-- [ ] **End-to-end governed candidate lifecycle** (`trial.py` host runner +
-      `adopt.py::process_adoption_tickets`). Deliver one host-facing service
-      that can execute an already-gated Crystal candidate in an isolated
-      resource-limited child, persist and reload its fork evidence, accept an
-      approved adoption ticket, activate the sealed compiled pack, promote the
-      fork, supersede an earlier version, and survive a restart. This joins the
-      currently separate trial, adoption, and boot seams into the first usable
-      host integration—not a one-row `adopt.py` exercise.
+- [x] **End-to-end governed candidate lifecycle** (`trial.py` host runner +
+      `adopt.py::process_adoption_tickets`). `SandboxLifecycleService` joins
+      Chronicle's fresh-process sandbox executor to a host-supplied sealed
+      compiled-pack resolver. The verified flow now runs fixture and replay
+      children with persisted labeled forks, reloads evidence, accepts the
+      approved ticket, re-verifies gates and pin, promotes/supersedes, and
+      reloads from a fresh SQLite runtime. Parent code never imports candidate
+      source; the host resolver remains the explicit compiled-artifact policy.
 
 ### Follow-on M — unattended Evolution soak, delivered as operator features
 

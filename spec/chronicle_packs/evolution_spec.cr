@@ -638,9 +638,10 @@ describe Chronicle::Packs::Evolution do
 
       files = Chronicle::Packs::Evolution::Author.wrap_source(source, "agent_author_note")
 
-      files.keys.sort.should eq(["behaviors.cr", "manifest.toml", "object_types.cr", "pack.cr", "settings.cr", "tools.cr"])
+      files.keys.sort.should eq(["behaviors.cr", "entrypoint.cr", "manifest.toml", "object_types.cr", "pack.cr", "settings.cr", "tools.cr"])
       files["object_types.cr"].should eq(source.object_types_src)
       files["pack.cr"].should contain("name: \"agent_author_note\"")
+      files["entrypoint.cr"].should contain("Chronicle::Sandbox::CandidatePack")
       files["manifest.toml"].should contain("name = \"agent_author_note\"")
       files["manifest.toml"].should contain("authors = [\"keyless Crystal author\"]")
       files["manifest.toml"].should contain("object_types = [\"author_note\"]")
@@ -674,7 +675,7 @@ describe Chronicle::Packs::Evolution do
         data["status"].as_s.should eq("drafted")
         service.drafting_context_counts.should eq([1])
         graph.objects(type: "artifact").map { |artifact| JSON.parse(artifact.data)["title"].as_s }.sort.should eq(
-          ["behaviors.cr", "manifest.toml", "object_types.cr", "pack.cr", "settings.cr", "tools.cr"])
+          ["behaviors.cr", "entrypoint.cr", "manifest.toml", "object_types.cr", "pack.cr", "settings.cr", "tools.cr"])
       ensure
         Chronicle::Packs::Evolution::Author.clear_services
       end
@@ -706,6 +707,84 @@ describe Chronicle::Packs::Evolution do
       ensure
         Chronicle::Packs::Evolution::Author.clear_services
         Chronicle::Packs::Evolution::Trial.clear_services
+      end
+    end
+
+    it "runs a sealed authored candidate through child trials, adoption, and boot reload" do
+      path = File.tempname("evolution_lifecycle", ".sqlite")
+      store = Chronicle::SQLiteEventStore.new(path, run_id: "evolution_lifecycle_parent")
+      graph = Chronicle::GraphProjection.empty.attach_store(store)
+      agent = Crig::Agent(PackModel).new(model: PackModel.new, preamble: "")
+      runtime = Chronicle::Runtime(PackModel).new(
+        store: store,
+        log_agent: Chronicle::LogAgent(PackModel).new(agent, store: store),
+        graph: graph,
+        run_id: "evolution_lifecycle_parent",
+      )
+      runtime.load_pack(Chronicle::Packs::Core.pack).should be_true
+      settings = Chronicle::Packs::Evolution::EvolutionSettings.new(enabled: true)
+      runtime.load_pack(Chronicle::Packs::Evolution.pack, JSON.parse(settings.to_json).as_h).should be_true
+      begin
+        pack_name = "agent_lifecycle"
+        source = Chronicle::Packs::Evolution::AuthoredSource.new("", "", "", "")
+        proposal = Chronicle::Packs::Evolution.submit_proposal_fn(
+          graph, pack_name: pack_name,
+          files: Chronicle::Packs::Evolution::Author.wrap_source(source, pack_name),
+        )
+        runtime.run_until_idle
+        JSON.parse(graph.get_object(proposal.id).not_nil!.data)["status"].as_s.should eq("gated")
+
+        sealed_pack = Chronicle::Packs::Pack.new(name: pack_name, version: "0.1.0")
+        resolver = ->(request : Chronicle::Packs::Evolution::ActivationRequest) do
+          raise "unexpected sealed bundle" unless request.pack_name == pack_name
+          sealed_pack
+        end
+        lifecycle = Chronicle::Packs::Evolution::SandboxLifecycleService.for_runtime(runtime, resolver)
+        Chronicle::Packs::Evolution::Lifecycle.install(graph, lifecycle)
+
+        trial = Chronicle::Packs::Evolution::Trial.run_trial(
+          graph, graph.get_object(proposal.id).not_nil!,
+          Chronicle::Packs::Evolution::EvolutionSettings.new(enabled: true, trial_fixture_timeout_seconds: 30.0, trial_wall_clock_seconds: 30.0),
+        )
+
+        trial.verdict.should eq("pass")
+        trial_data = JSON.parse(graph.get_object(trial.trial_id).not_nil!.data)
+        fork_run_id = trial_data["fork_run_id"].as_s
+        fork_run_id.should_not be_empty
+        lifecycle.executor.isolation_guarantees.process.should eq("fresh_interpreter_subprocess")
+        Chronicle::SQLiteEventStore.list_runs(store.db_path).map(&.label).compact_map(&.itself).should contain("evolution-fixturegate:#{proposal.id}")
+        Chronicle::SQLiteEventStore.list_runs(store.db_path).map(&.label).compact_map(&.itself).should contain("evolution-trial:#{proposal.id}")
+        Chronicle::Packs::Evolution::Trial.load_trial_fork(runtime, fork_run_id).should_not be_nil
+        JSON.parse(graph.get_object(proposal.id).not_nil!.data)["status"].as_s.should eq("trialed")
+
+        ticket = graph.add_object("adoption_ticket", {
+          "kind" => JSON::Any.new("adopt"), "proposal_id" => JSON::Any.new(proposal.id),
+          "status" => JSON::Any.new("open"),
+        }.to_json)
+        outcomes = Chronicle::Packs::Evolution.process_adoption_tickets(
+          runtime, Chronicle::Packs::Evolution::EvolutionSettings.new(enabled: true),
+        )
+
+        outcomes.first["outcome"].as_s.should eq("promoted")
+        JSON.parse(graph.get_object(ticket.id).not_nil!.data)["status"].as_s.should eq("done")
+        promotion = graph.objects(type: "mod_promotion").last
+        JSON.parse(promotion.data)["status"].as_s.should eq("active")
+
+        restarted = Chronicle::Runtime(PackModel).load(store.db_path, runtime.run_id, runtime.log_agent.agent)
+        restarted.load_pack(Chronicle::Packs::Core.pack).should be_true
+        settings = Chronicle::Packs::Evolution::EvolutionSettings.new(enabled: true)
+        restarted.load_pack(Chronicle::Packs::Evolution.pack, JSON.parse(settings.to_json).as_h).should be_true
+        restarted_graph = restarted.graph.not_nil!
+        Chronicle::Packs::Evolution::Lifecycle.install(
+          restarted_graph,
+          Chronicle::Packs::Evolution::SandboxLifecycleService.for_runtime(restarted, resolver),
+        )
+
+        Chronicle::Packs::Evolution::Boot.reload_adopted_packs(restarted)[pack_name].should eq("loaded")
+      ensure
+        Chronicle::Packs::Evolution::Lifecycle.clear
+        store.close
+        File.delete(path) if File.exists?(path)
       end
     end
 
