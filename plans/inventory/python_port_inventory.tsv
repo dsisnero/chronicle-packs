@@ -846,22 +846,22 @@ packs/evolution/soak.py::method::SoakHarness._author_and_gate	method	ported	src/
 packs/evolution/soak.py::method::SoakHarness._check_invariants	method	partial	src/chronicle_packs/evolution/soak.cr::Soak::State.record, Soak::State.target_met?	Crystal ledger records failed scenarios durably and computes the all-path completion invariant; runtime graph invariants remain host integration work.
 packs/evolution/soak.py::method::SoakHarness._enforce_invariants	method	missing	-	auto-generated
 packs/evolution/soak.py::method::SoakHarness._failure_object_ids	method	missing	-	auto-generated
-packs/evolution/soak.py::method::SoakHarness._governed_disable	method	missing	-	auto-generated
+packs/evolution/soak.py::method::SoakHarness._governed_disable	method	ported	src/chronicle_packs/evolution/soak.cr::Soak::HappyHost#approve_disable, Soak::HappyRotation#scenario_disable_restart	Host creates the governed disable ticket; the runner applies it only through the normal chassis sweep.
 packs/evolution/soak.py::method::SoakHarness._graph_counts	method	missing	-	auto-generated
 packs/evolution/soak.py::method::SoakHarness._latest_child_failure_detail	method	missing	-	auto-generated
 packs/evolution/soak.py::method::SoakHarness._load_state	method	ported	src/chronicle_packs/evolution/soak.cr::Soak::State.load	Loads durable Crystal scenario accounting and initializes missing configured paths.
-packs/evolution/soak.py::method::SoakHarness._memory_net_available	method	missing	-	auto-generated
+packs/evolution/soak.py::method::SoakHarness._memory_net_available	method	ported	src/chronicle_packs/evolution/soak.cr::Soak::HappyHost#memory_net_available?, Soak::HappyRotation#scenario_budget	Host supplies the sandbox preflight signal; memory runaways use the wall-clock net when that signal says the memory net is unavailable.
 packs/evolution/soak.py::method::SoakHarness._save_state	method	ported	src/chronicle_packs/evolution/soak.cr::Soak::State.save	Writes the JSON-serializable Crystal scenario ledger.
-packs/evolution/soak.py::method::SoakHarness._scenario_budget	method	missing	-	auto-generated
+packs/evolution/soak.py::method::SoakHarness._scenario_budget	method	ported	src/chronicle_packs/evolution/soak.cr::Soak::HappyRotation#scenario_budget	Requires a contained child failure and rejected proposal for event, wall-clock, and memory-budget paths.
 packs/evolution/soak.py::method::SoakHarness._sweep	method	ported	src/chronicle_packs/evolution/soak.cr::Soak::HappyRotation#sweep	Uses the normal Evolution chassis sweep.
 packs/evolution/soak.py::method::SoakHarness.boot	method	ported	src/chronicle_packs/evolution/soak.cr::Soak::HappyRotation#boot	Binds host services and reloads durable active promotions on every fresh rotation runtime.
-packs/evolution/soak.py::method::SoakHarness.contest	method	missing	-	auto-generated
+packs/evolution/soak.py::method::SoakHarness.contest	method	ported	src/chronicle_packs/evolution/soak.cr::Soak::HappyHost#contest_adoption	Host advances the contested parent state after trial evidence and before promotion.
 packs/evolution/soak.py::method::SoakHarness.preflight	method	missing	-	auto-generated
-packs/evolution/soak.py::method::SoakHarness.run_rotation	method	ported	src/chronicle_packs/evolution/soak.cr::Soak::HappyRotation#run_rotation	Records the successful happy outcome durably and always tears down graph-bound services.
-packs/evolution/soak.py::method::SoakHarness.scenario_conflict_park	method	missing	-	auto-generated
-packs/evolution/soak.py::method::SoakHarness.scenario_disable_restart	method	missing	-	auto-generated
+packs/evolution/soak.py::method::SoakHarness.run_rotation	method	ported	src/chronicle_packs/evolution/soak.cr::Soak::HappyRotation#run_rotation, Soak::HappyRotation#run_adversarial_rotation	Happy and adversarial rotations record independent durable outcomes and always release graph-bound host services.
+packs/evolution/soak.py::method::SoakHarness.scenario_conflict_park	method	ported	src/chronicle_packs/evolution/soak.cr::Soak::HappyRotation#scenario_conflict_park	Repeated host-induced promotion conflicts park at needs_owner and remain unchanged on an extra sweep.
+packs/evolution/soak.py::method::SoakHarness.scenario_disable_restart	method	ported	src/chronicle_packs/evolution/soak.cr::Soak::HappyRotation#scenario_disable_restart	A host-governed disable is checked through fresh boot reconciliation and cannot resurrect.
 packs/evolution/soak.py::method::SoakHarness.scenario_happy	method	ported	src/chronicle_packs/evolution/soak.cr::Soak::HappyRotation#scenario_happy	Runs gated trial/adoption/promotion, requires a host behavioral watch, and governs away the prior happy promotion.
-packs/evolution/soak.py::method::SoakHarness.scenario_tainted	method	missing	-	auto-generated
+packs/evolution/soak.py::method::SoakHarness.scenario_tainted	method	ported	src/chronicle_packs/evolution/soak.cr::Soak::HappyRotation#scenario_tainted	Tainted reflection evidence yields a suspended proposal with no gate records and no chassis mutation.
 packs/evolution/soak.py::method::SoakHarness.target_met	method	ported	src/chronicle_packs/evolution/soak.cr::Soak::State.target_met?	Requires every configured scenario path to reach the requested success minimum.
 packs/evolution/soak.py::method::SoakHarness.teardown	method	ported	src/chronicle_packs/evolution/soak.cr::Soak::HappyRotation#teardown	Drops host runtime and graph-bound service references between rotations.
 packs/evolution/soak.py::method::SoakHarness.write_digest	method	ported	src/chronicle_packs/evolution/soak.cr::Soak::State.to_markdown	Renders the persisted Crystal scenario ledger as a deterministic Markdown review digest.

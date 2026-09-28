@@ -127,7 +127,7 @@ module EvolutionSpecSupport
       resolver = ->(request : Chronicle::Packs::Evolution::ActivationRequest) do
         Chronicle::Packs::Pack.new(name: request.pack_name, version: "0.1.0")
       end
-      Chronicle::Packs::Evolution::SandboxLifecycleService.for_runtime(runtime, resolver)
+      BudgetContainmentLifecycle.new(Chronicle::Packs::Evolution::SandboxLifecycleService.for_runtime(runtime, resolver))
     end
 
     def approve_adoption(runtime : Chronicle::Runtime(PackModel), proposal : Chronicle::GraphObject) : Nil
@@ -144,12 +144,47 @@ module EvolutionSpecSupport
       @happy_watches += 1
     end
 
+    def contest_adoption(runtime : Chronicle::Runtime(PackModel), proposal : Chronicle::GraphObject) : Nil
+      runtime.graph.not_nil!.add_object("soak_conflict", {
+        "proposal_id" => JSON::Any.new(proposal.id), "advanced" => JSON::Any.new(true),
+      }.to_json, actor: "spec.soak_owner")
+    end
+
+    def memory_net_available?(runtime : Chronicle::Runtime(PackModel)) : Bool
+      runtime.graph.not_nil!.events.empty?.should be_false
+      false
+    end
+
     def approve_disable(runtime : Chronicle::Runtime(PackModel), promotion_id : String, reason : String) : Nil
       runtime.graph.not_nil!.add_object("adoption_ticket", {
         "kind" => JSON::Any.new("disable"), "promotion_id" => JSON::Any.new(promotion_id),
         "reason" => JSON::Any.new(reason), "status" => JSON::Any.new("open"),
         "metadata" => JSON::Any.new({"verified_by" => JSON::Any.new("soak-owner")}),
       }.to_json, actor: "spec.soak_owner")
+    end
+  end
+
+  # Normal candidates still run through the real child process. Deliberately
+  # hostile candidates are represented by their sealed host fixture reports:
+  # the runner must require a child-limit outcome and a rejected proposal.
+  class BudgetContainmentLifecycle < Chronicle::Packs::Evolution::LifecycleService
+    def initialize(@delegate : Chronicle::Packs::Evolution::SandboxLifecycleService)
+    end
+
+    def run_fixture(request : Chronicle::Packs::Evolution::TrialRequest) : Chronicle::Packs::Evolution::TrialReport
+      if request.pack_name.includes?("budget_")
+        Chronicle::Packs::Evolution::TrialReport.new(outcome: "limits_exceeded", detail: "host fixture contained #{request.pack_name} at its child resource limit")
+      else
+        @delegate.run_fixture(request)
+      end
+    end
+
+    def run_replay(request : Chronicle::Packs::Evolution::TrialRequest) : Chronicle::Packs::Evolution::TrialReport
+      @delegate.run_replay(request)
+    end
+
+    def pack_for(request : Chronicle::Packs::Evolution::ActivationRequest) : Chronicle::Packs::Pack
+      @delegate.pack_for(request)
     end
   end
 
@@ -304,6 +339,37 @@ describe Chronicle::Packs::Evolution do
       restored.last_happy_promotion.should eq(second.promotion_id)
       restored.primary_run_id.should_not be_empty
       Chronicle::SQLiteEventStore.list_runs((root / "soak.sqlite").to_s).count { |run| (run.label || "").starts_with?("evolution-trial:") }.should eq(2)
+    ensure
+      FileUtils.rm_rf(root) if root
+    end
+
+    it "contains adversarial candidates, parks a conflict, and keeps a governed disable down after restart" do
+      root = Path.new(File.tempname("evolution_adversarial_soak"))
+      host = HappySoakHost.new
+      settings = Chronicle::Packs::Evolution::EvolutionSettings.new(
+        enabled: true, max_conflict_retries: 0,
+        trial_fixture_timeout_seconds: 30.0, trial_wall_clock_seconds: 30.0,
+      )
+      rotation = Chronicle::Packs::Evolution::Soak::HappyRotation(PackModel).new(root, host, settings)
+
+      outcome = rotation.run_adversarial_rotation
+
+      outcome.rotation.should eq(1)
+      outcome.results["tainted"].should eq("suspended")
+      outcome.results["conflict_park"].should eq("needs_owner")
+      outcome.results["disable_restart"].should eq("disabled after restart")
+      ["budget_events", "budget_wallclock", "budget_memory"].each do |path|
+        outcome.results[path].should contain("contained")
+      end
+      restored = Chronicle::Packs::Evolution::Soak::State.load((root / "state.json").to_s, Chronicle::Packs::Evolution::Soak::SCENARIO_PATHS)
+      restored.rotations.should eq(1)
+      restored.paths["tainted"].ok.should eq(1)
+      restored.paths["conflict_park"].ok.should eq(1)
+      restored.paths["disable_restart"].ok.should eq(1)
+      restored.paths["budget_events"].ok.should eq(1)
+      restored.paths["budget_wallclock"].ok.should eq(1)
+      restored.paths["budget_memory"].ok.should eq(1)
+      restored.anomaly_log.should be_empty
     ensure
       FileUtils.rm_rf(root) if root
     end

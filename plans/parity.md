@@ -25,8 +25,8 @@ each entry is branch-sized and user-visible, `[x]` = green and committed,
 Intentional divergences section). The `## Features` sections below remain the
 per-pack detail record (surfaces, divergence notes, fixture drivers).
 
-**Progress: 1783 / 2080 source API items ported, 1 partial, 106 skipped, and 177 intentional divergences.**
-**Open source work: 13 missing + 1 partial rows; all are in `packs/evolution`.**
+**Progress: 1790 / 2080 source API items ported, 1 partial, 106 skipped, and 177 intentional divergences.**
+**Open source work: 6 missing + 1 partial rows; all are in `packs/evolution`.**
 **Upstream tests: 415 / 638 ported, 204 skipped test-fixture/environment rows, 17 intentional divergences, and 2 partial behavior rows.**
 
 The source and test ledgers were checked against vendor revision
@@ -94,9 +94,9 @@ is a usable completion gate again.
       reloads from a fresh SQLite runtime. Parent code never imports candidate
       source; the host resolver remains the explicit compiled-artifact policy.
 
-### Completed M — unattended Evolution happy rotation
+### Completed `EVOL-SOAK-M1` — unattended Evolution happy rotation
 
-- [x] **Happy-path rotation runner** (`soak.py`, 10 ported rows + 1 host
+- [x] **`EVOL-SOAK-M1` Happy-path rotation runner** (`soak.py`, 10 ported rows + 1 host
       identity divergence). `Soak::HappyRotation` provides a host-run
       rotation that creates its workspace, boots a persisted runtime, authors
       and gates a candidate, drives the isolated trial and verified adoption,
@@ -105,15 +105,17 @@ is a usable completion gate again.
       down cleanly. Its spec runs two persisted rotations through fresh
       sandboxed children and restart boot.
 
-### Next M — adversarial recovery rotation
+### Completed `EVOL-SOAK-M2` — adversarial recovery rotation
 
-- [ ] **Adversarial recovery rotation** (`soak.py`, 9 rows). Add the
+- [x] **`EVOL-SOAK-M2` Adversarial recovery rotation** (`soak.py`, 9 mapped
+      rows; 7 newly closed). `run_adversarial_rotation` drives the vendor's
       operator-visible scenarios for tainted inputs, promotion conflicts,
       governed disable/restart, and contest/retry handling, with child-failure
-      and resource-budget evidence. A rotation must demonstrate safe recovery,
-      not merely a happy deployment.
+      and resource-budget evidence. It requires suspension without gating,
+      bounded conflict parking at `needs_owner`, rejected contained children,
+      and a disabled promotion staying down across a fresh boot.
 
-### Follow-on M — soak health report and scheduled entrypoint
+### Next `EVOL-SOAK-M3` — soak health report and scheduled entrypoint
 - [ ] **Soak health report and scheduled entrypoint** (`soak.py`, 7 rows).
       Make the harness runnable as an operational command, aggregate graph and
       invariant health across rotations, and emit the durable anomaly/completion
