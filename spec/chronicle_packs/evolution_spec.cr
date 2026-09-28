@@ -89,6 +89,70 @@ module EvolutionSpecSupport
     end
   end
 
+  class HappySoakHost < Chronicle::Packs::Evolution::Soak::HappyHost(PackModel)
+    getter boots = 0
+    getter happy_watches = 0
+    getter author : RecordingAuthorService
+
+    def initialize
+      @author = RecordingAuthorService.new(Chronicle::Packs::Evolution::AuthoredSource.new("", "", "", ""))
+    end
+
+    def boot(root : Path, primary_run_id : String, settings : Chronicle::Packs::Evolution::EvolutionSettings) : Chronicle::Runtime(PackModel)
+      @boots += 1
+      path = (root / "soak.sqlite").to_s
+      agent = Crig::Agent(PackModel).new(model: PackModel.new, preamble: "")
+      runtime = if File.exists?(path)
+                  Chronicle::Runtime(PackModel).load(path, primary_run_id, agent)
+                else
+                  store = Chronicle::SQLiteEventStore.new(path, run_id: "happy_soak_parent")
+                  graph = Chronicle::GraphProjection.empty.attach_store(store)
+                  Chronicle::Runtime(PackModel).new(
+                    store: store,
+                    log_agent: Chronicle::LogAgent(PackModel).new(agent, store: store),
+                    graph: graph,
+                    run_id: "happy_soak_parent",
+                  )
+                end
+      runtime.load_pack(Chronicle::Packs::Core.pack).should be_true
+      runtime.load_pack(Chronicle::Packs::Evolution.pack, JSON.parse(settings.to_json).as_h).should be_true
+      runtime
+    end
+
+    def author_service : Chronicle::Packs::Evolution::AuthorService
+      @author
+    end
+
+    def lifecycle_service(runtime : Chronicle::Runtime(PackModel)) : Chronicle::Packs::Evolution::LifecycleService
+      resolver = ->(request : Chronicle::Packs::Evolution::ActivationRequest) do
+        Chronicle::Packs::Pack.new(name: request.pack_name, version: "0.1.0")
+      end
+      Chronicle::Packs::Evolution::SandboxLifecycleService.for_runtime(runtime, resolver)
+    end
+
+    def approve_adoption(runtime : Chronicle::Runtime(PackModel), proposal : Chronicle::GraphObject) : Nil
+      graph = runtime.graph.not_nil!
+      graph.add_object("adoption_ticket", {
+        "kind" => JSON::Any.new("adopt"), "proposal_id" => JSON::Any.new(proposal.id),
+        "status" => JSON::Any.new("open"), "metadata" => JSON::Any.new({"verified_by" => JSON::Any.new("soak-owner")}),
+      }.to_json, actor: "spec.soak_owner")
+    end
+
+    def watch_happy(runtime : Chronicle::Runtime(PackModel), proposal : Chronicle::GraphObject, promotion_id : String) : Nil
+      runtime.graph.not_nil!.get_object(proposal.id).should_not be_nil
+      runtime.graph.not_nil!.get_object(promotion_id).should_not be_nil
+      @happy_watches += 1
+    end
+
+    def approve_disable(runtime : Chronicle::Runtime(PackModel), promotion_id : String, reason : String) : Nil
+      runtime.graph.not_nil!.add_object("adoption_ticket", {
+        "kind" => JSON::Any.new("disable"), "promotion_id" => JSON::Any.new(promotion_id),
+        "reason" => JSON::Any.new(reason), "status" => JSON::Any.new("open"),
+        "metadata" => JSON::Any.new({"verified_by" => JSON::Any.new("soak-owner")}),
+      }.to_json, actor: "spec.soak_owner")
+    end
+  end
+
   class RecordingAuthorService < Chronicle::Packs::Evolution::AuthorService
     getter frames = [] of Hash(String, JSON::Any)
 
@@ -215,6 +279,33 @@ describe Chronicle::Packs::Evolution do
       digest.should contain("## Recent anomalies\n\n- tainted: failed")
     ensure
       File.delete(path.not_nil!) if File.exists?(path.not_nil!)
+    end
+
+    it "runs persisted happy rotations through sandbox trial, verified tickets, and restart boot" do
+      root = Path.new(File.tempname("evolution_happy_soak"))
+      host = HappySoakHost.new
+      settings = Chronicle::Packs::Evolution::EvolutionSettings.new(
+        enabled: true, trial_fixture_timeout_seconds: 30.0, trial_wall_clock_seconds: 30.0,
+      )
+      rotation = Chronicle::Packs::Evolution::Soak::HappyRotation(PackModel).new(root, host, settings)
+
+      first = rotation.run_rotation
+      second = rotation.run_rotation
+
+      first.rotation.should eq(1)
+      second.rotation.should eq(2)
+      second.disabled_previous_promotion_id.should eq(first.promotion_id)
+      host.boots.should eq(2)
+      host.happy_watches.should eq(2)
+      restored = Chronicle::Packs::Evolution::Soak::State.load((root / "state.json").to_s, Chronicle::Packs::Evolution::Soak::SCENARIO_PATHS)
+      restored.rotations.should eq(2)
+      restored.paths["happy"].ok.should eq(2)
+      restored.paths["happy"].anomalies.should eq(0)
+      restored.last_happy_promotion.should eq(second.promotion_id)
+      restored.primary_run_id.should_not be_empty
+      Chronicle::SQLiteEventStore.list_runs((root / "soak.sqlite").to_s).count { |run| (run.label || "").starts_with?("evolution-trial:") }.should eq(2)
+    ensure
+      FileUtils.rm_rf(root) if root
     end
   end
 

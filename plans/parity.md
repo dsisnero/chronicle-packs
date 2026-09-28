@@ -25,8 +25,8 @@ each entry is branch-sized and user-visible, `[x]` = green and committed,
 Intentional divergences section). The `## Features` sections below remain the
 per-pack detail record (surfaces, divergence notes, fixture drivers).
 
-**Progress: 1773 / 2080 source API items ported, 2 partial, 106 skipped, and 176 intentional divergences.**
-**Open source work: 23 missing + 2 partial rows; all are in `packs/evolution`.**
+**Progress: 1783 / 2080 source API items ported, 1 partial, 106 skipped, and 177 intentional divergences.**
+**Open source work: 13 missing + 1 partial rows; all are in `packs/evolution`.**
 **Upstream tests: 415 / 638 ported, 204 skipped test-fixture/environment rows, 17 intentional divergences, and 2 partial behavior rows.**
 
 The source and test ledgers were checked against vendor revision
@@ -94,18 +94,26 @@ is a usable completion gate again.
       reloads from a fresh SQLite runtime. Parent code never imports candidate
       source; the host resolver remains the explicit compiled-artifact policy.
 
-### Follow-on M — unattended Evolution soak, delivered as operator features
+### Completed M — unattended Evolution happy rotation
 
-- [ ] **Happy-path rotation runner** (`soak.py`, 9 rows). Provide a host-run
+- [x] **Happy-path rotation runner** (`soak.py`, 10 ported rows + 1 host
+      identity divergence). `Soak::HappyRotation` provides a host-run
       rotation that creates its workspace, boots a persisted runtime, authors
       and gates a candidate, drives the isolated trial and verified adoption,
-      records a successful `scenario_happy`, and tears down cleanly. This is
-      the first reproducible unattended lifecycle demonstration.
+      requires the host's post-adoption behavioral watch, governs away the
+      prior happy promotion, records a successful `scenario_happy`, and tears
+      down cleanly. Its spec runs two persisted rotations through fresh
+      sandboxed children and restart boot.
+
+### Next M — adversarial recovery rotation
+
 - [ ] **Adversarial recovery rotation** (`soak.py`, 9 rows). Add the
       operator-visible scenarios for tainted inputs, promotion conflicts,
       governed disable/restart, and contest/retry handling, with child-failure
       and resource-budget evidence. A rotation must demonstrate safe recovery,
       not merely a happy deployment.
+
+### Follow-on M — soak health report and scheduled entrypoint
 - [ ] **Soak health report and scheduled entrypoint** (`soak.py`, 7 rows).
       Make the harness runnable as an operational command, aggregate graph and
       invariant health across rotations, and emit the durable anomaly/completion
