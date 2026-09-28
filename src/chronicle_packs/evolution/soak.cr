@@ -50,6 +50,12 @@ module Chronicle::Packs::Evolution
         end
       end
 
+      def record_anomaly(rotation : Int32, path : String, detail : String, child_detail : String = "") : Nil
+        line = "rotation #{rotation} / #{path} at #{Time.utc.to_rfc3339}: #{detail}"
+        line += " | child failure: #{child_detail}" unless child_detail.empty?
+        @anomaly_log << line
+      end
+
       def target_met?(min_per_path : Int32) : Bool
         @paths.each_value.all? { |count| count.ok >= min_per_path }
       end
@@ -96,6 +102,8 @@ module Chronicle::Packs::Evolution
     abstract class HappyHost(M)
       abstract def boot(root : Path, primary_run_id : String, settings : EvolutionSettings) : Chronicle::Runtime(M)
 
+      abstract def preflight(settings : EvolutionSettings) : PreflightResult
+
       abstract def author_service : AuthorService
 
       abstract def lifecycle_service(runtime : Chronicle::Runtime(M)) : LifecycleService
@@ -134,6 +142,16 @@ module Chronicle::Packs::Evolution
       rotation : Int32,
       results : Hash(String, String),
       reloaded : Hash(String, String) = {} of String => String
+
+    record PreflightResult,
+      ready : Bool,
+      message : String
+
+    record FullRotationResult,
+      rotation : Int32,
+      results : Hash(String, String),
+      digest_path : Path,
+      target_met : Bool
 
     # A single operator-visible happy rotation. It creates and retains the
     # SQLite/state workspace, starts a fresh host runtime every time, executes
@@ -174,6 +192,10 @@ module Chronicle::Packs::Evolution
         Author.clear_services
         Lifecycle.clear
         @runtime = nil
+      end
+
+      def preflight : PreflightResult
+        @host.preflight(@settings)
       end
 
       def author_and_gate(name : String) : Chronicle::GraphObject
@@ -368,6 +390,143 @@ module Chronicle::Packs::Evolution
         teardown
       end
 
+      # One complete vendor-shaped rotation. Unlike the focused happy and
+      # recovery helpers above, this keeps going after a path fails so the
+      # durable digest records every result from the same fresh runtime.
+      def run_full_rotation : FullRotationResult
+        index = @state.rotations + 1
+        reloaded = boot
+        results = {} of String => String
+        scenarios = {
+          "tainted"          => -> { scenario_tainted(index) },
+          "happy"            => -> { scenario_happy(index).promotion_id },
+          "conflict_park"    => -> { scenario_conflict_park(index) },
+          "budget_events"    => -> { scenario_budget(index, "budget_events") },
+          "budget_wallclock" => -> { scenario_budget(index, "budget_wallclock") },
+          "budget_memory"    => -> { scenario_budget(index, "budget_memory") },
+          "disable_restart"  => -> { scenario_disable_restart(index) },
+        }
+        scenarios.each do |path, scenario|
+          preexisting = failure_object_ids
+          begin
+            results[path] = scenario.call
+            @state.record(path, true)
+          rescue ex
+            detail = ex.message || ex.class.name
+            results[path] = "failed: #{detail}"
+            @state.record(path, false)
+            @state.record_anomaly(index, path, detail, latest_child_failure_detail(preexisting))
+          end
+        end
+        enforce_invariants(index, results)
+        @state.advance_rotation
+        @state.save(@state_path.to_s)
+        digest = write_digest(index, results, reloaded)
+        FullRotationResult.new(index, results, digest, target_met?)
+      ensure
+        teardown
+      end
+
+      def target_met?(min_days : Int32 = DEFAULT_MIN_DAYS, min_per_path : Int32 = DEFAULT_MIN_PER_PATH) : Bool
+        started = Time.parse_rfc3339(@state.started_at)
+        elapsed_days = ((Time.utc - started).total_seconds / 86_400).floor.to_i
+        @state.completion_met?(elapsed_days, min_per_path)
+      rescue
+        false
+      end
+
+      def graph_counts : Hash(String, Int32)
+        graph = current_runtime.graph || raise PackError.new("Evolution health report requires an attached graph")
+        counts = {} of String => Int32
+        ["mod_proposal", "mod_promotion", "mod_trial", "gate_result"].each do |type|
+          graph.objects(type: type).each do |object|
+            data = JSON.parse(object.data)
+            status = if type == "mod_trial" || type == "gate_result"
+                       data["verdict"]?.try(&.as_s?) || "?"
+                     else
+                       data["status"]?.try(&.as_s?) || "?"
+                     end
+            key = "#{type}.#{status}"
+            counts[key] = (counts[key]? || 0) + 1
+          end
+        end
+        counts
+      end
+
+      private def failure_object_ids : Set(String)
+        graph = current_runtime.graph || raise PackError.new("Evolution health report requires an attached graph")
+        ids = Set(String).new
+        ["gate_result", "mod_trial"].each do |type|
+          graph.objects(type: type).each { |object| ids << object.id }
+        end
+        ids
+      end
+
+      # ameba:disable Metrics/CyclomaticComplexity -- scans both vendor failure-carrying evidence types with scoped exclusion
+      private def latest_child_failure_detail(exclude_ids : Set(String)) : String
+        graph = current_runtime.graph || raise PackError.new("Evolution health report requires an attached graph")
+        candidates = [] of {String, String}
+        graph.objects(type: "gate_result").each do |gate|
+          next if exclude_ids.includes?(gate.id)
+          data = JSON.parse(gate.data)
+          name = data["gate"]?.try(&.as_s?) || ""
+          next unless ["fixtures", "in_sample", "held_out", "trial"].includes?(name)
+          next unless data["verdict"]?.try(&.as_s?) == "fail"
+          candidates << {data["at"]?.try(&.as_s?) || "", "#{name}: #{data["details"]?.try(&.as_s?) || ""}"}
+        end
+        graph.objects(type: "mod_trial").each do |trial|
+          next if exclude_ids.includes?(trial.id)
+          data = JSON.parse(trial.data)
+          summary = data["eval_summary"]?.try(&.as_h)
+          outcome = summary.try { |value| value["child_outcome"]?.try(&.as_s?) } || ""
+          next if outcome.empty? || outcome == "completed"
+          detail = summary.try { |value| value["child_detail"]?.try(&.as_s?) } || ""
+          candidates << {data["at"]?.try(&.as_s?) || "", "child_outcome=#{outcome}: #{detail}"}
+        end
+        if latest = candidates.max_by?(&.[0])
+          latest[1][0, 800]
+        else
+          ""
+        end
+      end
+
+      private def enforce_invariants(index : Int32, results : Hash(String, String)) : Nil
+        graph = current_runtime.graph || raise PackError.new("Evolution health report requires an attached graph")
+        active = graph.objects(type: "mod_promotion").select { |promotion| JSON.parse(promotion.data)["status"]?.try(&.as_s?) == "active" }
+        return if active.size <= 1
+        names = active.map { |promotion| "#{JSON.parse(promotion.data)["pack_name"]?.try(&.as_s?) || "?"}=#{promotion.id}" }
+        detail = "soak invariant violated: #{active.size} active promotions (#{names.join(", ")}); expected at most 1"
+        results["invariant"] = "failed: #{detail}"
+        @state.record_anomaly(index, "invariant", detail)
+      end
+
+      private def write_digest(index : Int32, results : Hash(String, String), reloaded : Hash(String, String)) : Path
+        digests = @root / "digests"
+        FileUtils.mkdir_p(digests)
+        path = digests / "soak-#{Time.utc.to_s("%Y-%m-%d")}.md"
+        red = results.any? { |_, detail| detail.starts_with?("failed:") } || !@state.anomaly_log.empty?
+        lines = ["# Evolution soak digest #{Time.utc.to_s("%Y-%m-%d")}", "",
+                 "- status: **#{red ? "RED" : "GREEN"}**",
+                 "- rotations completed: #{@state.rotations}",
+                 "- started: #{@state.started_at}",
+                 "- soak target: #{target_met? ? "MET" : "not yet (need #{DEFAULT_MIN_DAYS}d and #{DEFAULT_MIN_PER_PATH}x per path)"}",
+                 "- last rotation: ##{index}",
+                 "- reloaded: #{reloaded.empty? ? "none" : reloaded.map { |name, status| "#{name}=#{status}" }.join(", ")}",
+                 "", "## Path counts (cumulative)", "", "| path | ok | anomalies |", "|---|---:|---:|"]
+        SCENARIO_PATHS.each { |scenario| count = @state.paths[scenario]; lines << "| #{scenario} | #{count.ok} | #{count.anomalies} |" }
+        lines += ["", "## Graph counts", ""]
+        counts = graph_counts
+        counts.keys.sort!.each { |key| lines << "- #{key}: #{counts[key]}" }
+        lines += ["", "## Last rotation", ""]
+        results.each { |scenario, detail| lines << "- [#{detail.starts_with?("failed:") ? "ANOMALY" : "OK"}] #{scenario}: #{detail}" }
+        unless @state.anomaly_log.empty?
+          lines += ["", "## Anomaly log (stop-and-report material)", ""]
+          @state.anomaly_log.last(10).each { |entry| lines << "- #{entry}" }
+        end
+        File.write(path, lines.join("\n") + "\n")
+        path
+      end
+
       def run_rotation : HappyRotationResult
         index = @state.rotations + 1
         reloaded = boot
@@ -388,6 +547,32 @@ module Chronicle::Packs::Evolution
 
       private def current_runtime : Chronicle::Runtime(M)
         @runtime || raise PackError.new("Evolution happy rotation is not booted")
+      end
+    end
+
+    # The Crystal operational entrypoint is host-bound: it cannot construct a
+    # model/runtime globally, but it owns the vendor's preflight refusal and
+    # one-shot or bounded recurring rotation scheduling once a host is given.
+    class ScheduledRunner(M)
+      def initialize(@rotation : HappyRotation(M))
+      end
+
+      def run_once : FullRotationResult
+        preflight = @rotation.preflight
+        raise PackError.new("Evolution soak refusing to run: #{preflight.message}") unless preflight.ready
+        @rotation.run_full_rotation
+      end
+
+      def run(rotations : Int32 = 0, interval_seconds : Float64 = 600.0) : Array(FullRotationResult)
+        raise ArgumentError.new("rotations must be non-negative") if rotations < 0
+        raise ArgumentError.new("interval_seconds must be non-negative") if interval_seconds < 0
+        outcomes = [] of FullRotationResult
+        loop do
+          outcomes << run_once
+          break if rotations > 0 && outcomes.size >= rotations
+          sleep interval_seconds
+        end
+        outcomes
       end
     end
   end

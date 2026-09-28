@@ -25,8 +25,8 @@ each entry is branch-sized and user-visible, `[x]` = green and committed,
 Intentional divergences section). The `## Features` sections below remain the
 per-pack detail record (surfaces, divergence notes, fixture drivers).
 
-**Progress: 1790 / 2080 source API items ported, 1 partial, 106 skipped, and 177 intentional divergences.**
-**Open source work: 6 missing + 1 partial rows; all are in `packs/evolution`.**
+**Progress: 1797 / 2080 source API items ported, 0 partial, 106 skipped, and 177 intentional divergences.**
+**Open source work: none; the source inventory is closed.**
 **Upstream tests: 415 / 638 ported, 204 skipped test-fixture/environment rows, 17 intentional divergences, and 2 partial behavior rows.**
 
 The source and test ledgers were checked against vendor revision
@@ -115,13 +115,15 @@ is a usable completion gate again.
       bounded conflict parking at `needs_owner`, rejected contained children,
       and a disabled promotion staying down across a fresh boot.
 
-### Next `EVOL-SOAK-M3` — soak health report and scheduled entrypoint
-- [ ] **Soak health report and scheduled entrypoint** (`soak.py`, 7 rows).
-      Make the harness runnable as an operational command, aggregate graph and
-      invariant health across rotations, and emit the durable anomaly/completion
-      report that tells an operator whether the soak remains green.
+### Completed `EVOL-SOAK-M3` — soak health report and scheduled entrypoint
+- [x] **`EVOL-SOAK-M3` Soak health report and scheduled entrypoint**
+      (`soak.py`, 7 rows). `ScheduledRunner` runs a preflight-gated full
+      rotation or bounded recurrence through the explicit host. The durable
+      daily digest records cumulative path counts, graph status counts,
+      completion target, current outcomes, scoped child detail, and invariant
+      anomalies. An incapable sandbox refuses before it begins work.
 
-### Current upstream-test closeout
+### Next `EVOL-TEST-M4` — upstream-test closeout
 
 - [x] Agentic-chat allow-list construction path — both vendor behavior tests
       are ported in `spec/chronicle_packs/agentic_chat_spec.cr`.

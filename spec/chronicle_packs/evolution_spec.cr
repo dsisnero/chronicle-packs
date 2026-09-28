@@ -92,6 +92,7 @@ module EvolutionSpecSupport
   class HappySoakHost < Chronicle::Packs::Evolution::Soak::HappyHost(PackModel)
     getter boots = 0
     getter happy_watches = 0
+    property preflight_ready = true
     getter author : RecordingAuthorService
 
     def initialize
@@ -117,6 +118,15 @@ module EvolutionSpecSupport
       runtime.load_pack(Chronicle::Packs::Core.pack).should be_true
       runtime.load_pack(Chronicle::Packs::Evolution.pack, JSON.parse(settings.to_json).as_h).should be_true
       runtime
+    end
+
+    def preflight(settings : Chronicle::Packs::Evolution::EvolutionSettings) : Chronicle::Packs::Evolution::Soak::PreflightResult
+      settings.enabled?.should be_true
+      if @preflight_ready
+        Chronicle::Packs::Evolution::Soak::PreflightResult.new(true, "trial child OK")
+      else
+        Chronicle::Packs::Evolution::Soak::PreflightResult.new(false, "child cannot start")
+      end
     end
 
     def author_service : Chronicle::Packs::Evolution::AuthorService
@@ -370,6 +380,36 @@ describe Chronicle::Packs::Evolution do
       restored.paths["budget_wallclock"].ok.should eq(1)
       restored.paths["budget_memory"].ok.should eq(1)
       restored.anomaly_log.should be_empty
+    ensure
+      FileUtils.rm_rf(root) if root
+    end
+
+    it "writes a durable full-rotation health digest and refuses an incapable scheduled host" do
+      root = Path.new(File.tempname("evolution_scheduled_soak"))
+      host = HappySoakHost.new
+      settings = Chronicle::Packs::Evolution::EvolutionSettings.new(
+        enabled: true, max_conflict_retries: 0,
+        trial_fixture_timeout_seconds: 30.0, trial_wall_clock_seconds: 30.0,
+      )
+      rotation = Chronicle::Packs::Evolution::Soak::HappyRotation(PackModel).new(root, host, settings)
+      scheduled = Chronicle::Packs::Evolution::Soak::ScheduledRunner(PackModel).new(rotation)
+
+      outcome = scheduled.run_once
+
+      outcome.rotation.should eq(1)
+      File.exists?(outcome.digest_path).should be_true
+      digest = File.read(outcome.digest_path)
+      digest.should contain("# Evolution soak digest")
+      digest.should contain("## Path counts (cumulative)")
+      digest.should contain("## Graph counts")
+      digest.should contain("## Last rotation")
+      Chronicle::Packs::Evolution::Soak::State.load((root / "state.json").to_s, Chronicle::Packs::Evolution::Soak::SCENARIO_PATHS).rotations.should eq(1)
+
+      refusing_rotation = Chronicle::Packs::Evolution::Soak::HappyRotation(PackModel).new(root / "refusing", host, settings)
+      host.preflight_ready = false
+      expect_raises(Chronicle::Packs::PackError, /refusing to run: child cannot start/) do
+        Chronicle::Packs::Evolution::Soak::ScheduledRunner(PackModel).new(refusing_rotation).run_once
+      end
     ensure
       FileUtils.rm_rf(root) if root
     end
