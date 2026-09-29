@@ -1,37 +1,59 @@
 # Architecture
 
-`chronicle-packs` is a Crystal port of the `activegraph-packs` library — the
-official pack library for the ActiveGraph reactive object-graph runtime.
+`chronicle-packs` maps the vendor's pack architecture onto Chronicle and
+Crystal. A pack owns a narrow graph surface—object types, relation types,
+reactive behaviors, settings, and tools. It coordinates with other packs only
+through durable graph-visible facts.
 
-## Upstream model
+```text
+input / tool / scheduled tick
+            |
+            v
+  GraphProjection emits durable event
+            |
+            v
+ Chronicle::Runtime dispatches PackBehavior
+            |
+            v
+ object / relation / result written by another pack
+```
 
-Upstream packs are Python modules. Each pack directory exports:
+There is no pack-level coordinator and a domain pack must not call another
+domain pack's private helper to make progress. Load order establishes required
+types and behaviors; events establish runtime coordination.
 
-- `__init__.py` — a `Pack(...)` object and a settings class
-- `object_types.py` — Pydantic schemas plus `OBJECT_TYPES` / `RELATION_TYPES` lists
-- `behaviors.py` — `@behavior` / `@llm_behavior` reactive handlers
-- `tools.py` — `@tool` decorated callable capabilities
-- `settings.py` — Pydantic settings (all fields must have defaults)
-- `fixtures/` — deterministic `.yaml` scenarios, no API key required
-- `manifest.toml` — declarative surface: object types, relation types, behaviors, tools, settings schema
+## Crystal structure
 
-Coordination is emergent: one pack writes an object, the write is an event, and
-the event triggers a behavior in another pack. No central orchestrator.
+The public entry point is `src/chronicle-packs.cr`. A conventional pack is
+split beneath `src/chronicle_packs/<name>/`:
 
-## Port structure
+- `pack.cr` declares `Chronicle::Packs::Pack` through the pack DSL.
+- `object_types.cr` and `relation_types.cr` define durable graph shapes.
+- `behaviors.cr` contains annotated reactive handlers.
+- `tools.cr` contains deterministic graph-facing operations.
+- `settings.cr` defines a typed `JSON::Serializable` configuration object.
 
-The Crystal port mirrors the tiered pack model:
+The port uses typed Crystal structs/classes at the graph boundary. Closed
+vendor literals are Crystal enums; genuinely provider-owned payloads remain
+open `Hash(String, JSON::Any)` values. See [coding guidelines](coding-guidelines.md).
 
-- Core pack (`src/chronicle_packs/core.cr`) — 7 object types, 7 relation types, deterministic behaviors
-- Infrastructure packs — tool_gateway, secrets, memory_gateway, identity_auth, agent_profile, entity, etc.
-- Communication packs — communication, chat, email, schedule
-- Domain packs — research, codebase, team_ops, meeting
-- Transport adapters — telegram, whatsapp, gmail, mcp, composio, evolution
-- Importers — local_files, chatgpt_export, claude_export, assistant_*, public_presence
-- Bundles — assistant, messaging_assistant, email_assistant, research_bundle
+## Runtime and provider boundaries
+
+Chronicle owns event storage, runtime dispatch, frames, forks, promotion, and
+recorded model/tool transport. This library owns pack policy. The Tool Gateway
+records a capability call before action; Semantic Extraction verifies recorded
+model output before it becomes annotations; Memory Gateway keeps graph objects
+authoritative while embeddings remain optional recall acceleration.
+
+The Crystal demo server is an HTTP wrapper over a bundle runtime. Its portable
+default is an in-memory store. Vendor integrations requiring a hosted MCP
+client, managed OAuth source, background tick driver, or deployment-owned
+persistent storage remain explicit host seams. See [Demo server](demo-server.md)
+and [intentional divergences](../plans/parity.md#intentional-divergences).
 
 ## Source of truth
 
-Upstream is a pinned git submodule at `vendor/activegraph-packs/`
-(revision 6639a5385518ad49f74813373c85cf96eff9adc0). Upstream behavior,
-tests, and fixtures are normative.
+Vendor behavior is authoritative at the revision recorded in the root README.
+The generated source and test manifests are evidence of coverage; the curated
+[parity roadmap](../plans/parity.md) explains feature boundaries and intentional
+Crystal/host differences.

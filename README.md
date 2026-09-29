@@ -1,73 +1,73 @@
 # chronicle-packs
 
-Crystal port of https://github.com/yoheinakajima/activegraph-packs
-— the official pack library for the ActiveGraph reactive object-graph runtime.
+`chronicle-packs` is the Crystal port of the pinned
+[`activegraph-packs`](https://github.com/yoheinakajima/activegraph-packs)
+library. It provides composable Chronicle packs for an auditable, reactive
+object graph: typed objects and relations are durable facts; behaviors react to
+their events; tools expose governed capabilities.
 
-Pinned upstream revision: `6639a5385518ad49f74813373c85cf96eff9adc0` (git submodule at `vendor/activegraph-packs/`).
+The vendor source is a git submodule at
+[`vendor/activegraph-packs`](vendor/activegraph-packs), pinned to
+`6639a5385518ad49f74813373c85cf96eff9adc0`. Its observable behavior, tests,
+and fixtures are the parity contract. Python packaging, Pydantic models, and
+the vendor's UI/API process topology are not Crystal APIs.
 
-The upstream library composes 19 packs plus a bridge pack into a coherent,
-auditable assistant architecture. Packs coordinate emergently: one pack writes
-an object, the write is an event, and the event triggers a behavior in another
-pack. This port mirrors that tiered model in Crystal.
+## Install
 
-## Installation
+```yaml
+dependencies:
+  chronicle-packs:
+    github: dsisnero/chronicle-packs
+```
 
-1. Add the dependency to your `shard.yml`:
+```bash
+shards install
+```
 
-   ```yaml
-   dependencies:
-     chronicle-packs:
-       github: dsisnero/chronicle-packs
-   ```
+## Start with a bundle
 
-2. Run `shards install`
-
-## Usage
+Bundles are named pack collections, not new graph ontologies. The assistant
+bundle builds an in-memory runtime with a deterministic completion model, so a
+key is never required for the documented baseline.
 
 ```crystal
 require "chronicle-packs"
+
+store, graph, runtime = Chronicle::Packs::Bundles.build_assistant
+runtime.run_until_idle
+
+puts graph.objects(type: "agent_profile").size
 ```
+
+Use `build_messaging_assistant`, `build_email_assistant`, or
+`build_research_assistant` for the corresponding preset. For a durable
+application runtime, construct a `Chronicle::Runtime` over your chosen event
+store, then use `Bundles.load_assistant_packs` or load pack declarations in the
+required order. See [Bundles](docs/bundles.md).
+
+## Documentation
+
+- [Concepts](docs/concepts.md) — event-sourced graph coordination, pack
+  boundaries, deterministic floor, and governance.
+- [Architecture](docs/architecture.md) — Crystal module layout and runtime
+  boundaries.
+- [Pack catalog](docs/packs.md) — every ported pack grouped by role.
+- [Bundles](docs/bundles.md) — included packs and configuration seams.
+- [Pack authoring](docs/pack-authoring.md) — Crystal pack, type, behavior,
+  tool, and spec conventions.
+- [Demo server](docs/demo-server.md) — HTTP surface and deferred host seams.
+- [Development](docs/development.md), [testing](docs/testing.md), and
+  [PR workflow](docs/pr-workflow.md) — contributor workflow and parity gates.
 
 ## Development
 
 ```bash
+git submodule update --init --recursive
 shards install
 crystal tool format --check src spec
 ameba src spec
 crystal spec
 ```
 
-See `plans/parity.md` for the porting roadmap.
-
-## Upstream README Highlights
-
-The upstream is a Python pack library. Its packs split into:
-
-- **Core Pack** (`packs/core`) — the universal substrate: 7 object types
-  (source, observation, task, action, artifact, memory_candidate, evaluation)
-  and 7 relation types, depending on nothing.
-- **Layered packs** — infrastructure (tool_gateway, secrets, memory_gateway,
-  identity_auth, agent_profile, entity), communication (communication, chat,
-  email, schedule), and domain verticals (research, codebase, team_ops,
-  meeting). Domain packs map their outputs back to Core primitives.
-- **Transport adapters** — telegram, whatsapp, gmail, mcp, composio, evolution.
-- **Importers** — format adapters emitting strict `acquired_item` /
-  `acquired_content` handoffs.
-- **Bundles** — preset pack lists with factory functions (assistant,
-  messaging_assistant, email_assistant, research_bundle).
-
-Everything runs with zero API keys: the deterministic floor serves every facet
-of extraction, memory, and behavior. Providing an LLM key is an upgrade, never
-a requirement.
-
-## Contributing
-
-1. Fork it (<https://github.com/dsisnero/chronicle-packs/fork>)
-2. Create your feature branch (`git checkout -b my-new-feature`)
-3. Commit your changes (`git commit -am 'Add some feature'`)
-4. Push to the branch (`git push origin my-new-feature`)
-5. Create a new Pull Request
-
-## Contributors
-
-- [Dominic Sisneros](https://github.com/dsisnero) - creator and maintainer
+The parity inventory and roadmap are maintained in
+[plans/parity.md](plans/parity.md).
