@@ -27,7 +27,7 @@ per-pack detail record (surfaces, divergence notes, fixture drivers).
 
 **Progress: 1797 / 2080 source API items ported, 0 partial, 106 skipped, and 177 intentional divergences.**
 **Open source work: none; the source inventory is closed.**
-**Upstream tests: 415 / 638 ported, 204 skipped test-fixture/environment rows, 17 intentional divergences, and 2 partial behavior rows.**
+**Upstream tests: 418 / 638 ported, 204 skipped test-fixture/environment rows, 16 intentional divergences, and 0 partial behavior rows.**
 
 The source and test ledgers were checked against vendor revision
 `6639a5385518ad49f74813373c85cf96eff9adc0`. Every former legacy `deferred`
@@ -123,18 +123,21 @@ is a usable completion gate again.
       completion target, current outcomes, scoped child detail, and invariant
       anomalies. An incapable sandbox refuses before it begins work.
 
-### Next `EVOL-TEST-M4` — upstream-test closeout
+### Completed `EVOL-TEST-M4` — upstream-test closeout
 
 - [x] Agentic-chat allow-list construction path — both vendor behavior tests
       are ported in `spec/chronicle_packs/agentic_chat_spec.cr`.
-- [ ] **Runtime authority-event audit** — complete
-      `test_action_class_policy::test_llm_proxy_records_class_reason_and_audits_via_runtime`.
-      Crystal records the held action-class reason but lacks the vendor runtime
-      authority-event facade.
-- [ ] **Live-provider procedural fallback** — complete
-      `test_extraction_proceduralization::test_reference_hardens_through_real_fork_then_deopts_and_demotes_on_drift`.
-      Graph-direct fallback and drift demotion are ported; the vendor live
-      provider/fork fallback remains host integration work.
+- [x] **Runtime authority-event audit** — runtime-bound LLM proxies now call
+      `Runtime#evaluate_capability_authority`, persist the ordered
+      `authority.decision` receipts, and retain their audit ids in the gateway
+      authority record. The equivalent spec covers an R3 hold and an R0 run.
+- [x] **Forked recorded-provider procedural fallback** — procedure evaluation
+      now forks a SQLite-backed runtime and promotes the evaluation delta with
+      its marker. Guard shape drift routes to the registered recorded
+      `semantic.llm` reference, persists completed fallback run ids, and
+      automatically demotes the procedure after three independent drifts.
+
+The upstream test ledger is now closed: no partial vendor behavior rows remain.
 
 ### Historical completed work (superseded counts; retained for detail)
 

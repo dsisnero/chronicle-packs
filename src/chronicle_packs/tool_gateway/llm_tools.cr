@@ -66,6 +66,30 @@ module Chronicle::Packs::ToolGateway
     end
   end
 
+  # The runtime-aware variant retains the runtime only to invoke its
+  # authority-decision audit boundary. Capability policy and execution remain
+  # owned by the gateway pipeline.
+  class RuntimeCrigGatewayTool(M) < Crig::DynamicTool
+    def initialize(graph : Chronicle::GraphProjection, spec : CapabilitySpec, settings : ToolGatewaySettings, runtime : Chronicle::Runtime(M), provider_id : String = "")
+      description = spec.description.empty? ? "Gateway capability #{spec.key}." : spec.description
+      parameters = spec.input_schema || CrigGatewayTool.default_parameters
+      super(spec.key, description, parameters) do |args, context|
+        input = begin
+          JSON.parse(args).as_h
+        rescue ex : JSON::ParseException
+          next Crig::Tool::ToolResult.failed(Crig::Tool::ToolExecutionError.invalid_args("tool arguments were not a JSON object: #{ex.message}"))
+        end
+        metadata = context.get(GatewayToolMetadata)
+        outcome = Chronicle::Packs::ToolGateway._llm_proxy_pipeline(graph, spec, settings, runtime, provider_id, input, metadata)
+        if outcome["status"]?.try(&.as_s?) == "held_for_approval"
+          Crig::Tool::ToolResult.success(Crig::Tool::ToolOutput.json(JSON::Any.new(outcome)))
+        else
+          Crig::Tool::ToolResult.success(Crig::Tool::ToolOutput.text(outcome["output"]?.try(&.as_s?) || ""))
+        end
+      end
+    end
+  end
+
   def self._now_iso : String
     Time.utc.to_s("%Y-%m-%dT%H:%M:%SZ")
   end
@@ -75,13 +99,21 @@ module Chronicle::Packs::ToolGateway
   # a structured held_for_approval payload or executes inline (approval
   # recorded after execution so call_executor's 'approved' guard skips it —
   # one approval, at most one execution).
-  # ameba:disable Metrics/CyclomaticComplexity -- faithful port of the upstream proxy's audit-before-action flow
   def self._llm_proxy_pipeline(graph : Chronicle::GraphProjection, spec : CapabilitySpec, settings : ToolGatewaySettings, authority_ceiling : String, provider_id : String, input_data : Hash(String, JSON::Any), metadata : GatewayToolMetadata?) : Hash(String, JSON::Any)
     policy = evaluate_call_policy(
       spec.key, spec.risk_class, spec.action_class, settings,
       graph: graph,
       authority_ceiling: authority_ceiling,
     )
+    _llm_proxy_pipeline_with_policy(graph, spec, settings, provider_id, input_data, metadata, policy)
+  end
+
+  # The mutation half shared by graph-only and runtime-audited entrypoints.
+  # The policy is deliberately computed before `capability_call` so the call
+  # carries its exact decision and the runtime audit, when present, precedes
+  # the call just as it does upstream.
+  # ameba:disable Metrics/CyclomaticComplexity -- faithful port of the upstream proxy's audit-before-action flow
+  def self._llm_proxy_pipeline_with_policy(graph : Chronicle::GraphProjection, spec : CapabilitySpec, settings : ToolGatewaySettings, provider_id : String, input_data : Hash(String, JSON::Any), metadata : GatewayToolMetadata?, policy : Hash(String, JSON::Any)) : Hash(String, JSON::Any)
     decision = policy["decision"]?.try(&.as_s?) || "hold"
     now = _now_iso
     behavior_name = metadata.try(&.behavior_name) || "gateway_llm_proxy"
@@ -166,6 +198,18 @@ module Chronicle::Packs::ToolGateway
     }
   end
 
+  # Runtime-backed pipeline: policy has the same gateway outcome but records
+  # the vendor-required authority.decision receipt before capability_call.
+  def self._llm_proxy_pipeline(graph : Chronicle::GraphProjection, spec : CapabilitySpec, settings : ToolGatewaySettings, runtime : Chronicle::Runtime(M), provider_id : String, input_data : Hash(String, JSON::Any), metadata : GatewayToolMetadata?) : Hash(String, JSON::Any) forall M
+    policy = evaluate_call_policy(
+      spec.key, spec.risk_class, spec.action_class, settings,
+      runtime: runtime,
+      graph: graph,
+      actor: metadata.try(&.behavior_name) || "gateway_llm_proxy",
+    )
+    _llm_proxy_pipeline_with_policy(graph, spec, settings, provider_id, input_data, metadata, policy)
+  end
+
   # Wrap one registered capability as a Crig tool proxy. The gateway's
   # never-offer-to-a-model set and the input-schema requirement are enforced
   # here; the returned Crig::ToolDyn is safe to register in a Crig::ToolSet.
@@ -178,6 +222,20 @@ module Chronicle::Packs::ToolGateway
     end
 
     CrigGatewayTool.new(graph, spec, settings || ToolGatewaySettings.new, provider_id: provider_id, authority_ceiling: authority_ceiling)
+  end
+
+  # Bind an LLM proxy to its owning runtime.  This is the vendor's audited
+  # construction path: only this form evaluates a declared action class via
+  # Runtime#evaluate_capability_authority and therefore emits authority.decision.
+  def self.as_llm_tool(graph : Chronicle::GraphProjection, spec : CapabilitySpec, runtime : Chronicle::Runtime(M), settings : ToolGatewaySettings? = nil, provider_id : String = "", timeout_seconds : Float64 = 30.0) : Crig::ToolDyn forall M
+    if Untrusted::NEVER_LLM_CALLABLE.includes?(spec.capability_name)
+      raise Chronicle::Packs::PackError.new("Capability #{spec.key.inspect} can never be offered to an LLM.")
+    end
+    unless spec.input_schema_available
+      raise Chronicle::Packs::PackError.new("Capability #{spec.key.inspect} has no input_schema, so it cannot be offered to an LLM.")
+    end
+
+    RuntimeCrigGatewayTool(M).new(graph, spec, settings || ToolGatewaySettings.new, runtime, provider_id: provider_id)
   end
 
   # Construction-time Chronicle Tool counterpart for an @[LLMBehavior]. It

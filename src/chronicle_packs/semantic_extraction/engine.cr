@@ -229,14 +229,38 @@ module Chronicle::Packs::SemanticExtraction
   # groups mapped facets into independent cache-identified runs; unmapped
   # facets stay in the default-extractor run. Keep the default group first
   # and mapped references sorted so run order is reproducible.
+  # ameba:disable Metrics/CyclomaticComplexity -- guarded procedure routing is the vendor extraction policy
   def self.run_profile_extraction(graph : Chronicle::GraphProjection, evidence_obj : Chronicle::GraphObject, settings : SemanticExtractionSettings, requested_facets : Array(String)? = nil, selection_id : String? = nil, content_segments : Array(Hash(String, JSON::Any))? = nil) : Array(Hash(String, JSON::Any))
     evidence = JSON.parse(evidence_obj.data).as_h
     facets = requested_facets || active_profile_facets(graph, evidence["source_category"]?.try(&.as_s?) || "", settings.default_profile_facets)
     requested = facets.to_set.to_a.sort
     extractor_map = active_profile_extractor_map(graph)
     groups = {} of String? => Array(String)
+    deoptimizations_by_ref = {} of String => Array(String)
     requested.each do |facet|
       ref = extractor_map[facet]?
+      if ref
+        procedure = active_procedure_for(graph, evidence, facet)
+        if procedure
+          candidate_id = procedure["candidate"].as_s
+          guard_id = procedure["guard"].as_s
+          candidate = graph.get_object(candidate_id)
+          guard = graph.get_object(guard_id)
+          if candidate && guard && ref == JSON.parse(candidate.data)["reference_ref"]?.try(&.as_s?)
+            if procedure["admitted"].as_bool
+              ref = JSON.parse(candidate.data)["candidate_ref"]?.try(&.as_s?)
+            else
+              reason = procedure["reason"].as_s
+              if deopt_id = record_deoptimization(graph, graph, candidate, guard, evidence_obj, reason)
+                fallback = JSON.parse(candidate.data)["fallback_ref"]?.try(&.as_s?) || ""
+                deoptimizations_by_ref[fallback] ||= [] of String
+                deoptimizations_by_ref[fallback] << deopt_id
+                ref = fallback
+              end
+            end
+          end
+        end
+      end
       (groups[ref] ||= [] of String) << facet
     end
 
@@ -245,13 +269,22 @@ module Chronicle::Packs::SemanticExtraction
     ([nil] of String?).concat(ordered_refs).each do |ref|
       grouped_facets = groups[ref]?
       next if grouped_facets.nil? || grouped_facets.empty?
-      results << run_annotation_extraction(
+      result = run_annotation_extraction(
         graph, evidence_obj, settings,
         requested_facets: grouped_facets,
         extractor_ref: ref,
         selection_id: selection_id,
         content_segments: content_segments,
       )
+      results << result
+      if ref
+        (deoptimizations_by_ref[ref]? || [] of String).each do |deopt_id|
+          patch(graph, deopt_id, {
+            "fallback_status"  => JSON::Any.new(result["ok"]?.try(&.as_bool?) ? "completed" : "failed"),
+            "fallback_run_ids" => JSON::Any.new([result["run"]?.try(&.as_s?) || ""].reject(&.empty?).map { |id| JSON::Any.new(id) }),
+          })
+        end
+      end
     end
     results
   end

@@ -35,6 +35,43 @@ module Chronicle::Packs::ToolGateway
     detail
   end
 
+  # Runtime-bound form of the policy decision.  A declared action class must
+  # travel through Chronicle's canonical authority API so the durable
+  # `authority.decision` receipt is emitted by the runtime, exactly as the
+  # vendor proxy does.  The graph-only form above intentionally remains
+  # unaudited: without a runtime it cannot grant through this path.
+  def self.evaluate_call_policy(capability_key : String, risk_class : String, action_class : String, settings : ToolGatewaySettings, runtime : Chronicle::Runtime(M), requires_explicit_approval : Bool = false, graph : Chronicle::GraphProjection? = nil, actor : String = "gateway_llm_proxy") : Hash(String, JSON::Any) forall M
+    ceiling = runtime.authority_ceiling
+    detail = evaluate_call_policy(
+      capability_key, risk_class, action_class, settings,
+      requires_explicit_approval: requires_explicit_approval,
+      graph: graph,
+      authority_ceiling: ceiling,
+    )
+    return detail if action_class.empty?
+
+    capability_ceiling = settings.capability_action_ceilings[capability_key]?
+    standing_scope = graph && action_class == "R2" ? promoted_standing_scope_for(graph, capability_key, "R2") : nil
+    audit_ceiling = capability_ceiling
+    audit_ceiling = _stricter_ceiling(audit_ceiling, "R1") if action_class == "R2" && standing_scope.nil?
+    audit_ceiling = _stricter_ceiling(audit_ceiling, "none") if requires_explicit_approval
+    audited = runtime.evaluate_capability_authority(
+      capability: capability_key,
+      action_class: action_class,
+      capability_ceiling: audit_ceiling,
+      actor: actor,
+    )
+    authority = detail["action_authority"]?.try(&.as_h) || {} of String => JSON::Any
+    authority["capability"] = JSON::Any.new(audited.capability)
+    authority["action_class"] = JSON::Any.new(audited.action_class)
+    authority["ceiling"] = JSON::Any.new(audited.ceiling)
+    authority["capability_ceiling"] = audited.capability_ceiling ? JSON::Any.new(audited.capability_ceiling) : JSON::Any.new(nil)
+    authority["effective_ceiling"] = JSON::Any.new(audited.effective_ceiling)
+    authority["audit_event_id"] = JSON::Any.new(audited.event_id)
+    detail["action_authority"] = JSON::Any.new(authority)
+    detail
+  end
+
   # Record a proposed capability call and create its provider relation.
   @[Chronicle::Packs::Annotations::Behavior(name: "call_recorder", on: ["object.created"], where: {"type" => "capability_call"})]
   def call_recorder(event : Chronicle::Event, graph : Chronicle::GraphProjection, _ctx : Chronicle::Packs::BehaviorContext, settings : ToolGatewaySettings) : Nil

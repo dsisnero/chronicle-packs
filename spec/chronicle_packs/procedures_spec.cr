@@ -4,9 +4,8 @@ require "../spec_helper"
 # Guarded proceduralization (ADR 0029 pilot): dynamic-to-deterministic
 # extraction. A procedure_candidate is declarative graph state; evaluation
 # runs the deterministic RequestRuleExtractorV1 against reference
-# annotations; promotion is approver-gated. The port evaluates on the graph
-# directly (deterministic, no mutation except the audit objects) instead of
-# a runtime fork.
+# annotations; promotion is approver-gated. Runtime evaluation executes in a
+# persisted fork and promotes its audit delta back to the parent.
 
 module ProceduresSupport
   extend self
@@ -18,9 +17,21 @@ module ProceduresSupport
     yield store, graph, rt
   end
 
+  def with_persisted_semantic_runtime(&)
+    path = File.tempname("procedure_evaluation", ".sqlite")
+    store = Chronicle::SQLiteEventStore.new(path, run_id: "procedure_parent")
+    graph = Chronicle::GraphProjection.empty.attach_store(store)
+    agent = Crig::Agent(PackModel).new(model: PackModel.new, preamble: "")
+    log_agent = Chronicle::LogAgent(PackModel).new(agent, store: store, max_turns: 1)
+    rt = Chronicle::Runtime(PackModel).new(store: store, log_agent: log_agent, graph: graph, run_id: "procedure_parent")
+    rt.load_pack(Chronicle::Packs::Core.pack).should be_true
+    rt.load_pack(Chronicle::Packs::SemanticExtraction.pack).should be_true
+    yield graph, rt
+  end
+
   # A communication evidence object whose normalized_metadata yields a stable
   # shape fingerprint. `requesting` puts a request cue in the content.
-  def add_evidence(graph, text, id, requesting = true)
+  def add_evidence(graph, text, id, requesting = true, shape_version = "v1")
     content = requesting ? text : "the sky is blue and the grass is green"
     graph.add_object("activity_evidence", JSON.build do |json|
       json.object do
@@ -46,7 +57,7 @@ module ProceduresSupport
         json.field "media_type", "text/plain"
         json.field "acquired_at_event_id", "evt_#{id}"
         json.field "normalized_content", content
-        json.field "normalized_metadata", JSON::Any.new({"direction" => JSON::Any.new("inbound"), "message_kind" => JSON::Any.new("chat"), "shape_version" => JSON::Any.new("v1")})
+        json.field "normalized_metadata", JSON::Any.new({"direction" => JSON::Any.new("inbound"), "message_kind" => JSON::Any.new("chat"), "shape_version" => JSON::Any.new(shape_version)})
       end
     end)
   end
@@ -172,6 +183,87 @@ describe "guarded proceduralization" do
       candidate_data["status"].as_s.should eq("promoted")
       states = graph.objects(type: "annotation_extractor_state")
       states.any? { |obj| JSON.parse(obj.data)["extractor_id"].as_s == "semantic.request_rule" }.should be_true
+    end
+  end
+
+  it "forks evaluation and completes live-reference fallback before drift demotion" do
+    ProceduresSupport.with_persisted_semantic_runtime do |graph, rt|
+      se = Chronicle::Packs::SemanticExtraction
+      witness_ids = [] of String
+      ["Please send the deck.", "Can you review the draft?", "Could you schedule the call?"].each_with_index do |text, index|
+        evidence = ProceduresSupport.add_evidence(graph, text, "w#{index}")
+        ProceduresSupport.add_reference_annotation(graph, evidence.id, text, "w#{index}")
+        witness_ids << evidence.id
+      end
+      held_ids = [] of String
+      ["Please share the notes.", "Can you confirm the date?"].each_with_index do |text, index|
+        evidence = ProceduresSupport.add_evidence(graph, text, "h#{index}")
+        ProceduresSupport.add_reference_annotation(graph, evidence.id, text, "h#{index}")
+        held_ids << evidence.id
+      end
+      counter = ProceduresSupport.add_evidence(graph, "Thanks for sharing the update.", "counter", false)
+      candidate = se.synthesize_request_procedure_fn(graph,
+        witness_evidence_ids: witness_ids, held_out_evidence_ids: held_ids,
+        counterexample_evidence_ids: [counter.id], created_by: "owner:test")
+      candidate_id = candidate["candidate_id"].as_s
+
+      evaluated = se.evaluate_request_procedure_fn(rt, candidate_id)
+      evaluated["ok"].as_bool.should be_true
+      evaluated["fork_run_id"].as_s.should_not eq(rt.run_id)
+      evaluated["promote_marker_event_id"].as_s.should_not be_empty
+      audit = JSON.parse(graph.get_object(evaluated["evaluation_id"].as_s).not_nil!.data)
+      audit["held_out_parity_milli"].as_i.should eq(1_000)
+      audit["false_admissions"].as_i.should eq(0)
+      audit["reference_calls"].as_i.should eq(0)
+      se.promote_request_procedure_fn(graph, candidate_id, evaluated["evaluation_id"].as_s, approver: "owner:test")["ok"].as_bool.should be_true
+
+      calls = 0
+      provider = ->(model : String, input : String) {
+        calls += 1
+        text = input.split("CONTENT:\n", 2).last
+        JSON.build do |json|
+          json.array do
+            json.object do
+              json.field "facet", "relation_mention"
+              json.field "exact", text
+              json.field "body", JSON::Any.new({"text" => JSON::Any.new(text), "subject" => JSON::Any.new("sender"), "predicate" => JSON::Any.new("requests"), "object" => JSON::Any.new(text)})
+              json.field "confidence", 0.9
+            end
+          end
+        end
+      }
+      settings = Chronicle::Packs::SemanticExtraction::SemanticExtractionSettings.from_json(%({"llm_model":"fixture-reference"}))
+      se.build_llm_extractor(settings, graph, provider: provider)
+      se.update_extraction_profile_fn(graph,
+        default_facets: ["relation_mention"],
+        extractor_by_facet: {"relation_mention" => "semantic.llm@0.1.0"},
+        created_by: "owner:test", rationale: "dynamic reference with guarded deterministic procedure")
+
+      admitted = ProceduresSupport.add_evidence(graph, "Please send the revised deck.", "admitted")
+      admitted_result = se.run_profile_extraction(graph, admitted, settings: settings, requested_facets: ["relation_mention"])
+      admitted_run = graph.get_object(admitted_result.first["run"].as_s).not_nil!
+      JSON.parse(admitted_run.data)["extractor_id"].as_s.should eq("semantic.request_rule")
+      calls.should eq(0)
+
+      3.times do |index|
+        drift = ProceduresSupport.add_evidence(graph, "Please send drift #{index}.", "drift#{index}", true, "v#{index + 2}")
+        result = se.run_profile_extraction(graph, drift, settings: settings, requested_facets: ["relation_mention"])
+        JSON.parse(graph.get_object(result.first["run"].as_s).not_nil!.data)["extractor_id"].as_s.should eq("semantic.llm")
+      end
+      deopts = graph.objects(type: "procedure_deoptimization")
+      deopts.size.should eq(3)
+      deopts.each do |deopt|
+        data = JSON.parse(deopt.data)
+        data["fallback_status"].as_s.should eq("completed")
+        data["fallback_run_ids"].as_a.should_not be_empty
+      end
+      calls.should eq(3)
+      JSON.parse(graph.get_object(candidate_id).not_nil!.data)["status"].as_s.should eq("demoted")
+
+      after_demote = ProceduresSupport.add_evidence(graph, "Please send one more.", "after-demote")
+      after_result = se.run_profile_extraction(graph, after_demote, settings: settings, requested_facets: ["relation_mention"])
+      JSON.parse(graph.get_object(after_result.first["run"].as_s).not_nil!.data)["extractor_id"].as_s.should eq("semantic.llm")
+      calls.should eq(4)
     end
   end
 

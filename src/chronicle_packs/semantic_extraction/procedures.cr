@@ -258,9 +258,8 @@ module Chronicle::Packs::SemanticExtraction
     {"parity_milli" => JSON::Any.new(parity), "selector_mismatches" => JSON::Any.new(mismatches), "guard_abstentions" => JSON::Any.new(abstentions), "failures" => JSON::Any.new(failures.map { |failure| JSON::Any.new(failure) })}
   end
 
-  # Evaluate a candidate. The port evaluates on the graph directly (the
-  # deterministic run mutates nothing but the audit objects) rather than a
-  # runtime fork; forked_at_event_id is the current event cursor.
+  # Graph-only evaluation remains the pure/test seam. Runtime callers use the
+  # overload below, which performs the vendor-required persisted fork.
   # ameba:disable Metrics/CyclomaticComplexity -- faithful port of the upstream fork evaluation
   def self.evaluate_request_procedure_fn(graph : Chronicle::GraphProjection, candidate_id : String) : Hash(String, JSON::Any)
     candidate = graph.get_object(candidate_id)
@@ -328,6 +327,49 @@ module Chronicle::Packs::SemanticExtraction
     graph.patch_object(candidate_id, JSON::Any.new(candidate_merged).to_json)
 
     {"ok" => JSON::Any.new(verdict == "pass"), "evaluation_id" => JSON::Any.new(evaluation_obj.id), "verdict" => JSON::Any.new(verdict), "fork_run_id" => JSON::Any.new("graph"), "promote_marker_event_id" => JSON::Any.new(nil)}
+  end
+
+  # Evaluate in a real persisted fork, then promote only the fork's audited
+  # candidate/evaluation delta. This mirrors vendor
+  # evaluate_request_procedure_fn: the parent never labels a direct-graph
+  # trial as a fork, and a failed promotion is an explicit error rather than
+  # silently retaining an unreviewable evaluation.
+  def self.evaluate_request_procedure_fn(runtime : Chronicle::Runtime(M), candidate_id : String) : Hash(String, JSON::Any) forall M
+    parent_graph = runtime.graph || raise Chronicle::Packs::PackError.new("procedure evaluation requires an attached runtime graph")
+    candidate = parent_graph.get_object(candidate_id)
+    raise Chronicle::Packs::PackError.new("no procedure_candidate #{candidate_id.inspect}") if candidate.nil? || candidate.type != "procedure_candidate"
+    raise Chronicle::Packs::PackError.new("procedure evaluation requires candidate status") unless JSON.parse(candidate.data)["status"]?.try(&.as_s?) == "candidate"
+
+    anchor = parent_graph.events.last?.try(&.id)
+    raise Chronicle::Packs::PackError.new("procedure evaluation requires a persisted event at which to fork") if anchor.nil?
+    fork = runtime.fork(anchor, label: "procedure-eval:#{candidate_id}")
+    fork_graph = fork.graph || raise Chronicle::Packs::PackError.new("procedure evaluation fork has no graph")
+    evaluated = evaluate_request_procedure_fn(fork_graph, candidate_id)
+    evaluation_id = evaluated["evaluation_id"].as_s
+    evaluation = fork_graph.get_object(evaluation_id) || raise Chronicle::Packs::PackError.new("forked procedure evaluation was not persisted")
+    evaluation_data = JSON.parse(evaluation.data).as_h
+    evaluation_data["evaluation_identity"] = JSON::Any.new(stable_id("procedure_evaluation", candidate_id, fork.run_id, anchor))
+    evaluation_data["fork_run_id"] = JSON::Any.new(fork.run_id)
+    evaluation_data["forked_at_event_id"] = JSON::Any.new(anchor)
+    fork_graph.patch_object(evaluation_id, JSON::Any.new(evaluation_data).to_json)
+
+    plan = runtime.promote(fork, dry_run: true).as(Chronicle::PromotePlan)
+    unless plan.is_promotable
+      raise Chronicle::Packs::PackError.new("procedure evaluation promotion conflict: #{plan.conflicts.join(", ")}")
+    end
+    promoted = runtime.promote(fork).as(Chronicle::PromoteResult)
+    parent_evaluation = parent_graph.get_object(evaluation_id) || raise Chronicle::Packs::PackError.new("promoted procedure evaluation is missing")
+    promoted_data = JSON.parse(parent_evaluation.data).as_h
+    promoted_data["promote_marker_event_id"] = JSON::Any.new(promoted.marker_event_id)
+    parent_graph.patch_object(evaluation_id, JSON::Any.new(promoted_data).to_json)
+
+    {
+      "ok"                      => evaluated["ok"]? || JSON::Any.new(false),
+      "evaluation_id"           => JSON::Any.new(evaluation_id),
+      "verdict"                 => evaluated["verdict"]? || JSON::Any.new("fail"),
+      "fork_run_id"             => JSON::Any.new(fork.run_id),
+      "promote_marker_event_id" => JSON::Any.new(promoted.marker_event_id),
+    }
   end
 
   # Promote a passing candidate — approver-gated, supersedes prior promoted

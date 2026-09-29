@@ -143,6 +143,55 @@ describe "llm tool proxies (Crig tool transport)" do
     end
   end
 
+  it "audits runtime authority decisions for action-class LLM proxies" do
+    with_gateway_runtime do |_store, graph, rt|
+      LlmToolsSupport.reset_seams
+      settings = Chronicle::Packs::ToolGateway::ToolGatewaySettings.new(auto_approve_risk_classes: [] of String)
+      rt.set_authority_ceiling("R1", actor: "owner", reason: "allow reads/derives")
+      held_spec = Chronicle::Packs::ToolGateway.register_local_capability(
+        "mail", "runtime_audited_send", ->(input : Hash(String, JSON::Any)) { {"sent" => input["text"]? || JSON::Any.new("")} },
+        description: "Send mail.", risk_class: "high", action_class: "R3",
+      )
+      auto_spec = Chronicle::Packs::ToolGateway.register_local_capability(
+        "notes", "runtime_audited_read", ->(input : Hash(String, JSON::Any)) { {"note" => input["text"]? || JSON::Any.new("")} },
+        description: "Read a note.", risk_class: "high", action_class: "R0",
+      )
+
+      held = Chronicle::Packs::ToolGateway.as_llm_tool(graph, held_spec, rt, settings: settings)
+      held_result = held.execute(%({"text":"hi"}), Crig::Tool::ToolContext.new)
+      held_result.output.render.should contain("held_for_approval")
+      held_result.output.render.should contain("R3")
+
+      auto = Chronicle::Packs::ToolGateway.as_llm_tool(graph, auto_spec, rt, settings: settings)
+      auto_result = auto.execute(%({"text":"q"}), Crig::Tool::ToolContext.new)
+      auto_result.success?.should be_true
+      auto_result.output.render.should contain("q")
+
+      audits = graph.events.select { |event| event.type == "authority.decision" }
+      audits.map { |event| JSON.parse(event.payload)["decision"].as_s }.should eq(["require_approval", "auto_approve"])
+      audits.map { |event| JSON.parse(event.payload)["action_class"].as_s }.should eq(["R3", "R0"])
+    end
+  end
+
+  it "preserves legacy no-class decisions without authority receipts" do
+    with_gateway_runtime do |_store, graph, _rt|
+      LlmToolsSupport.reset_seams
+      settings = Chronicle::Packs::ToolGateway::ToolGatewaySettings.new
+      low = Chronicle::Packs::ToolGateway.register_local_capability(
+        "legacy", "runtime_audited_low", ->(_input : Hash(String, JSON::Any)) { {"ok" => JSON::Any.new(true)} },
+        description: "Legacy low operation.", risk_class: "low",
+      )
+      medium = Chronicle::Packs::ToolGateway.register_local_capability(
+        "legacy", "runtime_audited_medium", ->(_input : Hash(String, JSON::Any)) { {"ok" => JSON::Any.new(true)} },
+        description: "Legacy medium operation.", risk_class: "medium",
+      )
+
+      Chronicle::Packs::ToolGateway.as_llm_tool(graph, low, settings: settings).execute(%({}), Crig::Tool::ToolContext.new).output.render.should contain("ok")
+      Chronicle::Packs::ToolGateway.as_llm_tool(graph, medium, settings: settings).execute(%({}), Crig::Tool::ToolContext.new).output.render.should contain("held_for_approval")
+      graph.events.any? { |event| event.type.starts_with?("authority.") }.should be_false
+    end
+  end
+
   it "holds a call and never executes it on denial" do
     with_gateway_runtime do |_store, graph, _rt|
       LlmToolsSupport.reset_seams
