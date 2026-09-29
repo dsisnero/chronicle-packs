@@ -296,8 +296,10 @@ The upstream test ledger is now closed: no partial vendor behavior rows remain.
 
 ### Historical separate tracking
 
-- [~] Upstream test porting — `plans/inventory/python_test_parity.tsv`
-      tracks 638 upstream tests (415/638 ported; test_action_class_policy,
+- [x] Upstream test porting — `plans/inventory/python_test_parity.tsv`
+      tracks 638 upstream tests (418/638 ported, 204 skipped fixture/environment
+      rows, 16 intentional divergences, and 0 partial behavior rows;
+      test_action_class_policy,
       test_assistant_local_sessions_importer, test_assistant_self_summary_importer,
       test_approval_auth, test_preflight,
       test_llm_provider, test_manifests, test_schedule_pack,
@@ -314,7 +316,8 @@ The upstream test ledger is now closed: no partial vendor behavior rows remain.
 1. `[x]` `evolution` Crystal candidate trial, soak, and boot lifecycle.
 2. `[x]` `evolution` candidate activation.
 3. `[x]` `evolution` Crystal author and deterministic scenarios.
-4. `[ ]` Upstream test porting (638 tests), tracked separately (415/638).
+4. `[x]` Upstream test porting (638 tests), tracked separately (418/638;
+   no partial behavior rows).
 
 ### Evolution candidate-language resolution
 
@@ -573,7 +576,7 @@ All six importers are ported: `local_files` (26/26),
   `Chronicle::Packs::Conftest` in `spec/spec_helper.cr` (see the
   `_preflight`/`_template`/`conftest` divergence note).
 - Upstream test porting — `plans/inventory/python_test_parity.tsv` tracks
-  638 upstream tests (415/638 ported; 17 intentional divergences and 2
+  638 upstream tests (418/638 ported; 16 intentional divergences and 0
   partial behavior rows). The
   `test_pack_fixtures.py` subprocess wrapper is ported through native Crystal
   spec discovery and the zero-exit in-process suite in
@@ -1551,4 +1554,4 @@ All six importers are ported: `local_files` (26/26),
 
 - `plans/inventory/python_port_inventory.tsv` — 2080 API items (tree-sitter backend)
 - `plans/inventory/python_source_parity.tsv` — 2080 source API items
-- `plans/inventory/python_test_parity.tsv` — 638 tests (415/638 ported; 17 intentional divergences; 2 partial)
+- `plans/inventory/python_test_parity.tsv` — 638 tests (418/638 ported; 16 intentional divergences; 0 partial)
