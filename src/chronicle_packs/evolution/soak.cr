@@ -180,12 +180,25 @@ module Chronicle::Packs::Evolution
         @runtime = @host.boot(@root, @state.primary_run_id, @settings)
         runtime = current_runtime
         graph = runtime.graph || raise PackError.new("Evolution happy rotation requires an attached graph")
+        seed_shared_objects(graph)
         Author.set_service(graph, @host.author_service)
         Lifecycle.install(graph, @host.lifecycle_service(runtime))
         reloaded = Boot.reload_adopted_packs(runtime)
         runtime.run_until_idle
         @state.primary_run_id = runtime.run_id
         reloaded
+      end
+
+      # Vendor soak parity: a shared config object plus the recorded inputs the
+      # trial replays. The candidate's config-toucher patches the shared object
+      # during replay, so a contested parent write conflicts at promote time.
+      private def seed_shared_objects(graph : Chronicle::GraphProjection) : Nil
+        return if graph.all_objects.any? { |obj| obj.type == "greeter_config" }
+
+        graph.add_object("greeter_config", %({"seen":0}), actor: "evolution.soak")
+        ["alpha", "beta", "gamma", "delta"].each_with_index do |content, index|
+          graph.add_object("chat_input", %({"content":#{content.to_json},"n":#{index}}), actor: "evolution.soak")
+        end
       end
 
       def teardown : Nil

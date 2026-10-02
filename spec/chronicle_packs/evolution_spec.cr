@@ -89,6 +89,27 @@ module EvolutionSpecSupport
     end
   end
 
+  # The scripted soak candidate (vendor `author_pack` parity): a greeter
+  # reaction plus a config-toucher that patches the shared `greeter_config`
+  # counter. The chassis-owned trial scenario replays `chat_input`, firing the
+  # toucher; contesting the same object in the parent then conflicts at promote.
+  CONFLICT_BEHAVIORS_SRC = <<-'CR'
+  @[Chronicle::Packs::Annotations::Behavior(name: "greeter", on: ["object.created"], where: {"type" => "source"})]
+  def greeter(event : Chronicle::Event, graph : Chronicle::GraphProjection, ctx : Chronicle::Packs::BehaviorContext)
+    graph.add_object("agent_greeting_log", %({"note":"greeted source"}))
+  end
+
+  @[Chronicle::Packs::Annotations::Behavior(name: "config_toucher", on: ["object.created"], where: {"type" => "chat_input"})]
+  def config_toucher(event : Chronicle::Event, graph : Chronicle::GraphProjection, ctx : Chronicle::Packs::BehaviorContext)
+    graph.all_objects.each do |obj|
+      next unless obj.type == "greeter_config"
+      seen = JSON.parse(obj.data)["seen"].as_i + 1
+      graph.patch_object(obj.id, %({"seen":#{seen}}))
+      break
+    end
+  end
+  CR
+
   class HappySoakHost < Chronicle::Packs::Evolution::Soak::HappyHost(PackModel)
     getter boots = 0
     getter happy_watches = 0
@@ -96,7 +117,7 @@ module EvolutionSpecSupport
     getter author : RecordingAuthorService
 
     def initialize
-      @author = RecordingAuthorService.new(Chronicle::Packs::Evolution::AuthoredSource.new("", "", "", ""))
+      @author = RecordingAuthorService.new(Chronicle::Packs::Evolution::AuthoredSource.new("", CONFLICT_BEHAVIORS_SRC, "", ""))
     end
 
     def boot(root : Path, primary_run_id : String, settings : Chronicle::Packs::Evolution::EvolutionSettings) : Chronicle::Runtime(PackModel)
@@ -155,9 +176,14 @@ module EvolutionSpecSupport
     end
 
     def contest_adoption(runtime : Chronicle::Runtime(PackModel), proposal : Chronicle::GraphObject) : Nil
-      runtime.graph.not_nil!.add_object("soak_conflict", {
-        "proposal_id" => JSON::Any.new(proposal.id), "advanced" => JSON::Any.new(true),
-      }.to_json, actor: "spec.soak_owner")
+      graph = runtime.graph.not_nil!
+      graph.all_objects.each do |obj|
+        next unless obj.type == "greeter_config"
+        seen = JSON.parse(obj.data)["seen"].as_i + 1000
+        graph.patch_object(obj.id, %({"seen":#{seen}}))
+        break
+      end
+      runtime.run_until_idle
     end
 
     def memory_net_available?(runtime : Chronicle::Runtime(PackModel)) : Bool
@@ -546,8 +572,8 @@ describe Chronicle::Packs::Evolution do
         assembly.owner_input_ids.should eq([owner.id])
         assembly.structured_fields.should eq(frame["gap_fields"].as_h.keys.sort)
         assembly.injection_flags.should contain("instruction_override")
-        assembly.surface_sources.should eq(["pack:frame_surface"])
-        frame["surface"].as_h["object_types"].as_a.map(&.as_s).should eq(["frame_note"])
+        assembly.surface_sources.should eq(["pack:core", "pack:evolution", "pack:frame_surface"])
+        frame["surface"].as_h["object_types"].as_a.map(&.as_s).should eq(["source", "observation", "task", "action", "artifact", "memory_candidate", "evaluation", "capability_gap", "drafting_context", "mod_proposal", "gate_result", "mod_trial", "mod_promotion", "mod_rollback", "adoption_ticket", "frame_note"])
       end
     end
 
@@ -713,9 +739,9 @@ describe Chronicle::Packs::Evolution do
   describe "trial_driver" do
     it "renders the canonical driver with baked replay types + held-out fraction" do
       driver = Chronicle::Packs::Evolution.render_trial_driver
-      driver.should contain("REPLAY_TYPES = ['chat_input']")
+      driver.should contain("REPLAY_TYPES = [\"chat_input\"] of String")
       driver.should contain("HELDOUT_FRACTION = 0.5")
-      driver.should contain("def main(rt):")
+      driver.should contain("def run(rt : Chronicle::Runtime(M))")
       driver.should contain("trial_stage_result")
       # Deterministic across settings-free calls.
       Chronicle::Packs::Evolution.render_trial_driver.should eq(driver)
@@ -835,8 +861,9 @@ describe Chronicle::Packs::Evolution do
 
       files = Chronicle::Packs::Evolution::Author.wrap_source(source, "agent_author_note")
 
-      files.keys.sort.should eq(["behaviors.cr", "entrypoint.cr", "manifest.toml", "object_types.cr", "pack.cr", "settings.cr", "tools.cr"])
-      files["object_types.cr"].should eq(source.object_types_src)
+      files.keys.sort.should eq(["behaviors.cr", "entrypoint.cr", "manifest.toml", "object_types.cr", "pack.cr", "settings.cr", "tools.cr", "trial_scenario.cr"])
+      files["object_types.cr"].should contain(source.object_types_src)
+      files["object_types.cr"].should contain("module AgentAuthorNote")
       files["pack.cr"].should contain("name: \"agent_author_note\"")
       files["entrypoint.cr"].should contain("Chronicle::Sandbox::CandidatePack")
       files["manifest.toml"].should contain("name = \"agent_author_note\"")
@@ -872,7 +899,7 @@ describe Chronicle::Packs::Evolution do
         data["status"].as_s.should eq("drafted")
         service.drafting_context_counts.should eq([1])
         graph.objects(type: "artifact").map { |artifact| JSON.parse(artifact.data)["title"].as_s }.sort.should eq(
-          ["behaviors.cr", "entrypoint.cr", "manifest.toml", "object_types.cr", "pack.cr", "settings.cr", "tools.cr"])
+          ["behaviors.cr", "entrypoint.cr", "manifest.toml", "object_types.cr", "pack.cr", "settings.cr", "tools.cr", "trial_scenario.cr"])
       ensure
         Chronicle::Packs::Evolution::Author.clear_services
       end

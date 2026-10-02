@@ -42,8 +42,8 @@ module Chronicle::Packs::Evolution
       @parent_run_id : String,
       @pack_resolver : Proc(ActivationRequest, Chronicle::Packs::Pack),
       @executor : Chronicle::Sandbox::TrialExecutor = Chronicle::Sandbox::LocalSubprocessTrialExecutor.new,
-      @fixture_scenario : String = "",
-      @replay_scenario : String = "",
+      @fixture_scenario : String = TrialDriverConstants::TRIAL_DRIVER_PATH,
+      @replay_scenario : String = TrialDriverConstants::TRIAL_DRIVER_PATH,
     )
     end
 
@@ -52,8 +52,8 @@ module Chronicle::Packs::Evolution
       pack_resolver : Proc(ActivationRequest, Chronicle::Packs::Pack),
       *,
       executor : Chronicle::Sandbox::TrialExecutor = Chronicle::Sandbox::LocalSubprocessTrialExecutor.new,
-      fixture_scenario : String = "",
-      replay_scenario : String = "",
+      fixture_scenario : String = TrialDriverConstants::TRIAL_DRIVER_PATH,
+      replay_scenario : String = TrialDriverConstants::TRIAL_DRIVER_PATH,
     ) : SandboxLifecycleService forall M
       store = runtime.store
       unless store.is_a?(Chronicle::SQLiteEventStore)

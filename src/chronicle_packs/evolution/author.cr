@@ -46,19 +46,24 @@ module Chronicle::Packs::Evolution
 
     # Pack-owned wrapping turns the only four authorable bodies into the
     # complete Crystal candidate surface. Identity, provenance, entrypoint,
-    # and the manifest are never accepted from the author.
-    def self.wrap_source(source : AuthoredSource, pack_name : String) : Hash(String, String)
+    # and the manifest are never accepted from the author. The four bodies are
+    # wrapped in the generated pack module so their `@[Chronicle::Packs::
+    # Annotations::*]` declarations are collected by the `pack` macro; the
+    # chassis-owned trial scenario is appended verbatim.
+    def self.wrap_source(source : AuthoredSource, pack_name : String, settings : EvolutionSettings = EvolutionSettings.new) : Hash(String, String)
       unless pack_name.matches?(Chronicle::Packs::MANIFEST_NAME_RE)
         raise AuthorRefusal.new("candidate pack name #{pack_name.inspect} is not a valid manifest identifier")
       end
 
+      module_name = pack_name.split('_').map(&.capitalize).join
       files = {
-        "object_types.cr" => source.object_types_src,
-        "behaviors.cr"    => source.behaviors_src,
-        "settings.cr"     => source.settings_src,
-        "tools.cr"        => source.tools_src,
-        "pack.cr"         => _pack_entrypoint(pack_name),
-        "entrypoint.cr"   => _sandbox_entrypoint(pack_name),
+        "object_types.cr"   => _wrap_module(module_name, source.object_types_src),
+        "behaviors.cr"      => _wrap_module(module_name, source.behaviors_src),
+        "settings.cr"       => _wrap_module(module_name, source.settings_src),
+        "tools.cr"          => _wrap_module(module_name, source.tools_src),
+        "trial_scenario.cr" => Evolution.render_trial_driver(settings),
+        "pack.cr"           => _pack_entrypoint(pack_name),
+        "entrypoint.cr"     => _sandbox_entrypoint(pack_name),
       }
       surface = begin
         Analysis.extract_crystal_declared_surface(files)
@@ -67,6 +72,13 @@ module Chronicle::Packs::Evolution
       end
       files["manifest.toml"] = _manifest(pack_name, surface, Materialize.content_hash_of(files))
       files
+    end
+
+    # Reopen the generated pack module around an authored body so the `pack`
+    # macro sees its annotated types/behaviors/tools.
+    private def self._wrap_module(module_name : String, body : String) : String
+      return body if body.strip.empty?
+      "module #{module_name}\n#{body}\nend\n"
     end
 
     # Seal the graph-owned record before the host author sees its pure frame.
@@ -124,7 +136,7 @@ module Chronicle::Packs::Evolution
         approver_roles: approver_roles,
       )
       pack_name = "agent_#{base_name}"
-      files = wrap_source(result.source, pack_name)
+      files = wrap_source(result.source, pack_name, settings)
       Chronicle::Packs::Evolution.submit_proposal_fn(
         graph, pack_name: pack_name, files: files, gap_id: gap_id,
         authored_by: "llm", drafting_context_id: result.drafting_context_id,
