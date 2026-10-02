@@ -96,6 +96,20 @@ required order. See [Bundles](docs/bundles.md).
 - [Pack authoring](docs/pack-authoring.md) — Crystal pack, type, behavior,
   tool, and spec conventions.
 - [Demo server](docs/demo-server.md) — HTTP surface and deferred host seams.
+- [Evolution design](docs/evolution-design.md) — governed self-modification:
+  lifecycle, graph vocabulary, threat model, and acceptance bar.
+- [LLM author design](docs/llm-author-design.md) — the keyless author
+  boundary and drafting frame.
+- [Soak runbook](docs/soak-runbook.md) — running and reading the LLM-author
+  gate rotations.
+- [Pack manifest specification](docs/manifest-spec.md) — the `manifest.toml`
+  schema, content hash, and static gates.
+- [MCP](docs/mcp.md) — outbound governed tool consumption and the inbound
+  server shape.
+- [Security](docs/security.md) — untrusted content and prompt-injection
+  containment.
+- [Long-term memory](docs/long-term-memory.md) — conversation-driven memory,
+  curation, and hybrid recall.
 - [Development](docs/development.md), [testing](docs/testing.md),
   [coding guidelines](docs/coding-guidelines.md), and
   [PR workflow](docs/pr-workflow.md) — contributor workflow and parity gates.
