@@ -6,6 +6,7 @@
 
 # Build artifacts
 *.dwarf
+/readme_ex
 
 # Apple Double / resource fork files (exFAT external drive)
 ._*
@@ -15,6 +16,9 @@
 
 # Local Crystal cache
 .crystal-cache/
+
+# Lattice offline-index cache (regenerable via `lattice clear-cache`)
+.lattice-cache/
 
 # Temporary working artifacts
 temp/
